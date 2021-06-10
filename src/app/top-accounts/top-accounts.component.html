@@ -1,0 +1,43 @@
+<div style="display: flex;flex-direction: row;justify-content: space-between;">
+  <h5>{{snippetService.getSnippet('top-accounts-component.title')}}</h5>
+</div>
+<table class="table table-dark dark-theme">
+  <thead>
+  <tr>
+    <th scope="col">{{snippetService.getSnippet('top-accounts-component.headers.address')}}</th>
+    <th scope="col">
+      <span ngbTooltip="{{snippetService.getSnippet('general.distribution-ratio')}}">
+        DR
+      </span>
+    </th>
+    <th scope="col">
+      <span>
+        {{snippetService.getSnippet('top-accounts-component.headers.pending')}}
+      </span>
+    </th>
+    <th scope="col">
+      <span ngbTooltip="{{snippetService.getSnippet('top-accounts-component.headers.ec.help-text')}}">
+        {{snippetService.getSnippet('top-accounts-component.headers.ec')}}
+      </span>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr *ngIf="!poolStats.topAccounts">
+      <td colspan="4" style="text-align: center">
+        <app-loading-state></app-loading-state>
+      </td>
+    </tr>
+    <tr *ngIf="poolStats.topAccounts && topAccounts.length === 0">
+      <td colspan="4" style="text-align: center; padding-top: 1rem">
+        <app-empty-state [text]="snippetService.getSnippet('top-accounts-component.no-miners-found')" [icon]="faHdd"></app-empty-state>
+      </td>
+    </tr>
+  <tr *ngFor="let account of topAccounts">
+    <td class="ellipsis">{{account.name ? account.name : account.payoutAddress}}</td>
+    <td>{{account.distributionRatio}}</td>
+    <td>{{account.pending}} {{poolConfig.coin}}</td>
+    <td>{{getFormattedCapacity(account.ec)}}</td>
+  </tr>
+  </tbody>
+</table>

@@ -1,0 +1,117 @@
+<div style="display: flex; justify-content: center; margin-top: 2em">
+  <div style="display: flex; flex-direction: column;">
+    <div style="display: flex;" *ngIf="!identityVerified">
+      <h4 style="margin-top: 6px; margin-right: 8px">1.</h4>
+      <div style="margin-bottom: 0.5em;">
+        <input type="text" class="form-control" placeholder="{{snippetService.getSnippet('settings-component.payout-address.placeholder')}}" [(ngModel)]="payoutAddress" style="width: 32em; margin-right: 1em;">
+      </div>
+      <div *ngIf="checkingPayoutAddress" style="margin-top: 5px">
+        <fa-icon [icon]="faCircleNotch" [spin]="true"></fa-icon>
+      </div>
+      <div *ngIf="!checkingPayoutAddress && payoutAddressExists && payoutAddress" style="margin-top: 5px">
+        <fa-icon [icon]="faCheck" style="color: green;"></fa-icon>
+      </div>
+      <div *ngIf="!checkingPayoutAddress && !payoutAddressExists && payoutAddress" style="margin-top: 5px">
+        <fa-icon [icon]="faTimes" style="color: red;"></fa-icon>
+      </div>
+    </div>
+    <div *ngIf="!checkingPayoutAddress && payoutAddressExists && !identityVerified">
+      <div style="display: flex; margin-bottom: 2em; margin-top: 2em">
+        <h4 style="margin-top: 32px; margin-right: 8px">2.</h4>
+        <div>
+          <label for="messageToSign">{{snippetService.getSnippet('settings-component.verification.message-to-sign')}}</label>
+          <input type="text" id="messageToSign" readonly class="form-control" [ngModel]="messageToSign" style="width: 32em; margin-right: 1em;">
+          <div style="margin-left: -2em; text-align: center; margin-top: 1em"><a href="{{signingUrl}}" target="_blank">{{snippetService.getSnippet('settings-component.verification.sign-it-here')}}</a></div>
+        </div>
+        <div *ngIf="verificationInputExists && identityVerified" style="margin-top: 38px;">
+          <fa-icon [icon]="faCheck" style="color: green;"></fa-icon>
+        </div>
+      </div>
+      <div style="display: flex;">
+        <h4 style="margin-top: 38px; margin-right: 8px">3.</h4>
+        <div>
+          <label for="signatureInput">{{snippetService.getSnippet('settings-component.verification.signature-input.label')}}:</label>
+          <input type="text" id="signatureInput" class="form-control" placeholder="{{snippetService.getSnippet('settings-component.verification.signature-input.placeholder')}}" [(ngModel)]="messageSignature" style="width: 32em; margin-right: 1em;">
+          <label *ngIf="coinRequiresPubKey(poolConfig.coin)" for="pubKeyInput" style="margin-top: 0.8em">{{snippetService.getSnippet('settings-component.verification.public-key-input.label')}}:</label>
+          <input *ngIf="coinRequiresPubKey(poolConfig.coin)" type="text" id="pubKeyInput" class="form-control" placeholder="{{snippetService.getSnippet('settings-component.verification.public-key-input.placeholder')}}" [(ngModel)]="pubKey" style="width: 32em; margin-right: 1em;">
+        </div>
+        <div *ngIf="verificationInputExists && identityVerified" style="margin-top: 38px">
+          <fa-icon [icon]="faCheck" style="color: green;"></fa-icon>
+        </div>
+        <div *ngIf="verificationInputExists && identityVerified === false" style="margin-top: 38px">
+          <fa-icon [icon]="faTimes" style="color: red;"></fa-icon>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="verificationInputExists && !identityVerified" style="margin-top: 1em">
+      <div style="display: flex; justify-content: center">
+        <button class="btn btn-outline-primary" (click)="verifyIdentity()">
+          {{verifyingIdentity ? snippetService.getSnippet('settings-component.verification.button.processing-label') : snippetService.getSnippet('settings-component.verification.button.label')}}
+        </button>
+        <div *ngIf="verifyingIdentity" style="margin-top: 5px; margin-left: 0.8em">
+          <fa-icon [icon]="faCircleNotch" [spin]="true"></fa-icon>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="identityVerified" style="display: flex">
+      <h6 style="margin-top: 0.5rem; margin-right: 1em">{{snippetService.getSnippet('settings-component.logged-in-with', this.payoutAddress)}}</h6>
+      <button class="btn btn-outline-danger" (click)="logout()"><fa-icon [icon]="faSignOut"></fa-icon> {{snippetService.getSnippet('settings-component.logout')}}</button>
+    </div>
+    <div *ngIf="payoutAddress && messageToSign && verificationInputExists && identityVerified" style="display: flex;margin-top: 2em; margin-bottom: 2em">
+      <ng-template #onDemandPayout let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" style="color: #474747">{{snippetService.getSnippet('settings-component.actions.on-demand-payout.title')}}</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div style="display: flex">
+            <input type="number" class="form-control" [(ngModel)]="onDemandPayoutAmount" step="0.00000000000001" min="{{poolConfig.onDemandPayoutFee + 0.001}}" max="{{accountStats.pending}}" style="width: 20em">
+            <a style="margin-left: 1em;margin-top: 5px;cursor: pointer;text-decoration: underline; color: #6e7877" (click)="onDemandPayoutAmount = accountStats.pending">{{snippetService.getSnippet('settings-component.actions.on-demand-payout.max')}}</a>
+          </div>
+          <div style="color: #474747; margin-top: 1em">{{snippetService.getSnippet('settings-component.actions.on-demand-payout.help-text', poolConfig.onDemandPayoutFee, poolConfig.coin, (poolConfig.onDemandPayoutFee + 0.001))}}</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" (click)="modal.close(true)">{{snippetService.getSnippet('settings-component.actions.on-demand-payout.request-payout')}}</button>
+        </div>
+      </ng-template>
+      <ng-template #setAccountName let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" style="color: #474747">{{snippetService.getSnippet('settings-component.actions.set-account-name.title')}}</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="form-control" placeholder="{{snippetService.getSnippet('settings-component.actions.set-account-name.account-name.placeholder')}}" [(ngModel)]="accountName" style="width: 20em">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" (click)="modal.close(true)">{{snippetService.getSnippet('settings-component.actions.set-account-name.save')}}</button>
+        </div>
+      </ng-template>
+      <ng-template #setDistributionRatio let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" style="color: #474747">{{snippetService.getSnippet('settings-component.actions.set-distribution-ratio.title')}}</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div style="display: flex">
+            <input type="number" class="form-control" [(ngModel)]="blockWinnerRatio" min="0" max="100" style="width: 6em">
+            <span style="font-size: 1.4em;font-weight: bold">&nbsp;-&nbsp;</span>
+            <input type="number" class="form-control" [(ngModel)]="historicalRatio" min="0" max="100" style="width: 6em">
+          </div>
+          <div style="color: #474747; margin-top: 1em">{{snippetService.getSnippet('settings-component.actions.set-distribution-ratio.help-text')}}</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" (click)="modal.close(true)">{{snippetService.getSnippet('settings-component.actions.set-distribution-ratio.save')}}</button>
+        </div>
+      </ng-template>
+      <button class="btn btn-outline-primary" style="margin-right: 0.4em" (click)="openOnDemandPayout(onDemandPayout)">{{snippetService.getSnippet('settings-component.actions.on-demand-payout.button')}}</button>
+      <button class="btn btn-outline-primary" style="margin-left: 0.4em; margin-right: 0.4em" (click)="openSetAccountName(setAccountName)">{{snippetService.getSnippet('settings-component.actions.set-account-name.button')}}</button>
+      <button class="btn btn-outline-primary" style="margin-left: 0.4em; margin-right: 0.4em" (click)="openSetDistributionRatio(setDistributionRatio)">{{snippetService.getSnippet('settings-component.actions.set-distribution-ratio.button')}}</button>
+    </div>
+  </div>
+</div>

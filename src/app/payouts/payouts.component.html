@@ -1,0 +1,42 @@
+<h5>{{snippetService.getSnippet('payouts-component.title')}}</h5>
+<table class="table table-dark dark-theme">
+  <thead>
+  <tr>
+    <th scope="col">{{snippetService.getSnippet('payouts-component.headers.date')}}</th>
+    <th scope="col">{{snippetService.getSnippet('payouts-component.headers.transaction')}}</th>
+    <th scope="col">{{snippetService.getSnippet('payouts-component.headers.amount')}}</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr *ngIf="!poolStats.lastPayouts">
+      <td colspan="3" style="text-align: center">
+        <app-loading-state></app-loading-state>
+      </td>
+    </tr>
+    <tr *ngIf="poolStats.lastPayouts && lastPayouts.length === 0">
+      <td colspan="3" style="text-align: center; padding-top: 1rem">
+        <app-empty-state [text]="snippetService.getSnippet('payouts-component.no-payouts-sent-yet')" [icon]="faMoneyCheck"></app-empty-state>
+      </td>
+    </tr>
+  <tr *ngFor="let payout of lastPayouts">
+    <td>{{getPayoutDate(payout)}}</td>
+    <td>
+      <span *ngFor="let transaction of payout.transactions; let last = last;">
+        <a *ngIf="poolConfig.blockExplorerTxUrlTemplate" href="{{getBlockExplorerTransactionLink(transaction.txId)}}" target="_blank" style="color: #b45bff">{{transaction.txId}}</a>
+        <span *ngIf="!poolConfig.blockExplorerTxUrlTemplate">{{transaction.txId}}</span>
+        <span *ngIf="!splitMultiPayoutsByBreak && !last">, </span>
+        <br *ngIf="splitMultiPayoutsByBreak && !last">
+      </span>
+    </td>
+    <td (click)="toggleShowPayout(payout)">
+      {{getTotalPayout(payout.transactions)}} {{poolConfig.coin}}
+      <span *ngIf="showPayout(payout._id)">
+        <span *ngFor="let data of getAddressAmountPairs(payout._id)">
+          <br>
+          {{data.address}}: {{data.amount}} {{poolConfig.coin}}
+        </span>
+      </span>
+    </td>
+  </tr>
+  </tbody>
+</table>

@@ -1,0 +1,99 @@
+<div class="row">
+  <div class="col-12" *ngIf="!accountService.havePoolPublicKey">
+    <div class="row justify-content-center">
+      <input type="text" class="form-control" placeholder="Pool Public Key" [(ngModel)]="poolPublicKeyInput" style="width: 32em;margin-right: 0.5rem;">
+      <button class="btn btn-success" style="margin-left: 0.5rem;" (click)="login()">
+        <fa-icon *ngIf="isLoading" [icon]="faCircleNotch" [spin]="true"></fa-icon>
+        <span *ngIf="isLoading"> Logging in</span>
+        <span *ngIf="!isLoading">Login</span>
+      </button>
+    </div>
+  </div>
+  <div class="col-12" *ngIf="accountService.havePoolPublicKey && !accountService.haveAccount">
+    <span *ngIf="isLoading">spinner</span>
+  </div>
+  <div class="col-12" *ngIf="accountService.havePoolPublicKey && accountService.haveAccount">
+    <div class="row">
+      <div class="p-1 col-md-12 col-lg-5 col-xxl-8">
+        <div class="card">
+          <div class="card-header text-align-center">
+            <h5>Payout Address</h5>
+          </div>
+          <div class="card-body text-align-center">
+            {{accountService.account.payoutAddress}}
+          </div>
+        </div>
+      </div>
+      <div class="p-1 col-md-12 col-lg-7 col-xxl-16">
+        <div class="card">
+          <div class="card-header text-align-center">
+            <h5>Pool Public Key</h5>
+          </div>
+          <div class="card-body text-align-center">
+            {{accountService.account.poolPublicKey}}
+          </div>
+        </div>
+      </div>
+      <div class="p-1 col-md-6 col-lg-3 col-xxl-5">
+        <div class="card">
+          <div class="card-header text-align-center">
+            <h5>Name</h5>
+          </div>
+          <div class="card-body text-align-center">
+            {{accountService.account.name || 'N/A'}}
+          </div>
+        </div>
+      </div>
+      <div class="p-1 col-md-3 col-lg-2 col-xxl-3">
+        <div class="card">
+          <div class="card-header text-align-center">
+            <h5>Difficulty</h5>
+          </div>
+          <div class="card-body text-align-center">
+            {{accountService.account.difficulty}}
+          </div>
+        </div>
+      </div>
+      <div class="p-1 col-md-3 col-lg-3 col-xxl-4">
+        <div class="card">
+          <div class="card-header text-align-center">
+            <h5>Pending balance</h5>
+          </div>
+          <div class="card-body text-align-center">
+            <span>{{accountService.account.pending}} {{poolConfig.coin}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="p-1 col-md-3 col-lg-2 col-xxl-3">
+        <div class="card">
+          <div class="card-header text-align-center">
+            <h5>EC</h5>
+          </div>
+          <div class="card-body text-align-center">
+            {{getFormattedCapacity(accountService.account.ec)}}
+          </div>
+        </div>
+      </div>
+      <div class="p-1 col-md-3 col-lg-2 col-xxl-3">
+        <div class="card">
+          <div class="card-header text-align-center">
+            <h5>DR</h5>
+          </div>
+          <div class="card-body text-align-center">
+            {{accountService.account.distributionRatio}}
+          </div>
+        </div>
+      </div>
+      <div class="p-1 col-md-6 col-lg-3 col-xxl-4">
+        <div class="card">
+          <div class="card-header text-align-center">
+            <h5>Last Partial accepted</h5>
+          </div>
+          <div class="card-body text-align-center">
+            {{getLastAcceptedPartialAtDuration(accountService.account.lastAcceptedPartialAt)}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

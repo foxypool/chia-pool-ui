@@ -1,0 +1,46 @@
+<h4>
+  {{snippetService.getSnippet('info-component.using-this-pool.title')}}:
+</h4>
+<div>
+  <ol>
+    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-1')"></li>
+    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-2', poolConfig.farmingUrl)"></li>
+    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-3')"></li>
+    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-4')"></li>
+  </ol>
+</div>
+<h4>
+  {{snippetService.getSnippet('info-component.pool-info.title')}}:
+</h4>
+<div>
+  <ul>
+    <li>
+      {{snippetService.getSnippet('info-component.pool-info.dr-info', poolRatioString)}}
+    </li>
+    <li>
+      {{snippetService.getSnippet('info-component.pool-info.pplns-info', historicalTimeInHours)}}
+    </li>
+    <li>
+      {{snippetService.getSnippet('info-component.pool-info.payout.fee-info', poolConfig.poolFee)}}
+    </li>
+    <li>
+      {{snippetService.getSnippet('info-component.pool-info.payout.interval-info')}}
+    </li>
+    <li>
+      {{snippetService.getSnippet('info-component.pool-info.payout.minimum-info', poolConfig.minimumPayout, poolConfig.coin)}}
+    </li>
+    <li>
+      {{snippetService.getSnippet('info-component.pool-info.distribution-delay-info', poolConfig.blockRewardDistributionDelay)}}
+    </li>
+  </ul>
+</div>
+<h4>
+  {{snippetService.getSnippet('info-component.contact.title')}}:
+</h4>
+<div>
+  <ul>
+    <li>
+      <span [innerHTML]="snippetService.getSnippet('info-component.contact.join-discord')"></span>
+    </li>
+  </ul>
+</div>

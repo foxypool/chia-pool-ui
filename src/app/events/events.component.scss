@@ -1,0 +1,10 @@
+.card {
+  text-align: center;
+  background-color: #2f3136;
+}
+.card-body {
+  text-align: left;
+}
+::ng-deep .progress {
+  background-color: #262629 !important;
+}

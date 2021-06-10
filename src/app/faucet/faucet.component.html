@@ -1,0 +1,26 @@
+<div style="display: flex; justify-content: center">
+  <div style="display: flex; flex-direction: column;margin-bottom: 1em;" class="faucet-input">
+    <div style="margin-bottom: 0.5em;">
+      {{snippetService.getSnippet('faucet-component.pool-address', poolConfig.poolAddress)}}
+    </div>
+    <div style="margin-bottom: 0.5em;">
+      <input type="text" class="form-control" placeholder="{{snippetService.getSnippet('faucet-component.input.' + faucetInput)}}" [(ngModel)]="address" style="margin-bottom: 1em;">
+      <button type="button" class="btn btn-outline-primary" (click)="getCoins()" [disabled]="requestingCoins">
+        <span *ngIf="requestingCoins" class="spinner-border spinner-border-sm text-light" role="status" aria-hidden="true" style="margin-bottom: 2px; margin-right: 2px"></span>
+        {{snippetService.getSnippet('faucet-component.get-coins-to-bind')}}
+      </button>
+    </div>
+    <div style="margin-top: 1em;">
+      <div class="alert alert-success" role="alert" *ngIf="success">
+        {{snippetService.getSnippet('general.success')}}
+      </div>
+      <div class="alert alert-danger" role="alert" *ngIf="success === false">
+        {{snippetService.getSnippet('general.failure', error)}}
+      </div>
+    </div>
+    <div style="margin-top: 1em;">
+      {{snippetService.getSnippet('faucet-component.binding-help-text', bindToFunction, poolConfig.poolAddress)}}:<br>
+      <img src="assets/bind-{{(poolConfig.coin || '').toLowerCase()}}.png" style="margin-top: 8px; margin-bottom: 8px">
+    </div>
+  </div>
+</div>

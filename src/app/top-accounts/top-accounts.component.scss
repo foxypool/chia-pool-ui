@@ -1,0 +1,40 @@
+.dot {
+  height: 10px;
+  width: 10px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+span[positive] {
+  background-color: rgb(75, 210, 143);
+}
+span[intermediary] {
+  background-color: rgb(255, 170, 0);
+}
+span[investor] {
+  background-color: rgb(66, 134, 244);
+}
+span[negative] {
+  background-color: rgb(255, 77, 77);
+}
+.dropdown-menu {
+  background-color: #2f3136;
+  color: #cfd0d1;
+}
+.dropdown-item {
+  color: #cfd0d1;
+}
+.dropdown-divider {
+  border-top: 1px solid #262629;
+}
+.dropdown-item:focus, .dropdown-item:hover {
+  background-color: #262629;
+}
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+}
+

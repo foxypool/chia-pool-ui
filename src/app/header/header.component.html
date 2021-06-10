@@ -1,0 +1,100 @@
+<nav class="navbar navbar-expand-xl navbar-dark sticky-navbar">
+  <a class="navbar-brand">
+    <img src="assets/fox.svg" width="34" height="34" alt="">
+    <span style="font-weight: 300; font-size: 1.1em;margin-left: 8px;vertical-align: top">{{poolTitle}}</span>
+  </a>
+  <button class="navbar-toggler" type="button" (click)="toggleMenuCollapse()">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" [ngbCollapse]="isMenuCollapsed">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link">
+          <button type="button" class="btn btn-outline-primary" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="onTabButtonClick()">
+            {{snippetService.getSnippet('header-component.button.dashboard')}}
+          </button>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link">
+          <button type="button" class="btn btn-outline-primary" routerLink="/my-farmer" routerLinkActive="active" (click)="onTabButtonClick()">
+            {{snippetService.getSnippet('header-component.button.my-farmer')}}
+          </button>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link">
+          <button type="button" class="btn btn-outline-primary" routerLink="/blocks-won" routerLinkActive="active" (click)="onTabButtonClick()">
+            {{snippetService.getSnippet('header-component.button.blocks-won')}}
+          </button>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link">
+          <button type="button" class="btn btn-outline-primary" routerLink="/payouts" routerLinkActive="active" (click)="onTabButtonClick()">
+            {{snippetService.getSnippet('header-component.button.payouts')}}
+          </button>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link">
+          <button type="button" class="btn btn-outline-primary" routerLink="/info" routerLinkActive="active" (click)="onTabButtonClick()">
+            {{snippetService.getSnippet('header-component.button.info')}}
+          </button>
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="poolConfig.supportsFaucet">
+        <a class="nav-link">
+          <button type="button" class="btn btn-outline-primary" routerLink="/faucet" routerLinkActive="active" (click)="onTabButtonClick()">
+            {{snippetService.getSnippet('header-component.button.faucet')}}
+          </button>
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="poolConfig.notices && poolConfig.notices.length > 0">
+        <a class="nav-link">
+          <button type="button" class="btn btn-outline-primary" routerLink="/notices" routerLinkActive="active" (click)="onTabButtonClick()">
+            {{snippetService.getSnippet('header-component.button.notices')}}
+          </button>
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="poolStats.events && poolStats.events.length > 0">
+        <a class="nav-link">
+          <button type="button" class="btn btn-outline-primary" routerLink="/events" routerLinkActive="active" (click)="onTabButtonClick()">
+            {{snippetService.getSnippet('header-component.button.events')}}
+          </button>
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="poolConfig.supportsMessageVerification">
+        <a class="nav-link">
+          <button type="button" class="btn btn-outline-primary" routerLink="/settings" routerLinkActive="active" (click)="onTabButtonClick()">
+            {{snippetService.getSnippet('header-component.button.settings')}}
+          </button>
+        </a>
+      </li>
+    </ul>
+    <button *ngIf="accountService.havePoolPublicKey" class="btn btn-secondary" style="margin-right: 0.5rem;" (click)="accountService.logout()">Logout</button>
+    <div ngbDropdown class="d-inline-block" *ngIf="otherPools.length > 0">
+      <button class="btn btn-outline-primary" id="poolsDropdown" ngbDropdownToggle>
+        {{snippetService.getSnippet('header-component.button.other-pools')}}
+      </button>
+      <div ngbDropdownMenu aria-labelledby="poolsDropdown">
+        <div *ngFor="let pool of otherPools; let i = index" [attr.data-index]="i">
+          <h6 *ngIf="!getPool(i - 1) || getPool(i - 1).group !== pool.group" class="dropdown-header">{{pool.group}}</h6>
+          <a ngbDropdownItem href="{{pool.url}}" target="_blank">{{pool.name}}</a>
+          <div *ngIf="getPool(i + 1) && getPool(i + 1).group !== pool.group" class="dropdown-divider"></div>
+        </div>
+      </div>
+    </div>
+    <div ngbDropdown class="d-inline-block" style="margin-left: 10px">
+      <button class="btn btn-outline-primary" id="languageDropdown" ngbDropdownToggle>
+        {{snippetService.getSelectedLanguage()}}
+      </button>
+      <div ngbDropdownMenu aria-labelledby="languageDropdown">
+        <div *ngFor="let lang of snippetService.languagesArray; let i = index" [attr.data-index]="i">
+          <div ngbDropdownItem (click)="snippetService.setLanguage(lang[0])" style="cursor: pointer;"><img src="assets/{{lang[0]}}.svg" style="height: 1.4em; border-radius: 8px"> {{lang[1]}}</div>
+          <div *ngIf="snippetService.languagesArray.length !== (i + 1)" class="dropdown-divider"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

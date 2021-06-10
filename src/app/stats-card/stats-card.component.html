@@ -1,0 +1,51 @@
+<div class="row">
+  <div class="col-md-6 col-lg-4 col-xxl-6">
+    <div class="card">
+      <div class="card-header">
+        {{snippetService.getSnippet('stats-card-component.height-card.title')}}
+      </div>
+      <div class="card-body" style="margin-top: -14px; margin-bottom: -10px">
+        <span class="card-text">{{poolStats.height ? poolStats.height : snippetService.getSnippet('general.not-available.short')}}</span><br>
+        {{snippetService.getSnippet('stats-card-component.height-card.elapsed')}}: {{(elapsed)}}<br>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-4 col-xxl-6">
+    <div class="card">
+      <div class="card-header">
+        {{snippetService.getSnippet('stats-card-component.network-capacity-card.title')}}
+      </div>
+      <div class="card-body" style="margin-top: -14px; margin-bottom: -10px">
+            <span class="card-text">
+              {{snippetService.getSnippet('stats-card-component.network-capacity-card.network-capacity')}}: {{getFormattedCapacityFromTiB(poolStats.networkSpaceInTiB)}}<br>
+              {{snippetService.getSnippet('stats-card-component.network-capacity-card.network-difficulty')}}: {{poolStats.difficulty}}
+            </span>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-4 col-xxl-6">
+    <div class="card">
+      <div class="card-header">
+        {{snippetService.getSnippet('stats-card-component.farmers-card.title')}}
+      </div>
+      <div class="card-body">
+            <span class="card-text">
+              {{poolStats.accountsWithShares}} | {{getFormattedCapacityFromGiB(poolStats.ecSum || 0)}}
+            </span>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-4 col-xxl-6">
+    <div class="card">
+      <div class="card-header">
+        {{snippetService.getSnippet('stats-card-component.balance-card.title')}}
+      </div>
+      <div class="card-body" style="margin-top: -14px; margin-bottom: -10px">
+            <span class="card-text">
+              {{poolBalance}} {{poolConfig.coin}}<br>
+              {{snippetService.getSnippet('stats-card-component.balance-card.daily-reward')}}: <span placement="bottom" ngbTooltip="{{dailyRewardPerPiBFiat.toFixed(2)}} USD / PiB">{{dailyRewardPerPiB}} {{poolConfig.coin}} / PiB</span>
+            </span>
+      </div>
+    </div>
+  </div>
+</div>
