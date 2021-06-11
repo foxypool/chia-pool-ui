@@ -111,13 +111,21 @@ export class PayoutsComponent implements OnInit {
       }).sort((a, b) => b.amount - a.amount);
   }
 
-  getBlockExplorerTransactionLink(txId) {
-    return this.poolConfig.blockExplorerTxUrlTemplate.replace('#TX#', txId);
+  getBlockExplorerCoinLink(coinId) {
+    return this.poolConfig.blockExplorerCoinUrlTemplate.replace('#COIN#', coinId);
+  }
+
+  getCoinIdsForPayout(payout) {
+    return payout.transactions.map(transaction => transaction.coinIds).flat();
   }
 
   get splitMultiPayoutsByBreak() {
     switch(this.poolsProvider.coin) {
       default: return true;
     }
+  }
+
+  trackPayoutBy(index, payout) {
+    return payout._id;
   }
 }

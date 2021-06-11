@@ -18,18 +18,18 @@
         <app-empty-state [text]="snippetService.getSnippet('payouts-component.no-payouts-sent-yet')" [icon]="faMoneyCheck"></app-empty-state>
       </td>
     </tr>
-  <tr *ngFor="let payout of lastPayouts">
+  <tr *ngFor="let payout of lastPayouts; trackBy: trackPayoutBy">
     <td>{{getPayoutDate(payout)}}</td>
     <td>
-      <span *ngFor="let transaction of payout.transactions; let last = last;">
-        <a *ngIf="poolConfig.blockExplorerTxUrlTemplate" href="{{getBlockExplorerTransactionLink(transaction.txId)}}" target="_blank" style="color: #b45bff">{{transaction.txId}}</a>
-        <span *ngIf="!poolConfig.blockExplorerTxUrlTemplate">{{transaction.txId}}</span>
-        <span *ngIf="!splitMultiPayoutsByBreak && !last">, </span>
-        <br *ngIf="splitMultiPayoutsByBreak && !last">
+      <span *ngFor="let coinId of getCoinIdsForPayout(payout); let lastCoinId = last">
+        <a *ngIf="poolConfig.blockExplorerCoinUrlTemplate" href="{{getBlockExplorerCoinLink(coinId)}}" target="_blank" style="color: #b45bff">{{coinId}}</a>
+        <span *ngIf="!poolConfig.blockExplorerCoinUrlTemplate">{{coinId}}</span>
+        <span *ngIf="!splitMultiPayoutsByBreak && !lastCoinId">, </span>
+        <br *ngIf="splitMultiPayoutsByBreak && !lastCoinId">
       </span>
     </td>
-    <td (click)="toggleShowPayout(payout)">
-      {{getTotalPayout(payout.transactions)}} {{poolConfig.coin}}
+    <td>
+      <span (click)="toggleShowPayout(payout)">{{getTotalPayout(payout.transactions)}} {{poolConfig.coin}}</span>
       <span *ngIf="showPayout(payout._id)">
         <span *ngFor="let data of getAddressAmountPairs(payout._id)">
           <br>
