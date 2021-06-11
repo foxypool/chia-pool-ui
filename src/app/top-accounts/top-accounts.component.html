@@ -36,7 +36,7 @@
   <tr *ngFor="let account of topAccounts">
     <td class="ellipsis">{{account.name ? account.name : account.payoutAddress}}</td>
     <td>{{account.distributionRatio}}</td>
-    <td>{{account.pending}} {{poolConfig.coin}}</td>
+    <td>{{account.pendingRounded}} {{poolConfig.coin}}</td>
     <td>{{getFormattedCapacity(account.ec)}}</td>
   </tr>
   </tbody>

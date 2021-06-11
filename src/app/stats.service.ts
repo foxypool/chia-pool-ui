@@ -66,9 +66,9 @@ export class StatsService {
   }
 
   onNewPoolStats(poolStats) {
-    if (poolStats.accounts) {
-      poolStats.accounts.forEach(account => {
-        account.pending = (new BigNumber(account.pending)).decimalPlaces(8, BigNumber.ROUND_FLOOR).toNumber();
+    if (poolStats.topAccounts) {
+      poolStats.topAccounts.forEach(account => {
+        account.pendingRounded = (new BigNumber(account.pending)).decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber();
       });
     }
     this.poolStats.next(poolStats);

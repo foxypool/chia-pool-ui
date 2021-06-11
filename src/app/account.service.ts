@@ -4,6 +4,7 @@ import {StatsService} from "./stats.service";
 import {PoolsProvider} from "./pools.provider";
 import {LocalStorageService} from './local-storage.service';
 import {ToastService} from './toast.service';
+import {BigNumber} from 'bignumber.js';
 
 @Injectable({
   providedIn: 'root'
@@ -72,10 +73,15 @@ export class AccountService {
     let account = null;
     try {
       account = await this.statsService.request({ event: 'get-account', data: { poolPublicKey } });
+      this.patchAccount(account);
     } finally {
       this.isLoading = false;
     }
 
     return account;
+  }
+
+  patchAccount(account) {
+    account.pendingRounded = (new BigNumber(account.pending)).decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber();
   }
 }
