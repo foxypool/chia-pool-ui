@@ -33,7 +33,7 @@
         <app-empty-state [text]="snippetService.getSnippet('top-accounts-component.no-miners-found')" [icon]="faHdd"></app-empty-state>
       </td>
     </tr>
-  <tr *ngFor="let account of topAccounts">
+  <tr *ngFor="let account of topAccounts; trackBy: trackBy">
     <td class="ellipsis">{{account.name ? account.name : account.payoutAddress}}</td>
     <td>{{account.distributionRatio}}</td>
     <td>{{account.pendingRounded}} {{poolConfig.coin}}</td>

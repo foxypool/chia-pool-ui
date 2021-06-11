@@ -148,4 +148,8 @@ export class BlocksWonComponent implements OnInit {
 
     return 'secondary';
   }
+
+  trackBy(index, block) {
+    return block.hash;
+  }
 }

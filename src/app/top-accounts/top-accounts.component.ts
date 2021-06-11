@@ -70,4 +70,8 @@ export class TopAccountsComponent implements OnInit {
   get topAccounts() {
     return this.poolStats.topAccounts || [];
   }
+
+  trackBy(index, account) {
+    return account.poolPublicKey;
+  }
 }

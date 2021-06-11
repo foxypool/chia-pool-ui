@@ -38,7 +38,7 @@
         <app-empty-state [text]="snippetService.getSnippet('blocks-won-component.no-blocks-won-yet')" [icon]="faCubes"></app-empty-state>
       </td>
     </tr>
-  <tr *ngFor="let block of blocksWonLastDay">
+  <tr *ngFor="let block of blocksWonLastDay; trackBy: trackBy">
     <td>{{getBlockDate(block)}}</td>
     <td *ngIf="poolConfig.blockExplorerBlockUrlTemplate"><a href="{{getBlockExplorerBlockLink(block)}}" target="_blank" style="color: #b45bff">{{block.height}}</a></td>
     <td *ngIf="!poolConfig.blockExplorerBlockUrlTemplate">{{block.height}}</td>
