@@ -62,7 +62,17 @@
             <h5>{{snippetService.getSnippet('my-farmer-component.pending-balance-card.title')}}</h5>
           </div>
           <div class="card-body text-align-center">
-            <span>{{accountService.account.pendingRounded}} {{poolConfig.coin}}</span>
+            {{accountService.account.pendingRounded}} {{poolConfig.coin}}
+          </div>
+        </div>
+      </div>
+      <div class="p-1 col-md-3 col-lg-3 col-xxl-4" *ngIf="accountService.account.collateral">
+        <div class="card">
+          <div class="card-header text-align-center">
+            <h5>{{snippetService.getSnippet('my-farmer-component.collateral-balance-card.title')}}</h5>
+          </div>
+          <div class="card-body text-align-center">
+            {{accountService.account.collateralRounded}} {{poolConfig.coin}}
           </div>
         </div>
       </div>

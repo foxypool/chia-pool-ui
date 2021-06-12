@@ -11,7 +11,7 @@
       </span>
     </th>
     <th scope="col">
-      <span>
+      <span ngbTooltip="{{snippetService.getSnippet('top-accounts-component.headers.pending.tooltip')}}">
         {{snippetService.getSnippet('top-accounts-component.headers.pending')}}
       </span>
     </th>
@@ -36,7 +36,7 @@
   <tr *ngFor="let account of topAccounts; trackBy: trackBy">
     <td class="ellipsis">{{account.name ? account.name : account.payoutAddress}}</td>
     <td>{{account.distributionRatio}}</td>
-    <td>{{account.pendingRounded}} {{poolConfig.coin}}</td>
+    <td>{{account.pendingRounded}}<span *ngIf="account.pendingRounded === 0 && account.collateral"><small> +{{account.collateralRounded}}</small></span> {{poolConfig.coin}}</td>
     <td>{{getFormattedCapacity(account.ec)}} <small>({{getEcShare(account)}} %)</small></td>
   </tr>
   </tbody>
