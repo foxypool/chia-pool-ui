@@ -4,6 +4,7 @@ import de from '../snippets/de';
 import zh_CN from '../snippets/zh_CN';
 import {LocalStorageService} from './local-storage.service';
 import {BehaviorSubject} from 'rxjs';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -68,6 +69,7 @@ export class SnippetService {
   set selectedLanguage(value) {
     this._selectedLanguage = value;
     this.selectedLanguageSubject.next(value);
+    moment.locale(this._selectedLanguage);
   }
 
   get selectedLanguageSubject(): BehaviorSubject<String> {

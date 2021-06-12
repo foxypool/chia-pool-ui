@@ -53,7 +53,7 @@ export class MyFarmerComponent implements OnInit {
 
   async login() {
     if (!this.poolPublicKeyInput) {
-      this.toastService.showErrorToast('No pool public key entered!');
+      this.toastService.showErrorToast(this.snippetService.getSnippet('my-farmer-component.pool-pk-input.error.missing'));
       return;
     }
     const success: boolean = await this.accountService.login({ poolPublicKey: this.poolPublicKeyInput });

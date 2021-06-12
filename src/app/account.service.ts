@@ -5,6 +5,7 @@ import {PoolsProvider} from "./pools.provider";
 import {LocalStorageService} from './local-storage.service';
 import {ToastService} from './toast.service';
 import {BigNumber} from 'bignumber.js';
+import {SnippetService} from './snippet.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class AccountService {
     private poolsProvider: PoolsProvider,
     private localStorageService: LocalStorageService,
     private toastService: ToastService,
+    private snippetService: SnippetService,
   ) {}
 
   async login({ poolPublicKey }) {
@@ -29,12 +31,12 @@ export class AccountService {
     }
     const account = await this.getAccount({ poolPublicKey });
     if (account === null) {
-      this.toastService.showErrorToast(`Could not find farmer for pool public key "${poolPublicKey}"`);
+      this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', poolPublicKey));
       return false;
     }
     this.localStorageService.setItem(AccountService.poolPublicKeyStorageKey, poolPublicKey);
     await this.updateAccount();
-    this.toastService.showSuccessToast('Successfully logged in');
+    this.toastService.showSuccessToast(this.snippetService.getSnippet('account-service.login.success'));
 
     return true;
   }
@@ -42,7 +44,7 @@ export class AccountService {
   logout() {
     this.removePoolPublicKey();
     this.account = null;
-    this.toastService.showSuccessToast('Successfully logged out');
+    this.toastService.showSuccessToast(this.snippetService.getSnippet('account-service.logout.success'));
   }
 
   get poolPublicKey() {
