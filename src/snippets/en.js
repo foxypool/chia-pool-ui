@@ -59,6 +59,7 @@ export default {
   'info-component.pool-info.payout.minimum-info': 'Minimum amount for payouts is {1} {2}, every Sunday the minimum amount is ignored',
   'info-component.pool-info.pplns-info': 'PPLNS over the last {1} hours',
   'info-component.pool-info.title': 'Pool info',
+  'info-component.using-this-pool.step-0': '<strong>Note:</strong> Untrusted pool members have to accumulate 1.75 XCH in their collateral balance before receiving rewards by the pool to protect the pool against cheaters. When leaving the pool you can claim your collateral balance by contacting the pool operator.',
   'info-component.using-this-pool.step-1': 'Download and install the pooling enabled <a href="https://github.com/felixbrucker/chia-blockchain" target="_blank">chia-blockchain</a> software',
   'info-component.using-this-pool.step-2': 'Add the <code>pool_url</code> config option in the farmer section of your chia <code>config.yaml</code> and set it to <code>{1}</code>',
   'info-component.using-this-pool.step-3': 'Add the <code>pool_payout_address</code> config option in the farmer section of your chia <code>config.yaml</code> and set it to your desired chia payout address',

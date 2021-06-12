@@ -3,6 +3,7 @@
 </h4>
 <div>
   <ol>
+    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-0')"></li>
     <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-1')"></li>
     <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-2', poolConfig.farmingUrl)"></li>
     <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-3')"></li>

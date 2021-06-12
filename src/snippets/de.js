@@ -59,6 +59,7 @@ export default {
   'info-component.pool-info.payout.minimum-info': 'Mindestbetrag für Auszahlungen ist {1} {2}, jeden Sonntag wird der Mindestbetrag ignoriert',
   'info-component.pool-info.pplns-info': 'PPLNS über die letzten {1} Stunden',
   'info-component.pool-info.title': 'Pool Info',
+  'info-component.using-this-pool.step-0': '<strong>Hinweis:</strong> Nicht vertrauenswürdige Poolmitglieder müssen 1,75 XCH in ihrem Sicherheitssaldo ansammeln, bevor sie Belohnungen durch den Pool erhalten, um den Pool vor Betrügern zu schützen. Beim Verlassen des Pools können Sie Ihren Sicherheitssaldo einfordern, indem Sie sich an den Poolbetreiber wenden.',
   'info-component.using-this-pool.step-1': 'Laden Sie die poolingfähige <a href="https://github.com/felixbrucker/chia-blockchain" target="_blank">chia-blockchain</a> Software herunter und installieren Sie sie',
   'info-component.using-this-pool.step-2': 'Fügen Sie die Konfigurationsoption <code>pool_url</code> im Abschnitt farmer Ihrer chia <code>config.yaml</code> hinzu und setzen Sie sie auf <code>{1}</code>',
   'info-component.using-this-pool.step-3': 'Fügen Sie die Konfigurationsoption <code>pool_payout_address</code> im Abschnitt farmer Ihrer chia <code>config.yaml</code> hinzu und setzen Sie sie auf die gewünschte Chia-Auszahlungsadresse',

@@ -59,6 +59,7 @@ export default {
   'info-component.pool-info.payout.minimum-info': '赔付的最低金额是{1}。{2}，每个周日的最低金额被忽略了',
   'info-component.pool-info.pplns-info': '过去{1}小时内的PPLNS',
   'info-component.pool-info.title': '泳池信息',
+  'info-component.using-this-pool.step-0': '<strong>注意：</strong>不被信任的资金池成员在接受资金池奖励之前，必须在其抵押品余额中积累1.75 XCH，以保护资金池免受骗子的侵害。当离开资金池时，你可以通过联系资金池运营商来索取你的抵押品余额。',
   'info-component.using-this-pool.step-1': '下载并安装支持池化的<a href="https://github.com/felixbrucker/chia-blockchain" target="_blank">chia-blockchain</a>软件',
   'info-component.using-this-pool.step-2': '在你的chia <code>config.yaml</code>的farmer部分添加<code>pool_url</code>配置选项，并将其设置为<code>{1}</code>。',
   'info-component.using-this-pool.step-3': '在你的chia <code>config.yaml</code>的farmer部分添加<code>pool_payout_address</code>配置选项，并将其设置为你想要的chia支付地址。',
