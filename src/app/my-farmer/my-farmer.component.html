@@ -72,7 +72,7 @@
             <h5 ngbTooltip="{{snippetService.getSnippet('general.ec')}}">EC</h5>
           </div>
           <div class="card-body text-align-center">
-            {{getFormattedCapacity(accountService.account.ec)}}
+            {{getFormattedCapacity(accountService.account.ec)}} <small>({{ecShare}} %)</small>
           </div>
         </div>
       </div>

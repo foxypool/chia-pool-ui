@@ -71,6 +71,14 @@ export class TopAccountsComponent implements OnInit {
     return this.poolStats.topAccounts || [];
   }
 
+  getEcShare(account) {
+    if (!this.poolStats.ecSum) {
+      return 0;
+    }
+
+    return ((account.ec / this.poolStats.ecSum) * 100).toFixed(2);
+  }
+
   trackBy(index, account) {
     return account.poolPublicKey;
   }

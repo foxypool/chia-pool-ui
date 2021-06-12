@@ -23,6 +23,7 @@ export class MyFarmerComponent implements OnInit {
   public faCircleNotch = faCircleNotch;
 
   private randomBlockHeightOffset = Math.round(Math.random() * 9);
+  private poolEc = 0;
 
   constructor(
     public snippetService: SnippetService,
@@ -36,6 +37,7 @@ export class MyFarmerComponent implements OnInit {
     this.poolConfig = this.statsService.poolConfigSubject.getValue();
 
     this.statsService.poolStatsSubject.asObservable().subscribe(async poolStats => {
+      this.poolEc = poolStats.ecSum;
       if ((poolStats.height + this.randomBlockHeightOffset) % 9 !== 0) {
         return;
       }
@@ -77,5 +79,13 @@ export class MyFarmerComponent implements OnInit {
     }
 
     return moment(lastAcceptedPartialAt).fromNow();
+  }
+
+  get ecShare() {
+    if (!this.accountService.account || !this.poolEc) {
+      return 0;
+    }
+
+    return ((this.accountService.account.ec / this.poolEc) * 100).toFixed(2);
   }
 }
