@@ -18,7 +18,6 @@ import * as moment from 'moment';
 export class MyFarmerComponent implements OnInit {
   public poolConfig:any = {};
   public account = null;
-  public isLoading = false;
   public poolPublicKeyInput = null;
   public faCircleNotch = faCircleNotch;
 
