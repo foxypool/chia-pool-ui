@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { BlocksWonComponent } from './blocks-won/blocks-won.component';
 import { PayoutsComponent } from './payouts/payouts.component';
 import { TopAccountsComponent } from './top-accounts/top-accounts.component';
@@ -22,6 +22,9 @@ import {WINDOW_PROVIDERS} from "./window.provider";
 import { EmptyStateComponent } from './empty-state/empty-state.component';
 import { LoadingStateComponent } from './loading-state/loading-state.component';
 import { MyFarmerComponent } from './my-farmer/my-farmer.component';
+import { AuthenticationModalComponent } from './authentication-modal/authentication-modal.component';
+import {ClipboardModule} from 'ngx-clipboard';
+import { UpdateNameModalComponent } from './update-name-modal/update-name-modal.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +39,8 @@ import { MyFarmerComponent } from './my-farmer/my-farmer.component';
     EmptyStateComponent,
     LoadingStateComponent,
     MyFarmerComponent,
+    AuthenticationModalComponent,
+    UpdateNameModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,6 +54,8 @@ import { MyFarmerComponent } from './my-farmer/my-farmer.component';
     }),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production, registrationStrategy: 'registerImmediately' }),
     NgxScrollTopModule,
+    ReactiveFormsModule,
+    ClipboardModule,
   ],
   providers: [
     WINDOW_PROVIDERS,

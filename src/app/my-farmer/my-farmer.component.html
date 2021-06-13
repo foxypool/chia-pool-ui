@@ -16,96 +16,151 @@
   </div>
   <div class="col-12" *ngIf="accountService.havePoolPublicKey && accountService.haveAccount">
     <div class="row">
-      <div class="p-1 col-md-12 col-lg-5 col-xxl-8">
-        <div class="card">
-          <div class="card-header text-align-center">
-            <h5>{{snippetService.getSnippet('my-farmer-component.payout-address-card.title')}}</h5>
+      <div class="p-1 col-md-12 col-lg-9 col-xxl-20">
+        <div class="row row-without-margin">
+          <div class="p-1 col-md-6 col-lg-6 col-xxl-6">
+            <div class="card">
+              <div class="card-header text-align-center">
+                <h5>{{snippetService.getSnippet('my-farmer-component.pending-balance-card.title')}}</h5>
+              </div>
+              <div class="card-body text-align-center card-font-size">
+                <span placement="bottom" ngbTooltip="{{getCoinValueAsFiat(accountService.account.pendingRounded).toFixed(2)}} USD">{{accountService.account.pendingRounded}} {{poolConfig.coin}}</span>
+              </div>
+            </div>
           </div>
-          <div class="card-body text-align-center">
-            {{accountService.account.payoutAddress}}
+          <div class="p-1 col-md-6 col-lg-6 col-xxl-6">
+            <div class="card">
+              <div class="card-header text-align-center">
+                <h5>{{snippetService.getSnippet('my-farmer-component.estimated-daily-reward-card.title')}}</h5>
+              </div>
+              <div class="card-body text-align-center card-font-size">
+                <span placement="bottom" ngbTooltip="{{getCoinValueAsFiat(estimatedDailyReward).toFixed(2)}} USD">{{estimatedDailyReward}} {{poolConfig.coin}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="p-1 col-md-6 col-lg-6 col-xxl-6">
+            <div class="card">
+              <div class="card-header text-align-center">
+                <h5 ngbTooltip="{{snippetService.getSnippet('general.ec')}}">EC</h5>
+              </div>
+              <div class="card-body text-align-center card-font-size">
+                {{getFormattedCapacity(accountService.account.ec)}} <small>({{ecShare}} %)</small>
+              </div>
+            </div>
+          </div>
+          <div class="p-1 col-md-6 col-lg-6 col-xxl-6">
+            <div class="card">
+              <div class="card-header text-align-center">
+                <h5>{{snippetService.getSnippet('my-farmer-component.last-partial-accepted-card.title')}}</h5>
+              </div>
+              <div class="card-body text-align-center card-font-size">
+                {{getLastAcceptedPartialAtDuration(accountService.account.lastAcceptedPartialAt)}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row row-without-margin">
+          <div class="p-1 col-12">
+            <div class="card">
+              <div class="card-header text-align-center">
+                <h5>{{snippetService.getSnippet('my-farmer-component.payout-address-card.title')}}</h5>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-2 card-font-size">
+                    {{snippetService.getSnippet('my-farmer-component.payout-address-card.payout-address')}}
+                  </div>
+                  <div class="col-10 card-font-size" style="text-align: end">
+                    {{accountService.account.payoutAddress}}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-2 card-font-size">
+                    {{snippetService.getSnippet('my-farmer-component.payout-address-card.pool-public-key')}}
+                  </div>
+                  <div class="col-10 card-font-size" style="text-align: end">
+                    {{accountService.account.poolPublicKey}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row row-without-margin">
+          <div class="p-1 col-md-3 col-lg-3 col-xxl-6" *ngIf="accountService.account.collateral">
+            <div class="card">
+              <div class="card-header text-align-center">
+                <h5>{{snippetService.getSnippet('my-farmer-component.collateral-balance-card.title')}}</h5>
+              </div>
+              <div class="card-body text-align-center card-font-size">
+                <span placement="bottom" ngbTooltip="{{getCoinValueAsFiat(accountService.account.collateralRounded).toFixed(2)}} USD">{{accountService.account.collateralRounded}} {{poolConfig.coin}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="p-1 col-md-3 col-lg-3 col-xxl-6">
+            <div class="card">
+              <div class="card-header text-align-center">
+                <h5>{{snippetService.getSnippet('my-farmer-component.difficulty-card.title')}}</h5>
+              </div>
+              <div class="card-body text-align-center card-font-size">
+                {{accountService.account.difficulty}}
+              </div>
+            </div>
+          </div>
+          <div class="p-1 col-md-3 col-lg-3 col-xxl-6">
+            <div class="card">
+              <div class="card-header text-align-center">
+                <h5 ngbTooltip="{{snippetService.getSnippet('general.distribution-ratio')}}">DR</h5>
+              </div>
+              <div class="card-body text-align-center card-font-size">
+                {{accountService.account.distributionRatio}}
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="p-1 col-md-12 col-lg-7 col-xxl-16">
-        <div class="card">
-          <div class="card-header text-align-center">
-            <h5>{{snippetService.getSnippet('my-farmer-component.pool-public-key-card.title')}}</h5>
-          </div>
-          <div class="card-body text-align-center">
-            {{accountService.account.poolPublicKey}}
-          </div>
-        </div>
-      </div>
-      <div class="p-1 col-md-6 col-lg-3 col-xxl-5">
-        <div class="card">
-          <div class="card-header text-align-center">
-            <h5>{{snippetService.getSnippet('my-farmer-component.name-card.title')}}</h5>
-          </div>
-          <div class="card-body text-align-center">
-            {{accountService.account.name || 'N/A'}}
+      <div class="p-1 col-md-12 col-lg-3 col-xxl-4">
+        <div class="row row-without-margin">
+          <div class="p-1 col-12">
+            <div class="card">
+              <div class="card-header text-align-center">
+                <h5>{{snippetService.getSnippet('my-farmer-component.name-card.title')}}</h5>
+              </div>
+              <div class="card-body text-align-center card-font-size">
+                {{accountService.account.name || 'N/A'}}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="p-1 col-md-3 col-lg-2 col-xxl-3">
-        <div class="card">
-          <div class="card-header text-align-center">
-            <h5>{{snippetService.getSnippet('my-farmer-component.difficulty-card.title')}}</h5>
-          </div>
-          <div class="card-body text-align-center">
-            {{accountService.account.difficulty}}
-          </div>
-        </div>
-      </div>
-      <div class="p-1 col-md-3 col-lg-3 col-xxl-4">
-        <div class="card">
-          <div class="card-header text-align-center">
-            <h5>{{snippetService.getSnippet('my-farmer-component.pending-balance-card.title')}}</h5>
-          </div>
-          <div class="card-body text-align-center">
-            {{accountService.account.pendingRounded}} {{poolConfig.coin}}
-          </div>
-        </div>
-      </div>
-      <div class="p-1 col-md-3 col-lg-3 col-xxl-4" *ngIf="accountService.account.collateral">
-        <div class="card">
-          <div class="card-header text-align-center">
-            <h5>{{snippetService.getSnippet('my-farmer-component.collateral-balance-card.title')}}</h5>
-          </div>
-          <div class="card-body text-align-center">
-            {{accountService.account.collateralRounded}} {{poolConfig.coin}}
-          </div>
-        </div>
-      </div>
-      <div class="p-1 col-md-3 col-lg-2 col-xxl-3">
-        <div class="card">
-          <div class="card-header text-align-center">
-            <h5 ngbTooltip="{{snippetService.getSnippet('general.ec')}}">EC</h5>
-          </div>
-          <div class="card-body text-align-center">
-            {{getFormattedCapacity(accountService.account.ec)}} <small>({{ecShare}} %)</small>
-          </div>
-        </div>
-      </div>
-      <div class="p-1 col-md-3 col-lg-2 col-xxl-3">
-        <div class="card">
-          <div class="card-header text-align-center">
-            <h5 ngbTooltip="{{snippetService.getSnippet('general.distribution-ratio')}}">DR</h5>
-          </div>
-          <div class="card-body text-align-center">
-            {{accountService.account.distributionRatio}}
-          </div>
-        </div>
-      </div>
-      <div class="p-1 col-md-6 col-lg-3 col-xxl-4">
-        <div class="card">
-          <div class="card-header text-align-center">
-            <h5>{{snippetService.getSnippet('my-farmer-component.last-partial-accepted-card.title')}}</h5>
-          </div>
-          <div class="card-body text-align-center">
-            {{getLastAcceptedPartialAtDuration(accountService.account.lastAcceptedPartialAt)}}
+        <div class="row row-without-margin">
+          <div class="p-1 col-12">
+            <div class="card">
+              <div class="card-header text-align-center">
+                <h5>{{snippetService.getSnippet('my-farmer-component.manage-account-card.title')}}</h5>
+              </div>
+              <div class="card-body">
+                <div class="row justify-content-center">
+                  <button *ngIf="!accountService.haveAuthToken" class="btn btn-success" (click)="authenticate()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.authenticate')}}</button>
+                </div>
+                <div class="text-align-center" *ngIf="accountService.haveAuthToken">
+                  <div class="p-1 row">
+                    <div class="col-12 card-font-size">
+                      <fa-icon [icon]="faUserCheck"></fa-icon>&nbsp;{{snippetService.getSnippet('my-farmer-component.manage-account-card.authenticated')}}
+                    </div>
+                  </div>
+                  <div class="p-1 row">
+                    <div class="col-12">
+                      <button class="btn btn-outline-light" (click)="updateName()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.action.update-name')}}</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<app-authentication-modal></app-authentication-modal>
+<app-update-name-modal></app-update-name-modal>

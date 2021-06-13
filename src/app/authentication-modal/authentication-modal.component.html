@@ -1,0 +1,47 @@
+<ng-template #authenticationModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" style="color: #474747">{{snippetService.getSnippet('authentication-modal.title')}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-12">
+        <label for="messageToSign" style="color: #474747">{{snippetService.getSnippet('authentication-modal.message-to-sign')}}:</label>
+        <div id="messageToSign" class="input-group">
+          <input type="text" class="form-control" [value]="message" readonly>
+          <div class="input-group-append">
+            <div class="input-group-text"
+                 ngbTooltip="{{snippetService.getSnippet('general.copy')}}"
+                 ngxClipboard
+                 [cbContent]="message"
+                 style="cursor: pointer">
+              <fa-icon [icon]="faCopy"></fa-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="padding-top: 1rem">
+      <div class="col-12">
+        <input type="text" class="form-control" placeholder="{{snippetService.getSnippet('authentication-modal.signature-placeholder')}}" [(ngModel)]="signature">
+      </div>
+    </div>
+    <div class="row" style="padding-top: 1rem">
+      <div class="col-12">
+        <div class="alert alert-info" role="alert">
+          <div [innerHTML]="snippetService.getSnippet('authentication-modal.authentication-info', message)"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel')">{{snippetService.getSnippet('general.cancel')}}</button>
+    <button type="button" class="btn btn-success" (click)="authenticate()" [disabled]="accountService.isAuthenticating || !signature">
+      <span *ngIf="accountService.isAuthenticating">{{snippetService.getSnippet('authentication-modal.authenticating')}}</span>
+      <span *ngIf="!accountService.isAuthenticating">{{snippetService.getSnippet('authentication-modal.authenticate')}}</span>
+      <fa-icon [icon]="faCircleNotch" [spin]="true" *ngIf="accountService.isAuthenticating" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
+    </button>
+  </div>
+</ng-template>

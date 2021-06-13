@@ -12,9 +12,12 @@ import {SnippetService} from './snippet.service';
 })
 export class AccountService {
   public static poolPublicKeyStorageKey = 'poolPublicKey';
+  public static authTokenStorageKey = 'authToken';
 
   public account = null;
   public isLoading = false;
+  public isAuthenticating = false;
+  public isUpdatingAccount = false;
 
   constructor(
     private statsService: StatsService,
@@ -43,6 +46,7 @@ export class AccountService {
 
   logout() {
     this.removePoolPublicKey();
+    this.removeAuthToken();
     this.account = null;
     this.toastService.showSuccessToast(this.snippetService.getSnippet('account-service.logout.success'));
   }
@@ -56,7 +60,7 @@ export class AccountService {
   }
 
   get havePoolPublicKey() {
-    return !! this.poolPublicKey;
+    return !!this.poolPublicKey;
   }
 
   get haveAccount() {
@@ -67,6 +71,7 @@ export class AccountService {
     this.account = await this.getAccount({ poolPublicKey: this.poolPublicKey });
     if (!this.haveAccount) {
       this.removePoolPublicKey();
+      this.removeAuthToken();
     }
   }
 
@@ -74,7 +79,7 @@ export class AccountService {
     this.isLoading = true;
     let account = null;
     try {
-      account = await this.statsService.request({ event: 'get-account', data: { poolPublicKey } });
+      account = await this.statsService.request({ event: 'account:fetch', data: { poolPublicKey } });
       this.patchAccount(account);
     } finally {
       this.isLoading = false;
@@ -87,6 +92,59 @@ export class AccountService {
     account.pendingRounded = (new BigNumber(account.pending)).decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber();
     if (account.collateral) {
       account.collateralRounded = (new BigNumber(account.collateral)).decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber();
+    }
+  }
+
+  get authToken() {
+    return this.localStorageService.getItem(AccountService.authTokenStorageKey);
+  }
+
+  get haveAuthToken() {
+    return !!this.authToken;
+  }
+
+  removeAuthToken() {
+    this.localStorageService.removeItem(AccountService.authTokenStorageKey);
+  }
+
+  async authenticate({ signature, message }) {
+    if (!this.havePoolPublicKey) {
+      return;
+    }
+    this.isAuthenticating = true;
+    try {
+      const { accessToken } = await this.statsService.requestWithError({
+        event: 'authenticate',
+        data: {
+          poolPublicKey: this.poolPublicKey,
+          signature,
+          message,
+        },
+      });
+      this.localStorageService.setItem(AccountService.authTokenStorageKey, accessToken);
+    } finally {
+      this.isAuthenticating = false;
+    }
+  }
+
+  async updateName({ newName }) {
+    if (!this.haveAuthToken) {
+      return;
+    }
+    this.isUpdatingAccount = true;
+    try {
+      await this.statsService.requestWithError({
+        event: 'account:update:name',
+        data: {
+          authToken: this.authToken,
+          newName,
+        },
+      });
+      await this.updateAccount();
+    } catch (err) {
+      this.toastService.showErrorToast(err.message);
+    } finally {
+      this.isUpdatingAccount = false;
     }
   }
 }

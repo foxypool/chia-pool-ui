@@ -3,6 +3,7 @@ import {WebsocketService} from './websocket.service';
 import {BehaviorSubject} from 'rxjs';
 import {PoolsProvider} from "./pools.provider";
 import {BigNumber} from "bignumber.js";
+import {SnippetService} from './snippet.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class StatsService {
 
   constructor(
     private poolsProvider: PoolsProvider,
+    private snippetService: SnippetService,
   ) {
     this.connect();
   }
@@ -87,5 +89,14 @@ export class StatsService {
 
   async request({ event, data }) {
     return new Promise(resolve => this.websocketService.publish(event, this.poolIdentifier, data, resolve));
+  }
+
+  async requestWithError({ event, data }) {
+    const result:any = await this.request({ event, data });
+    if (result && result.error) {
+      throw new Error(this.snippetService.getSnippet(`api.error.${result.error}`));
+    }
+
+    return result;
   }
 }

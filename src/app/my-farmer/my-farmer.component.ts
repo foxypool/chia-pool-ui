@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import {SettingsService} from '../settings.service';
-import {LocalStorageService} from '../local-storage.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {StatsService} from '../stats.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ToastService} from '../toast.service';
 import {SnippetService} from '../snippet.service';
 import Capacity from '../capacity';
-import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
+import {faCircleNotch, faUserCheck} from '@fortawesome/free-solid-svg-icons';
 import {AccountService} from '../account.service';
 import * as moment from 'moment';
+import {AuthenticationModalComponent} from '../authentication-modal/authentication-modal.component';
+import {UpdateNameModalComponent} from '../update-name-modal/update-name-modal.component';
+import BigNumber from 'bignumber.js';
 
 @Component({
   selector: 'app-my-farmer',
@@ -16,13 +16,19 @@ import * as moment from 'moment';
   styleUrls: ['./my-farmer.component.scss']
 })
 export class MyFarmerComponent implements OnInit {
+  @ViewChild(AuthenticationModalComponent) authenticationModal;
+  @ViewChild(UpdateNameModalComponent) updateNameModal;
+
   public poolConfig:any = {};
+  public exchangeStats:any = {};
   public account = null;
   public poolPublicKeyInput = null;
   public faCircleNotch = faCircleNotch;
+  public faUserCheck = faUserCheck;
 
   private randomBlockHeightOffset = Math.round(Math.random() * 9);
   private poolEc = 0;
+  private dailyRewardPerPib = 0;
 
   constructor(
     public snippetService: SnippetService,
@@ -33,10 +39,13 @@ export class MyFarmerComponent implements OnInit {
 
   async ngOnInit() {
     this.statsService.poolConfigSubject.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
+    this.statsService.exchangeStatsSubject.asObservable().subscribe((exchangeStats => this.exchangeStats = exchangeStats));
     this.poolConfig = this.statsService.poolConfigSubject.getValue();
+    this.exchangeStats = this.statsService.exchangeStatsSubject.getValue();
 
     this.statsService.poolStatsSubject.asObservable().subscribe(async poolStats => {
       this.poolEc = poolStats.ecSum;
+      this.dailyRewardPerPib = poolStats.dailyRewardPerPiB;
       if ((poolStats.height + this.randomBlockHeightOffset) % 9 !== 0) {
         return;
       }
@@ -86,5 +95,39 @@ export class MyFarmerComponent implements OnInit {
     }
 
     return ((this.accountService.account.ec / this.poolEc) * 100).toFixed(2);
+  }
+
+  get estimatedDailyReward() {
+    if (!this.accountService.account || !this.dailyRewardPerPib) {
+      return 0;
+    }
+    const ecInPib = (new BigNumber(this.accountService.account.ec)).dividedBy((new BigNumber(1024).exponentiatedBy(2)));
+
+    return ecInPib.multipliedBy(this.dailyRewardPerPib).toFixed(4);
+  }
+
+  async authenticate() {
+    this.authenticationModal.openModal();
+  }
+
+  async updateName() {
+    this.updateNameModal.openModal();
+  }
+
+  getCoinValueAsFiat(value) {
+    if (!this.exchangeStats || !this.exchangeStats.rates) {
+      return 0;
+    }
+    if (!value) {
+      return 0;
+    }
+    if (this.poolConfig.isTestnet) {
+      return 0;
+    }
+    if (!this.exchangeStats.rates.usd) { // TODO: user configurable
+      return 0;
+    }
+
+    return value * this.exchangeStats.rates.usd;
   }
 }
