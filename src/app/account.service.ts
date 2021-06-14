@@ -80,7 +80,9 @@ export class AccountService {
     let account = null;
     try {
       account = await this.statsService.request({ event: 'account:fetch', data: { poolPublicKey } });
-      this.patchAccount(account);
+      if (account) {
+        this.patchAccount(account);
+      }
     } finally {
       this.isLoading = false;
     }
