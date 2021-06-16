@@ -39,7 +39,7 @@ export class PoolsProvider {
       url: 'https://chia-og.foxypool.io',
       poolIdentifier: 'chia-og',
       hostnames: ['chia-og.foxypool.io', 'localhost'],
-      apiUrl: 'http://127.0.0.1:5001',
+      apiUrl: 'https://api.chia-og.foxypool.io',
     },{
       group: 'BURST',
       name: 'Foxy-Pool BURST',
