@@ -16,6 +16,7 @@ export class PayoutsComponent implements OnInit {
   @Input() limit: number|null = null;
   private _poolConfig:any = {};
   private _poolStats:any = {};
+  public lastPayouts:any = null;
   private showPayouts: any = {};
   private addressAmountPairs: any = {};
 
@@ -32,10 +33,12 @@ export class PayoutsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.statsService.poolConfigSubject.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
-    this.statsService.poolStatsSubject.asObservable().subscribe((poolStats => this.poolStats = poolStats));
-    this.poolConfig = this.statsService.poolConfigSubject.getValue();
-    this.poolStats = this.statsService.poolStatsSubject.getValue();
+    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
+    this.statsService.poolStats.asObservable().subscribe((poolStats => this.poolStats = poolStats));
+    this.statsService.lastPayouts.asObservable().subscribe((lastPayouts => this.lastPayouts = lastPayouts));
+    this.poolConfig = this.statsService.poolConfig.getValue();
+    this.poolStats = this.statsService.poolStats.getValue();
+    this.lastPayouts = this.statsService.lastPayouts.getValue();
   }
 
   set poolConfig(poolConfig) {
@@ -54,15 +57,15 @@ export class PayoutsComponent implements OnInit {
     return this._poolStats;
   }
 
-  get lastPayouts() {
-    if (!this._poolStats.lastPayouts) {
+  get lastPayoutsArray() {
+    if (!this.lastPayouts) {
       return [];
     }
     if (!this.limit) {
-      return this._poolStats.lastPayouts;
+      return this.lastPayouts;
     }
 
-    return this._poolStats.lastPayouts.slice(0, this.limit);
+    return this.lastPayouts.slice(0, this.limit);
   }
 
   getPayoutDate(payout) {

@@ -49,7 +49,7 @@ export class AppComponent implements OnInit {
         this.seoService.updateMeta({ name: 'description', content: event.description });
       }
     });
-    this.statsService.poolConfigSubject.asObservable().subscribe((poolConfig => {
+    this.statsService.poolConfig.asObservable().subscribe((poolConfig => {
       if (!poolConfig.coin) {
         return;
       }

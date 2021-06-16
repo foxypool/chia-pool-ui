@@ -32,10 +32,10 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.statsService.poolConfigSubject.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
-    this.statsService.poolStatsSubject.asObservable().subscribe((poolStats => this.poolStats = poolStats));
-    this.poolConfig = this.statsService.poolConfigSubject.getValue();
-    this.poolStats = this.statsService.poolStatsSubject.getValue();
+    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
+    this.statsService.poolStats.asObservable().subscribe((poolStats => this.poolStats = poolStats));
+    this.poolConfig = this.statsService.poolConfig.getValue();
+    this.poolStats = this.statsService.poolStats.getValue();
   }
 
   onTabButtonClick() {

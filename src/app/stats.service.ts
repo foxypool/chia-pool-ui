@@ -10,9 +10,12 @@ import {SnippetService} from './snippet.service';
 })
 export class StatsService {
 
-  private poolConfig = new BehaviorSubject<any>({});
-  private poolStats = new BehaviorSubject<any>({});
-  private exchangeStats = new BehaviorSubject<any>({});
+  public poolConfig = new BehaviorSubject<any>({});
+  public poolStats = new BehaviorSubject<any>({});
+  public accountStats = new BehaviorSubject<any>({});
+  public rewardStats = new BehaviorSubject<any>({});
+  public lastPayouts = new BehaviorSubject<any>(null);
+  public exchangeStats = new BehaviorSubject<any>({});
 
   private websocketService: WebsocketService;
 
@@ -28,6 +31,9 @@ export class StatsService {
     this.websocketService.subscribe('connect', this.onConnected.bind(this));
     this.websocketService.subscribe('pool-stats-updated', (_, poolStats) => this.onNewPoolStats(poolStats));
     this.websocketService.subscribe('exchange-stats-updated', (_, exchangeStats) => this.onNewExchangeStats(exchangeStats));
+    this.websocketService.subscribe('account-stats-updated', (_, accountStats) => this.onNewAccountsStats(accountStats));
+    this.websocketService.subscribe('reward-stats-updated', (_, rewardStats) => this.onNewRewardStats(rewardStats));
+    this.websocketService.subscribe('last-payouts-updated', (_, lastPayouts) => this.onNewLastPayouts(lastPayouts));
   }
 
   async onConnected() {
@@ -40,9 +46,19 @@ export class StatsService {
 
   async initStats() {
     await this.subscribeToPools();
-    this.websocketService.publish('init', this.poolIdentifier, ({ poolConfig, poolStats, exchangeStats }) => {
+    this.websocketService.publish('init', this.poolIdentifier, ({
+      poolConfig,
+      poolStats,
+      exchangeStats,
+      accountStats,
+      rewardStats,
+      lastPayouts,
+    }) => {
       this.onNewPoolConfig(poolConfig);
       this.onNewPoolStats(poolStats);
+      this.onNewAccountsStats(accountStats);
+      this.onNewRewardStats(rewardStats);
+      this.onNewLastPayouts(lastPayouts);
       this.onNewExchangeStats(exchangeStats);
     });
   }
@@ -51,32 +67,32 @@ export class StatsService {
     return new Promise(resolve => this.websocketService.publish('subscribe', [this.poolIdentifier], resolve));
   }
 
-  get poolConfigSubject() {
-    return this.poolConfig;
-  }
-
-  get poolStatsSubject() {
-    return this.poolStats;
-  }
-
-  get exchangeStatsSubject() {
-    return this.exchangeStats;
-  }
-
   onNewPoolConfig(poolConfig) {
     this.poolConfig.next(poolConfig);
   }
 
   onNewPoolStats(poolStats) {
-    if (poolStats.topAccounts) {
-      poolStats.topAccounts.forEach(account => {
+    this.poolStats.next(poolStats);
+  }
+
+  onNewAccountsStats(accountStats) {
+    if (accountStats.topAccounts) {
+      accountStats.topAccounts.forEach(account => {
         account.pendingRounded = (new BigNumber(account.pending)).decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber();
         if (account.collateral) {
           account.collateralRounded = (new BigNumber(account.collateral)).decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber();
         }
       });
     }
-    this.poolStats.next(poolStats);
+    this.accountStats.next(accountStats);
+  }
+
+  onNewRewardStats(rewardStats) {
+    this.rewardStats.next(rewardStats);
+  }
+
+  onNewLastPayouts(lastPayouts) {
+    this.lastPayouts.next(lastPayouts);
   }
 
   onNewExchangeStats(exchangeStats) {

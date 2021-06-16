@@ -13,7 +13,7 @@ export class TopAccountsComponent implements OnInit {
 
   private _poolConfig:any = {};
   private _poolStats:any = {};
-  private _exchangeStats:any = {};
+  public accountStats:any = {};
 
   public faHdd = faHdd;
 
@@ -27,12 +27,12 @@ export class TopAccountsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.statsService.poolConfigSubject.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
-    this.statsService.poolStatsSubject.asObservable().subscribe((poolStats => this.poolStats = poolStats));
-    this.statsService.exchangeStatsSubject.asObservable().subscribe((exchangeStats => this.exchangeStats = exchangeStats));
-    this.poolConfig = this.statsService.poolConfigSubject.getValue();
-    this.poolStats = this.statsService.poolStatsSubject.getValue();
-    this.exchangeStats = this.statsService.exchangeStatsSubject.getValue();
+    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
+    this.statsService.poolStats.asObservable().subscribe((poolStats => this.poolStats = poolStats));
+    this.statsService.accountStats.asObservable().subscribe((accountStats => this.accountStats = accountStats));
+    this.poolConfig = this.statsService.poolConfig.getValue();
+    this.poolStats = this.statsService.poolStats.getValue();
+    this.accountStats = this.statsService.accountStats.getValue();
   }
 
   set poolConfig(poolConfig) {
@@ -51,14 +51,6 @@ export class TopAccountsComponent implements OnInit {
     return this._poolStats;
   }
 
-  set exchangeStats(roundStats) {
-    this._exchangeStats = roundStats;
-  }
-
-  get exchangeStats() {
-    return this._exchangeStats;
-  }
-
   getFormattedCapacity(capacityInGiB) {
     if (capacityInGiB === 0) {
       return this.snippetService.getSnippet('general.not-available.short');
@@ -68,15 +60,15 @@ export class TopAccountsComponent implements OnInit {
   }
 
   get topAccounts() {
-    return this.poolStats.topAccounts || [];
+    return this.accountStats.topAccounts || [];
   }
 
   getEcShare(account) {
-    if (!this.poolStats.ecSum) {
+    if (!this.accountStats.ecSum) {
       return 0;
     }
 
-    return ((account.ec / this.poolStats.ecSum) * 100).toFixed(2);
+    return ((account.ec / this.accountStats.ecSum) * 100).toFixed(2);
   }
 
   trackBy(index, account) {

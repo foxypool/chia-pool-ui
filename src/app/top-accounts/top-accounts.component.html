@@ -23,12 +23,12 @@
   </tr>
   </thead>
   <tbody>
-    <tr *ngIf="!poolStats.topAccounts">
+    <tr *ngIf="!accountStats.topAccounts">
       <td colspan="4" style="text-align: center">
         <app-loading-state></app-loading-state>
       </td>
     </tr>
-    <tr *ngIf="poolStats.topAccounts && topAccounts.length === 0">
+    <tr *ngIf="accountStats.topAccounts && topAccounts.length === 0">
       <td colspan="4" style="text-align: center; padding-top: 1rem">
         <app-empty-state [text]="snippetService.getSnippet('top-accounts-component.no-miners-found')" [icon]="faHdd"></app-empty-state>
       </td>

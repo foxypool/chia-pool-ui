@@ -23,7 +23,7 @@ export class NoticesComponent implements OnInit {
   }
 
   get notices() {
-    const poolConfig = this.statsService.poolConfigSubject.getValue();
+    const poolConfig = this.statsService.poolConfig.getValue();
     if (!poolConfig || !poolConfig.notices) {
       return [];
     }

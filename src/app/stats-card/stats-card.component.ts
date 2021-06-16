@@ -20,8 +20,8 @@ export class StatsCardComponent implements OnInit {
   private _remainingSeconds = 0;
   private counter: Observable<any>;
   private subscription: Subscription;
-  private _chartOptions: any;
-  private _chartUpdateOptions: any;
+  public accountStats:any = {};
+  public rewardStats:any = {};
 
   constructor(
     private statsService: StatsService,
@@ -33,12 +33,16 @@ export class StatsCardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.statsService.poolConfigSubject.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
-    this.statsService.poolStatsSubject.asObservable().subscribe((poolStats => this.poolStats = poolStats));
-    this.statsService.exchangeStatsSubject.asObservable().subscribe((exchangeStats => this.exchangeStats = exchangeStats));
-    this.poolConfig = this.statsService.poolConfigSubject.getValue();
-    this.poolStats = this.statsService.poolStatsSubject.getValue();
-    this.exchangeStats = this.statsService.exchangeStatsSubject.getValue();
+    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
+    this.statsService.poolStats.asObservable().subscribe((poolStats => this.poolStats = poolStats));
+    this.statsService.exchangeStats.asObservable().subscribe((exchangeStats => this.exchangeStats = exchangeStats));
+    this.statsService.accountStats.asObservable().subscribe((accountStats => this.accountStats = accountStats));
+    this.statsService.rewardStats.asObservable().subscribe((rewardStats => this.rewardStats = rewardStats));
+    this.poolConfig = this.statsService.poolConfig.getValue();
+    this.poolStats = this.statsService.poolStats.getValue();
+    this.rewardStats = this.statsService.rewardStats.getValue();
+    this.exchangeStats = this.statsService.exchangeStats.getValue();
+    this.accountStats = this.statsService.accountStats.getValue();
     this.counter = interval(1000);
     this.subscription = this.counter.subscribe(() => {
       this.updateElapsed();
@@ -112,18 +116,18 @@ export class StatsCardComponent implements OnInit {
   }
 
   get dailyRewardPerPiB() {
-    if (!this.poolStats || !this.poolStats.dailyRewardPerPiB) {
+    if (!this.rewardStats || !this.rewardStats.dailyRewardPerPiB) {
       return 0;
     }
 
-    return (this.poolStats.dailyRewardPerPiB || 0).toFixed(2);
+    return (this.rewardStats.dailyRewardPerPiB || 0).toFixed(2);
   }
 
   get dailyRewardPerPiBFiat() {
     if (!this.exchangeStats || !this.exchangeStats.rates) {
       return 0;
     }
-    if (!this.poolStats.dailyRewardPerPiB) {
+    if (!this.rewardStats.dailyRewardPerPiB) {
       return 0;
     }
     if (this.poolConfig.isTestnet) {
@@ -133,7 +137,7 @@ export class StatsCardComponent implements OnInit {
       return 0;
     }
 
-    return this.poolStats.dailyRewardPerPiB * this.exchangeStats.rates.usd;
+    return this.rewardStats.dailyRewardPerPiB * this.exchangeStats.rates.usd;
   }
 
   get poolBalance() {

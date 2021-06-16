@@ -27,7 +27,7 @@ export class EventsComponent implements OnInit {
   }
 
   get events() {
-    const poolStats = this.statsService.poolStatsSubject.getValue();
+    const poolStats = this.statsService.poolStats.getValue();
     if (!poolStats || !poolStats.events) {
       return [];
     }
@@ -36,7 +36,7 @@ export class EventsComponent implements OnInit {
   }
 
   get coin() {
-    const poolConfig = this.statsService.poolConfigSubject.getValue();
+    const poolConfig = this.statsService.poolConfig.getValue();
     if (!poolConfig || !poolConfig.coin) {
       return '';
     }

@@ -28,8 +28,8 @@ export class FaucetComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.statsService.poolConfigSubject.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
-    this.poolConfig = this.statsService.poolConfigSubject.getValue();
+    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
+    this.poolConfig = this.statsService.poolConfig.getValue();
   }
 
   get faucetInput() {

@@ -28,12 +28,12 @@
   </tr>
   </thead>
   <tbody>
-    <tr *ngIf="!poolStats.blocksWonLastDay">
+    <tr *ngIf="!rewardStats.blocksWonLastDay">
       <td colspan="7" style="text-align: center">
         <app-loading-state></app-loading-state>
       </td>
     </tr>
-    <tr *ngIf="poolStats.blocksWonLastDay && blocksWonLastDay.length === 0">
+    <tr *ngIf="rewardStats.blocksWonLastDay && blocksWonLastDay.length === 0">
       <td colspan="7" style="text-align: center; padding-top: 1rem">
         <app-empty-state [text]="snippetService.getSnippet('blocks-won-component.no-blocks-won-yet')" [icon]="faCubes"></app-empty-state>
       </td>

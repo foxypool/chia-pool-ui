@@ -8,17 +8,17 @@
   </tr>
   </thead>
   <tbody>
-    <tr *ngIf="!poolStats.lastPayouts">
+    <tr *ngIf="!lastPayouts">
       <td colspan="3" style="text-align: center">
         <app-loading-state></app-loading-state>
       </td>
     </tr>
-    <tr *ngIf="poolStats.lastPayouts && lastPayouts.length === 0">
+    <tr *ngIf="lastPayouts && lastPayouts.length === 0">
       <td colspan="3" style="text-align: center; padding-top: 1rem">
         <app-empty-state [text]="snippetService.getSnippet('payouts-component.no-payouts-sent-yet')" [icon]="faMoneyCheck"></app-empty-state>
       </td>
     </tr>
-  <tr *ngFor="let payout of lastPayouts; trackBy: trackPayoutBy">
+  <tr *ngFor="let payout of lastPayoutsArray; trackBy: trackPayoutBy">
     <td>{{getPayoutDate(payout)}}</td>
     <td>
       <span *ngFor="let coinId of getCoinIdsForPayout(payout); let lastCoinId = last">

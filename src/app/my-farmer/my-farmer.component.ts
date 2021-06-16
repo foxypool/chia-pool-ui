@@ -21,6 +21,7 @@ export class MyFarmerComponent implements OnInit {
 
   public poolConfig:any = {};
   public exchangeStats:any = {};
+  public accountStats:any = {};
   public account = null;
   public poolPublicKeyInput = null;
   public faCircleNotch = faCircleNotch;
@@ -38,14 +39,18 @@ export class MyFarmerComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.statsService.poolConfigSubject.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
-    this.statsService.exchangeStatsSubject.asObservable().subscribe((exchangeStats => this.exchangeStats = exchangeStats));
-    this.poolConfig = this.statsService.poolConfigSubject.getValue();
-    this.exchangeStats = this.statsService.exchangeStatsSubject.getValue();
+    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
+    this.statsService.exchangeStats.asObservable().subscribe((exchangeStats => this.exchangeStats = exchangeStats));
+    this.poolConfig = this.statsService.poolConfig.getValue();
+    this.exchangeStats = this.statsService.exchangeStats.getValue();
 
-    this.statsService.poolStatsSubject.asObservable().subscribe(async poolStats => {
-      this.poolEc = poolStats.ecSum;
-      this.dailyRewardPerPib = poolStats.dailyRewardPerPiB;
+    this.statsService.accountStats.asObservable().subscribe(async accountStats => {
+      this.poolEc = accountStats.ecSum;
+    });
+    this.statsService.rewardStats.asObservable().subscribe(async rewardStats => {
+      this.dailyRewardPerPib = rewardStats.dailyRewardPerPiB;
+    });
+    this.statsService.poolStats.asObservable().subscribe(async poolStats => {
       if ((poolStats.height + this.randomBlockHeightOffset) % 9 !== 0) {
         return;
       }
