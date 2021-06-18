@@ -31,7 +31,7 @@ export default {
   'events-component.ended-at': '结束于',
   'events-component.extra-reward': '额外奖励',
   'events-component.filled': '填充',
-  'events-component.miner-extra-reward.title': '矿工额外奖励',
+  'events-component.extra-block-reward.title': '额外的区块奖励',
   'events-component.started-at': '开始于',
   'events-component.state': '国家',
   'events-component.states.active': '活跃',

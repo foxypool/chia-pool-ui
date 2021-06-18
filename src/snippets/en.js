@@ -31,7 +31,7 @@ export default {
   'events-component.ended-at': 'Ended at',
   'events-component.extra-reward': 'Extra reward',
   'events-component.filled': 'Filled',
-  'events-component.miner-extra-reward.title': 'Farmer extra rewards',
+  'events-component.extra-block-reward.title': 'Extra block rewards',
   'events-component.started-at': 'Started at',
   'events-component.state': 'State',
   'events-component.states.active': 'Active',

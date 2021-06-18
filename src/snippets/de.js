@@ -31,7 +31,7 @@ export default {
   'events-component.ended-at': 'Endete am',
   'events-component.extra-reward': 'Extra Belohnung',
   'events-component.filled': 'Gefüllt',
-  'events-component.miner-extra-reward.title': 'Extra-Belohnungen für Miner',
+  'events-component.extra-block-reward.title': 'Extra Blockbelohnungen',
   'events-component.started-at': 'Angefangen am',
   'events-component.state': 'Zustand',
   'events-component.states.active': 'Aktiv',

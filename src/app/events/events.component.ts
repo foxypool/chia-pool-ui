@@ -9,13 +9,33 @@ import * as moment from "moment";
   styleUrls: ['./events.component.scss']
 })
 export class EventsComponent implements OnInit {
+  public EVENT_TYPE = {
+    EXTRA_BLOCK_REWARD: 'extra-block-reward',
+  };
+  public EVENT_STATE = {
+    UPCOMING: 'upcoming',
+    ACTIVE: 'active',
+    ENDED: 'ended',
+  };
+  public events = [];
+  public coin = '';
 
   constructor(
     private statsService: StatsService,
     private _snippetService: SnippetService,
-  ) { }
+  ) {}
 
   ngOnInit() {
+    this.statsService.poolStats.asObservable().subscribe(poolStats => {
+      this.events = poolStats.events;
+    });
+    this.statsService.poolConfig.asObservable().subscribe(poolConfig => {
+      this.coin = poolConfig.coin;
+    });
+    const poolStats = this.statsService.poolStats.getValue();
+    this.events = poolStats ? (poolStats.events || []) : [];
+    const poolConfig = this.statsService.poolConfig.getValue();
+    this.coin = poolConfig ? (poolConfig.coin || '') : '';
   }
 
   get snippetService() {
@@ -24,24 +44,6 @@ export class EventsComponent implements OnInit {
 
   getEventProgress(event) {
     return event.payload.creditedCount / event.payload.totalCount * 100;
-  }
-
-  get events() {
-    const poolStats = this.statsService.poolStats.getValue();
-    if (!poolStats || !poolStats.events) {
-      return [];
-    }
-
-    return poolStats.events;
-  }
-
-  get coin() {
-    const poolConfig = this.statsService.poolConfig.getValue();
-    if (!poolConfig || !poolConfig.coin) {
-      return '';
-    }
-
-    return poolConfig.coin;
   }
 
   getFormattedDate(date) {

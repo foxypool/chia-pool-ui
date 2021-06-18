@@ -5,19 +5,19 @@
     </h4>
     <div class="row">
       <div *ngFor="let event of events" style="padding: 0.5em;">
-        <div class="card" *ngIf="event.type === 'miner-extra-reward'">
+        <div class="card" *ngIf="event.type === EVENT_TYPE.EXTRA_BLOCK_REWARD">
           <div class="card-header">
-            {{snippetService.getSnippet('events-component.miner-extra-reward.title')}}
+            {{snippetService.getSnippet('events-component.extra-block-reward.title')}}
           </div>
           <div class="card-body">
             <ul>
               <li>
                 {{snippetService.getSnippet('events-component.state')}}: <strong>{{snippetService.getSnippet('events-component.states.' + event.state)}}</strong>
               </li>
-              <li *ngIf="event.startedAt && event.state === 'upcoming'">
+              <li *ngIf="event.startedAt && event.state === EVENT_STATE.UPCOMING">
                 {{snippetService.getSnippet('events-component.will-start')}}: {{getFormattedDate(event.startedAt)}}
               </li>
-              <li *ngIf="event.startedAt && (event.state === 'active' || event.state === 'ended')">
+              <li *ngIf="event.startedAt && (event.state === EVENT_STATE.ACTIVE || event.state === EVENT_STATE.ENDED)">
                 {{snippetService.getSnippet('events-component.started-at')}}: {{getFormattedDate(event.startedAt)}}
               </li>
               <li *ngIf="event.endedAt">
@@ -31,34 +31,6 @@
                   {{snippetService.getSnippet('events-component.filled')}}: {{event.payload.creditedCount}} / {{event.payload.totalCount}} ({{getEventProgress(event).toFixed(0)}}%)
                   <ngb-progressbar *ngIf="getEventProgress(event) < 100" [striped]="true" [animated]="true" type="secondary" [value]="getEventProgress(event)"></ngb-progressbar>
                 </span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="card" *ngIf="event.type === 'block-winner-extra-reward'">
-          <div class="card-header">
-            {{snippetService.getSnippet('events-component.block-winner-extra-reward')}}
-          </div>
-          <div class="card-body">
-            <ul>
-              <li>
-                {{snippetService.getSnippet('events-component.state')}}: {{snippetService.getSnippet('events-component.states.' + event.state)}}
-              </li>
-              <li *ngIf="event.startedAt && event.state === 'upcoming'">
-                {{snippetService.getSnippet('events-component.will-start')}}: {{getFormattedDate(event.startedAt)}}
-              </li>
-              <li *ngIf="event.startedAt && (event.state === 'active' || event.state === 'ended')">
-                {{snippetService.getSnippet('events-component.started-at')}}: {{getFormattedDate(event.startedAt)}}
-              </li>
-              <li *ngIf="event.endedAt">
-                {{snippetService.getSnippet('events-component.ended-at')}}: {{getFormattedDate(event.endedAt)}}
-              </li>
-              <li>
-                {{snippetService.getSnippet('events-component.extra-reward')}}: {{event.payload.extraReward}} {{coin}}
-              </li>
-              <li>
-                {{snippetService.getSnippet('events-component.filled')}}: {{event.payload.creditedCount}} / {{event.payload.totalCount}} ({{((event.payload.creditedCount / event.payload.totalCount) * 100).toFixed(0)}}%)
               </li>
             </ul>
           </div>
