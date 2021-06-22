@@ -28,13 +28,6 @@ export class PoolsProvider {
       apiUrl: 'https://api.chia.foxypool.io',
     },{
       group: 'CHIA',
-      name: 'Foxy-Pool CHIA (Testnet)',
-      url: 'https://chia-testnet.foxypool.io',
-      poolIdentifier: 'chia-testnet',
-      hostnames: ['chia-testnet.foxypool.io'],
-      apiUrl: 'https://api.chia-testnet.foxypool.io',
-    },{
-      group: 'CHIA',
       name: 'Foxy-Pool CHIA (OG)',
       url: 'https://chia-og.foxypool.io',
       poolIdentifier: 'chia-og',
