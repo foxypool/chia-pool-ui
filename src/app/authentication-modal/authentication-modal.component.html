@@ -31,7 +31,7 @@
     <div class="row" style="padding-top: 1rem">
       <div class="col-12">
         <div class="alert alert-info" role="alert">
-          <div [innerHTML]="snippetService.getSnippet('authentication-modal.authentication-info', message)"></div>
+          <div [innerHTML]="snippetService.getSnippet('authentication-modal.authentication-info', statsService.coinConfig.cliCommandPrefix, message)"></div>
         </div>
       </div>
     </div>

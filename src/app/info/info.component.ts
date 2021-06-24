@@ -12,7 +12,7 @@ export class InfoComponent implements OnInit {
   private _poolConfig:any = {};
 
   constructor(
-    private statsService: StatsService,
+    public statsService: StatsService,
     private _snippetService: SnippetService
   ) {}
 

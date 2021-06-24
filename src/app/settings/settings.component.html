@@ -70,7 +70,7 @@
             <input type="number" class="form-control" [(ngModel)]="onDemandPayoutAmount" step="0.00000000000001" min="{{poolConfig.onDemandPayoutFee + 0.001}}" max="{{accountStats.pending}}" style="width: 20em">
             <a style="margin-left: 1em;margin-top: 5px;cursor: pointer;text-decoration: underline; color: #6e7877" (click)="onDemandPayoutAmount = accountStats.pending">{{snippetService.getSnippet('settings-component.actions.on-demand-payout.max')}}</a>
           </div>
-          <div style="color: #474747; margin-top: 1em">{{snippetService.getSnippet('settings-component.actions.on-demand-payout.help-text', poolConfig.onDemandPayoutFee, poolConfig.coin, (poolConfig.onDemandPayoutFee + 0.001))}}</div>
+          <div style="color: #474747; margin-top: 1em">{{snippetService.getSnippet('settings-component.actions.on-demand-payout.help-text', poolConfig.onDemandPayoutFee, poolConfig.ticker, (poolConfig.onDemandPayoutFee + 0.001))}}</div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-dark" (click)="modal.close(true)">{{snippetService.getSnippet('settings-component.actions.on-demand-payout.request-payout')}}</button>

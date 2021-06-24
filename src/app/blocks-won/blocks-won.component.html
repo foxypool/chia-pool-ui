@@ -45,7 +45,7 @@
     <td>{{block.networkSpaceInTib ? getFormattedCapacityFromTiB(block.networkSpaceInTib) : snippetService.getSnippet('general.not-available.short')}}</td>
     <td>{{block.distributionRatio}}</td>
     <td class="ellipsis">{{block.winner.name || block.winner.payoutAddress}}</td>
-    <td>{{block.reward}} {{poolConfig.coin}}</td>
+    <td>{{block.reward}} {{poolConfig.ticker}}</td>
     <td [style.padding-top]="block.distributed ? '12px' : '2px'" [style.padding-bottom]="block.distributed ? '12px' : '8px'">
       {{block.distributed ? snippetService.getSnippet('blocks-won-component.distributed') : snippetService.getSnippet('blocks-won-component.pending')}}
       <span *ngIf="!block.distributed">({{getBlockConfirms(block)}} / {{poolConfig.blockRewardDistributionDelay}})</span>

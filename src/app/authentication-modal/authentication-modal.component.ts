@@ -5,6 +5,7 @@ import {ToastService} from '../toast.service';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import { faCircleNotch, faCopy } from '@fortawesome/free-solid-svg-icons';
 import {SnippetService} from '../snippet.service';
+import {StatsService} from '../stats.service';
 
 @Component({
   selector: 'app-authentication-modal',
@@ -24,6 +25,7 @@ export class AuthenticationModalComponent implements OnInit {
 
   constructor(
     public accountService: AccountService,
+    public statsService: StatsService,
     public snippetService: SnippetService,
     private modalService: NgbModal,
     private toastService: ToastService,

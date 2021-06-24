@@ -31,8 +31,15 @@ export class PoolsProvider {
       name: 'Foxy-Pool CHIA (OG)',
       url: 'https://chia-og.foxypool.io',
       poolIdentifier: 'chia-og',
-      hostnames: ['chia-og.foxypool.io', 'localhost'],
+      hostnames: ['chia-og.foxypool.io'],
       apiUrl: 'https://api.chia-og.foxypool.io',
+    },{
+      group: 'FLAX',
+      name: 'Foxy-Pool FLAX (OG)',
+      url: 'https://flax-og.foxypool.io',
+      poolIdentifier: 'flax-og',
+      hostnames: ['flax-og.foxypool.io', 'localhost'],
+      apiUrl: 'https://api.flax-og.foxypool.io',
     },{
       group: 'BURST',
       name: 'Foxy-Pool BURST',

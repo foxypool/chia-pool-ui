@@ -29,11 +29,11 @@
       </span>
     </td>
     <td>
-      <span (click)="toggleShowPayout(payout)">{{getTotalPayout(payout.transactions)}} {{poolConfig.coin}}</span>
+      <span (click)="toggleShowPayout(payout)">{{getTotalPayout(payout.transactions)}} {{poolConfig.ticker}}</span>
       <span *ngIf="showPayout(payout._id)">
         <span *ngFor="let data of getAddressAmountPairs(payout._id)">
           <br>
-          {{data.address}}: {{data.amount}} {{poolConfig.coin}}
+          {{data.address}}: {{data.amount}} {{poolConfig.ticker}}
         </span>
       </span>
     </td>

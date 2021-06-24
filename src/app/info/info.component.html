@@ -3,11 +3,11 @@
 </h4>
 <div>
   <ol>
-    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-0')"></li>
-    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-1')"></li>
-    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-2', poolConfig.farmingUrl)"></li>
-    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-3')"></li>
-    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-4')"></li>
+    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-0', poolConfig.ticker)"></li>
+    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-1', statsService.coinConfig.clientSoftwareDownloadUrl, statsService.coinConfig.clientSoftwareName)"></li>
+    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-2', statsService.coinConfig.cliCommandPrefix, poolConfig.farmingUrl)"></li>
+    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-3', statsService.coinConfig.cliCommandPrefix, poolConfig.coin)"></li>
+    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-4', statsService.coinConfig.clientSoftwareName)"></li>
   </ol>
 </div>
 <h4>
@@ -28,7 +28,7 @@
       {{snippetService.getSnippet('info-component.pool-info.payout.interval-info')}}
     </li>
     <li>
-      {{snippetService.getSnippet('info-component.pool-info.payout.minimum-info', poolConfig.minimumPayout, poolConfig.coin)}}
+      {{snippetService.getSnippet('info-component.pool-info.payout.minimum-info', poolConfig.minimumPayout, poolConfig.ticker)}}
     </li>
     <li>
       {{snippetService.getSnippet('info-component.pool-info.distribution-delay-info', poolConfig.blockRewardDistributionDelay)}}

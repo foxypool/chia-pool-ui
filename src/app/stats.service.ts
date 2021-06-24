@@ -4,6 +4,7 @@ import {BehaviorSubject} from 'rxjs';
 import {PoolsProvider} from "./pools.provider";
 import {BigNumber} from "bignumber.js";
 import {SnippetService} from './snippet.service';
+import {configForCoin} from './coin-config';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ import {SnippetService} from './snippet.service';
 export class StatsService {
 
   public poolConfig = new BehaviorSubject<any>({});
+  public coinConfig = configForCoin('CHIA');
   public poolStats = new BehaviorSubject<any>({});
   public accountStats = new BehaviorSubject<any>({});
   public rewardStats = new BehaviorSubject<any>({});
@@ -69,6 +71,7 @@ export class StatsService {
 
   onNewPoolConfig(poolConfig) {
     this.poolConfig.next(poolConfig);
+    this.coinConfig = configForCoin(poolConfig.coin);
   }
 
   onNewPoolStats(poolStats) {
