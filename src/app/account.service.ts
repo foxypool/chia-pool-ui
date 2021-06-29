@@ -18,6 +18,7 @@ export class AccountService {
   public isLoading = false;
   public isAuthenticating = false;
   public isUpdatingAccount = false;
+  public isLeavingPool = false;
 
   constructor(
     private statsService: StatsService,
@@ -140,6 +141,45 @@ export class AccountService {
         data: {
           authToken: this.authToken,
           newName,
+        },
+      });
+      await this.updateAccount();
+    } finally {
+      this.isUpdatingAccount = false;
+    }
+  }
+
+  async leavePool({ leaveForEver }) {
+    if (!this.haveAuthToken) {
+      return;
+    }
+    this.isUpdatingAccount = true;
+    this.isLeavingPool = true;
+    try {
+      await this.statsService.requestWithError({
+        event: 'account:update:leave-pool',
+        data: {
+          authToken: this.authToken,
+          leaveForEver,
+        },
+      });
+      await this.updateAccount();
+    } finally {
+      this.isUpdatingAccount = false;
+      this.isLeavingPool = false;
+    }
+  }
+
+  async rejoinPool() {
+    if (!this.haveAuthToken) {
+      return;
+    }
+    this.isUpdatingAccount = true;
+    try {
+      await this.statsService.requestWithError({
+        event: 'account:update:rejoin-pool',
+        data: {
+          authToken: this.authToken,
         },
       });
       await this.updateAccount();

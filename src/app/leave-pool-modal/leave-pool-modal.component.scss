@@ -1,0 +1,15 @@
+.text-color {
+  color: #474747;
+}
+.checkbox-lg .custom-control-label::before,
+.checkbox-lg .custom-control-label::after {
+  top: .6rem;
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.checkbox-lg .custom-control-label {
+  padding-top: 8px;
+  padding-left: 5px;
+  font-size: 1.1rem;
+}

@@ -25,6 +25,7 @@ import { MyFarmerComponent } from './my-farmer/my-farmer.component';
 import { AuthenticationModalComponent } from './authentication-modal/authentication-modal.component';
 import {ClipboardModule} from 'ngx-clipboard';
 import { UpdateNameModalComponent } from './update-name-modal/update-name-modal.component';
+import { LeavePoolModalComponent } from './leave-pool-modal/leave-pool-modal.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { UpdateNameModalComponent } from './update-name-modal/update-name-modal.
     MyFarmerComponent,
     AuthenticationModalComponent,
     UpdateNameModalComponent,
+    LeavePoolModalComponent,
   ],
   imports: [
     BrowserModule,

@@ -3,12 +3,13 @@ import {StatsService} from '../stats.service';
 import {ToastService} from '../toast.service';
 import {SnippetService} from '../snippet.service';
 import Capacity from '../capacity';
-import {faCircleNotch, faUserCheck} from '@fortawesome/free-solid-svg-icons';
+import {faCircleNotch, faInfoCircle, faUserCheck} from '@fortawesome/free-solid-svg-icons';
 import {AccountService} from '../account.service';
 import * as moment from 'moment';
 import {AuthenticationModalComponent} from '../authentication-modal/authentication-modal.component';
 import {UpdateNameModalComponent} from '../update-name-modal/update-name-modal.component';
 import BigNumber from 'bignumber.js';
+import {LeavePoolModalComponent} from '../leave-pool-modal/leave-pool-modal.component';
 
 @Component({
   selector: 'app-my-farmer',
@@ -18,14 +19,14 @@ import BigNumber from 'bignumber.js';
 export class MyFarmerComponent implements OnInit {
   @ViewChild(AuthenticationModalComponent) authenticationModal;
   @ViewChild(UpdateNameModalComponent) updateNameModal;
+  @ViewChild(LeavePoolModalComponent) leavePoolModal;
 
   public poolConfig:any = {};
   public exchangeStats:any = {};
-  public accountStats:any = {};
-  public account = null;
   public poolPublicKeyInput = null;
   public faCircleNotch = faCircleNotch;
   public faUserCheck = faUserCheck;
+  public faInfoCircle = faInfoCircle;
 
   private randomBlockHeightOffset = Math.round(Math.random() * 9);
   private poolEc = 0;
@@ -111,12 +112,46 @@ export class MyFarmerComponent implements OnInit {
     return ecInPib.multipliedBy(this.dailyRewardPerPib).toFixed(4);
   }
 
+  get canLeavePool() {
+    if (!this.accountService.account) {
+      return false;
+    }
+    const account = this.accountService.account;
+
+    return !account.hasLeftThePool && !account.isCheating
+  }
+
+  get canRejoinPool() {
+    if (!this.accountService.account) {
+      return false;
+    }
+    const account = this.accountService.account;
+    if (!account.hasLeftThePool) {
+      return false;
+    }
+
+    return account.collateral === undefined || account.collateral !== '0';
+  }
+
   async authenticate() {
     this.authenticationModal.openModal();
   }
 
   async updateName() {
     this.updateNameModal.openModal();
+  }
+
+  async leavePool() {
+    this.leavePoolModal.openModal();
+  }
+
+  async rejoinPool() {
+    try {
+      await this.accountService.rejoinPool();
+      this.toastService.showSuccessToast(this.snippetService.getSnippet('my-farmer-component.rejoin-pool.success'));
+    } catch (err) {
+      this.toastService.showErrorToast(err.message);
+    }
   }
 
   getCoinValueAsFiat(value) {

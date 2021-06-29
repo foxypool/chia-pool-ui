@@ -141,6 +141,7 @@
               <div class="card-body">
                 <div class="row justify-content-center">
                   <button *ngIf="!accountService.haveAuthToken" class="btn btn-success" (click)="authenticate()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.authenticate')}}</button>
+                  &nbsp;&nbsp;<fa-icon style="font-size: 1.5rem" [icon]="faInfoCircle" placement="bottom" [ngbTooltip]="snippetService.getSnippet('my-farmer-component.manage-account-card.auth-info')"></fa-icon>
                 </div>
                 <div class="text-align-center" *ngIf="accountService.haveAuthToken">
                   <div class="p-1 row">
@@ -151,6 +152,16 @@
                   <div class="p-1 row">
                     <div class="col-12">
                       <button class="btn btn-outline-light" (click)="updateName()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.action.update-name')}}</button>
+                    </div>
+                  </div>
+                  <div class="p-1 row" *ngIf="canLeavePool">
+                    <div class="col-12">
+                      <button class="btn btn-outline-light" (click)="leavePool()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.action.leave-pool')}}</button>
+                    </div>
+                  </div>
+                  <div class="p-1 row" *ngIf="canRejoinPool">
+                    <div class="col-12">
+                      <button class="btn btn-outline-light" (click)="rejoinPool()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.action.rejoin-pool')}}</button>
                     </div>
                   </div>
                 </div>
@@ -164,3 +175,4 @@
 </div>
 <app-authentication-modal></app-authentication-modal>
 <app-update-name-modal></app-update-name-modal>
+<app-leave-pool-modal></app-leave-pool-modal>
