@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {StatsService} from '../stats.service';
 import {SnippetService} from '../snippet.service';
+import {PoolsProvider} from '../pools.provider';
 
 @Component({
   selector: 'app-info',
@@ -13,7 +14,8 @@ export class InfoComponent implements OnInit {
 
   constructor(
     public statsService: StatsService,
-    private _snippetService: SnippetService
+    private _snippetService: SnippetService,
+    private poolsProvider: PoolsProvider,
   ) {}
 
   get snippetService(): SnippetService {
@@ -46,5 +48,9 @@ export class InfoComponent implements OnInit {
       return 'N/A';
     }
     return Math.round(this.poolConfig.historicalTimeInMinutes / 60);
+  }
+
+  get docsGettingStartedUrl() {
+    return `https://docs.foxypool.io/proof-of-spacetime/foxy-pool/pools/${this.poolsProvider.poolIdentifier}/getting-started/`;
   }
 }

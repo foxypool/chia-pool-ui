@@ -2,13 +2,9 @@
   {{snippetService.getSnippet('info-component.using-this-pool.title')}}:
 </h4>
 <div>
-  <ol>
-    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-0', poolConfig.ticker)"></li>
-    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-1', statsService.coinConfig.clientSoftwareDownloadUrl, statsService.coinConfig.clientSoftwareName)"></li>
-    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-2', statsService.coinConfig.cliCommandPrefix, poolConfig.farmingUrl)"></li>
-    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-3', statsService.coinConfig.cliCommandPrefix, poolConfig.coin)"></li>
-    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.step-4', statsService.coinConfig.clientSoftwareName)"></li>
-  </ol>
+  <ul>
+    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.docs', docsGettingStartedUrl)"></li>
+  </ul>
 </div>
 <h4>
   {{snippetService.getSnippet('info-component.pool-info.title')}}:
