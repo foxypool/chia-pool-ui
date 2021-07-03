@@ -189,4 +189,23 @@ export class AccountService {
       this.isUpdatingAccount = false;
     }
   }
+
+  async updateMinimumPayout({ newMinimumPayout }) {
+    if (!this.haveAuthToken) {
+      return;
+    }
+    this.isUpdatingAccount = true;
+    try {
+      await this.statsService.requestWithError({
+        event: 'account:update:minimum-payout',
+        data: {
+          authToken: this.authToken,
+          minimumPayout: newMinimumPayout,
+        },
+      });
+      await this.updateAccount();
+    } finally {
+      this.isUpdatingAccount = false;
+    }
+  }
 }

@@ -28,8 +28,8 @@ export class UpdateNameModalComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  async authenticate() {
-    if (this.accountService.isAuthenticating) {
+  async updateName() {
+    if (this.accountService.isUpdatingAccount) {
       return;
     }
     const newName = this.newName.trim();

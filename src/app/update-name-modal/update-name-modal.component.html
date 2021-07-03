@@ -14,7 +14,7 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel')">{{snippetService.getSnippet('general.cancel')}}</button>
-    <button type="button" class="btn btn-success" (click)="authenticate()" [disabled]="accountService.isUpdatingAccount || !newName || newName === accountService.account.name">
+    <button type="button" class="btn btn-success" (click)="updateName()" [disabled]="accountService.isUpdatingAccount || !newName || newName === accountService.account.name">
       <span *ngIf="accountService.isUpdatingAccount">{{snippetService.getSnippet('update-name-modal.updating')}}</span>
       <span *ngIf="!accountService.isUpdatingAccount">{{snippetService.getSnippet('update-name-modal.update-name')}}</span>
       <fa-icon [icon]="faCircleNotch" [spin]="true" *ngIf="accountService.isUpdatingAccount" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>

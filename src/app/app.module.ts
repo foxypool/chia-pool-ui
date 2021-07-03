@@ -26,6 +26,7 @@ import { AuthenticationModalComponent } from './authentication-modal/authenticat
 import {ClipboardModule} from 'ngx-clipboard';
 import { UpdateNameModalComponent } from './update-name-modal/update-name-modal.component';
 import { LeavePoolModalComponent } from './leave-pool-modal/leave-pool-modal.component';
+import { UpdateMinimumPayoutModalComponent } from './update-minimum-payout-modal/update-minimum-payout-modal.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { LeavePoolModalComponent } from './leave-pool-modal/leave-pool-modal.com
     AuthenticationModalComponent,
     UpdateNameModalComponent,
     LeavePoolModalComponent,
+    UpdateMinimumPayoutModalComponent,
   ],
   imports: [
     BrowserModule,

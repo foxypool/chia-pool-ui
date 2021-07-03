@@ -10,6 +10,7 @@ import {AuthenticationModalComponent} from '../authentication-modal/authenticati
 import {UpdateNameModalComponent} from '../update-name-modal/update-name-modal.component';
 import BigNumber from 'bignumber.js';
 import {LeavePoolModalComponent} from '../leave-pool-modal/leave-pool-modal.component';
+import {UpdateMinimumPayoutModalComponent} from '../update-minimum-payout-modal/update-minimum-payout-modal.component';
 
 @Component({
   selector: 'app-my-farmer',
@@ -20,6 +21,7 @@ export class MyFarmerComponent implements OnInit {
   @ViewChild(AuthenticationModalComponent) authenticationModal;
   @ViewChild(UpdateNameModalComponent) updateNameModal;
   @ViewChild(LeavePoolModalComponent) leavePoolModal;
+  @ViewChild(UpdateMinimumPayoutModalComponent) updateMinimumPayoutModal;
 
   public poolConfig:any = {};
   public exchangeStats:any = {};
@@ -143,6 +145,10 @@ export class MyFarmerComponent implements OnInit {
 
   async leavePool() {
     this.leavePoolModal.openModal();
+  }
+
+  async updateMinimumPayout() {
+    this.updateMinimumPayoutModal.openModal();
   }
 
   async rejoinPool() {

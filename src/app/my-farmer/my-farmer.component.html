@@ -154,6 +154,11 @@
                       <button class="btn btn-outline-light" (click)="updateName()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.action.update-name')}}</button>
                     </div>
                   </div>
+                  <div class="p-1 row">
+                    <div class="col-12">
+                      <button class="btn btn-outline-light" (click)="updateMinimumPayout()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.action.update-minimum-payout')}}</button>
+                    </div>
+                  </div>
                   <div class="p-1 row" *ngIf="canLeavePool">
                     <div class="col-12">
                       <button class="btn btn-outline-light" (click)="leavePool()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.action.leave-pool')}}</button>
@@ -176,3 +181,4 @@
 <app-authentication-modal></app-authentication-modal>
 <app-update-name-modal></app-update-name-modal>
 <app-leave-pool-modal></app-leave-pool-modal>
+<app-update-minimum-payout-modal></app-update-minimum-payout-modal>
