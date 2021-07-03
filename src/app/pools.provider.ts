@@ -41,13 +41,13 @@ export class PoolsProvider {
       hostnames: ['flax-og.foxypool.io', 'localhost'],
       apiUrl: 'https://api.flax-og.foxypool.io',
     },{
-      group: 'BURST',
-      name: 'Foxy-Pool BURST',
-      url:  'https://burst.foxypool.io',
+      group: 'SIGNA',
+      name: 'Foxy-Pool SIGNA',
+      url:  'https://signa.foxypool.io',
     },{
-      group: 'BURST',
-      name: 'Foxy-Pool BURST (Testnet)',
-      url: 'https://burst-testnet.foxypool.io',
+      group: 'SIGNA',
+      name: 'Foxy-Pool SIGNA (Testnet)',
+      url: 'https://signa-testnet.foxypool.io',
     },{
       group: 'HDD',
       name: 'Foxy-Pool HDD',
