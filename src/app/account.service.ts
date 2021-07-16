@@ -80,7 +80,7 @@ export class AccountService {
     this.isLoading = true;
     let account = null;
     try {
-      account = await this.statsService.request({ event: 'account:fetch', data: { poolPublicKey } });
+      account = await this.statsService.getAccount({ poolPublicKey });
       if (account) {
         this.patchAccount(account);
       }
@@ -116,13 +116,10 @@ export class AccountService {
     }
     this.isAuthenticating = true;
     try {
-      const { accessToken } = await this.statsService.requestWithError({
-        event: 'authenticate',
-        data: {
-          poolPublicKey: this.poolPublicKey,
-          signature,
-          message,
-        },
+      const { accessToken } = await this.statsService.authenticate({
+        poolPublicKey: this.poolPublicKey,
+        signature,
+        message,
       });
       this.localStorageService.setItem(AccountService.authTokenStorageKey, accessToken);
     } finally {
@@ -136,12 +133,10 @@ export class AccountService {
     }
     this.isUpdatingAccount = true;
     try {
-      await this.statsService.requestWithError({
-        event: 'account:update:name',
-        data: {
-          authToken: this.authToken,
-          newName,
-        },
+      await this.statsService.updateAccountName({
+        poolPublicKey: this.poolPublicKey,
+        authToken: this.authToken,
+        newName,
       });
       await this.updateAccount();
     } finally {
@@ -156,12 +151,10 @@ export class AccountService {
     this.isUpdatingAccount = true;
     this.isLeavingPool = true;
     try {
-      await this.statsService.requestWithError({
-        event: 'account:update:leave-pool',
-        data: {
-          authToken: this.authToken,
-          leaveForEver,
-        },
+      await this.statsService.leavePool({
+        poolPublicKey: this.poolPublicKey,
+        authToken: this.authToken,
+        leaveForEver,
       });
       await this.updateAccount();
     } finally {
@@ -176,11 +169,9 @@ export class AccountService {
     }
     this.isUpdatingAccount = true;
     try {
-      await this.statsService.requestWithError({
-        event: 'account:update:rejoin-pool',
-        data: {
-          authToken: this.authToken,
-        },
+      await this.statsService.rejoinPool({
+        poolPublicKey: this.poolPublicKey,
+        authToken: this.authToken,
       });
       await this.updateAccount();
     } catch (err) {
@@ -196,12 +187,10 @@ export class AccountService {
     }
     this.isUpdatingAccount = true;
     try {
-      await this.statsService.requestWithError({
-        event: 'account:update:minimum-payout',
-        data: {
-          authToken: this.authToken,
-          minimumPayout: newMinimumPayout,
-        },
+      await this.statsService.updateAccountMinimumPayout({
+        poolPublicKey: this.poolPublicKey,
+        authToken: this.authToken,
+        minimumPayout: newMinimumPayout,
       });
       await this.updateAccount();
     } finally {

@@ -3,8 +3,8 @@ import {StatsService} from '../stats.service';
 import * as moment from 'moment';
 import Capacity from '../capacity';
 import {SnippetService} from '../snippet.service';
-import {SettingsService} from "../settings.service";
 import {faCubes} from "@fortawesome/free-solid-svg-icons";
+import {LocalStorageService} from '../local-storage.service';
 
 @Component({
   selector: 'app-blocks-won',
@@ -20,11 +20,12 @@ export class BlocksWonComponent implements OnInit {
   public rewardStats:any = {};
 
   public faCubes = faCubes;
+  public page = 1;
+  public pageSize = 25;
 
   constructor(
     private statsService: StatsService,
     private _snippetService: SnippetService,
-    private settingsService: SettingsService
   ) {}
 
   get snippetService(): SnippetService {
@@ -43,12 +44,10 @@ export class BlocksWonComponent implements OnInit {
   }
 
   get dr() {
-    return this.settingsService.dr;
+    return null;
   }
 
-  set dr(dr) {
-    this.settingsService.dr = dr;
-  }
+  set dr(dr) {}
 
   get distributionRatios() {
     if (!this.poolStats || !this.poolStats.distributionRatios) {

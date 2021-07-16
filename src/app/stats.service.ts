@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import {WebsocketService} from './websocket.service';
 import {BehaviorSubject} from 'rxjs';
 import {PoolsProvider} from "./pools.provider";
 import {BigNumber} from "bignumber.js";
 import {SnippetService} from './snippet.service';
 import {configForCoin} from './coin-config';
+import {ApiService} from './api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,27 +19,24 @@ export class StatsService {
   public lastPayouts = new BehaviorSubject<any>(null);
   public exchangeStats = new BehaviorSubject<any>({});
 
-  private websocketService: WebsocketService;
+  private apiService: ApiService;
 
   constructor(
     private poolsProvider: PoolsProvider,
     private snippetService: SnippetService,
   ) {
-    this.connect();
+    this.init();
   }
 
-  connect() {
-    this.websocketService = new WebsocketService(this.poolsProvider.apiUrl);
-    this.websocketService.subscribe('connect', this.onConnected.bind(this));
-    this.websocketService.subscribe('pool-stats-updated', (_, poolStats) => this.onNewPoolStats(poolStats));
-    this.websocketService.subscribe('exchange-stats-updated', (_, exchangeStats) => this.onNewExchangeStats(exchangeStats));
-    this.websocketService.subscribe('account-stats-updated', (_, accountStats) => this.onNewAccountsStats(accountStats));
-    this.websocketService.subscribe('reward-stats-updated', (_, rewardStats) => this.onNewRewardStats(rewardStats));
-    this.websocketService.subscribe('last-payouts-updated', (_, lastPayouts) => this.onNewLastPayouts(lastPayouts));
-  }
-
-  async onConnected() {
-    await this.initStats();
+  init() {
+    this.apiService = new ApiService(this.poolsProvider.apiUrl);
+    this.initStats();
+    setInterval(this.updatePoolConfig.bind(this), 60 * 60 * 1000);
+    setInterval(this.updatePoolStats.bind(this), 31 * 1000);
+    setInterval(this.updateAccountsStats.bind(this), 61 * 1000);
+    setInterval(this.updateRewardStats.bind(this), 61 * 1000);
+    setInterval(this.updateLastPayouts.bind(this), 5 * 61 * 1000);
+    setInterval(this.updateExchangeStats.bind(this), 5 * 61 * 1000);
   }
 
   get poolIdentifier() {
@@ -47,26 +44,38 @@ export class StatsService {
   }
 
   async initStats() {
-    await this.subscribeToPools();
-    this.websocketService.publish('init', this.poolIdentifier, ({
-      poolConfig,
-      poolStats,
-      exchangeStats,
-      accountStats,
-      rewardStats,
-      lastPayouts,
-    }) => {
-      this.onNewPoolConfig(poolConfig);
-      this.onNewPoolStats(poolStats);
-      this.onNewAccountsStats(accountStats);
-      this.onNewRewardStats(rewardStats);
-      this.onNewLastPayouts(lastPayouts);
-      this.onNewExchangeStats(exchangeStats);
-    });
+   await Promise.all([
+      this.updatePoolConfig(),
+      this.updatePoolStats(),
+      this.updateAccountsStats(),
+      this.updateRewardStats(),
+      this.updateLastPayouts(),
+      this.updateExchangeStats(),
+    ]);
   }
 
-  subscribeToPools() {
-    return new Promise(resolve => this.websocketService.publish('subscribe', [this.poolIdentifier], resolve));
+  async updatePoolConfig() {
+    this.onNewPoolConfig(await this.apiService.getPoolConfig({ poolIdentifier: this.poolIdentifier }));
+  }
+
+  async updatePoolStats() {
+    this.onNewPoolStats(await this.apiService.getPoolStats({ poolIdentifier: this.poolIdentifier }));
+  }
+
+  async updateAccountsStats() {
+    this.onNewAccountsStats(await this.apiService.getAccountsStats({ poolIdentifier: this.poolIdentifier }));
+  }
+
+  async updateRewardStats() {
+    this.onNewRewardStats(await this.apiService.getRewardStats({ poolIdentifier: this.poolIdentifier }));
+  }
+
+  async updateLastPayouts() {
+    this.onNewLastPayouts(await this.apiService.getLastPayouts({ poolIdentifier: this.poolIdentifier }));
+  }
+
+  async updateExchangeStats() {
+    this.onNewExchangeStats(await this.apiService.getExchangeStats({ poolIdentifier: this.poolIdentifier }));
   }
 
   onNewPoolConfig(poolConfig) {
@@ -102,16 +111,36 @@ export class StatsService {
     this.exchangeStats.next(exchangeStats);
   }
 
-  getWebsocketService() {
-    return this.websocketService;
+  getAccount({ poolPublicKey}) {
+    return this.apiService.getAccount({ poolIdentifier: this.poolIdentifier, poolPublicKey });
   }
 
-  async request({ event, data }) {
-    return new Promise(resolve => this.websocketService.publish(event, this.poolIdentifier, data, resolve));
+  authenticate({ poolPublicKey, message, signature }): any {
+    return this.apiService.authenticateAccount({ poolIdentifier: this.poolIdentifier, poolPublicKey, message, signature });
   }
 
-  async requestWithError({ event, data }) {
-    const result:any = await this.request({ event, data });
+  async updateAccountName({ poolPublicKey, authToken, newName }) {
+    return this.requestWithError(this.apiService.updateAccountName({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, newName }));
+  }
+
+  updateAccountDistributionRatio({ poolPublicKey, authToken, newDistributionRatio }) {
+    return this.requestWithError(this.apiService.updateAccountDistributionRatio({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, newDistributionRatio }));
+  }
+
+  updateAccountMinimumPayout({ poolPublicKey, authToken, minimumPayout }) {
+    return this.requestWithError(this.apiService.updateAccountMinimumPayout({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, minimumPayout }));
+  }
+
+  leavePool({ poolPublicKey, authToken, leaveForEver }) {
+    return this.requestWithError(this.apiService.leavePool({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, leaveForEver }));
+  }
+
+  rejoinPool({ poolPublicKey, authToken }) {
+    return this.requestWithError(this.apiService.rejoinPool({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken }));
+  }
+
+  async requestWithError(requestPromise) {
+    const result:any = await requestPromise;
     if (result && result.error) {
       throw new Error(this.snippetService.getSnippet(`api.error.${result.error}`));
     }

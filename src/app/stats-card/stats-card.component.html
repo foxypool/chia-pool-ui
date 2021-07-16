@@ -4,9 +4,8 @@
       <div class="card-header">
         {{snippetService.getSnippet('stats-card-component.height-card.title')}}
       </div>
-      <div class="card-body" style="margin-top: -14px; margin-bottom: -10px">
-        <span class="card-text">{{poolStats.height ? poolStats.height : snippetService.getSnippet('general.not-available.short')}}</span><br>
-        {{snippetService.getSnippet('stats-card-component.height-card.elapsed')}}: {{(elapsed)}}<br>
+      <div class="card-body">
+        <span class="card-text">{{poolStats.height ? poolStats.height : snippetService.getSnippet('general.not-available.short')}}</span>
       </div>
     </div>
   </div>

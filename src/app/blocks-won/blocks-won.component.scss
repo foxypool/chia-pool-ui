@@ -21,3 +21,19 @@
   white-space: nowrap;
   max-width: 150px;
 }
+::ng-deep .page-link {
+  background-color: #262629;
+  border-color: #18191c;
+  -webkit-transition: color 0.3s;
+  transition: color 0.3s;
+  color: rgba(255, 255, 255, 0.6);
+}
+::ng-deep .page-link:hover{
+  color: rgba(255, 255, 255, 0.9);
+  background-color: #262629;
+  border-color: #18191c;
+}
+::ng-deep .page-item.disabled .page-link {
+  background-color: #262629;
+  border-color: #18191c;
+}

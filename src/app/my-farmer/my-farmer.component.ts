@@ -30,7 +30,6 @@ export class MyFarmerComponent implements OnInit {
   public faUserCheck = faUserCheck;
   public faInfoCircle = faInfoCircle;
 
-  private randomBlockHeightOffset = Math.round(Math.random() * 9);
   private poolEc = 0;
   private dailyRewardPerPib = 0;
 
@@ -53,15 +52,12 @@ export class MyFarmerComponent implements OnInit {
     this.statsService.rewardStats.asObservable().subscribe(async rewardStats => {
       this.dailyRewardPerPib = rewardStats.dailyRewardPerPiB;
     });
-    this.statsService.poolStats.asObservable().subscribe(async poolStats => {
-      if ((poolStats.height + this.randomBlockHeightOffset) % 9 !== 0) {
-        return;
-      }
+    setInterval(async () => {
       if (!this.accountService.havePoolPublicKey) {
         return;
       }
       await this.accountService.updateAccount();
-    });
+    }, 3 * 60 * 1000);
 
     if (!this.accountService.havePoolPublicKey) {
       return;
