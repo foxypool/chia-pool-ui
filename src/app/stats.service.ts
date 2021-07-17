@@ -116,7 +116,7 @@ export class StatsService {
   }
 
   authenticate({ poolPublicKey, message, signature }): any {
-    return this.apiService.authenticateAccount({ poolIdentifier: this.poolIdentifier, poolPublicKey, message, signature });
+    return this.requestWithError(this.apiService.authenticateAccount({ poolIdentifier: this.poolIdentifier, poolPublicKey, message, signature }));
   }
 
   async updateAccountName({ poolPublicKey, authToken, newName }) {
