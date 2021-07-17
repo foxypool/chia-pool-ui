@@ -84,6 +84,12 @@ export class AccountService {
       if (account) {
         this.patchAccount(account);
       }
+    } catch (err) {
+      if (err.response && err.response.data && err.response.data.error) {
+        account = null;
+      } else {
+        throw err;
+      }
     } finally {
       this.isLoading = false;
     }
