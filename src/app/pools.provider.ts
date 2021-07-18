@@ -8,24 +8,13 @@ export class PoolsProvider {
 
   public pools = [
     {
-      group: 'BHD',
-      name: 'Foxy-Pool BHD',
-      url: 'https://bhd.foxypool.io',
-    },{
-      group: 'BHD',
-      name: 'Foxy-Pool BHD ECO',
-      url: 'https://bhd-eco.foxypool.io',
-    },{
-      group: 'BHD',
-      name: 'Foxy-Pool BHD (Testnet)',
-      url: 'https://bhd-testnet.foxypool.io',
-    },{
       group: 'CHIA',
       name: 'Foxy-Pool CHIA',
       url: 'https://chia.foxypool.io',
       poolIdentifier: 'chia',
       hostnames: ['chia.foxypool.io'],
       apiUrl: 'https://api2.foxypool.io',
+      algorithm: 'Proof of Spacetime',
     },{
       group: 'CHIA',
       name: 'Foxy-Pool CHIA (OG)',
@@ -33,6 +22,7 @@ export class PoolsProvider {
       poolIdentifier: 'chia-og',
       hostnames: ['chia-og.foxypool.io'],
       apiUrl: 'https://api2.foxypool.io',
+      algorithm: 'Proof of Spacetime',
     },{
       group: 'FLAX',
       name: 'Foxy-Pool FLAX (OG)',
@@ -40,26 +30,27 @@ export class PoolsProvider {
       poolIdentifier: 'flax-og',
       hostnames: ['flax-og.foxypool.io', 'localhost'],
       apiUrl: 'https://api2.foxypool.io',
+      algorithm: 'Proof of Spacetime',
+    },{
+      group: 'BHD',
+      name: 'Foxy-Pool BHD',
+      url: 'https://bhd.foxypool.io',
+      algorithm: 'Proof of Capacity',
+    },{
+      group: 'BHD',
+      name: 'Foxy-Pool BHD (Testnet)',
+      url: 'https://bhd-testnet.foxypool.io',
+      algorithm: 'Proof of Capacity',
     },{
       group: 'SIGNA',
       name: 'Foxy-Pool SIGNA',
       url:  'https://signa.foxypool.io',
+      algorithm: 'Proof of Capacity',
     },{
       group: 'SIGNA',
       name: 'Foxy-Pool SIGNA (Testnet)',
       url: 'https://signa-testnet.foxypool.io',
-    },{
-      group: 'HDD',
-      name: 'Foxy-Pool HDD',
-      url: 'https://hdd.foxypool.io',
-    },{
-      group: 'LHD',
-      name: 'Foxy-Pool LHD',
-      url: 'https://lhd.foxypool.io',
-    },{
-      group: 'XHD',
-      name: 'Foxy-Pool XHD',
-      url: 'https://xhd.foxypool.io',
+      algorithm: 'Proof of Capacity',
     },
   ];
 

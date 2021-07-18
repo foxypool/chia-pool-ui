@@ -79,9 +79,9 @@
       </button>
       <div ngbDropdownMenu aria-labelledby="poolsDropdown">
         <div *ngFor="let pool of otherPools; let i = index" [attr.data-index]="i">
-          <h6 *ngIf="!getPool(i - 1) || getPool(i - 1).group !== pool.group" class="dropdown-header">{{pool.group}}</h6>
+          <h6 *ngIf="!getPool(i - 1) || getPool(i - 1).algorithm !== pool.algorithm" class="dropdown-header">{{pool.algorithm}}</h6>
           <a ngbDropdownItem href="{{pool.url}}" target="_blank">{{pool.name}}</a>
-          <div *ngIf="getPool(i + 1) && getPool(i + 1).group !== pool.group" class="dropdown-divider"></div>
+          <div *ngIf="getPool(i + 1) && (getPool(i + 1).algorithm !== pool.algorithm || getPool(i + 1).group !== pool.group)" class="dropdown-divider"></div>
         </div>
       </div>
     </div>
