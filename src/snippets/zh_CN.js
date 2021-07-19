@@ -86,6 +86,7 @@ export default {
   'leave-pool-modal.leave-forever': '支付我的抵押品余额',
   'leave-pool-modal.leaving': '离去',
   'leave-pool-modal.leaving-info-toast': '离开泳池大约需要一两分钟，请稍等。',
+  'leave-pool-modal.read-leave-guide-info': '请阅读关于如何正确离开游泳池的指南<a href="{1}" target="_blank">这里</a>。<br><br><strong>游泳池将不会向你偿还任何发送到游泳池地址的奖励！</strong>。',
   'leave-pool-modal.rejoin-info': '你可以在离开泳池后的任何时候重新加入',
   'leave-pool-modal.success': '成功离开泳池',
   'leave-pool-modal.title': '你确定你要离开游泳池吗？',

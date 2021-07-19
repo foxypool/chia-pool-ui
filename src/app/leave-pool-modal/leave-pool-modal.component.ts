@@ -4,6 +4,7 @@ import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {AccountService} from '../account.service';
 import {SnippetService} from '../snippet.service';
 import {ToastService} from '../toast.service';
+import {PoolsProvider} from '../pools.provider';
 
 @Component({
   selector: 'app-leave-pool-modal',
@@ -24,6 +25,7 @@ export class LeavePoolModalComponent implements OnInit {
     public snippetService: SnippetService,
     private modalService: NgbModal,
     private toastService: ToastService,
+    private poolsProvider: PoolsProvider
   ) {}
 
   ngOnInit(): void {}
@@ -67,5 +69,9 @@ export class LeavePoolModalComponent implements OnInit {
     }, () => {
       this.onModalClose();
     });
+  }
+
+  get leavePoolGuideUrl() {
+    return `https://docs.foxypool.io/proof-of-spacetime/foxy-pool/pools/${this.poolsProvider.poolIdentifier}/getting-started/#leaving-the-pool`;
   }
 }

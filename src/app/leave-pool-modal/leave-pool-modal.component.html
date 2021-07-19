@@ -23,6 +23,11 @@
           {{snippetService.getSnippet('leave-pool-modal.rejoin-info')}}
         </div>
       </div>
+      <div class="col-12" >
+        <div class="alert alert-warning" role="alert" style="font-size: 1.1rem">
+          <span [innerHTML]="snippetService.getSnippet('leave-pool-modal.read-leave-guide-info', leavePoolGuideUrl)"></span>
+        </div>
+      </div>
     </div>
   </div>
   <div class="modal-footer">

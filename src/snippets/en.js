@@ -86,6 +86,7 @@ export default {
   'leave-pool-modal.leave-forever': 'Pay out my collateral balance',
   'leave-pool-modal.leaving': 'Leaving',
   'leave-pool-modal.leaving-info-toast': 'Leaving the pool takes about a minute or two, please wait',
+  'leave-pool-modal.read-leave-guide-info': 'Please read the guide on how to properly leave the pool <a href="{1}" target="_blank">here</a>.<br><br><strong>The pool will not reimburse you any rewards sent to the pools address!</strong>',
   'leave-pool-modal.rejoin-info': 'You can rejoin at any time after leaving the pool',
   'leave-pool-modal.success': 'Successfully left the pool',
   'leave-pool-modal.title': 'Are you sure you want to leave the pool?',

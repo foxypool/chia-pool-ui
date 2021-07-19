@@ -86,6 +86,7 @@ export default {
   'leave-pool-modal.leave-forever': 'Meinen Sicherheitssaldo auszahlen',
   'leave-pool-modal.leaving': 'Verlasse',
   'leave-pool-modal.leaving-info-toast': 'Das Verlassen des Pools dauert etwa ein bis zwei Minuten, bitte warten Sie',
+  'leave-pool-modal.read-leave-guide-info': 'Bitte lesen Sie die Anleitung zum korrekten Verlassen des Pools <a href="{1}" target="_blank">hier</a>.<br><br><strong>Der Pool erstattet Ihnen keine Belohnungen, die an die Adresse des Pools geschickt wurden!</strong>',
   'leave-pool-modal.rejoin-info': 'Sie können nach dem Verlassen des Pools jederzeit wieder beitreten',
   'leave-pool-modal.success': 'Erfolgreich den Pool verlassen',
   'leave-pool-modal.title': 'Sind Sie sicher, dass Sie den Pool verlassen wollen?',
