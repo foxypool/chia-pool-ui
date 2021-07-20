@@ -31,6 +31,7 @@ export default {
   'blocks-won-component.no-blocks-won-yet': '还没有赢得块！',
   'blocks-won-component.pending': '待定',
   'blocks-won-component.title': '最近赢得块',
+  'blocks-won-component.unclaimed': '无人认领',
   'dashboard-component.latest-notices.title': '最新通知',
   'events-component.block-winner-extra-reward.title': '大块头赢家额外奖励',
   'events-component.ended-at': '结束于',

@@ -151,6 +151,17 @@ export class BlocksWonComponent implements OnInit {
     return 'secondary';
   }
 
+  getBlockDistributedLabel(block) {
+    if (block.distributed) {
+      return this.snippetService.getSnippet('blocks-won-component.distributed');
+    }
+    if (block.isRewardClaimed) {
+      return this.snippetService.getSnippet('blocks-won-component.pending');
+    }
+
+    return this.snippetService.getSnippet('blocks-won-component.unclaimed');
+  }
+
   trackBy(index, block) {
     return block.hash;
   }
