@@ -18,7 +18,7 @@ export class EventsComponent implements OnInit {
     ENDED: 'ended',
   };
   public events = [];
-  public coin = '';
+  public ticker = '';
 
   constructor(
     private statsService: StatsService,
@@ -30,12 +30,12 @@ export class EventsComponent implements OnInit {
       this.events = poolStats.events;
     });
     this.statsService.poolConfig.asObservable().subscribe(poolConfig => {
-      this.coin = poolConfig.coin;
+      this.ticker = poolConfig.ticker;
     });
     const poolStats = this.statsService.poolStats.getValue();
     this.events = poolStats ? (poolStats.events || []) : [];
     const poolConfig = this.statsService.poolConfig.getValue();
-    this.coin = poolConfig ? (poolConfig.coin || '') : '';
+    this.ticker = poolConfig ? (poolConfig.ticker || '') : '';
   }
 
   get snippetService() {
