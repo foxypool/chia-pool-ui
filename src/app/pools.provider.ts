@@ -37,19 +37,9 @@ export class PoolsProvider {
       url: 'https://bhd.foxypool.io',
       algorithm: 'Proof of Capacity',
     },{
-      group: 'BHD',
-      name: 'Foxy-Pool BHD (Testnet)',
-      url: 'https://bhd-testnet.foxypool.io',
-      algorithm: 'Proof of Capacity',
-    },{
       group: 'SIGNA',
       name: 'Foxy-Pool SIGNA',
       url:  'https://signa.foxypool.io',
-      algorithm: 'Proof of Capacity',
-    },{
-      group: 'SIGNA',
-      name: 'Foxy-Pool SIGNA (Testnet)',
-      url: 'https://signa-testnet.foxypool.io',
       algorithm: 'Proof of Capacity',
     },
   ];
