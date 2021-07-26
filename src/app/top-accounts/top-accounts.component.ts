@@ -72,6 +72,6 @@ export class TopAccountsComponent implements OnInit {
   }
 
   trackBy(index, account) {
-    return account.poolPublicKey;
+    return account.payoutAddress;
   }
 }
