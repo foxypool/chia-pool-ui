@@ -5,6 +5,7 @@ import {SnippetService} from '../snippet.service';
 import {faMoneyCheckAlt} from "@fortawesome/free-solid-svg-icons";
 import {BigNumber} from "bignumber.js";
 import {PoolsProvider} from "../pools.provider";
+import {ensureHexPrefix} from '../util';
 
 @Component({
   selector: 'app-payouts',
@@ -115,7 +116,7 @@ export class PayoutsComponent implements OnInit {
   }
 
   getBlockExplorerCoinLink(coinId) {
-    return this.poolConfig.blockExplorerCoinUrlTemplate.replace('#COIN#', coinId);
+    return this.poolConfig.blockExplorerCoinUrlTemplate.replace('#COIN#', ensureHexPrefix(coinId));
   }
 
   getCoinIdsForPayout(payout) {
