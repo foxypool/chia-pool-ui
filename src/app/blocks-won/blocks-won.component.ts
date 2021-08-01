@@ -85,27 +85,27 @@ export class BlocksWonComponent implements OnInit {
     return this._poolStats;
   }
 
-  get blocksWonLastDay() {
-    let blocksWonLastDay = this.blocksWonLastDayUnfiltered;
+  get recentlyWonBlocks() {
+    let recentlyWonBlocks = this.recentlyWonBlocksUnfiltered;
 
     if (!this.limit) {
-      return blocksWonLastDay;
+      return recentlyWonBlocks;
     }
 
-    return blocksWonLastDay.slice(0, this.limit);
+    return recentlyWonBlocks.slice(0, this.limit);
   }
 
-  get blocksWonLastDayUnfiltered() {
-    if (!this.rewardStats.blocksWonLastDay) {
+  get recentlyWonBlocksUnfiltered() {
+    if (!this.rewardStats.recentlyWonBlocks) {
       return [];
     }
 
-    let blocksWonLastDay = this.rewardStats.blocksWonLastDay;
+    let recentlyWonBlocks = this.rewardStats.recentlyWonBlocks;
     if (this.dr && this.distributionRatiosLength > 1) {
-      blocksWonLastDay = blocksWonLastDay.filter(wonBlock => wonBlock.distributionRatio === this.dr);
+      recentlyWonBlocks = recentlyWonBlocks.filter(wonBlock => wonBlock.distributionRatio === this.dr);
     }
 
-    return blocksWonLastDay;
+    return recentlyWonBlocks;
   }
 
   getBlockDate(block) {
@@ -116,8 +116,10 @@ export class BlocksWonComponent implements OnInit {
     return Capacity.fromTiB(capacityInTiB).toString();
   }
 
-  getRoundsWonLast24H() {
-    return this.blocksWonLastDayUnfiltered.length;
+  getBlocksWonLast24H() {
+    return this.recentlyWonBlocksUnfiltered
+      .filter(wonBlock => moment(wonBlock.createdAt).isAfter(moment().subtract(1, 'day')))
+      .length;
   }
 
   getBlockExplorerBlockLink(block) {

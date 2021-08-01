@@ -5,7 +5,7 @@ export class ApiService {
 
   constructor(url: string) {
     this.client = axios.create({
-      baseURL: `${url}/api/v1`,
+      baseURL: `${url}/api/v2`,
     });
   }
 

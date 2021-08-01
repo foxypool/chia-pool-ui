@@ -1,7 +1,7 @@
 <div style="display: flex;flex-direction: row;justify-content: space-between;">
   <h5>
     {{snippetService.getSnippet('blocks-won-component.title')}}
-    <span *ngIf="limit">| {{snippetService.getSnippet('blocks-won-component.blocks-won-in-the-last-24h', getRoundsWonLast24H())}}</span>
+    <span *ngIf="limit">| {{snippetService.getSnippet('blocks-won-component.blocks-won-in-the-last-24h', getBlocksWonLast24H())}}</span>
   </h5>
   <div *ngIf="distributionRatiosLength > 1" ngbDropdown class="d-inline-block" style="margin-right: 10px" ngbTooltip="{{snippetService.getSnippet('general.distribution-ratio')}}">
     <button class="btn btn-outline-primary" id="drDropdown" ngbDropdownToggle>
@@ -28,17 +28,17 @@
   </tr>
   </thead>
   <tbody>
-    <tr *ngIf="!rewardStats.blocksWonLastDay">
+    <tr *ngIf="!rewardStats.recentlyWonBlocks">
       <td colspan="7" style="text-align: center">
         <app-loading-state></app-loading-state>
       </td>
     </tr>
-    <tr *ngIf="rewardStats.blocksWonLastDay && blocksWonLastDay.length === 0">
+    <tr *ngIf="rewardStats.recentlyWonBlocks && recentlyWonBlocks.length === 0">
       <td colspan="7" style="text-align: center; padding-top: 1rem">
         <app-empty-state [text]="snippetService.getSnippet('blocks-won-component.no-blocks-won-yet')" [icon]="faCubes"></app-empty-state>
       </td>
     </tr>
-  <tr *ngFor="let block of blocksWonLastDay | slice: (page - 1) * pageSize : page * pageSize; trackBy: trackBy">
+  <tr *ngFor="let block of recentlyWonBlocks | slice: (page - 1) * pageSize : page * pageSize; trackBy: trackBy">
     <td>{{getBlockDate(block)}}</td>
     <td *ngIf="poolConfig.blockExplorerBlockUrlTemplate"><a href="{{getBlockExplorerBlockLink(block)}}" target="_blank" style="color: #b45bff">{{block.height}}</a></td>
     <td *ngIf="!poolConfig.blockExplorerBlockUrlTemplate">{{block.height}}</td>
@@ -55,11 +55,11 @@
   </tbody>
 </table>
 <ngb-pagination
-  *ngIf="!limit && blocksWonLastDay.length > pageSize"
+  *ngIf="!limit && recentlyWonBlocks.length > pageSize"
   class="d-flex justify-content-center"
   [(page)]="page"
   [pageSize]="pageSize"
-  [collectionSize]="blocksWonLastDay.length"
+  [collectionSize]="recentlyWonBlocks.length"
   [maxSize]="5"
   [rotate]="true"
   [boundaryLinks]="true">
