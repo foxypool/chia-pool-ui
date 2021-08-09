@@ -11,6 +11,7 @@ import {UpdateNameModalComponent} from '../update-name-modal/update-name-modal.c
 import BigNumber from 'bignumber.js';
 import {LeavePoolModalComponent} from '../leave-pool-modal/leave-pool-modal.component';
 import {UpdateMinimumPayoutModalComponent} from '../update-minimum-payout-modal/update-minimum-payout-modal.component';
+import {ensureHexPrefix} from '../util';
 
 @Component({
   selector: 'app-my-farmer',
@@ -171,5 +172,9 @@ export class MyFarmerComponent implements OnInit {
     }
 
     return value * this.exchangeStats.rates.usd;
+  }
+
+  getBlockExplorerAddressLink(address) {
+    return this.poolConfig.blockExplorerAddressUrlTemplate.replace('#ADDRESS#', address);
   }
 }

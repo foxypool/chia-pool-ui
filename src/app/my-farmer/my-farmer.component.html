@@ -71,7 +71,7 @@
                     {{snippetService.getSnippet('my-farmer-component.payout-address-card.payout-address')}}
                   </div>
                   <div class="col-10 card-font-size" style="text-align: end">
-                    {{accountService.account.payoutAddress}}
+                    <a href="{{getBlockExplorerAddressLink(accountService.account.payoutAddress)}}" target="_blank" style="color: #b45bff;">{{accountService.account.payoutAddress}}</a>
                   </div>
                 </div>
                 <div class="row">
