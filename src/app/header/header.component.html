@@ -65,13 +65,13 @@
         </a>
       </li>
     </ul>
-    <div class="currency-select-wrapper header-row-item-start" *ngIf="ratesService.currencies && ratesService.currencies.length > 0">
+    <div class="header-row-item-start" *ngIf="accountService.havePoolPublicKey">
+      <button class="btn btn-secondary" (click)="accountService.logout()">{{snippetService.getSnippet('header-component.button.logout')}}</button>
+    </div>
+    <div class="currency-select-wrapper header-row-item" *ngIf="ratesService.currencies && ratesService.currencies.length > 0">
       <select class="custom-select currency-select" [(ngModel)]="ratesService.selectedCurrency">
         <option *ngFor="let currency of ratesService.currencies" [ngValue]="currency" class="currency-select-option">{{ currency.toUpperCase() }}</option>
       </select>
-    </div>
-    <div class="header-row-item">
-      <button *ngIf="accountService.havePoolPublicKey" class="btn btn-secondary" (click)="accountService.logout()">{{snippetService.getSnippet('header-component.button.logout')}}</button>
     </div>
     <div ngbDropdown class="d-inline-block header-row-item" *ngIf="otherPools.length > 0">
       <button class="btn btn-outline-primary" id="poolsDropdown" ngbDropdownToggle>
