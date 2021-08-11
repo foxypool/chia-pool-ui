@@ -5,6 +5,7 @@ import * as humanizeDuration from 'humanize-duration';
 import * as moment from 'moment';
 import Capacity from '../capacity';
 import {SnippetService} from '../snippet.service';
+import {RatesService} from '../rates.service';
 
 @Component({
   selector: 'app-stats-card',
@@ -25,7 +26,8 @@ export class StatsCardComponent implements OnInit {
 
   constructor(
     private statsService: StatsService,
-    private _snippetService: SnippetService
+    private _snippetService: SnippetService,
+    public ratesService: RatesService,
   ) {}
 
   get snippetService(): SnippetService {
@@ -121,23 +123,6 @@ export class StatsCardComponent implements OnInit {
     }
 
     return (this.rewardStats.dailyRewardPerPiB || 0).toFixed(2);
-  }
-
-  get dailyRewardPerPiBFiat() {
-    if (!this.exchangeStats || !this.exchangeStats.rates) {
-      return 0;
-    }
-    if (!this.rewardStats.dailyRewardPerPiB) {
-      return 0;
-    }
-    if (this.poolConfig.isTestnet) {
-      return 0;
-    }
-    if (!this.exchangeStats.rates.usd) { // TODO: user configurable
-      return 0;
-    }
-
-    return this.rewardStats.dailyRewardPerPiB * this.exchangeStats.rates.usd;
   }
 
   get poolBalance() {

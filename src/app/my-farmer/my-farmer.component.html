@@ -24,7 +24,7 @@
                 <h5>{{snippetService.getSnippet('my-farmer-component.pending-balance-card.title')}}</h5>
               </div>
               <div class="card-body text-align-center card-font-size">
-                <span placement="bottom" ngbTooltip="{{getCoinValueAsFiat(accountService.account.pendingRounded).toFixed(2)}} USD">{{accountService.account.pendingRounded}} {{poolConfig.ticker}}</span>
+                <span placement="bottom" ngbTooltip="{{ratesService.getValuesInFiatFormatted(accountService.account.pendingRounded)}}">{{accountService.account.pendingRounded}} {{poolConfig.ticker}}</span>
               </div>
             </div>
           </div>
@@ -34,7 +34,7 @@
                 <h5>{{snippetService.getSnippet('my-farmer-component.estimated-daily-reward-card.title')}}</h5>
               </div>
               <div class="card-body text-align-center card-font-size">
-                <span placement="bottom" ngbTooltip="{{getCoinValueAsFiat(estimatedDailyReward).toFixed(2)}} USD">{{estimatedDailyReward}} {{poolConfig.ticker}}</span>
+                <span placement="bottom" ngbTooltip="{{ratesService.getValuesInFiatFormatted(estimatedDailyReward)}}">{{estimatedDailyReward}} {{poolConfig.ticker}}</span>
               </div>
             </div>
           </div>
@@ -93,7 +93,7 @@
                 <h5>{{snippetService.getSnippet('my-farmer-component.collateral-balance-card.title')}}</h5>
               </div>
               <div class="card-body text-align-center card-font-size">
-                <span placement="bottom" ngbTooltip="{{getCoinValueAsFiat(accountService.account.collateralRounded).toFixed(2)}} USD">{{accountService.account.collateralRounded}} {{poolConfig.ticker}}</span>
+                <span placement="bottom" ngbTooltip="{{ratesService.getValuesInFiatFormatted(accountService.account.collateralRounded)}}">{{accountService.account.collateralRounded}} {{poolConfig.ticker}}</span>
               </div>
             </div>
           </div>

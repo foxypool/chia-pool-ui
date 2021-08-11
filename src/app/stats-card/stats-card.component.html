@@ -42,7 +42,7 @@
       <div class="card-body" style="margin-top: -14px; margin-bottom: -10px">
             <span class="card-text">
               {{poolBalance}} {{poolConfig.ticker}}<br>
-              {{snippetService.getSnippet('stats-card-component.balance-card.daily-reward')}}: <span placement="bottom" ngbTooltip="{{dailyRewardPerPiBFiat.toFixed(2)}} USD / PiB">{{dailyRewardPerPiB}} {{poolConfig.ticker}} / PiB</span>
+              {{snippetService.getSnippet('stats-card-component.balance-card.daily-reward')}}: <span placement="bottom" ngbTooltip="{{ratesService.getValuesInFiatFormatted(dailyRewardPerPiB)}} / PiB">{{dailyRewardPerPiB}} {{poolConfig.ticker}} / PiB</span>
             </span>
       </div>
     </div>

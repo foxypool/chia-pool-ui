@@ -1,3 +1,12 @@
+.header-row-item-start {
+  padding: 8px 4px 8px 0;
+}
+.header-row-item {
+  padding: 8px 4px;
+}
+.header-row-item-end {
+  padding: 8px 0 8px 4px;
+}
 .dropdown-menu {
   background-color: #2f3136;
   color: #cfd0d1;
@@ -32,4 +41,28 @@
     padding-left: 7%;
     padding-right: 7%;
   }
+}
+.currency-select-wrapper {
+  display: inline-block;
+}
+.currency-select {
+  background-color: #262629;
+  color: #cfd0d1;
+  border-color: #6c757d;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+}
+.currency-select::-webkit-scrollbar {
+  width: 6px;
+}
+.currency-select::-webkit-scrollbar-track {
+  background: transparent;
+}
+.currency-select::-webkit-scrollbar-thumb {
+  background-color: rgba(155, 155, 155, 0.5);
+  border-radius: 20px;
+  border: transparent;
+}
+.currency-select-option {
+  background-color: #262629;
 }

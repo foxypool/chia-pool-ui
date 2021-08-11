@@ -3,6 +3,7 @@ import {StatsService} from '../stats.service';
 import {SnippetService} from '../snippet.service';
 import {PoolsProvider} from "../pools.provider";
 import {AccountService} from '../account.service';
+import {RatesService} from '../rates.service';
 
 @Component({
   selector: 'app-header',
@@ -20,7 +21,8 @@ export class HeaderComponent implements OnInit {
     public accountService: AccountService,
     private statsService: StatsService,
     private _snippetService: SnippetService,
-    private poolsProvider: PoolsProvider
+    private poolsProvider: PoolsProvider,
+    public ratesService: RatesService,
   ) {}
 
   toggleMenuCollapse() {

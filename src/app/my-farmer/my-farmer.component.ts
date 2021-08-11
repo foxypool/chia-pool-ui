@@ -11,7 +11,7 @@ import {UpdateNameModalComponent} from '../update-name-modal/update-name-modal.c
 import BigNumber from 'bignumber.js';
 import {LeavePoolModalComponent} from '../leave-pool-modal/leave-pool-modal.component';
 import {UpdateMinimumPayoutModalComponent} from '../update-minimum-payout-modal/update-minimum-payout-modal.component';
-import {ensureHexPrefix} from '../util';
+import {RatesService} from '../rates.service';
 
 @Component({
   selector: 'app-my-farmer',
@@ -39,6 +39,7 @@ export class MyFarmerComponent implements OnInit {
     public accountService: AccountService,
     private statsService: StatsService,
     private toastService: ToastService,
+    public ratesService: RatesService,
   ) {}
 
   async ngOnInit() {
@@ -155,23 +156,6 @@ export class MyFarmerComponent implements OnInit {
     } catch (err) {
       this.toastService.showErrorToast(err.message);
     }
-  }
-
-  getCoinValueAsFiat(value) {
-    if (!this.exchangeStats || !this.exchangeStats.rates) {
-      return 0;
-    }
-    if (!value) {
-      return 0;
-    }
-    if (this.poolConfig.isTestnet) {
-      return 0;
-    }
-    if (!this.exchangeStats.rates.usd) { // TODO: user configurable
-      return 0;
-    }
-
-    return value * this.exchangeStats.rates.usd;
   }
 
   getBlockExplorerAddressLink(address) {
