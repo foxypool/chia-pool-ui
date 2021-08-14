@@ -16,6 +16,11 @@ Sentry.init({
   ],
   tracesSampleRate: 0,
   allowUrls: ['foxypool.io'],
+  ignoreErrors: [
+    'Request failed with status code',
+    'Network request failed',
+    'NetworkError',
+  ],
 });
 
 if (environment.production) {
