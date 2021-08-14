@@ -15,6 +15,7 @@ Sentry.init({
     }),
   ],
   tracesSampleRate: 0,
+  allowUrls: ['foxypool.io'],
 });
 
 if (environment.production) {
