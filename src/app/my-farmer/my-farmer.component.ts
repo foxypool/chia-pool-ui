@@ -162,6 +162,10 @@ export class MyFarmerComponent implements OnInit {
   }
 
   getBlockExplorerAddressLink(address) {
+    if (!this.poolConfig || !this.poolConfig.blockExplorerAddressUrlTemplate) {
+      return '';
+    }
+
     return this.poolConfig.blockExplorerAddressUrlTemplate.replace('#ADDRESS#', address);
   }
 }
