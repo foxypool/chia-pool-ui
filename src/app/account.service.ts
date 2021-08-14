@@ -6,6 +6,7 @@ import {LocalStorageService} from './local-storage.service';
 import {ToastService} from './toast.service';
 import {BigNumber} from 'bignumber.js';
 import {SnippetService} from './snippet.service';
+import * as Sentry from '@sentry/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +40,7 @@ export class AccountService {
       return false;
     }
     this.localStorageService.setItem(AccountService.poolPublicKeyStorageKey, poolPublicKey);
+    Sentry.setUser({ id: poolPublicKey });
     await this.updateAccount();
     this.toastService.showSuccessToast(this.snippetService.getSnippet('account-service.login.success'));
 
@@ -49,6 +51,7 @@ export class AccountService {
     this.removePoolPublicKey();
     this.removeAuthToken();
     this.account = null;
+    Sentry.setUser(null);
     this.toastService.showSuccessToast(this.snippetService.getSnippet('account-service.logout.success'));
   }
 

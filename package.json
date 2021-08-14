@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --watch",
-    "build": "ng build --configuration production",
+    "start": "ng serve --watch --disable-host-check",
+    "build": "ng build --configuration production --source-map=true",
     "update": "ncu -u"
   },
   "private": true,
@@ -25,6 +25,8 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@ng-bootstrap/ng-bootstrap": "^10.0.0",
+    "@sentry/angular": "^6.11.0",
+    "@sentry/tracing": "^6.11.0",
     "axios": "^0.21.1",
     "bignumber.js": "^9.0.1",
     "bootstrap": "^4.6.0",

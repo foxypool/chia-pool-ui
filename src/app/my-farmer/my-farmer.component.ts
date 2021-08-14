@@ -1,14 +1,16 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
+import {faCircleNotch, faInfoCircle, faUserCheck} from '@fortawesome/free-solid-svg-icons';
+import * as Sentry from '@sentry/angular';
+import * as moment from 'moment';
+import BigNumber from 'bignumber.js';
+
 import {StatsService} from '../stats.service';
 import {ToastService} from '../toast.service';
 import {SnippetService} from '../snippet.service';
 import Capacity from '../capacity';
-import {faCircleNotch, faInfoCircle, faUserCheck} from '@fortawesome/free-solid-svg-icons';
 import {AccountService} from '../account.service';
-import * as moment from 'moment';
 import {AuthenticationModalComponent} from '../authentication-modal/authentication-modal.component';
 import {UpdateNameModalComponent} from '../update-name-modal/update-name-modal.component';
-import BigNumber from 'bignumber.js';
 import {LeavePoolModalComponent} from '../leave-pool-modal/leave-pool-modal.component';
 import {UpdateMinimumPayoutModalComponent} from '../update-minimum-payout-modal/update-minimum-payout-modal.component';
 import {RatesService} from '../rates.service';
@@ -64,6 +66,7 @@ export class MyFarmerComponent implements OnInit {
     if (!this.accountService.havePoolPublicKey) {
       return;
     }
+    Sentry.setUser({ id: this.accountService.poolPublicKey });
     await this.accountService.updateAccount();
   }
 
