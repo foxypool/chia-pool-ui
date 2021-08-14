@@ -58,7 +58,7 @@ import { UpdateMinimumPayoutModalComponent } from './update-minimum-payout-modal
     ToastrModule.forRoot({
       newestOnTop: false,
     }),
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production, registrationStrategy: 'registerImmediately' }),
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     NgxScrollTopModule,
     ReactiveFormsModule,
     ClipboardModule,
