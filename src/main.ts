@@ -22,7 +22,9 @@ Sentry.init({
     'Request failed with status code',
     'Network request failed',
     'NetworkError',
+    'Network Error',
     'Request aborted',
+    'Request failed',
   ],
 });
 
