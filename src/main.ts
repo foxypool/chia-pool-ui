@@ -15,6 +15,7 @@ const ignoreErrors = [
   'Network Error',
   'Request aborted',
   'Request failed',
+  'timeout of 0ms exceeded',
 ];
 
 Sentry.init({
