@@ -14,6 +14,12 @@ export function getEffortColor(effort: BigNumber | null | undefined): string {
   if (effort.isLessThan(1.5)) {
     return '';
   }
+  if (effort.isLessThan(2.5)) {
+    return 'color-grey';
+  }
+  if (effort.isLessThan(4)) {
+    return 'color-dark-orange';
+  }
 
-  return 'color-grey';
+  return 'color-red';
 }
