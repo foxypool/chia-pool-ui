@@ -6,7 +6,7 @@ export default class Capacity {
   }
 
   static fromTiB(capacityInTiB) {
-    return new Capacity(capacityInTiB * 1024);
+    return new Capacity(parseFloat(capacityInTiB) * 1024);
   }
 
   toString(precision = 2) {

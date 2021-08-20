@@ -6,6 +6,8 @@ import * as moment from 'moment';
 import Capacity from '../capacity';
 import {SnippetService} from '../snippet.service';
 import {RatesService} from '../rates.service';
+import BigNumber from 'bignumber.js';
+import {getEffortColor} from '../util';
 
 @Component({
   selector: 'app-stats-card',
@@ -133,5 +135,31 @@ export class StatsCardComponent implements OnInit {
     const decimalPlaces = (balance < 100) ? 2 : 0;
 
     return balance.toFixed(decimalPlaces);
+  }
+
+  get currentEffort(): BigNumber | null {
+    if (!this.rewardStats.recentlyWonBlocks || this.rewardStats.recentlyWonBlocks.length === 0 || !this.poolStats.networkSpaceInTiB || !this.poolStats.height || !this.accountStats.ecSum) {
+      return null;
+    }
+
+    const lastWonBlockHeight = this.rewardStats.recentlyWonBlocks[0].height;
+    const passedBlocks = this.poolStats.height - lastWonBlockHeight;
+    const chanceToWinABlock = (new BigNumber(this.accountStats.ecSum)).dividedBy(1024).dividedBy(this.poolStats.networkSpaceInTiB);
+    const blockCountFor100PercentEffort = new BigNumber(1).dividedBy(chanceToWinABlock);
+
+    return (new BigNumber(passedBlocks)).dividedBy(blockCountFor100PercentEffort);
+  }
+
+  get currentEffortFormatted() {
+    const effort = this.currentEffort;
+    if (effort === null) {
+      return 'N/A';
+    }
+
+    return `${effort.multipliedBy(100).toFixed(2)} %`;
+  }
+
+  get effortColor() {
+    return getEffortColor(this.currentEffort);
   }
 }

@@ -28,6 +28,7 @@ $color-green: rgb(75, 210, 143);
 $color-orange: rgb(255, 170, 0);
 $color-blue: rgb(66, 134, 244);
 $color-red: rgb(255, 77, 77);
+$color-grey: rgb(140, 140, 140);
 span[green] {
   background-color: $color-green;
 }
@@ -51,6 +52,9 @@ span[red] {
 }
 .color-blue {
   color: $color-blue;
+}
+.color-grey {
+  color: $color-grey;
 }
 
 @media (min-width: 1700px) {

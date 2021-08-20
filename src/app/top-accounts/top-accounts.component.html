@@ -6,11 +6,6 @@
   <tr>
     <th scope="col">{{snippetService.getSnippet('top-accounts-component.headers.address')}}</th>
     <th scope="col">
-      <span ngbTooltip="{{snippetService.getSnippet('general.distribution-ratio')}}">
-        DR
-      </span>
-    </th>
-    <th scope="col">
       <span ngbTooltip="{{snippetService.getSnippet('top-accounts-component.headers.pending.tooltip')}}">
         {{snippetService.getSnippet('top-accounts-component.headers.pending')}}
       </span>
@@ -24,18 +19,17 @@
   </thead>
   <tbody>
     <tr *ngIf="!accountStats.topAccounts">
-      <td colspan="4" style="text-align: center">
+      <td colspan="3" style="text-align: center">
         <app-loading-state></app-loading-state>
       </td>
     </tr>
     <tr *ngIf="accountStats.topAccounts && topAccounts.length === 0">
-      <td colspan="4" style="text-align: center; padding-top: 1rem">
+      <td colspan="3" style="text-align: center; padding-top: 1rem">
         <app-empty-state [text]="snippetService.getSnippet('top-accounts-component.no-miners-found')" [icon]="faHdd"></app-empty-state>
       </td>
     </tr>
   <tr *ngFor="let account of topAccounts; trackBy: trackBy">
     <td class="ellipsis">{{account.name ? account.name : account.payoutAddress}}</td>
-    <td>{{account.distributionRatio}}</td>
     <td>{{account.pendingRounded}}<span *ngIf="account.pendingRounded === 0 && account.collateral"><small> +{{account.collateralRounded}}</small></span> {{poolConfig.ticker}}</td>
     <td>{{getFormattedCapacity(account.ec)}} <small>({{getEcShare(account)}} %)</small></td>
   </tr>

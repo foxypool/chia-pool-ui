@@ -21,7 +21,7 @@
     <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.date')}}</th>
     <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.height')}}</th>
     <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.network-capacity')}}</th>
-    <th scope="col"><span ngbTooltip="{{snippetService.getSnippet('general.distribution-ratio')}}">DR</span></th>
+    <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.effort')}}</th>
     <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.winner')}}</th>
     <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.reward')}}</th>
     <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.distributed')}}</th>
@@ -43,7 +43,7 @@
     <td *ngIf="poolConfig.blockExplorerBlockUrlTemplate"><a href="{{getBlockExplorerBlockLink(block)}}" target="_blank" style="color: #b45bff">{{block.height}}</a></td>
     <td *ngIf="!poolConfig.blockExplorerBlockUrlTemplate">{{block.height}}</td>
     <td>{{block.networkSpaceInTib ? getFormattedCapacityFromTiB(block.networkSpaceInTib) : snippetService.getSnippet('general.not-available.short')}}</td>
-    <td>{{block.distributionRatio}}</td>
+    <td><span [class]="getEffortColor(block)">{{getBlockEffort(block)}}</span></td>
     <td class="ellipsis">{{block.winner.name || block.winner.payoutAddress || snippetService.getSnippet('general.unknown')}}</td>
     <td>{{block.reward}} {{poolConfig.ticker}}</td>
     <td [style.padding-top]="block.distributed ? '12px' : '2px'" [style.padding-bottom]="block.distributed ? '12px' : '8px'">

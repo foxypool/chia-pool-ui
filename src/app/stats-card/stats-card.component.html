@@ -5,7 +5,9 @@
         {{snippetService.getSnippet('stats-card-component.height-card.title')}}
       </div>
       <div class="card-body">
-        <span class="card-text">{{poolStats.height ? poolStats.height : snippetService.getSnippet('general.not-available.short')}}</span>
+        <span class="card-text">
+          {{poolStats.height ? poolStats.height : snippetService.getSnippet('general.not-available.short')}}
+        </span>
       </div>
     </div>
   </div>
@@ -14,7 +16,7 @@
       <div class="card-header">
         {{snippetService.getSnippet('stats-card-component.network-capacity-card.title')}}
       </div>
-      <div class="card-body" style="margin-top: -14px; margin-bottom: -10px">
+      <div class="card-body card-body-two-lines">
             <span class="card-text">
               {{snippetService.getSnippet('stats-card-component.network-capacity-card.network-capacity')}}: {{getFormattedCapacityFromTiB(poolStats.networkSpaceInTiB)}}<br>
               {{snippetService.getSnippet('stats-card-component.network-capacity-card.network-difficulty')}}: {{poolStats.difficulty}}
@@ -37,12 +39,12 @@
   <div class="col-md-6 col-lg-4 col-xxl-6">
     <div class="card">
       <div class="card-header">
-        {{snippetService.getSnippet('stats-card-component.balance-card.title')}}
+        {{snippetService.getSnippet('stats-card-component.reward-card.title')}}
       </div>
-      <div class="card-body" style="margin-top: -14px; margin-bottom: -10px">
+      <div class="card-body card-body-two-lines">
             <span class="card-text">
-              {{poolBalance}} {{poolConfig.ticker}}<br>
-              {{snippetService.getSnippet('stats-card-component.balance-card.daily-reward')}}: <span placement="bottom" ngbTooltip="{{ratesService.getValuesInFiatFormatted(dailyRewardPerPiB)}} / PiB">{{dailyRewardPerPiB}} {{poolConfig.ticker}} / PiB</span>
+              {{snippetService.getSnippet('stats-card-component.reward-card.effort')}}: <span [class]="effortColor">{{currentEffortFormatted}}</span><br>
+              {{snippetService.getSnippet('stats-card-component.reward-card.daily-reward')}}: <span placement="bottom" ngbTooltip="{{ratesService.getValuesInFiatFormatted(dailyRewardPerPiB)}} / PiB">{{dailyRewardPerPiB}} {{poolConfig.ticker}} / PiB</span>
             </span>
       </div>
     </div>

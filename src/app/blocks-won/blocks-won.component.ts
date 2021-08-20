@@ -4,7 +4,8 @@ import * as moment from 'moment';
 import Capacity from '../capacity';
 import {SnippetService} from '../snippet.service';
 import {faCubes} from "@fortawesome/free-solid-svg-icons";
-import {LocalStorageService} from '../local-storage.service';
+import {getEffortColor} from '../util';
+import BigNumber from 'bignumber.js';
 
 @Component({
   selector: 'app-blocks-won',
@@ -162,6 +163,23 @@ export class BlocksWonComponent implements OnInit {
     }
 
     return this.snippetService.getSnippet('blocks-won-component.unclaimed');
+  }
+
+  getBlockEffort(block) {
+    if (block.effort === null || block.effort === undefined) {
+      return 'N/A';
+    }
+
+    return `${(block.effort * 100).toFixed(2)} %`;
+  }
+
+  getEffortColor(block) {
+    const effort = block.effort;
+    if (effort === null || effort === undefined) {
+      return '';
+    }
+
+    return getEffortColor(new BigNumber(effort));
   }
 
   trackBy(index, block) {
