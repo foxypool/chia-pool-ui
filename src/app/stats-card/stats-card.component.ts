@@ -159,7 +159,24 @@ export class StatsCardComponent implements OnInit {
     return `${effort.multipliedBy(100).toFixed(2)} %`;
   }
 
-  get effortColor() {
-    return getEffortColor(this.currentEffort);
+  get averageEffort() {
+    if (this.rewardStats.averageEffort === undefined || this.rewardStats.averageEffort === null) {
+      return null;
+    }
+
+    return new BigNumber(this.rewardStats.averageEffort);
+  }
+
+  get averageEffortFormatted() {
+    const effort = this.averageEffort;
+    if (effort === null) {
+      return 'N/A';
+    }
+
+    return `${effort.multipliedBy(100).toFixed(2)} %`;
+  }
+
+  getEffortColor(effort) {
+    return getEffortColor(effort);
   }
 }
