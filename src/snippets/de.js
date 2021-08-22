@@ -75,6 +75,7 @@ export default {
   'info-component.contact.join-discord': 'Tritt unserem <a href="https://discord.gg/gNHhn9y" target="_blank">Discord-Server</a> bei',
   'info-component.contact.title': 'Kontakt',
   'info-component.pool-info.distribution-delay-info': 'Die Block-Reward-Verteilung ist um {1} Blöcke verzögert',
+  'info-component.pool-info.block-split-info': 'Aufteilung der Blockbelohnung: 1/8 an den Blockfinder (Farmerbelohnung), 7/8 an die Poolmitglieder (Poolbelohnung)',
   'info-component.pool-info.dr-info': 'Pool mit Unterstützung für jeden DR, Standard-DR: {1}',
   'info-component.pool-info.payout.fee-info': '{1}% Gebühr, kostenlose automatische Auszahlungen',
   'info-component.pool-info.payout.interval-info': 'Auszahlungen erfolgen einmal pro Tag um 12:00 UTC',

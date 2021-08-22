@@ -75,6 +75,7 @@ export default {
   'info-component.contact.join-discord': '加入我们的 <a href="https://discord.gg/gNHhn9y" target="_blank">Discord</a>',
   'info-component.contact.title': '联系我们',
   'info-component.pool-info.distribution-delay-info': '区块奖励分配延迟{1}个区块。',
+  'info-component.pool-info.block-split-info': '区块奖励分配：1/8给区块发现者（农民奖励），7/8给池子成员（池子奖励）。',
   'info-component.pool-info.dr-info': '支持任何DR的矿池，默认DR：{1}。',
   'info-component.pool-info.payout.fee-info': '{1}%的费用，免费自动支付',
   'info-component.pool-info.payout.interval-info': '每天12:00(UTC)支付一次。',
