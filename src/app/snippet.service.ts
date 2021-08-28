@@ -25,7 +25,7 @@ export class SnippetService {
   ) {
     let language = 'en';
     if (!localStorageService.getItem('language')) {
-      const lang = navigator.language;
+      const lang = navigator.language || '';
       if (lang.startsWith('en')) {
         language = 'en';
       } else if (lang.startsWith('de')) {
