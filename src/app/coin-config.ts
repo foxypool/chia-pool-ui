@@ -9,6 +9,11 @@ const config = {
     clientSoftwareName: 'flax-blockchain',
     cliCommandPrefix: 'flax',
   },
+  CHIVES: {
+    clientSoftwareDownloadUrl: 'https://github.com/felixbrucker/chives-blockchain',
+    clientSoftwareName: 'chives-blockchain',
+    cliCommandPrefix: 'chives',
+  },
 };
 
 export function configForCoin(coin) {
