@@ -20,7 +20,7 @@ export class PoolsProvider {
       name: 'Foxy-Pool CHIA (OG)',
       url: 'https://chia-og.foxypool.io',
       poolIdentifier: 'chia-og',
-      hostnames: ['chia-og.foxypool.io', 'localhost'],
+      hostnames: ['chia-og.foxypool.io'],
       apiUrl: 'https://api2.foxypool.io',
       algorithm: 'Proof of Spacetime',
     },{
@@ -29,6 +29,14 @@ export class PoolsProvider {
       url: 'https://flax-og.foxypool.io',
       poolIdentifier: 'flax-og',
       hostnames: ['flax-og.foxypool.io'],
+      apiUrl: 'https://api2.foxypool.io',
+      algorithm: 'Proof of Spacetime',
+    },{
+      group: 'CHIVES',
+      name: 'Foxy-Pool CHIVES (OG)',
+      url: 'https://chives-og.foxypool.io',
+      poolIdentifier: 'chives-og',
+      hostnames: ['chives-og.foxypool.io', 'localhost'],
       apiUrl: 'https://api2.foxypool.io',
       algorithm: 'Proof of Spacetime',
     },{
