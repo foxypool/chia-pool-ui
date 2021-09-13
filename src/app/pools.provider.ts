@@ -36,7 +36,15 @@ export class PoolsProvider {
       name: 'Foxy-Pool CHIVES (OG)',
       url: 'https://chives-og.foxypool.io',
       poolIdentifier: 'chives-og',
-      hostnames: ['chives-og.foxypool.io', 'localhost'],
+      hostnames: ['chives-og.foxypool.io'],
+      apiUrl: 'https://api2.foxypool.io',
+      algorithm: 'Proof of Spacetime',
+    },{
+      group: 'HDDCOIN',
+      name: 'Foxy-Pool HDDCOIN (OG)',
+      url: 'https://hddcoin-og.foxypool.io',
+      poolIdentifier: 'hddcoin-og',
+      hostnames: ['hddcoin-og.foxypool.io', 'localhost'],
       apiUrl: 'https://api2.foxypool.io',
       algorithm: 'Proof of Spacetime',
     },{
