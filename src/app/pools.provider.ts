@@ -28,7 +28,7 @@ export class PoolsProvider {
       name: 'Foxy-Pool FLAX (OG)',
       url: 'https://flax-og.foxypool.io',
       poolIdentifier: 'flax-og',
-      hostnames: ['flax-og.foxypool.io'],
+      hostnames: ['flax-og.foxypool.io', 'localhost'],
       apiUrl: 'https://api2.foxypool.io',
       algorithm: 'Proof of Spacetime',
     },{
@@ -44,7 +44,7 @@ export class PoolsProvider {
       name: 'Foxy-Pool HDDCOIN (OG)',
       url: 'https://hddcoin-og.foxypool.io',
       poolIdentifier: 'hddcoin-og',
-      hostnames: ['hddcoin-og.foxypool.io', 'localhost'],
+      hostnames: ['hddcoin-og.foxypool.io'],
       apiUrl: 'https://api2.foxypool.io',
       algorithm: 'Proof of Spacetime',
     },{

@@ -29,6 +29,7 @@ import {ClipboardModule} from 'ngx-clipboard';
 import { UpdateNameModalComponent } from './update-name-modal/update-name-modal.component';
 import { LeavePoolModalComponent } from './leave-pool-modal/leave-pool-modal.component';
 import { UpdateMinimumPayoutModalComponent } from './update-minimum-payout-modal/update-minimum-payout-modal.component';
+import {NgxEchartsModule} from 'ngx-echarts';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,9 @@ import { UpdateMinimumPayoutModalComponent } from './update-minimum-payout-modal
     NgxScrollTopModule,
     ReactiveFormsModule,
     ClipboardModule,
+    NgxEchartsModule.forRoot({
+      echarts: () => import('echarts'),
+    }),
   ],
   providers: [
     WINDOW_PROVIDERS,

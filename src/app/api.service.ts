@@ -51,6 +51,12 @@ export class ApiService {
     return data;
   }
 
+  async getAccountHistoricalStats({ poolIdentifier, poolPublicKey }) {
+    const { data } = await this.client.get(`${poolIdentifier}/account/${poolPublicKey}/historical`);
+
+    return data;
+  }
+
   async authenticateAccount({ poolIdentifier, poolPublicKey, message, signature }) {
     const { data } = await this.client.post(`${poolIdentifier}/account/${poolPublicKey}/authenticate`, {
       message,
