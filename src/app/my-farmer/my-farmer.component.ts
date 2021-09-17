@@ -96,11 +96,11 @@ export class MyFarmerComponent implements OnInit {
         areaStyle: {
           color: new graphic.LinearGradient(0, 0, 0, 1, [{
             offset: 0,
-            color: '#4bd28f'
+            color: '#4bd28f',
           }, {
             offset: 1,
-            color: 'rgba(1, 191, 236)'
-          }])
+            color: '#01bfec',
+          }]),
         },
       }],
     };
