@@ -21,6 +21,12 @@ export class ApiService {
     return data;
   }
 
+  async getPoolHistoricalStats({ poolIdentifier }) {
+    const { data } = await this.client.get(`${poolIdentifier}/pool/historical`);
+
+    return data;
+  }
+
   async getAccountsStats({ poolIdentifier }) {
     const { data } = await this.client.get(`${poolIdentifier}/accounts`);
 

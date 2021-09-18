@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {PoolsProvider} from "./pools.provider";
-import {BigNumber} from "bignumber.js";
+import {BigNumber} from 'bignumber.js';
+import * as moment from 'moment';
+
+import {PoolsProvider} from './pools.provider';
 import {SnippetService} from './snippet.service';
 import {configForCoin} from './coin-config';
 import {ApiService} from './api.service';
@@ -14,6 +16,7 @@ export class StatsService {
   public poolConfig = new BehaviorSubject<any>({});
   public coinConfig = configForCoin('CHIA');
   public poolStats = new BehaviorSubject<any>({});
+  public poolHistoricalStats = new BehaviorSubject<any>([]);
   public accountStats = new BehaviorSubject<any>({});
   public rewardStats = new BehaviorSubject<any>({});
   public lastPayouts = new BehaviorSubject<any>(null);
@@ -37,6 +40,19 @@ export class StatsService {
     setInterval(this.updateRewardStats.bind(this), 61 * 1000);
     setInterval(this.updateLastPayouts.bind(this), 5 * 61 * 1000);
     setInterval(this.updateExchangeStats.bind(this), 5 * 61 * 1000);
+    this.registerPoolHistoricalStatsUpdates();
+  }
+
+  registerPoolHistoricalStatsUpdates() {
+    let nextRefreshDate = moment().utc().startOf('day').add(6, 'minutes');
+    if (moment().isAfter(nextRefreshDate)) {
+      nextRefreshDate = nextRefreshDate.add(1, 'day');
+    }
+    const timeTillRefreshInMs = nextRefreshDate.diff(moment(), 'milliseconds');
+    setTimeout(async () => {
+      setInterval(this.updatePoolHistoricalStats.bind(this), 24 * 60 * 60 * 1000);
+      await this.updatePoolHistoricalStats();
+    }, timeTillRefreshInMs);
   }
 
   get poolIdentifier() {
@@ -47,6 +63,7 @@ export class StatsService {
    await Promise.all([
       this.updatePoolConfig(),
       this.updatePoolStats(),
+      this.updatePoolHistoricalStats(),
       this.updateAccountsStats(),
       this.updateRewardStats(),
       this.updateLastPayouts(),
@@ -60,6 +77,10 @@ export class StatsService {
 
   async updatePoolStats() {
     this.onNewPoolStats(await this.apiService.getPoolStats({ poolIdentifier: this.poolIdentifier }));
+  }
+
+  async updatePoolHistoricalStats() {
+    this.onNewPoolHistoricalStats(await this.apiService.getPoolHistoricalStats({ poolIdentifier: this.poolIdentifier }));
   }
 
   async updateAccountsStats() {
@@ -85,6 +106,10 @@ export class StatsService {
 
   onNewPoolStats(poolStats) {
     this.poolStats.next(poolStats);
+  }
+
+  onNewPoolHistoricalStats(poolHistoricalStats) {
+    this.poolHistoricalStats.next(poolHistoricalStats);
   }
 
   onNewAccountsStats(accountStats) {
