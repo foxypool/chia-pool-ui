@@ -50,7 +50,7 @@ export class PoolHistoryComponent {
           label: {
             formatter: params => {
               if (params.axisDimension === 'x') {
-                return moment(params.value).utc().format('YYYY-MM-DD');
+                return moment(params.value).format('YYYY-MM-DD');
               }
               if (params.axisIndex === 0) {
                 return (params.value as Number).toFixed(0);
