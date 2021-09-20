@@ -15,12 +15,12 @@
   <div class="col-md-6 col-lg-6 col-xxl-12">
     <div class="card">
       <div class="card-header">
-        {{snippetService.getSnippet('stats-card-component.network-capacity-card.title')}}
+        {{snippetService.getSnippet('stats-card-component.reward-card.title')}}
       </div>
       <div class="card-body card-body-two-lines">
             <span class="card-text">
-              {{snippetService.getSnippet('stats-card-component.network-capacity-card.network-capacity')}}: {{getFormattedCapacityFromTiB(poolStats.networkSpaceInTiB)}}<br>
-              {{snippetService.getSnippet('stats-card-component.network-capacity-card.network-difficulty')}}: {{poolStats.difficulty}}
+              {{snippetService.getSnippet('stats-card-component.reward-card.average-effort')}}: <span [class]="getEffortColor(averageEffort)">{{averageEffortFormatted}}</span><br>
+              {{snippetService.getSnippet('stats-card-component.reward-card.daily-reward')}}: <span placement="bottom" ngbTooltip="{{ratesService.getValuesInFiatFormatted(dailyRewardPerPiB)}} / PiB">{{dailyRewardPerPiB}} {{poolConfig.ticker}} / PiB</span>
             </span>
       </div>
     </div>
@@ -40,12 +40,12 @@
   <div class="col-md-6 col-lg-6 col-xxl-12">
     <div class="card">
       <div class="card-header">
-        {{snippetService.getSnippet('stats-card-component.reward-card.title')}}
+        {{snippetService.getSnippet('stats-card-component.network-capacity-card.title')}}
       </div>
       <div class="card-body card-body-two-lines">
             <span class="card-text">
-              {{snippetService.getSnippet('stats-card-component.reward-card.average-effort')}}: <span [class]="getEffortColor(averageEffort)">{{averageEffortFormatted}}</span><br>
-              {{snippetService.getSnippet('stats-card-component.reward-card.daily-reward')}}: <span placement="bottom" ngbTooltip="{{ratesService.getValuesInFiatFormatted(dailyRewardPerPiB)}} / PiB">{{dailyRewardPerPiB}} {{poolConfig.ticker}} / PiB</span>
+              {{snippetService.getSnippet('stats-card-component.network-capacity-card.network-capacity')}}: {{getFormattedCapacityFromTiB(poolStats.networkSpaceInTiB)}}<br>
+              {{snippetService.getSnippet('stats-card-component.network-capacity-card.network-difficulty')}}: {{poolStats.difficulty}}
             </span>
       </div>
     </div>
