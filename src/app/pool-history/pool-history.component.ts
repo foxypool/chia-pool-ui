@@ -193,7 +193,7 @@ export class PoolHistoryComponent {
       return '#4bd28f';
     }
     if (effort < 1.5) {
-      return '#bbb';
+      return '#cfd0d1';
     }
     if (effort < 2.5) {
       return '#8c8c8c';
