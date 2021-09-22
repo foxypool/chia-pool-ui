@@ -37,8 +37,9 @@ export class AuthenticationModalComponent implements OnInit {
     if (this.accountService.isAuthenticating) {
       return;
     }
+    const signature = this.signature ? this.signature.trim() : null;
     try {
-      await this.accountService.authenticate({ message: this.message, signature: this.signature });
+      await this.accountService.authenticate({ message: this.message, signature });
       this.toastService.showSuccessToast(this.snippetService.getSnippet('authentication-modal.success'));
       this.modalRef.close(true);
     } catch (err) {
