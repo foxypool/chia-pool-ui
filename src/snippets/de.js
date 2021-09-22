@@ -15,6 +15,7 @@ export default {
   'api.error.invalid_signature': 'Die Signatur ist ungültig!',
   'authentication-modal.authenticate': 'Authentifizieren',
   'authentication-modal.authenticating': 'Authentifiziere',
+  'authentication-modal.authentication-guide': 'Eine Liste mit detaillierten Schritten finden Sie im <a href="{1}" target="_blank">Leitfaden</a> zur Authentifizierung.',
   'authentication-modal.authentication-info': 'Um die Nachricht zu signieren, holen Sie sich zunächst den Fingerabdruck Ihrer Geldbörse über<br><code>{1} keys show</code><br>und führen dann folgenden Befehl aus:<br><code>{1} keys sign -t "{2}" -d {3} -f &lt;Ihr Fingerabdruck hier&gt;</code>',
   'authentication-modal.message-to-sign': 'Die zu signierende Nachricht',
   'authentication-modal.signature-placeholder': 'Signatur',

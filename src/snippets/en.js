@@ -15,6 +15,7 @@ export default {
   'api.error.invalid_signature': 'The signature is invalid!',
   'authentication-modal.authenticate': 'Authenticate',
   'authentication-modal.authenticating': 'Authenticating',
+  'authentication-modal.authentication-guide': 'For a list of detailed steps please follow <a href="{1}" target="_blank">the guide</a> on how to authenticate yourself.',
   'authentication-modal.authentication-info': 'To sign the message first obtain the fingerprint of your wallet via<br><code>{1} keys show</code><br>and then execute the following command:<br><code>{1} keys sign -t "{2}" -d {3} -f &lt;your fingerprint here&gt;</code>',
   'authentication-modal.message-to-sign': 'The message to sign',
   'authentication-modal.signature-placeholder': 'Signature',

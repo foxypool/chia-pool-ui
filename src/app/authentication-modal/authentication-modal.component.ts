@@ -6,6 +6,7 @@ import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import { faCircleNotch, faCopy } from '@fortawesome/free-solid-svg-icons';
 import {SnippetService} from '../snippet.service';
 import {StatsService} from '../stats.service';
+import {PoolsProvider} from '../pools.provider';
 
 @Component({
   selector: 'app-authentication-modal',
@@ -29,6 +30,7 @@ export class AuthenticationModalComponent implements OnInit {
     public snippetService: SnippetService,
     private modalService: NgbModal,
     private toastService: ToastService,
+    private poolsProvider: PoolsProvider,
   ) {}
 
   ngOnInit(): void {}
@@ -60,5 +62,9 @@ export class AuthenticationModalComponent implements OnInit {
     }, () => {
       this.onModalClose();
     });
+  }
+
+  get docsAuthenticationGuideUrl() {
+    return `https://docs.foxypool.io/proof-of-spacetime/foxy-pool/pools/${this.poolsProvider.poolIdentifier}/authenticate/`;
   }
 }

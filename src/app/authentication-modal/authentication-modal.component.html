@@ -34,6 +34,9 @@
           <div [innerHTML]="snippetService.getSnippet('authentication-modal.authentication-info', statsService.coinConfig.cliCommandPrefix, statsService.coinConfig.hdKeyPoolPublicKeyPath, message)"></div>
         </div>
       </div>
+      <div class="col-12 text-color">
+        <span [innerHTML]="snippetService.getSnippet('authentication-modal.authentication-guide', docsAuthenticationGuideUrl)"></span>
+      </div>
     </div>
   </div>
   <div class="modal-footer">

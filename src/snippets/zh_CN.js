@@ -15,6 +15,7 @@ export default {
   'api.error.invalid_signature': '签名是无效的!',
   'authentication-modal.authenticate': '认证',
   'authentication-modal.authenticating': '认证',
+  'authentication-modal.authentication-guide': '有关详细步骤的清单，请按照<a href="{1}" target="_blank">指南</a>了解如何进行自我认证。',
   'authentication-modal.authentication-info': '要签署信息，首先通过<br><code>{1} keys show</code><br>获得你的钱包的指纹，然后执行以下命令：<br><code>{1} keys sign -t "{2}" -d {3}。-f &lt;你的指纹在这里&gt;</code>。',
   'authentication-modal.message-to-sign': '要签署的信息',
   'authentication-modal.signature-placeholder': '签名',
