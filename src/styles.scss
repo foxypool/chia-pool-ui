@@ -24,14 +24,17 @@ html, body {
   border-radius: 50%;
   display: inline-block;
 }
-$color-green: rgb(75, 210, 143);
+$color-light-green: rgb(75, 210, 143);
+$color-lighter-green: rgb(135,211,181);
+$color-green: rgb(70,207,118);
+$color-dark-green: rgb(83,179,50);
 $color-orange: rgb(255, 170, 0);
 $color-blue: rgb(66, 134, 244);
 $color-red: rgb(255, 77, 77);
 $color-grey: rgb(140, 140, 140);
 $color-dark-orange: rgb(204, 147, 33);
 span[green] {
-  background-color: $color-green;
+  background-color: $color-light-green;
 }
 span[orange] {
   background-color: $color-orange;
@@ -44,6 +47,15 @@ span[red] {
 }
 .color-green {
   color: $color-green;
+}
+.color-light-green {
+  color: $color-light-green;
+}
+.color-lighter-green {
+  color: $color-lighter-green;
+}
+.color-dark-green {
+  color: $color-dark-green;
 }
 .color-orange {
   color: $color-orange;

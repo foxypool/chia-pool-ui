@@ -8,8 +8,17 @@ export function getEffortColor(effort: BigNumber | null | undefined): string {
   if (effort === null || effort === undefined) {
     return '';
   }
-  if (effort.isLessThan(1)) {
+  if (effort.isLessThan(0.25)) {
+    return 'color-dark-green';
+  }
+  if (effort.isLessThan(0.5)) {
     return 'color-green';
+  }
+  if (effort.isLessThan(0.75)) {
+    return 'color-light-green';
+  }
+  if (effort.isLessThan(1)) {
+    return 'color-lighter-green';
   }
   if (effort.isLessThan(1.5)) {
     return '';

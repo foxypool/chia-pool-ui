@@ -189,8 +189,17 @@ export class PoolHistoryComponent {
     if (effort === null || effort === undefined) {
       return '#bbb';
     }
-    if (effort < 1) {
+    if (effort < 0.25) {
+      return '#53b332';
+    }
+    if (effort < 0.5) {
+      return '#46cf76';
+    }
+    if (effort < 0.75) {
       return '#4bd28f';
+    }
+    if (effort < 1) {
+      return '#87d3b5';
     }
     if (effort < 1.5) {
       return '#cfd0d1';
