@@ -30,9 +30,10 @@
       <div class="card-header">
         {{snippetService.getSnippet('stats-card-component.farmers-card.title')}}
       </div>
-      <div class="card-body">
+      <div class="card-body card-body-two-lines">
             <span class="card-text">
-              {{accountStats.accountsWithShares}} | {{getFormattedCapacityFromGiB(accountStats.ecSum || 0)}}
+              {{snippetService.getSnippet('stats-card-component.farmers-card.farmers')}}: {{accountStats.accountsWithShares}}<br>
+              {{snippetService.getSnippet('stats-card-component.farmers-card.pool-ec')}}: {{getFormattedCapacityFromGiB(accountStats.ecSum || 0)}}
             </span>
       </div>
     </div>
