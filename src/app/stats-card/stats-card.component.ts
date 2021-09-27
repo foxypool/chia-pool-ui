@@ -124,7 +124,19 @@ export class StatsCardComponent implements OnInit {
       return 0;
     }
 
-    return (this.rewardStats.dailyRewardPerPiB || 0).toFixed(2);
+    return this.rewardStats.dailyRewardPerPiB || 0;
+  }
+
+  get dailyRewardPerPiBFormatted() {
+    return this.dailyRewardPerPiB.toFixed(2);
+  }
+
+  get networkSpaceInTiB() {
+    if (!this.poolStats || !this.poolStats.networkSpaceInTiB) {
+      return 0;
+    }
+
+    return this.poolStats.networkSpaceInTiB;
   }
 
   get poolBalance() {

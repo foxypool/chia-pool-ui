@@ -1,3 +1,8 @@
 .pool-history-chart {
-  height: 262px;
+  height: 240px;
+}
+@media (min-width: 960px) and (max-width: 1600px) {
+  .pool-history-chart {
+    height: 362px;
+  }
 }

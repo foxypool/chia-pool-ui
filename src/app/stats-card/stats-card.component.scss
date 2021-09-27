@@ -3,7 +3,21 @@
   background-color: #2f3136;
   margin-bottom: 1em;
 }
-.card-body-two-lines {
-  margin-top: -14px;
-  margin-bottom: -10px;
+.card-header-large {
+  padding: 0.5rem 0.25rem;
+}
+.card-body-large {
+  padding: 0.5rem;
+}
+.card-text-large {
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+.card-text-medium {
+  font-size: 1.25rem;
+  font-weight: 550;
+}
+.small-col-padding {
+  padding-left: 4px;
+  padding-right: 4px;
 }
