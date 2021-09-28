@@ -6,7 +6,8 @@
       </div>
       <div class="card-body card-body-large">
         <span class="card-text card-text-large">
-          <span [class]="getEffortColor(currentEffort)">{{currentEffortFormatted}}</span>
+          <span *ngIf="!rewardStatsLoading && !poolStatsLoading && !accountStatsLoading" [class]="getEffortColor(currentEffort)">{{currentEffortFormatted}}</span>
+          <app-loading-state *ngIf="rewardStatsLoading || poolStatsLoading || accountStatsLoading" [height]="2" [width]="2" fontSize="14px"></app-loading-state>
         </span>
       </div>
     </div>
@@ -18,7 +19,8 @@
       </div>
       <div class="card-body card-body-large">
         <span class="card-text card-text-large">
-          <span [class]="getEffortColor(averageEffort)">{{averageEffortFormatted}}</span>
+          <span *ngIf="!rewardStatsLoading" [class]="getEffortColor(averageEffort)">{{averageEffortFormatted}}</span>
+          <app-loading-state *ngIf="rewardStatsLoading" [height]="2" [width]="2" fontSize="14px"></app-loading-state>
         </span>
       </div>
     </div>
@@ -30,7 +32,8 @@
       </div>
       <div class="card-body card-body-large">
         <span class="card-text card-text-large">
-          <span placement="bottom" ngbTooltip="{{ratesService.getValuesInFiatFormatted(dailyRewardPerPiB)}} / PiB">{{dailyRewardPerPiBFormatted}} {{poolConfig.ticker}} / PiB</span>
+          <span *ngIf="!rewardStatsLoading && !poolConfigLoading" placement="bottom" ngbTooltip="{{ratesService.getValuesInFiatFormatted(dailyRewardPerPiB)}} / PiB">{{dailyRewardPerPiBFormatted}} {{poolConfig.ticker}} / PiB</span>
+          <app-loading-state *ngIf="rewardStatsLoading || poolConfigLoading" [height]="2" [width]="2" fontSize="14px"></app-loading-state>
         </span>
       </div>
     </div>
@@ -42,7 +45,8 @@
       </div>
       <div class="card-body card-body-large">
         <span class="card-text card-text-large">
-          {{accountStats.accountsWithShares}}
+          <span *ngIf="!accountStatsLoading">{{accountStats.accountsWithShares}}</span>
+          <app-loading-state *ngIf="accountStatsLoading" [height]="2" [width]="2" fontSize="14px"></app-loading-state>
         </span>
       </div>
     </div>
@@ -54,7 +58,8 @@
       </div>
       <div class="card-body card-body-large">
         <span class="card-text card-text-large">
-          {{getFormattedCapacityFromGiB(accountStats.ecSum || 0)}}
+          <span *ngIf="!accountStatsLoading">{{getFormattedCapacityFromGiB(accountStats.ecSum || 0)}}</span>
+          <app-loading-state *ngIf="accountStatsLoading" [height]="2" [width]="2" fontSize="14px"></app-loading-state>
         </span>
       </div>
     </div>
@@ -66,7 +71,8 @@
       </div>
       <div class="card-body card-body-large">
         <span class="card-text card-text-large">
-          {{poolStats.height ? poolStats.height : snippetService.getSnippet('general.not-available.short')}}
+          <span *ngIf="!poolStatsLoading">{{poolStats.height ? poolStats.height : snippetService.getSnippet('general.not-available.short')}}</span>
+          <app-loading-state *ngIf="poolStatsLoading" [height]="2" [width]="2" fontSize="14px"></app-loading-state>
         </span>
       </div>
     </div>
@@ -78,7 +84,8 @@
       </div>
       <div class="card-body card-body-large">
         <span class="card-text card-text-large">
-          {{getFormattedCapacityFromTiB(networkSpaceInTiB)}}
+          <span *ngIf="!poolStatsLoading">{{getFormattedCapacityFromTiB(networkSpaceInTiB)}}</span>
+           <app-loading-state *ngIf="poolStatsLoading" [height]="2" [width]="2" fontSize="14px"></app-loading-state>
         </span>
       </div>
     </div>

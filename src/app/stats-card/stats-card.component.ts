@@ -79,6 +79,22 @@ export class StatsCardComponent implements OnInit {
     return this._exchangeStats;
   }
 
+  get accountStatsLoading() {
+    return this.accountStats.accountsWithShares === undefined;
+  }
+
+  get rewardStatsLoading() {
+    return this.rewardStats.dailyRewardPerPiB === undefined;
+  }
+
+  get poolConfigLoading() {
+    return this.poolConfig.ticker === undefined;
+  }
+
+  get poolStatsLoading() {
+    return this.poolStats.networkSpaceInTiB === undefined;
+  }
+
   updateElapsed() {
     if (!this.poolStats.receivedAt) {
       return;

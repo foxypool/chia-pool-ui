@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'app-loading-state',
@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./loading-state.component.scss']
 })
 export class LoadingStateComponent {
+  @Input() width: number = 3;
+  @Input() height: number = 3;
+  @Input() fontSize: string = 'inherit';
+
   constructor() { }
 }
