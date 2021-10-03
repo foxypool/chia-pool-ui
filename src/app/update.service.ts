@@ -25,6 +25,7 @@ export class UpdateService {
       document.location.reload();
     });
     swUpdate.unrecoverable.subscribe(async () => {
+      console.error('SW reached unrecoverable state, clearing cache and reloading ..');
       await this.clearCacheStorage();
       document.location.reload();
     });
