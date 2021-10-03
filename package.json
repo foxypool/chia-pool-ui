@@ -5,9 +5,7 @@
     "ng": "ng",
     "start": "ng serve --watch --disable-host-check",
     "build": "ng build --configuration production",
-    "build:source-maps": "ng build --configuration production-with-source-maps",
     "prebuild": "yarn run bin:generate-env-config",
-    "prebuild:source-maps": "yarn run bin:generate-env-config",
     "bin:generate-env-config": "node ./bin/generate-env-config.js",
     "update": "ncu -u"
   },

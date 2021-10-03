@@ -16,8 +16,8 @@ jobs:
           node-version: 14.x
       - name: Install
         run: yarn install
-      - name: Build source maps
-        run: yarn run build:source-maps
+      - name: Build with source maps
+        run: yarn build
       - name: Create Sentry release
         uses: getsentry/action-release@v1
         env:
