@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "chia-og-pool-ui": {
+    "chia-pool-ui": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -82,34 +82,34 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "chia-og-pool-ui:build"
+            "browserTarget": "chia-pool-ui:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "chia-og-pool-ui:build:production"
+              "browserTarget": "chia-pool-ui:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "chia-og-pool-ui:build"
+            "browserTarget": "chia-pool-ui:build"
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
             ]
           }
         }
       }
     }
   },
-  "defaultProject": "chia-og-pool-ui"
+  "defaultProject": "chia-pool-ui",
+  "cli": {
+    "defaultCollection": "@angular-eslint/schematics"
+  }
 }
