@@ -99,7 +99,7 @@ export default {
   'my-farmer-component.difficulty-card.title': '难度',
   'my-farmer-component.ec-card.help': '有效容量（EC）是根据过去24小时内提交给水池的准分子计算的，因此可能会有变化。',
   'my-farmer-component.estimated-daily-reward-card.title': '估算的每日奖励',
-  'my-farmer-component.estimated-daily-reward-card.help': '估计的每日奖励是根据你当前的EC和过去7天内每个PiB的池子平均估计的每日奖励计算的，这在仪表板上显示。',
+  'my-farmer-component.estimated-daily-reward-card.help': '估计的每日奖励是根据你当前的EC和过去7天内每个PiB的池子的平均每日奖励计算的，这在仪表板上显示。',
   'my-farmer-component.last-partial-accepted-card.title': '最后接受的部分',
   'my-farmer-component.login-button.label': '登录',
   'my-farmer-component.login-button.label-logging-in': '登录',

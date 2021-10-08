@@ -99,7 +99,7 @@ export default {
   'my-farmer-component.difficulty-card.title': 'Schwierigkeit',
   'my-farmer-component.ec-card.help': 'Die effektive Kapazität (EC) wird auf der Grundlage der letzten 24 Stunden der an den Pool übermittelten Partials berechnet und kann daher variieren.',
   'my-farmer-component.estimated-daily-reward-card.title': 'Geschätzte tägliche Belohnung',
-  'my-farmer-component.estimated-daily-reward-card.help': 'Die geschätzte tägliche Belohnung wird auf der Grundlage Ihrer aktuellen EC und der durchschnittlichen geschätzten täglichen Belohnung des Pools pro PiB in den letzten 7 Tagen berechnet, die auf dem Dashboard angezeigt wird.',
+  'my-farmer-component.estimated-daily-reward-card.help': 'Die geschätzte tägliche Belohnung wird auf der Grundlage Ihrer aktuellen EC und der durchschnittlichen täglichen Belohnung des Pools pro PiB in den letzten 7 Tagen berechnet, die auf dem Dashboard angezeigt wird.',
   'my-farmer-component.last-partial-accepted-card.title': 'Letztes Partial akzeptiert',
   'my-farmer-component.login-button.label': 'Einloggen',
   'my-farmer-component.login-button.label-logging-in': 'Logge ein',
