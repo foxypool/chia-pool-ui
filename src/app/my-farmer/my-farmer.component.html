@@ -72,28 +72,23 @@
           </div>
         </div>
         <div class="row row-without-margin">
-          <div class="p-1 col-12">
+          <div class="p-1 col-md-12 col-lg-6 col-xxl-12">
             <div class="card">
               <div class="card-header text-align-center">
                 <h5>{{snippetService.getSnippet('my-farmer-component.payout-address-card.title')}}</h5>
               </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-2 card-font-size">
-                    {{snippetService.getSnippet('my-farmer-component.payout-address-card.payout-address')}}
-                  </div>
-                  <div class="col-10 card-font-size" style="text-align: end">
-                    <a href="{{getBlockExplorerAddressLink(accountService.account.payoutAddress)}}" target="_blank" style="color: #b45bff;">{{accountService.account.payoutAddress}}</a>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-2 card-font-size">
-                    {{snippetService.getSnippet('my-farmer-component.payout-address-card.pool-public-key')}}
-                  </div>
-                  <div class="col-10 card-font-size" style="text-align: end">
-                    {{accountService.account.poolPublicKey}}
-                  </div>
-                </div>
+              <div class="card-body text-align-center card-font-size ellipsis">
+                <a href="{{getBlockExplorerAddressLink(accountService.account.payoutAddress)}}" target="_blank" style="color: #b45bff;">{{accountService.account.payoutAddress}}</a>
+              </div>
+            </div>
+          </div>
+          <div class="p-1 col-md-12 col-lg-6 col-xxl-12">
+            <div class="card">
+              <div class="card-header text-align-center">
+                <h5> {{snippetService.getSnippet('my-farmer-component.pool-public-key-card.title')}}</h5>
+              </div>
+              <div class="card-body text-align-center card-font-size ellipsis">
+                {{accountService.account.poolPublicKey}}
               </div>
             </div>
           </div>

@@ -33,3 +33,8 @@
 .header-info-icon:hover{
   color: rgba(255, 255, 255, 0.9);
 }
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
