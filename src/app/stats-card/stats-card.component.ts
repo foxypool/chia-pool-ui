@@ -8,6 +8,7 @@ import {SnippetService} from '../snippet.service';
 import {RatesService} from '../rates.service';
 import BigNumber from 'bignumber.js';
 import {getEffortColor} from '../util';
+import {faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-stats-card',
@@ -15,6 +16,7 @@ import {getEffortColor} from '../util';
   styleUrls: ['./stats-card.component.scss']
 })
 export class StatsCardComponent implements OnInit {
+  public faInfoCircle = faInfoCircle;
 
   private _poolConfig:any = {};
   private _poolStats:any = {};

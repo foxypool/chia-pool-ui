@@ -2,7 +2,13 @@
   <div class="col-sm-6 col-md-3 col-lg-6 col-xxl-7 small-col-padding">
     <div class="card">
       <div class="card-header card-text-medium card-header-large">
-        {{snippetService.getSnippet('stats-card-component.height-card.current-effort')}}
+        {{snippetService.getSnippet('stats-card-component.current-effort')}}
+        <fa-icon
+          [icon]="faInfoCircle"
+          [ngbTooltip]="snippetService.getSnippet('stats-card-component.current-effort.help')"
+          placement="bottom"
+          class="header-info-icon"
+        ></fa-icon>
       </div>
       <div class="card-body card-body-large">
         <span class="card-text card-text-large">
@@ -15,7 +21,13 @@
   <div class="col-sm-6 col-md-3 col-lg-6 col-xxl-7 small-col-padding">
     <div class="card">
       <div class="card-header card-text-medium card-header-large">
-        {{snippetService.getSnippet('stats-card-component.reward-card.average-effort')}}
+        {{snippetService.getSnippet('stats-card-component.average-effort')}}
+        <fa-icon
+          [icon]="faInfoCircle"
+          [ngbTooltip]="snippetService.getSnippet('stats-card-component.average-effort.help')"
+          placement="bottom"
+          class="header-info-icon"
+        ></fa-icon>
       </div>
       <div class="card-body card-body-large">
         <span class="card-text card-text-large">
@@ -28,7 +40,13 @@
   <div class="col-sm-12 col-md-6 col-lg-6 col-xxl-10 small-col-padding">
     <div class="card">
       <div class="card-header card-text-medium card-header-large">
-        {{snippetService.getSnippet('stats-card-component.reward-card.daily-reward')}}
+        {{snippetService.getSnippet('stats-card-component.daily-reward')}}
+        <fa-icon
+          [icon]="faInfoCircle"
+          [ngbTooltip]="snippetService.getSnippet('stats-card-component.daily-reward.help')"
+          placement="bottom"
+          class="header-info-icon"
+        ></fa-icon>
       </div>
       <div class="card-body card-body-large">
         <span class="card-text card-text-large">
@@ -41,7 +59,7 @@
   <div class="col-sm-6 col-md-2 col-lg-3 col-xxl-5 small-col-padding order-lg-1 order-xxl-0">
     <div class="card">
       <div class="card-header card-text-medium card-header-large">
-        {{snippetService.getSnippet('stats-card-component.farmers-card.farmers')}}
+        {{snippetService.getSnippet('stats-card-component.farmers')}}
       </div>
       <div class="card-body card-body-large">
         <span class="card-text card-text-large">
@@ -54,7 +72,7 @@
   <div class="col-sm-6 col-md-3 col-lg-6 col-xxl-6 small-col-padding order-lg-0 order-xxl-1">
     <div class="card">
       <div class="card-header card-text-medium card-header-large">
-        {{snippetService.getSnippet('stats-card-component.farmers-card.pool-ec')}}
+        {{snippetService.getSnippet('stats-card-component.pool-ec')}}
       </div>
       <div class="card-body card-body-large">
         <span class="card-text card-text-large">
@@ -67,7 +85,7 @@
   <div class="col-sm-6 col-md-3 col-lg-3 col-xxl-6 small-col-padding order-lg-2">
     <div class="card">
       <div class="card-header card-text-medium card-header-large">
-        {{snippetService.getSnippet('stats-card-component.height-card.height')}}
+        {{snippetService.getSnippet('stats-card-component.height')}}
       </div>
       <div class="card-body card-body-large">
         <span class="card-text card-text-large">
@@ -80,7 +98,7 @@
   <div class="col-sm-6 col-md-4 col-lg-6 col-xxl-7 small-col-padding order-lg-3">
     <div class="card">
       <div class="card-header card-text-medium card-header-large">
-        {{snippetService.getSnippet('stats-card-component.network-capacity-card.network-capacity')}}
+        {{snippetService.getSnippet('stats-card-component.network-capacity')}}
       </div>
       <div class="card-body card-body-large">
         <span class="card-text card-text-large">

@@ -32,6 +32,12 @@
             <div class="card">
               <div class="card-header text-align-center">
                 <h5>{{snippetService.getSnippet('my-farmer-component.estimated-daily-reward-card.title')}}</h5>
+                <fa-icon
+                  [icon]="faInfoCircle"
+                  [ngbTooltip]="snippetService.getSnippet('my-farmer-component.estimated-daily-reward-card.help')"
+                  placement="bottom"
+                  class="header-info-icon"
+                ></fa-icon>
               </div>
               <div class="card-body text-align-center card-font-size">
                 <span placement="bottom" ngbTooltip="{{ratesService.getValuesInFiatFormatted(estimatedDailyReward)}}">{{estimatedDailyReward}} {{poolConfig.ticker}}</span>
@@ -42,6 +48,12 @@
             <div class="card">
               <div class="card-header text-align-center">
                 <h5 ngbTooltip="{{snippetService.getSnippet('general.ec')}}">EC</h5>
+                <fa-icon
+                  [icon]="faInfoCircle"
+                  [ngbTooltip]="snippetService.getSnippet('my-farmer-component.ec-card.help')"
+                  placement="bottom"
+                  class="header-info-icon"
+                ></fa-icon>
               </div>
               <div class="card-body text-align-center card-font-size">
                 {{getFormattedCapacity(accountService.account.ec)}} <small>({{ecShare}} %)</small>
@@ -87,10 +99,16 @@
           </div>
         </div>
         <div class="row row-without-margin">
-          <div class="p-1 col-md-3 col-lg-3 col-xxl-6" *ngIf="accountService.account.collateral">
+          <div class="p-1 col-md-4 col-lg-4 col-xxl-6" *ngIf="accountService.account.collateral">
             <div class="card">
               <div class="card-header text-align-center">
                 <h5>{{snippetService.getSnippet('my-farmer-component.collateral-balance-card.title')}}</h5>
+                <fa-icon
+                  [icon]="faInfoCircle"
+                  [ngbTooltip]="snippetService.getSnippet('my-farmer-component.collateral-balance-card.help')"
+                  placement="bottom"
+                  class="header-info-icon"
+                ></fa-icon>
               </div>
               <div class="card-body text-align-center card-font-size">
                 <span placement="bottom" ngbTooltip="{{ratesService.getValuesInFiatFormatted(accountService.account.collateralRounded)}}">{{accountService.account.collateralRounded}} {{poolConfig.ticker}}</span>
@@ -104,16 +122,6 @@
               </div>
               <div class="card-body text-align-center card-font-size">
                 {{accountService.account.difficulty}}
-              </div>
-            </div>
-          </div>
-          <div class="p-1 col-md-3 col-lg-3 col-xxl-6">
-            <div class="card">
-              <div class="card-header text-align-center">
-                <h5 ngbTooltip="{{snippetService.getSnippet('general.distribution-ratio')}}">DR</h5>
-              </div>
-              <div class="card-body text-align-center card-font-size">
-                {{accountService.account.distributionRatio}}
               </div>
             </div>
           </div>

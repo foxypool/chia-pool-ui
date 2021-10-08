@@ -21,3 +21,11 @@
   padding-left: 4px;
   padding-right: 4px;
 }
+.header-info-icon {
+  margin-top: -10px;
+  float: right;
+  color: rgba(255, 255, 255, 0.4);
+}
+.header-info-icon:hover{
+  color: rgba(255, 255, 255, 0.9);
+}
