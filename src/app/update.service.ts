@@ -1,7 +1,7 @@
-import {ApplicationRef, Injectable} from "@angular/core";
-import {SwUpdate} from "@angular/service-worker";
-import {ToastService} from "./toast.service";
-import {SnippetService} from "./snippet.service";
+import {ApplicationRef, Injectable} from '@angular/core';
+import {SwUpdate} from '@angular/service-worker';
+import {ToastService} from './toast.service';
+import {SnippetService} from './snippet.service';
 import {first} from 'rxjs/operators';
 import {concat, interval} from 'rxjs';
 

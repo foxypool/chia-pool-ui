@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {UpdateService} from "./update.service";
-import {SeoService} from "./seo.service";
-import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
-import {filter, map, mergeMap} from "rxjs/operators";
-import {StatsService} from "./stats.service";
-import {SnippetService} from "./snippet.service";
-import {PoolsProvider} from "./pools.provider";
+import {UpdateService} from './update.service';
+import {SeoService} from './seo.service';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {filter, map, mergeMap} from 'rxjs/operators';
+import {StatsService} from './stats.service';
+import {SnippetService} from './snippet.service';
+import {PoolsProvider} from './pools.provider';
 
 @Component({
   selector: 'app-root',

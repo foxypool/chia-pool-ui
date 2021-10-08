@@ -2,9 +2,9 @@ import {Component, Input, OnInit} from '@angular/core';
 import {StatsService} from '../stats.service';
 import * as moment from 'moment';
 import {SnippetService} from '../snippet.service';
-import {faMoneyCheckAlt} from "@fortawesome/free-solid-svg-icons";
-import {BigNumber} from "bignumber.js";
-import {PoolsProvider} from "../pools.provider";
+import {faMoneyCheckAlt} from '@fortawesome/free-solid-svg-icons';
+import {BigNumber} from 'bignumber.js';
+import {PoolsProvider} from '../pools.provider';
 import {ensureHexPrefix} from '../util';
 
 @Component({

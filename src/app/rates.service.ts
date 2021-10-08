@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {Injectable} from '@angular/core';
 import {StatsService} from './stats.service';
 import {LocalStorageService} from './local-storage.service';
 

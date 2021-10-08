@@ -6,9 +6,7 @@ import {Component, Input} from '@angular/core';
   styleUrls: ['./loading-state.component.scss']
 })
 export class LoadingStateComponent {
-  @Input() width: number = 3;
-  @Input() height: number = 3;
-  @Input() fontSize: string = 'inherit';
-
-  constructor() { }
+  @Input() width = 3;
+  @Input() height = 3;
+  @Input() fontSize = 'inherit';
 }

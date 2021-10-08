@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import BigNumber from 'bignumber.js';
@@ -12,7 +12,7 @@ import {StatsService} from '../stats.service';
   templateUrl: './update-minimum-payout-modal.component.html',
   styleUrls: ['./update-minimum-payout-modal.component.scss']
 })
-export class UpdateMinimumPayoutModalComponent implements OnInit {
+export class UpdateMinimumPayoutModalComponent  {
   @ViewChild('updateMinimumPayoutModal') modal;
 
   private _newMinimumPayout = undefined;
@@ -28,8 +28,6 @@ export class UpdateMinimumPayoutModalComponent implements OnInit {
     private toastService: ToastService,
     private statsService: StatsService,
   ) {}
-
-  ngOnInit(): void {}
 
   get poolConfig() {
     return this.statsService.poolConfig.getValue() || {};

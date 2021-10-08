@@ -53,10 +53,10 @@ export class PoolHistoryComponent {
                 return moment(params.value).format('YYYY-MM-DD');
               }
               if (params.axisIndex === 0) {
-                return (params.value as Number).toFixed(0);
+                return (params.value as number).toFixed(0);
               }
 
-              return (params.value as Number).toFixed(2);
+              return (params.value as number).toFixed(2);
             },
           },
         },

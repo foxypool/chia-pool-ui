@@ -1,22 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import {StatsService} from "../stats.service";
-import {SnippetService} from "../snippet.service";
-import * as moment from "moment";
+import { Component } from '@angular/core';
+import {StatsService} from '../stats.service';
+import {SnippetService} from '../snippet.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-notices',
   templateUrl: './notices.component.html',
   styleUrls: ['./notices.component.scss']
 })
-export class NoticesComponent implements OnInit {
-
+export class NoticesComponent  {
   constructor(
     private statsService: StatsService,
     private _snippetService: SnippetService,
-  ) { }
-
-  ngOnInit() {
-  }
+  ) {}
 
   get snippetService() {
     return this._snippetService;

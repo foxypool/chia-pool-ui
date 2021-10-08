@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {IconDefinition} from "@fortawesome/fontawesome-common-types";
+import {IconDefinition} from '@fortawesome/fontawesome-common-types';
 
 @Component({
   selector: 'app-empty-state',
@@ -9,5 +9,4 @@ import {IconDefinition} from "@fortawesome/fontawesome-common-types";
 export class EmptyStateComponent {
   @Input() text;
   @Input() icon: IconDefinition;
-  constructor() { }
 }

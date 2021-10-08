@@ -18,7 +18,7 @@ export class SnippetService {
   };
   private readonly _languagesArray;
   private _selectedLanguage;
-  private _selectedLanguageSubject = new BehaviorSubject<String>(this.selectedLanguage);
+  private _selectedLanguageSubject = new BehaviorSubject<string>(this.selectedLanguage);
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -72,7 +72,7 @@ export class SnippetService {
     moment.locale(this._selectedLanguage);
   }
 
-  get selectedLanguageSubject(): BehaviorSubject<String> {
+  get selectedLanguageSubject(): BehaviorSubject<string> {
     return this._selectedLanguageSubject;
   }
 

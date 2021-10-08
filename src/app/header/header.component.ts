@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {StatsService} from '../stats.service';
 import {SnippetService} from '../snippet.service';
-import {PoolsProvider} from "../pools.provider";
+import {PoolsProvider} from '../pools.provider';
 import {AccountService} from '../account.service';
 import {RatesService} from '../rates.service';
 

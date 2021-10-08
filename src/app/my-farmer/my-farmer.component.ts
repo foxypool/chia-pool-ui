@@ -252,7 +252,7 @@ export class MyFarmerComponent implements OnInit {
   }
 
   private makeEcChartUpdateOptions(historicalStats): EChartsOption {
-    let biggestEc = historicalStats.reduce((acc, curr) => acc > curr.ec ? acc : curr.ec, 0);
+    const biggestEc = historicalStats.reduce((acc, curr) => acc > curr.ec ? acc : curr.ec, 0);
     const { unit, unitIndex } = this.getUnitForCapacity(biggestEc);
     const historicalStatsSeries = historicalStats.map(stats => [stats.createdAt, (new BigNumber(stats.ec)).dividedBy((new BigNumber(1024)).exponentiatedBy(unitIndex)).decimalPlaces(2).toNumber()]);
     const lastDate = historicalStats.length > 0 ? historicalStats[0].createdAt : new Date();

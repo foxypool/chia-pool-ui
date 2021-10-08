@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {AccountService} from '../account.service';
@@ -10,7 +10,7 @@ import {SnippetService} from '../snippet.service';
   templateUrl: './update-name-modal.component.html',
   styleUrls: ['./update-name-modal.component.scss']
 })
-export class UpdateNameModalComponent implements OnInit {
+export class UpdateNameModalComponent  {
   @ViewChild('updateNameModal') modal;
 
   public newName = null;
@@ -25,8 +25,6 @@ export class UpdateNameModalComponent implements OnInit {
     private modalService: NgbModal,
     private toastService: ToastService,
   ) {}
-
-  ngOnInit(): void {}
 
   async updateName() {
     if (this.accountService.isUpdatingAccount) {

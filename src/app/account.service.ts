@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import {StatsService} from "./stats.service";
-import {PoolsProvider} from "./pools.provider";
+import {StatsService} from './stats.service';
+import {PoolsProvider} from './pools.provider';
 import {LocalStorageService} from './local-storage.service';
 import {ToastService} from './toast.service';
 import {BigNumber} from 'bignumber.js';

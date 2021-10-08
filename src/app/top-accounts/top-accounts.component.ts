@@ -2,7 +2,7 @@ import {StatsService} from '../stats.service';
 import {Component, OnInit} from '@angular/core';
 import Capacity from '../capacity';
 import {SnippetService} from '../snippet.service';
-import {faHdd} from "@fortawesome/free-regular-svg-icons";
+import {faHdd} from '@fortawesome/free-regular-svg-icons';
 
 @Component({
   selector: 'app-top-accounts',

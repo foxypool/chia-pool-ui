@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {StatsService} from "../stats.service";
-import {SnippetService} from "../snippet.service";
-import * as moment from "moment";
+import {StatsService} from '../stats.service';
+import {SnippetService} from '../snippet.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-events',

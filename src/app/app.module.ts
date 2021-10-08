@@ -20,7 +20,7 @@ import { environment } from '../environments/environment';
 import { ToastrModule } from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { NgxScrollTopModule } from 'ngx-scrolltop';
-import {WINDOW_PROVIDERS} from "./window.provider";
+import {WINDOW_PROVIDERS} from './window.provider';
 import { EmptyStateComponent } from './empty-state/empty-state.component';
 import { LoadingStateComponent } from './loading-state/loading-state.component';
 import { MyFarmerComponent } from './my-farmer/my-farmer.component';
@@ -86,7 +86,7 @@ import { PoolHistoryComponent } from './pool-history/pool-history.component';
     },
     {
       provide: APP_INITIALIZER,
-      useFactory: () => () => {},
+      useFactory: () => () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
       deps: [Sentry.TraceService],
       multi: true,
     },

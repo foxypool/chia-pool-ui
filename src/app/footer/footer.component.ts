@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {SnippetService} from '../snippet.service';
-import {faDiscord, faGithub, faTwitter} from "@fortawesome/free-brands-svg-icons";
+import {faDiscord, faGithub, faTwitter} from '@fortawesome/free-brands-svg-icons';
 
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss']
 })
-export class FooterComponent implements OnInit {
+export class FooterComponent  {
 
   public faDiscord = faDiscord;
   public faGithub = faGithub;
@@ -18,8 +18,4 @@ export class FooterComponent implements OnInit {
   get snippetService(): SnippetService {
     return this._snippetService;
   }
-
-  ngOnInit() {
-  }
-
 }

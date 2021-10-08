@@ -3,7 +3,7 @@ import {StatsService} from '../stats.service';
 import * as moment from 'moment';
 import Capacity from '../capacity';
 import {SnippetService} from '../snippet.service';
-import {faCubes} from "@fortawesome/free-solid-svg-icons";
+import {faCubes} from '@fortawesome/free-solid-svg-icons';
 import {getEffortColor} from '../util';
 import BigNumber from 'bignumber.js';
 
@@ -48,8 +48,6 @@ export class BlocksWonComponent implements OnInit {
     return null;
   }
 
-  set dr(dr) {}
-
   get distributionRatios() {
     if (!this.poolStats || !this.poolStats.distributionRatios) {
       return [];
@@ -87,7 +85,7 @@ export class BlocksWonComponent implements OnInit {
   }
 
   get recentlyWonBlocks() {
-    let recentlyWonBlocks = this.recentlyWonBlocksUnfiltered;
+    const recentlyWonBlocks = this.recentlyWonBlocksUnfiltered;
 
     if (!this.limit) {
       return recentlyWonBlocks;

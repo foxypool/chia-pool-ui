@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import * as moment from 'moment';
 import {AccountService} from '../account.service';
 import {ToastService} from '../toast.service';
@@ -13,7 +13,7 @@ import {PoolsProvider} from '../pools.provider';
   templateUrl: './authentication-modal.component.html',
   styleUrls: ['./authentication-modal.component.scss']
 })
-export class AuthenticationModalComponent implements OnInit {
+export class AuthenticationModalComponent  {
   @ViewChild('authenticationModal') modal;
 
   public message = null;
@@ -32,8 +32,6 @@ export class AuthenticationModalComponent implements OnInit {
     private toastService: ToastService,
     private poolsProvider: PoolsProvider,
   ) {}
-
-  ngOnInit(): void {}
 
   async authenticate() {
     if (this.accountService.isAuthenticating) {

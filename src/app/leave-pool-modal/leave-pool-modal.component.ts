@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {AccountService} from '../account.service';
@@ -11,7 +11,7 @@ import {PoolsProvider} from '../pools.provider';
   templateUrl: './leave-pool-modal.component.html',
   styleUrls: ['./leave-pool-modal.component.scss']
 })
-export class LeavePoolModalComponent implements OnInit {
+export class LeavePoolModalComponent  {
   @ViewChild('leavePoolModal') modal;
 
   public leaveForEver = false;
@@ -27,8 +27,6 @@ export class LeavePoolModalComponent implements OnInit {
     private toastService: ToastService,
     private poolsProvider: PoolsProvider
   ) {}
-
-  ngOnInit(): void {}
 
   get haveCollateral() {
     return this.accountService.account && this.accountService.account.collateral !== undefined;
