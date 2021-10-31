@@ -128,7 +128,7 @@ export class MyFarmerComponent implements OnInit {
       },
       grid: {
         left: 65,
-        top: 50,
+        top: this.shareChartTopMargin,
         right: 40,
         bottom: 20,
       },
@@ -241,6 +241,17 @@ export class MyFarmerComponent implements OnInit {
         }],
       };
     });
+  }
+
+  private get shareChartTopMargin(): number {
+    if (window.innerWidth >= 716) {
+      return 50;
+    }
+    if (window.innerWidth >= 541) {
+      return 70;
+    }
+
+    return 94;
   }
 
   async ngOnInit() {
