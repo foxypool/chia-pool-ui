@@ -160,7 +160,7 @@ export class MyFarmerComponent implements OnInit {
         type: 'bar',
         stack: 'shares',
         name: this.snippetService.getSnippet('my-farmer-component.shares-chart.invalid-shares.name'),
-        color: '#ee6666',
+        color: '#dc3545',
         large: true,
         barWidth: 6,
       }, {
