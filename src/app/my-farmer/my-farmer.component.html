@@ -23,9 +23,18 @@
               <div class="card-header text-align-center">
                 <h5>{{snippetService.getSnippet('my-farmer-component.pending-balance-card.title')}}</h5>
               </div>
-              <div class="card-body text-align-center card-font-size">
+              <div class="card-body text-align-center card-font-size card-body-with-progress-bar">
                 <span placement="bottom" ngbTooltip="{{ratesService.getValuesInFiatFormatted(accountService.account.pendingRounded)}}">{{accountService.account.pendingRounded}} {{poolConfig.ticker}}</span>
               </div>
+              <ngb-progressbar
+                class="card-progress-bar"
+                type="primary"
+                [striped]="false"
+                [animated]="false"
+                [value]="pendingProgress"
+                placement="bottom"
+                [ngbTooltip]="snippetService.getSnippet('my-farmer-component.pending-balance-card.progress.help', pendingProgressRaw.toFixed(2))"
+              ></ngb-progressbar>
             </div>
           </div>
           <div class="p-1 col-md-6 col-lg-6 col-xxl-6">
@@ -105,9 +114,18 @@
                   class="header-info-icon"
                 ></fa-icon>
               </div>
-              <div class="card-body text-align-center card-font-size">
+              <div class="card-body text-align-center card-font-size card-body-with-progress-bar">
                 <span placement="bottom" ngbTooltip="{{ratesService.getValuesInFiatFormatted(accountService.account.collateralRounded)}}">{{accountService.account.collateralRounded}} {{poolConfig.ticker}}</span>
               </div>
+              <ngb-progressbar
+                class="card-progress-bar"
+                type="primary"
+                [striped]="false"
+                [animated]="false"
+                [value]="collateralProgress"
+                placement="bottom"
+                [ngbTooltip]="snippetService.getSnippet('my-farmer-component.collateral-balance-card.progress.help', collateralProgress.toFixed(2))"
+              ></ngb-progressbar>
             </div>
           </div>
           <div class="p-1 col-md-3 col-lg-3 col-xxl-6">

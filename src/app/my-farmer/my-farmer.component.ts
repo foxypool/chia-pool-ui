@@ -276,6 +276,40 @@ export class MyFarmerComponent implements OnInit {
     await this.accountService.updateAccountHistoricalStats();
   }
 
+  public get pendingProgressRaw(): number {
+    if (!this.accountService.account || !this.poolConfig.minimumPayout) {
+      return 0;
+    }
+
+    return this.accountService.account.pendingBN
+      .dividedBy(this.poolConfig.minimumPayout)
+      .multipliedBy(100)
+      .toNumber();
+  }
+
+  public get pendingProgress(): number {
+    const progress = this.pendingProgressRaw;
+
+    return Math.min(progress, 100);
+  }
+
+  public get collateralProgressRaw(): number {
+    if (!this.accountService.account || !this.accountService.account.collateralBN || !this.poolConfig.poolRewardPortion) {
+      return 0;
+    }
+
+    return this.accountService.account.collateralBN
+      .dividedBy(this.poolConfig.poolRewardPortion)
+      .multipliedBy(100)
+      .toNumber();
+  }
+
+  public get collateralProgress(): number {
+    const progress = this.collateralProgressRaw;
+
+    return Math.min(progress, 100);
+  }
+
   private makeEcChartUpdateOptions(historicalStats): EChartsOption {
     const biggestEc = historicalStats.reduce((acc, curr) => acc > curr.ec ? acc : curr.ec, 0);
     const { unit, unitIndex } = this.getUnitForCapacity(biggestEc);

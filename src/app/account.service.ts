@@ -121,10 +121,12 @@ export class AccountService {
     return accountHistoricalStats;
   }
 
-  patchAccount(account) {
-    account.pendingRounded = (new BigNumber(account.pending)).decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber();
+  patchAccount(account): void {
+    account.pendingBN = new BigNumber(account.pending);
+    account.pendingRounded = account.pendingBN.decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber();
     if (account.collateral) {
-      account.collateralRounded = (new BigNumber(account.collateral)).decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber();
+      account.collateralBN = new BigNumber(account.collateral);
+      account.collateralRounded = account.collateralBN.decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber();
     }
   }
 

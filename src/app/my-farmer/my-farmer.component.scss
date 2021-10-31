@@ -38,3 +38,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+::ng-deep .progress {
+  background-color: #262629 !important;
+}
+.card-progress-bar {
+  border-radius: 0 0 0.25rem 0.25rem;
+  margin-left: -1px;
+  height: 0.5rem;
+}
+.card-body-with-progress-bar {
+  margin-bottom: -0.5rem;
+}
