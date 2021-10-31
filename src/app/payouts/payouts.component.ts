@@ -129,6 +129,17 @@ export class PayoutsComponent implements OnInit {
     }
   }
 
+  getPaymentState(payout): string {
+    if (!payout.state || payout.state === 'IN_MEMPOOL') {
+      return this.snippetService.getSnippet('payouts-component.in-mempool');
+    }
+    if (payout.state === 'PARTIALLY_CONFIRMED') {
+      return this.snippetService.getSnippet('payouts-component.partially-confirmed');
+    }
+
+    return this.snippetService.getSnippet('payouts-component.confirmed');
+  }
+
   trackPayoutBy(index, payout) {
     return payout._id;
   }
