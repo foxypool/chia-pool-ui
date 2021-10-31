@@ -276,13 +276,24 @@ export class MyFarmerComponent implements OnInit {
     await this.accountService.updateAccountHistoricalStats();
   }
 
+  private get minimumPayout() {
+    if (this.accountService.account && this.accountService.account.minimumPayout) {
+      return this.accountService.account.minimumPayout;
+    }
+    if (this.poolConfig.minimumPayout) {
+      return this.poolConfig.minimumPayout;
+    }
+
+    return 0;
+  }
+
   public get pendingProgressRaw(): number {
-    if (!this.accountService.account || !this.poolConfig.minimumPayout) {
+    if (!this.accountService.account || !this.minimumPayout) {
       return 0;
     }
 
     return this.accountService.account.pendingBN
-      .dividedBy(this.poolConfig.minimumPayout)
+      .dividedBy(this.minimumPayout)
       .multipliedBy(100)
       .toNumber();
   }
