@@ -16,8 +16,9 @@
                  ngbTooltip="{{snippetService.getSnippet('general.copy')}}"
                  ngxClipboard
                  [cbContent]="message"
+                 (cbOnSuccess)="copied()"
                  style="cursor: pointer">
-              <fa-icon [icon]="faCopy"></fa-icon>
+              <fa-icon [icon]="copyIcon" [ngStyle]="copyIconStyle"></fa-icon>
             </div>
           </div>
         </div>

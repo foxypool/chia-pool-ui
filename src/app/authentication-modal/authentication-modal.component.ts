@@ -3,7 +3,7 @@ import * as moment from 'moment';
 import {AccountService} from '../account.service';
 import {ToastService} from '../toast.service';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import { faCircleNotch, faCopy } from '@fortawesome/free-solid-svg-icons';
+import { faCircleNotch, faCopy, faCheck } from '@fortawesome/free-solid-svg-icons';
 import {SnippetService} from '../snippet.service';
 import {StatsService} from '../stats.service';
 import {PoolsProvider} from '../pools.provider';
@@ -20,7 +20,8 @@ export class AuthenticationModalComponent  {
   public signature = null;
 
   public faCircleNotch = faCircleNotch;
-  public faCopy = faCopy;
+  public copyIcon = faCopy;
+  public copyIconStyle = {};
 
   private modalRef: NgbModalRef = null;
 
@@ -45,6 +46,15 @@ export class AuthenticationModalComponent  {
     } catch (err) {
       this.toastService.showErrorToast(err.message);
     }
+  }
+
+  copied(): void {
+    this.copyIcon = faCheck;
+    this.copyIconStyle = { color: 'green' };
+    setTimeout(() => {
+      this.copyIcon = faCopy;
+      this.copyIconStyle = {};
+    }, 1000);
   }
 
   onModalClose() {
