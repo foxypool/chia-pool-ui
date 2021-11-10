@@ -15,6 +15,10 @@ const config = {
     cliCommandPrefix: 'hddcoin',
     hdKeyPoolPublicKeyPath: 'm/12381/8444/1/0',
   },
+  STAI: {
+    cliCommandPrefix: 'staicoin',
+    hdKeyPoolPublicKeyPath: 'm/12381/8444/1/0',
+  },
 };
 
 export function configForCoin(coin) {

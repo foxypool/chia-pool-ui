@@ -48,6 +48,14 @@ export class PoolsProvider {
       apiUrl: 'https://api2.foxypool.io',
       algorithm: 'Proof of Spacetime',
     },{
+      group: 'STAI',
+      name: 'Foxy-Pool STAI (OG)',
+      url: 'https://stai-og.foxypool.io',
+      poolIdentifier: 'stai-og',
+      hostnames: ['stai-og.foxypool.io'],
+      apiUrl: 'https://api2.foxypool.io',
+      algorithm: 'Proof of Spacetime',
+    },{
       group: 'BHD',
       name: 'Foxy-Pool BHD',
       url: 'https://bhd.foxypool.io',
