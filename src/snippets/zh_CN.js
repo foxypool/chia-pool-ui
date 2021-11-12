@@ -73,6 +73,8 @@ export default {
   'header-component.button.other-pools': '其他泳池',
   'header-component.button.payouts': '赔付',
   'header-component.button.settings': '设置',
+  'header-component.search.placeholder': '池公钥',
+  'header-component.search.title': '搜索',
   'info-component.contact.join-discord': '加入我们的 <a href="https://discord.gg/gNHhn9y" target="_blank">Discord</a>',
   'info-component.contact.title': '联系我们',
   'info-component.pool-info.distribution-delay-info': '区块奖励分配延迟{1}个区块。',

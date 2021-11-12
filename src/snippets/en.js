@@ -73,6 +73,8 @@ export default {
   'header-component.button.other-pools': 'Other Pools',
   'header-component.button.payouts': 'Payouts',
   'header-component.button.settings': 'Settings',
+  'header-component.search.placeholder': 'Pool Public Key',
+  'header-component.search.title': 'Search',
   'info-component.contact.join-discord': 'Join our <a href="https://discord.gg/gNHhn9y" target="_blank">Discord</a>',
   'info-component.contact.title': 'Contact',
   'info-component.pool-info.distribution-delay-info': 'Block reward distribution is delayed by {1} blocks',

@@ -46,9 +46,6 @@
   display: inline-block;
 }
 .currency-select {
-  background-color: #262629;
-  color: #cfd0d1;
-  border-color: #6c757d;
   scrollbar-width: thin;
   scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
 }
@@ -65,4 +62,9 @@
 }
 .currency-select-option {
   background-color: #262629;
+}
+.dark-background-input {
+  background-color: #262629;
+  color: #cfd0d1;
+  border-color: #6c757d;
 }

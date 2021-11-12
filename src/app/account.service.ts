@@ -77,6 +77,17 @@ export class AccountService {
     return true;
   }
 
+  async doesAccountExist({ poolPublicKey }) {
+    const account = await this.getAccount({ poolPublicKey });
+    if (account === null) {
+      this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', poolPublicKey));
+
+      return false;
+    }
+
+    return true;
+  }
+
   logout(): void {
     this.removeAuthTokenFromLocalStorage();
     if (!this.isExternalPoolPublicKey) {

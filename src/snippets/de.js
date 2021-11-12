@@ -73,6 +73,8 @@ export default {
   'header-component.button.other-pools': 'Andere Pools',
   'header-component.button.payouts': 'Auszahlungen',
   'header-component.button.settings': 'Einstellungen',
+  'header-component.search.placeholder': 'Pool Public Key',
+  'header-component.search.title': 'Suchen',
   'info-component.contact.join-discord': 'Tritt unserem <a href="https://discord.gg/gNHhn9y" target="_blank">Discord-Server</a> bei',
   'info-component.contact.title': 'Kontakt',
   'info-component.pool-info.distribution-delay-info': 'Die Block-Reward-Verteilung ist um {1} Blöcke verzögert',
