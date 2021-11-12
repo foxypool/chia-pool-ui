@@ -13,6 +13,7 @@ const routes: Routes = [
   { path: 'payouts', component: PayoutsComponent, pathMatch: 'full', data: { titlePrefixSnippet: 'payouts' } },
   { path: 'top-accounts', component: TopAccountsComponent, pathMatch: 'full', data: { titlePrefixSnippet: 'top-accounts' } },
   { path: 'my-farmer', component: MyFarmerComponent, pathMatch: 'full', data: { titlePrefixSnippet: 'my-farmer' } },
+  { path: 'farmer/:poolPublicKey', component: MyFarmerComponent, pathMatch: 'full', data: { titlePrefixSnippet: 'farmer' } },
   { path: 'notices', loadChildren: () => import('./notices/notices.module').then(m => m.NoticesModule) },
   { path: 'events', loadChildren: () => import('./events/events.module').then(m => m.EventsModule) },
   { path: '**', redirectTo: '' }

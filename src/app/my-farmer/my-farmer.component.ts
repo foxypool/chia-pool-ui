@@ -1,6 +1,5 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {faCircleNotch, faInfoCircle, faUserCheck} from '@fortawesome/free-solid-svg-icons';
-import * as Sentry from '@sentry/angular';
 import * as moment from 'moment';
 import BigNumber from 'bignumber.js';
 import {EChartsOption, graphic} from 'echarts';
@@ -15,13 +14,14 @@ import {UpdateNameModalComponent} from '../update-name-modal/update-name-modal.c
 import {LeavePoolModalComponent} from '../leave-pool-modal/leave-pool-modal.component';
 import {UpdateMinimumPayoutModalComponent} from '../update-minimum-payout-modal/update-minimum-payout-modal.component';
 import {RatesService} from '../rates.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-my-farmer',
   templateUrl: './my-farmer.component.html',
   styleUrls: ['./my-farmer.component.scss']
 })
-export class MyFarmerComponent implements OnInit {
+export class MyFarmerComponent implements OnInit, OnDestroy {
   @ViewChild(AuthenticationModalComponent) authenticationModal;
   @ViewChild(UpdateNameModalComponent) updateNameModal;
   @ViewChild(LeavePoolModalComponent) leavePoolModal;
@@ -51,6 +51,8 @@ export class MyFarmerComponent implements OnInit {
     private statsService: StatsService,
     private toastService: ToastService,
     public ratesService: RatesService,
+    private route: ActivatedRoute,
+    private router: Router,
   ) {
     this.ecChartOptions = {
       title: {
@@ -200,6 +202,19 @@ export class MyFarmerComponent implements OnInit {
         },
       }],
     };
+
+    this.route.params.subscribe(params => {
+      if (params.poolPublicKey) {
+        this.accountService.poolPublicKey = params.poolPublicKey;
+        this.accountService.isMyFarmerPage = false;
+      } else {
+        this.accountService.isMyFarmerPage = true;
+        if (this.accountService.poolPublicKey !== this.accountService.poolPublicKeyFromLocalStorage) {
+          this.accountService.poolPublicKey = this.accountService.poolPublicKeyFromLocalStorage;
+        }
+      }
+    });
+
     this.accountService.accountHistoricalStats.subscribe(historicalStats => {
       this.ecChartUpdateOptions = this.makeEcChartUpdateOptions(historicalStats);
       this.sharesChartUpdateOptions = this.makeSharesChartUpdateOptions(historicalStats);
@@ -243,6 +258,14 @@ export class MyFarmerComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    if (this.accountService.isMyFarmerPage) {
+      return;
+    }
+
+    this.accountService.clearStats();
+  }
+
   private get shareChartTopMargin(): number {
     if (window.innerWidth >= 716) {
       return 50;
@@ -282,8 +305,15 @@ export class MyFarmerComponent implements OnInit {
     if (!this.accountService.havePoolPublicKey) {
       return;
     }
-    Sentry.setUser({ id: this.accountService.poolPublicKey });
     await this.accountService.updateAccount();
+    if (!this.accountService.haveAccount) {
+      if (!this.accountService.isMyFarmerPage) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        await this.router.navigate(['/']);
+      }
+
+      return;
+    }
     await this.accountService.updateAccountHistoricalStats();
   }
 

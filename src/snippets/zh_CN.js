@@ -152,6 +152,8 @@ export default {
   'routing.title-prefix.payouts': '赔付',
   'routing.title-prefix.settings': '设置',
   'routing.title-prefix.top-accounts': '热门账户',
+  'routing.title-prefix.my-farmer': '我的农夫',
+  'routing.title-prefix.farmer': '农民',
   'settings-component.actions.on-demand-payout.button': '按需支付',
   'settings-component.actions.on-demand-payout.help-text': '注意：从您指定的按需支付金额中扣除{1}。{2} 固定费用。最低赔付金额为{3}。{2}.',
   'settings-component.actions.on-demand-payout.max': '最大',

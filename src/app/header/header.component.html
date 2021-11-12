@@ -65,7 +65,7 @@
         </a>
       </li>
     </ul>
-    <div class="header-row-item-start" *ngIf="accountService.havePoolPublicKey">
+    <div class="header-row-item-start" *ngIf="showLogoutButton">
       <button class="btn btn-secondary" (click)="accountService.logout()">{{snippetService.getSnippet('header-component.button.logout')}}</button>
     </div>
     <div class="currency-select-wrapper header-row-item" *ngIf="ratesService.currencies && ratesService.currencies.length > 0">

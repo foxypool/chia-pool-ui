@@ -152,6 +152,8 @@ export default {
   'routing.title-prefix.payouts': 'Payouts',
   'routing.title-prefix.settings': 'Settings',
   'routing.title-prefix.top-accounts': 'Top Accounts',
+  'routing.title-prefix.my-farmer': 'My Farmer',
+  'routing.title-prefix.farmer': 'Farmer',
   'settings-component.actions.on-demand-payout.button': 'On demand payout',
   'settings-component.actions.on-demand-payout.help-text': 'Note: a {1} {2} flat fee is deducted from the on demand payout amount you specify. Minimum payout amount is {3} {2}.',
   'settings-component.actions.on-demand-payout.max': 'Max',

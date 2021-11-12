@@ -25,6 +25,14 @@ export class HeaderComponent implements OnInit {
     public ratesService: RatesService,
   ) {}
 
+  get showLogoutButton(): boolean {
+    if (!this.accountService.isMyFarmerPage) {
+      return this.accountService.isAuthenticated;
+    }
+
+    return this.accountService.havePoolPublicKey;
+  }
+
   toggleMenuCollapse() {
     this.isMenuCollapsed = !this.isMenuCollapsed;
   }

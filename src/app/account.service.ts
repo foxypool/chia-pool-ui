@@ -14,7 +14,7 @@ import {BehaviorSubject} from 'rxjs';
 })
 export class AccountService {
   public static poolPublicKeyStorageKey = 'poolPublicKey';
-  public static authTokenStorageKey = 'authToken';
+  public static authTokenStorageKey = (poolPublicKey: string): string => `authToken:${poolPublicKey}`;
 
   public account = null;
   public accountHistoricalStats = new BehaviorSubject<any[]>([]);
@@ -22,6 +22,9 @@ export class AccountService {
   public isAuthenticating = false;
   public isUpdatingAccount = false;
   public isLeavingPool = false;
+  public isMyFarmerPage = true;
+
+  private _poolPublicKey: string = null;
 
   constructor(
     private statsService: StatsService,
@@ -29,9 +32,33 @@ export class AccountService {
     private localStorageService: LocalStorageService,
     private toastService: ToastService,
     private snippetService: SnippetService,
-  ) {}
+  ) {
+    this.migrateLegacyConfig();
+    this.poolPublicKey = this.poolPublicKeyFromLocalStorage;
+  }
 
-  async login({ poolPublicKey }) {
+  get poolPublicKey(): string {
+    return this._poolPublicKey;
+  }
+
+  set poolPublicKey(value: string) {
+    this._poolPublicKey = value;
+    if (value) {
+      Sentry.setUser({ id: value });
+    } else {
+      Sentry.setUser(null);
+    }
+  }
+
+  get poolPublicKeyFromLocalStorage(): string {
+    return this.localStorageService.getItem(AccountService.poolPublicKeyStorageKey);
+  }
+
+  get authToken(): string {
+    return this.localStorageService.getItem(AccountService.authTokenStorageKey(this.poolPublicKey));
+  }
+
+  async login({ poolPublicKey }): Promise<boolean> {
     poolPublicKey = poolPublicKey.trim();
     if (!poolPublicKey.startsWith('0x')) {
       poolPublicKey = `0x${poolPublicKey}`;
@@ -41,8 +68,8 @@ export class AccountService {
       this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', poolPublicKey));
       return false;
     }
-    this.localStorageService.setItem(AccountService.poolPublicKeyStorageKey, poolPublicKey);
-    Sentry.setUser({ id: poolPublicKey });
+    this.setPoolPublicKeyInLocalStorage(poolPublicKey);
+    this.poolPublicKey = poolPublicKey;
     await this.updateAccount();
     await this.updateAccountHistoricalStats();
     this.toastService.showSuccessToast(this.snippetService.getSnippet('account-service.login.success'));
@@ -50,37 +77,66 @@ export class AccountService {
     return true;
   }
 
-  logout() {
-    this.removePoolPublicKey();
-    this.removeAuthToken();
-    this.account = null;
-    this.accountHistoricalStats.next([]);
-    Sentry.setUser(null);
+  logout(): void {
+    this.removeAuthTokenFromLocalStorage();
+    if (!this.isExternalPoolPublicKey) {
+      this.removePoolPublicKeyFromLocalStorage();
+      this.clearStats();
+    }
     this.toastService.showSuccessToast(this.snippetService.getSnippet('account-service.logout.success'));
   }
 
-  get poolPublicKey() {
-    return this.localStorageService.getItem(AccountService.poolPublicKeyStorageKey);
+  clearStats(): void {
+    this.poolPublicKey = null;
+    this.account = null;
+    this.accountHistoricalStats.next([]);
   }
 
-  removePoolPublicKey() {
+  removePoolPublicKeyFromLocalStorage(): void {
     this.localStorageService.removeItem(AccountService.poolPublicKeyStorageKey);
   }
 
-  get havePoolPublicKey() {
+  setPoolPublicKeyInLocalStorage(poolPublicKey: string): void {
+    this.localStorageService.setItem(AccountService.poolPublicKeyStorageKey, poolPublicKey);
+  }
+
+  setAuthTokenInLocalStorage(authToken: string): void {
+    this.localStorageService.setItem(AccountService.authTokenStorageKey(this.poolPublicKey), authToken);
+  }
+
+  removeAuthTokenFromLocalStorage(): void {
+    this.localStorageService.removeItem(AccountService.authTokenStorageKey(this.poolPublicKey));
+  }
+
+  get havePoolPublicKey(): boolean {
     return !!this.poolPublicKey;
   }
 
-  get haveAccount() {
+  get haveAccount(): boolean {
     return this.account !== null;
+  }
+
+  get haveAuthToken(): boolean {
+    return !!this.authToken;
+  }
+
+  get isAuthenticated(): boolean {
+    return this.havePoolPublicKey && this.haveAuthToken;
+  }
+
+  get isExternalPoolPublicKey(): boolean {
+    return this.poolPublicKey !== this.poolPublicKeyFromLocalStorage;
   }
 
   async updateAccount() {
     this.account = await this.getAccount({ poolPublicKey: this.poolPublicKey });
     if (!this.haveAccount) {
-      this.removePoolPublicKey();
-      this.removeAuthToken();
+      if (this.isMyFarmerPage) {
+        this.removeAuthTokenFromLocalStorage();
+        this.removePoolPublicKeyFromLocalStorage();
+      }
       this.accountHistoricalStats.next([]);
+      this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', this.poolPublicKey));
     }
   }
 
@@ -130,18 +186,6 @@ export class AccountService {
     }
   }
 
-  get authToken() {
-    return this.localStorageService.getItem(AccountService.authTokenStorageKey);
-  }
-
-  get haveAuthToken() {
-    return !!this.authToken;
-  }
-
-  removeAuthToken() {
-    this.localStorageService.removeItem(AccountService.authTokenStorageKey);
-  }
-
   async authenticate({ signature, message }) {
     if (!this.havePoolPublicKey) {
       return;
@@ -153,14 +197,14 @@ export class AccountService {
         signature,
         message,
       });
-      this.localStorageService.setItem(AccountService.authTokenStorageKey, accessToken);
+      this.setAuthTokenInLocalStorage(accessToken);
     } finally {
       this.isAuthenticating = false;
     }
   }
 
   async updateName({ newName }) {
-    if (!this.haveAuthToken) {
+    if (!this.isAuthenticated) {
       return;
     }
     this.isUpdatingAccount = true;
@@ -177,7 +221,7 @@ export class AccountService {
   }
 
   async leavePool({ leaveForEver }) {
-    if (!this.haveAuthToken) {
+    if (!this.isAuthenticated) {
       return;
     }
     this.isUpdatingAccount = true;
@@ -196,7 +240,7 @@ export class AccountService {
   }
 
   async rejoinPool() {
-    if (!this.haveAuthToken) {
+    if (!this.isAuthenticated) {
       return;
     }
     this.isUpdatingAccount = true;
@@ -214,7 +258,7 @@ export class AccountService {
   }
 
   async updateMinimumPayout({ newMinimumPayout }) {
-    if (!this.haveAuthToken) {
+    if (!this.isAuthenticated) {
       return;
     }
     this.isUpdatingAccount = true;
@@ -227,6 +271,14 @@ export class AccountService {
       await this.updateAccount();
     } finally {
       this.isUpdatingAccount = false;
+    }
+  }
+
+  private migrateLegacyConfig() {
+    const legacyAuthToken = this.localStorageService.getItem('authToken');
+    if (legacyAuthToken) {
+      this.localStorageService.setItem(AccountService.authTokenStorageKey(this.poolPublicKeyFromLocalStorage), legacyAuthToken);
+      this.localStorageService.removeItem('authToken');
     }
   }
 }

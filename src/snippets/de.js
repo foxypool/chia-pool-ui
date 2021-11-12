@@ -152,6 +152,8 @@ export default {
   'routing.title-prefix.payouts': 'Auszahlungen',
   'routing.title-prefix.settings': 'Einstellungen',
   'routing.title-prefix.top-accounts': 'Top Konten',
+  'routing.title-prefix.my-farmer': 'Mein Farmer',
+  'routing.title-prefix.farmer': 'Farmer',
   'settings-component.actions.on-demand-payout.button': 'Auszahlung auf Anfrage',
   'settings-component.actions.on-demand-payout.help-text': 'Hinweis: eine pauschale Gebühr von {1} {2} wird von dem von Ihnen angegebenen Auszahlungsbetrag bei abgezogen. Der Mindestauszahlungsbetrag beträgt {3} {2}.',
   'settings-component.actions.on-demand-payout.max': 'Maximum',
