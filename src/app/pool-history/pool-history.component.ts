@@ -96,29 +96,6 @@ export class PoolHistoryComponent {
         yAxisIndex: 1,
       }],
     };
-    this.snippetService.selectedLanguageSubject.subscribe(() => {
-      this.chartUpdateOptions = {
-        title: {
-          text: this.snippetService.getSnippet('pool-history-component.chart.title'),
-        },
-        legend: {
-          data: [
-            this.snippetService.getSnippet('pool-history-component.chart.blocks.name'),
-            this.snippetService.getSnippet('pool-history-component.chart.pool-ec.name'),
-          ],
-        },
-        yAxis: [{
-          name: this.snippetService.getSnippet('pool-history-component.chart.blocks.name'),
-        }, {
-          name: this.snippetService.getSnippet('pool-history-component.chart.capacity.name'),
-        }],
-        series: [{
-          name: this.snippetService.getSnippet('pool-history-component.chart.blocks.name'),
-        }, {
-          name: this.snippetService.getSnippet('pool-history-component.chart.pool-ec.name'),
-        }],
-      };
-    });
     this.statsService.poolHistoricalStats.subscribe(historicalStats => {
       this.chartUpdateOptions = this.makeChartUpdateOptions(historicalStats);
     });

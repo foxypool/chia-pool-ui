@@ -219,43 +219,6 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       this.ecChartUpdateOptions = this.makeEcChartUpdateOptions(historicalStats);
       this.sharesChartUpdateOptions = this.makeSharesChartUpdateOptions(historicalStats);
     });
-    this.snippetService.selectedLanguageSubject.subscribe(() => {
-      this.ecChartUpdateOptions = {
-        title: {
-          text: this.snippetService.getSnippet('my-farmer-component.ec-chart.title'),
-        },
-      };
-      this.sharesChartUpdateOptions = {
-        title: {
-          text: this.snippetService.getSnippet('my-farmer-component.shares-chart.title'),
-        },
-        legend: {
-          data: [
-            this.snippetService.getSnippet('my-farmer-component.shares-chart.invalid-shares.name'),
-            this.snippetService.getSnippet('my-farmer-component.shares-chart.stale-shares.name'),
-            this.snippetService.getSnippet('my-farmer-component.shares-chart.valid-shares.name'),
-            this.snippetService.getSnippet('my-farmer-component.shares-chart.difficulty.name'),
-            this.snippetService.getSnippet('my-farmer-component.shares-chart.partials.name'),
-          ],
-        },
-        yAxis: [{
-          name: this.snippetService.getSnippet('my-farmer-component.shares-chart.shares.name'),
-        }, {
-          name: this.snippetService.getSnippet('my-farmer-component.shares-chart.difficulty.name'),
-        }],
-        series: [{
-          name: this.snippetService.getSnippet('my-farmer-component.shares-chart.invalid-shares.name'),
-        }, {
-          name: this.snippetService.getSnippet('my-farmer-component.shares-chart.stale-shares.name'),
-        }, {
-          name: this.snippetService.getSnippet('my-farmer-component.shares-chart.valid-shares.name'),
-        }, {
-          name: this.snippetService.getSnippet('my-farmer-component.shares-chart.difficulty.name'),
-        }, {
-          name: this.snippetService.getSnippet('my-farmer-component.shares-chart.partials.name'),
-        }],
-      };
-    });
   }
 
   ngOnDestroy(): void {

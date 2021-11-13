@@ -28,7 +28,7 @@ export class NoticesComponent  {
   }
 
   getTranslatedNoticeText(notice) {
-    return notice.text[this.snippetService.selectedLanguage] || notice.text.en;
+    return notice.text.en;
   }
 
   getFormattedDate(date) {

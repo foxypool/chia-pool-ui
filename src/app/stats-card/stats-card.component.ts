@@ -111,10 +111,6 @@ export class StatsCardComponent implements OnInit {
     this._remainingSeconds = this._exchangeStats.bestDeadline - this._elapsedSeconds;
   }
 
-  get elapsed() {
-    return humanizeDuration(this._elapsedSeconds * 1000, { round: true, language: this.snippetService.selectedLanguage });
-  }
-
   get bestDeadline() {
     if (this.exchangeStats.bestDeadline === null) {
       return this.snippetService.getSnippet('general.not-available.short');

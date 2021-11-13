@@ -95,16 +95,5 @@
         </div>
       </div>
     </div>
-    <div ngbDropdown class="d-inline-block header-row-item-end">
-      <button class="btn btn-outline-primary" id="languageDropdown" ngbDropdownToggle>
-        {{snippetService.getSelectedLanguage()}}
-      </button>
-      <div ngbDropdownMenu aria-labelledby="languageDropdown">
-        <div *ngFor="let lang of snippetService.languagesArray; let i = index" [attr.data-index]="i">
-          <div ngbDropdownItem (click)="snippetService.setLanguage(lang[0])" style="cursor: pointer;"><img src="assets/{{lang[0]}}.svg" style="height: 1.4em; border-radius: 8px"> {{lang[1]}}</div>
-          <div *ngIf="snippetService.languagesArray.length !== (i + 1)" class="dropdown-divider"></div>
-        </div>
-      </div>
-    </div>
   </div>
 </nav>
