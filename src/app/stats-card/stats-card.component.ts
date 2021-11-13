@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {interval, Observable, Subscription} from 'rxjs';
 import {StatsService} from '../stats.service';
-import * as humanizeDuration from 'humanize-duration';
 import * as moment from 'moment';
 import Capacity from '../capacity';
 import {SnippetService} from '../snippet.service';
