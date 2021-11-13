@@ -49,7 +49,7 @@
     <td [style.padding-top]="block.distributed ? '12px' : '2px'" [style.padding-bottom]="block.distributed ? '12px' : '8px'">
       {{getBlockDistributedLabel(block)}}
       <span *ngIf="!block.distributed">({{getBlockConfirms(block)}} / {{poolConfig.blockRewardDistributionDelay}})</span>
-      <ngb-progressbar *ngIf="!block.distributed" [striped]="true" [animated]="false" [type]="getBlockProgressType(block)" [value]="getBlockProgress(block)"></ngb-progressbar>
+      <ngb-progressbar *ngIf="!block.distributed" [striped]="true" [animated]="true" [type]="getBlockProgressType(block)" [value]="getBlockProgress(block)"></ngb-progressbar>
     </td>
   </tr>
   </tbody>
