@@ -5,6 +5,7 @@ import {PoolsProvider} from '../pools.provider';
 import {AccountService} from '../account.service';
 import {RatesService} from '../rates.service';
 import {Router} from '@angular/router';
+import {faSearch} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-header',
@@ -18,6 +19,7 @@ export class HeaderComponent implements OnInit {
 
   public isMenuCollapsed = true;
   public accountSearchInput = '';
+  public searchIcon = faSearch;
 
   constructor(
     public accountService: AccountService,
@@ -53,6 +55,9 @@ export class HeaderComponent implements OnInit {
 
   async search() {
     this.accountSearchInput = this.accountSearchInput.trim();
+    if (!this.accountSearchInput) {
+      return;
+    }
     if (await this.accountService.doesAccountExist({ poolPublicKey: this.accountSearchInput })) {
       await this.router.navigate([`/farmer/${this.accountSearchInput}`]);
       this.accountSearchInput = '';

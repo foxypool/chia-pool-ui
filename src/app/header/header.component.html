@@ -66,25 +66,34 @@
       </li>
     </ul>
     <div class="header-row-item-start" *ngIf="showLogoutButton">
-      <button class="btn btn-secondary" (click)="accountService.logout()">{{snippetService.getSnippet('header-component.button.logout')}}</button>
+      <button class="btn dark-background btn-outline-danger logout-button" (click)="accountService.logout()">{{snippetService.getSnippet('header-component.button.logout')}}</button>
     </div>
     <div class="currency-select-wrapper header-row-item" *ngIf="ratesService.currencies && ratesService.currencies.length > 0">
-      <select class="custom-select currency-select dark-background-input" [(ngModel)]="ratesService.selectedCurrency">
+      <select class="custom-select currency-select dark-background" [(ngModel)]="ratesService.selectedCurrency">
         <option *ngFor="let currency of ratesService.currencies" [ngValue]="currency" class="currency-select-option">{{ currency.toUpperCase() }}</option>
       </select>
     </div>
-    <form class="form-inline header-row-item">
+    <div class="input-group header-row-item search-input">
       <input
-        class="form-control mr-sm-2 dark-background-input"
+        class="form-control dark-background"
         type="search"
         [(ngModel)]="accountSearchInput"
-        [ngModelOptions]="{standalone: true}"
         [placeholder]="snippetService.getSnippet('header-component.search.placeholder')"
-        aria-label="Search">
-      <button class="btn btn-outline-success" (click)="search()">{{snippetService.getSnippet('header-component.search.title')}}</button>
-    </form>
+        aria-label="Search"
+      >
+      <div class="input-group-append">
+        <div
+          class="input-group-text dark-background search-button"
+          (click)="search()"
+          [ngbTooltip]="snippetService.getSnippet('header-component.search.title')"
+          placement="right"
+        >
+          <fa-icon [icon]="searchIcon" class="color-green"></fa-icon>
+        </div>
+      </div>
+    </div>
     <div ngbDropdown class="d-inline-block header-row-item" *ngIf="otherPools.length > 0">
-      <button class="btn btn-outline-primary" id="poolsDropdown" ngbDropdownToggle>
+      <button class="btn btn-outline-light dark-background other-pools-button" id="poolsDropdown" ngbDropdownToggle>
         {{snippetService.getSnippet('header-component.button.other-pools')}}
       </button>
       <div ngbDropdownMenu aria-labelledby="poolsDropdown">
