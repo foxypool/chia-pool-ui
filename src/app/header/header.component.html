@@ -79,6 +79,7 @@
         type="search"
         [(ngModel)]="accountSearchInput"
         [placeholder]="snippetService.getSnippet('header-component.search.placeholder')"
+        (keyup.enter)="search()"
         aria-label="Search"
       >
       <div class="input-group-append">
