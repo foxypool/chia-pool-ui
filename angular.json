@@ -56,7 +56,7 @@
                 "scripts": true,
                 "styles": true,
                 "vendor": true,
-                "hidden": true
+                "hidden": false
               },
               "namedChunks": false,
               "extractLicenses": true,
