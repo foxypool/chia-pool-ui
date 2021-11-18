@@ -204,7 +204,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       }],
     };
 
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe(async params => {
       if (params.poolPublicKey) {
         this.accountService.poolPublicKey = params.poolPublicKey;
         this.accountService.isMyFarmerPage = false;
@@ -214,6 +214,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
           this.accountService.poolPublicKey = this.accountService.poolPublicKeyFromLocalStorage;
         }
       }
+      await this.initAccount();
     });
 
     this.accountService.accountHistoricalStats
@@ -257,7 +258,9 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       }
       await this.accountService.updateAccountHistoricalStats();
     }, (this.historicalIntervalInMinutes + 1) * 60 * 1000);
+  }
 
+  private async initAccount() {
     if (!this.accountService.havePoolPublicKey) {
       return;
     }
