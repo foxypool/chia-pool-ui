@@ -23,7 +23,7 @@ export class FarmerPayoutHistoryComponent implements OnChanges {
   public faMoneyCheck = faMoneyCheckAlt;
   public chartOptions: EChartsOption = {
     grid: {
-      left: 35,
+      left: 45,
       top: 30,
       right: 10,
       bottom: 20,
