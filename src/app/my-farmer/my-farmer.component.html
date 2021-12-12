@@ -196,11 +196,35 @@
           </div>
         </div>
       </div>
-      <div class="p-1 col-md-12">
-        <div echarts [options]="ecChartOptions" [merge]="ecChartUpdateOptions" theme="default" class="ec-chart"></div>
-      </div>
-      <div class="p-1 col-md-12">
-        <div echarts [options]="sharesChartOptions" [merge]="sharesChartUpdateOptions" theme="default" class="shares-chart"></div>
+    </div>
+    <div class="row">
+      <div class="p-2 col-md-12">
+        <ul ngbNav #nav="ngbNav" class="nav-tabs">
+          <li ngbNavItem="stats" [destroyOnHide]="true">
+            <a ngbNavLink><h5>{{snippetService.getSnippet('my-farmer-component.tabs.stats.label')}}</h5></a>
+            <ng-template ngbNavContent>
+              <div class="p-1 col-md-12">
+                <div echarts [options]="ecChartOptions" [merge]="ecChartUpdateOptions" theme="default" class="ec-chart"></div>
+              </div>
+              <div class="p-1 col-md-12">
+                <div echarts [options]="sharesChartOptions" [merge]="sharesChartUpdateOptions" theme="default" class="shares-chart"></div>
+              </div>
+            </ng-template>
+          </li>
+          <li ngbNavItem="recent-payouts" [destroyOnHide]="true">
+            <a ngbNavLink><h5>{{snippetService.getSnippet('my-farmer-component.tabs.recent-payouts.label')}}</h5></a>
+            <ng-template ngbNavContent>
+              <div class="p-1 col-md-12">
+                <app-farmer-payout-history
+                  [isLoading]="isLoadingPayoutHistory"
+                  [poolConfig]="poolConfig"
+                  [recentPayouts]="recentPayouts"
+                ></app-farmer-payout-history>
+              </div>
+            </ng-template>
+          </li>
+        </ul>
+        <div [ngbNavOutlet]="nav" class="mt-2"></div>
       </div>
     </div>
   </div>

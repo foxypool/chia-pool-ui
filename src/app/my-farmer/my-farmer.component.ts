@@ -3,6 +3,9 @@ import {faCircleNotch, faInfoCircle, faUserCheck} from '@fortawesome/free-solid-
 import * as moment from 'moment';
 import BigNumber from 'bignumber.js';
 import {EChartsOption, graphic} from 'echarts';
+import {ActivatedRoute, Router} from '@angular/router';
+import {distinctUntilChanged, map, skip} from 'rxjs/operators';
+import {combineLatest, Subscription} from 'rxjs';
 
 import {StatsService} from '../stats.service';
 import {ToastService} from '../toast.service';
@@ -14,8 +17,7 @@ import {UpdateNameModalComponent} from '../update-name-modal/update-name-modal.c
 import {LeavePoolModalComponent} from '../leave-pool-modal/leave-pool-modal.component';
 import {UpdateMinimumPayoutModalComponent} from '../update-minimum-payout-modal/update-minimum-payout-modal.component';
 import {RatesService} from '../rates.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {skip} from 'rxjs/operators';
+import {Payout} from '../farmer-payout-history/farmer-payout-history.component';
 
 @Component({
   selector: 'app-my-farmer',
@@ -41,10 +43,14 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   public sharesChartOptions: EChartsOption;
   public sharesChartUpdateOptions: EChartsOption;
 
+  public isLoadingPayoutHistory = true;
+  public recentPayouts: Payout[] = [];
+
   private poolEc = 0;
   private dailyRewardPerPib = 0;
 
   private historicalIntervalInMinutes = 15;
+  private payoutsSubscription: Subscription;
 
   constructor(
     public snippetService: SnippetService,
@@ -226,6 +232,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.payoutsSubscription.unsubscribe();
+
     if (this.accountService.isMyFarmerPage) {
       return;
     }
@@ -245,6 +253,48 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     this.statsService.rewardStats.asObservable().subscribe(async rewardStats => {
       this.dailyRewardPerPib = rewardStats.dailyRewardPerPiB;
     });
+
+    const accountPayoutAddressSource = this.accountService.accountSubject.asObservable()
+      .pipe(map(account => {
+        if (!account || !account.payoutAddress) {
+          return null;
+        }
+
+        return account.payoutAddress;
+      }), distinctUntilChanged());
+    this.payoutsSubscription = combineLatest([this.statsService.lastPayouts.asObservable(), accountPayoutAddressSource])
+      .subscribe(([lastPayouts, payoutAddress]) => {
+        if (lastPayouts === null || !payoutAddress) {
+          this.isLoadingPayoutHistory = true;
+
+          return;
+        }
+        this.isLoadingPayoutHistory = false;
+        this.recentPayouts = lastPayouts
+          .map(payout => {
+            const matchingTransaction = payout.transactions.find(tx => tx.payoutAmounts[payoutAddress] !== undefined);
+            if (!matchingTransaction) {
+              return null;
+            }
+            const payoutDate = moment(payout.createdAt);
+            let payoutAmount = matchingTransaction.payoutAmounts[this.accountService.account.payoutAddress] || null;
+            if (payoutAmount) {
+              payoutAmount = (new BigNumber(payoutAmount)).decimalPlaces(
+                this.statsService.coinConfig.decimalPlaces,
+                BigNumber.ROUND_FLOOR
+              ).toString();
+            }
+
+            return {
+              coinId: matchingTransaction.coinIds[0],
+              state: matchingTransaction.state,
+              payoutDate: payoutDate.toDate(),
+              formattedPayoutDate: payoutDate.format('YYYY-MM-DD HH:mm'),
+              amount: payoutAmount,
+            };
+          })
+          .filter(payout => payout !== null);
+      });
 
     setInterval(async () => {
       if (!this.accountService.havePoolPublicKey) {

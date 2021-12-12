@@ -16,7 +16,7 @@ export class AccountService {
   public static poolPublicKeyStorageKey = 'poolPublicKey';
   public static authTokenStorageKey = (poolPublicKey: string): string => `authToken:${poolPublicKey}`;
 
-  public account = null;
+  public accountSubject = new BehaviorSubject<any>(null);
   public accountHistoricalStats = new BehaviorSubject<any[]>([]);
   public isLoading = false;
   public isAuthenticating = false;
@@ -35,6 +35,14 @@ export class AccountService {
   ) {
     this.migrateLegacyConfig();
     this.poolPublicKey = this.poolPublicKeyFromLocalStorage;
+  }
+
+  get account(): any {
+    return this.accountSubject.getValue();
+  }
+
+  set account(account: any) {
+    this.accountSubject.next(account);
   }
 
   get poolPublicKey(): string {
