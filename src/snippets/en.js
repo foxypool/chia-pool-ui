@@ -133,6 +133,7 @@ export default {
   'my-farmer-component.shares-chart.partials.name': 'Partials',
   'my-farmer-component.tabs.stats.label': 'Stats',
   'my-farmer-component.tabs.recent-payouts.label': 'Recent payouts',
+  'my-farmer-component.tabs.won-blocks.label': 'Blocks',
   'notices-component.title': 'Notices',
   'payouts-component.headers.amount': 'Amount',
   'payouts-component.headers.fiat-amount': 'Fiat amount',

@@ -32,6 +32,7 @@ import { UpdateMinimumPayoutModalComponent } from './update-minimum-payout-modal
 import {NgxEchartsModule} from 'ngx-echarts';
 import { PoolHistoryComponent } from './pool-history/pool-history.component';
 import { FarmerPayoutHistoryComponent } from './farmer-payout-history/farmer-payout-history.component';
+import { FarmerWonBlocksComponent } from './farmer-won-blocks/farmer-won-blocks.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { FarmerPayoutHistoryComponent } from './farmer-payout-history/farmer-pay
     UpdateMinimumPayoutModalComponent,
     PoolHistoryComponent,
     FarmerPayoutHistoryComponent,
+    FarmerWonBlocksComponent,
   ],
   imports: [
     BrowserModule,

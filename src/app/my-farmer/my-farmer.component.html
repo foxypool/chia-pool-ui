@@ -223,6 +223,18 @@
               </div>
             </ng-template>
           </li>
+          <li ngbNavItem="won-blocks" [destroyOnHide]="true">
+            <a ngbNavLink><h5>{{snippetService.getSnippet('my-farmer-component.tabs.won-blocks.label')}}</h5></a>
+            <ng-template ngbNavContent>
+              <div class="p-1 col-md-12">
+                <app-farmer-won-blocks
+                  [isLoading]="isAccountLoading | async"
+                  [poolConfig]="poolConfig"
+                  [wonBlocksObservable]="accountService.accountWonBlocks.asObservable()"
+                ></app-farmer-won-blocks>
+              </div>
+            </ng-template>
+          </li>
         </ul>
         <div [ngbNavOutlet]="nav" class="mt-2"></div>
       </div>

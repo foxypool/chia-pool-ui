@@ -20,12 +20,12 @@
       </thead>
       <tbody>
         <tr *ngIf="isLoading && recentPayouts.length === 0">
-          <td colspan="4" style="text-align: center">
+          <td colspan="5" style="text-align: center">
             <app-loading-state></app-loading-state>
           </td>
         </tr>
         <tr *ngIf="!isLoading && recentPayouts.length === 0">
-          <td colspan="4" style="text-align: center; padding-top: 1rem">
+          <td colspan="5" style="text-align: center; padding-top: 1rem">
             <app-empty-state [text]="snippetService.getSnippet('payouts-component.no-payouts-sent-yet')" [icon]="faMoneyCheck"></app-empty-state>
           </td>
         </tr>

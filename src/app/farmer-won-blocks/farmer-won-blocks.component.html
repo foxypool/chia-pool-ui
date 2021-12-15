@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-dark dark-theme">
+      <thead>
+        <tr>
+          <th scope="col">
+            <div class="date-header-container">
+              <span>{{snippetService.getSnippet('blocks-won-component.header.date')}}</span>
+              <fa-icon [icon]="faExchangeAlt" class="toggle-date-formatting-icon" (click)="toggleDateFormatting()"></fa-icon>
+            </div>
+          </th>
+          <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.height')}}</th>
+          <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.effort')}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="isLoading && (wonBlocksObservable | async).length === 0">
+          <td colspan="3" style="text-align: center">
+            <app-loading-state></app-loading-state>
+          </td>
+        </tr>
+        <tr *ngIf="!isLoading && (wonBlocksObservable | async).length === 0">
+          <td colspan="3" style="text-align: center; padding-top: 1rem">
+            <app-empty-state [text]="snippetService.getSnippet('blocks-won-component.no-blocks-won-yet')" [icon]="faCubes"></app-empty-state>
+          </td>
+        </tr>
+        <tr *ngFor="let block of (wonBlocksObservable | async); trackBy: trackBlockByHash">
+          <td>{{getBlockDate(block)}}</td>
+          <td *ngIf="poolConfig.blockExplorerBlockUrlTemplate"><a href="{{getBlockExplorerBlockLink(block)}}" target="_blank" style="color: #b45bff">{{block.height}}</a></td>
+          <td *ngIf="!poolConfig.blockExplorerBlockUrlTemplate">{{block.height}}</td>
+          <td><span [class]="getEffortColor(block)">{{getBlockEffort(block)}}</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
