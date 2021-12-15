@@ -81,6 +81,9 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     this.statsService.accountStats.asObservable().subscribe(accountStats => this.poolEc = accountStats.ecSum),
     this.statsService.rewardStats.asObservable().subscribe(rewardStats => this.dailyRewardPerPib = rewardStats.dailyRewardPerPiB),
   ];
+  private accountUpdateInterval: number = null;
+  private accountHistoricalUpdateInterval: number = null;
+  private accountWonBlocksUpdateInterval: number = null;
 
   constructor(
     public snippetService: SnippetService,
@@ -244,6 +247,15 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.map(subscription => subscription.unsubscribe());
+    if (this.accountUpdateInterval) {
+      clearInterval(this.accountUpdateInterval);
+    }
+    if (this.accountHistoricalUpdateInterval) {
+      clearInterval(this.accountHistoricalUpdateInterval);
+    }
+    if (this.accountWonBlocksUpdateInterval) {
+      clearInterval(this.accountWonBlocksUpdateInterval);
+    }
 
     if (this.accountService.isMyFarmerPage) {
       return;
@@ -309,19 +321,19 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       });
     this.subscriptions.push(payoutsSubscription);
 
-    setInterval(async () => {
+    this.accountUpdateInterval = setInterval(async () => {
       if (!this.accountService.havePoolPublicKey) {
         return;
       }
       await this.accountService.updateAccount();
     }, 3 * 60 * 1000);
-    setInterval(async () => {
+    this.accountHistoricalUpdateInterval = setInterval(async () => {
       if (!this.accountService.havePoolPublicKey) {
         return;
       }
       await this.accountService.updateAccountHistoricalStats();
     }, (this.historicalIntervalInMinutes + 1) * 60 * 1000);
-    setInterval(async () => {
+    this.accountWonBlocksUpdateInterval = setInterval(async () => {
       if (!this.accountService.havePoolPublicKey) {
         return;
       }
