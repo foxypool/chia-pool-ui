@@ -1,11 +1,12 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {faMoneyCheckAlt} from '@fortawesome/free-solid-svg-icons';
+import {faMoneyCheckAlt, faExchangeAlt} from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
 import {EChartsOption} from 'echarts';
 import BigNumber from 'bignumber.js';
 
 import {SnippetService} from '../snippet.service';
 import {ensureHexPrefix} from '../util';
+import {ConfigService, DateFormatting} from '../config.service';
 
 @Component({
   selector: 'app-farmer-payout-history',
@@ -21,6 +22,7 @@ export class FarmerPayoutHistoryComponent implements OnChanges {
   };
 
   public faMoneyCheck = faMoneyCheckAlt;
+  public faExchangeAlt = faExchangeAlt;
   public chartOptions: EChartsOption = {
     grid: {
       left: 45,
@@ -65,9 +67,12 @@ export class FarmerPayoutHistoryComponent implements OnChanges {
   };
   public chartUpdateOptions: EChartsOption;
 
-  constructor(public snippetService: SnippetService) {}
+  constructor(
+    public snippetService: SnippetService,
+    private configService: ConfigService,
+  ) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges): void {
     const recentPayoutsChange = changes.recentPayouts;
     if (!recentPayoutsChange) {
       return;
@@ -89,6 +94,14 @@ export class FarmerPayoutHistoryComponent implements OnChanges {
     }
 
     return this.snippetService.getSnippet('payouts-component.confirmed');
+  }
+
+  public toggleDateFormatting(): void {
+    if (this.configService.payoutDateFormatting === DateFormatting.fixed) {
+      this.configService.payoutDateFormatting = DateFormatting.relative;
+    } else {
+      this.configService.payoutDateFormatting = DateFormatting.fixed;
+    }
   }
 
   private makeChartUpdateOptions(): EChartsOption {

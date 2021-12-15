@@ -2,10 +2,11 @@ import {Component, Input, OnInit} from '@angular/core';
 import {StatsService} from '../stats.service';
 import * as moment from 'moment';
 import {SnippetService} from '../snippet.service';
-import {faMoneyCheckAlt} from '@fortawesome/free-solid-svg-icons';
+import {faMoneyCheckAlt, faExchangeAlt} from '@fortawesome/free-solid-svg-icons';
 import {BigNumber} from 'bignumber.js';
 import {PoolsProvider} from '../pools.provider';
 import {ensureHexPrefix} from '../util';
+import {ConfigService, DateFormatting} from '../config.service';
 
 @Component({
   selector: 'app-payouts',
@@ -22,11 +23,13 @@ export class PayoutsComponent implements OnInit {
   private addressAmountPairs: any = {};
 
   public faMoneyCheck = faMoneyCheckAlt;
+  public faExchangeAlt = faExchangeAlt;
 
   constructor(
     private statsService: StatsService,
     private _snippetService: SnippetService,
-    private poolsProvider: PoolsProvider
+    private poolsProvider: PoolsProvider,
+    private configService: ConfigService,
   ) {}
 
   get snippetService(): SnippetService {
@@ -69,8 +72,12 @@ export class PayoutsComponent implements OnInit {
     return this.lastPayouts.slice(0, this.limit);
   }
 
-  getPayoutDate(payout) {
-    return moment(payout.createdAt).format('YYYY-MM-DD HH:mm');
+  getPayoutDate(payout): string {
+    if (this.configService.payoutDateFormatting === DateFormatting.fixed) {
+      return moment(payout.createdAt).format('YYYY-MM-DD HH:mm');
+    } else {
+      return moment(payout.createdAt).fromNow();
+    }
   }
 
   getTotalPayout(transactions) {
@@ -142,5 +149,13 @@ export class PayoutsComponent implements OnInit {
 
   trackPayoutBy(index, payout) {
     return payout._id;
+  }
+
+  public toggleDateFormatting(): void {
+    if (this.configService.payoutDateFormatting === DateFormatting.fixed) {
+      this.configService.payoutDateFormatting = DateFormatting.relative;
+    } else {
+      this.configService.payoutDateFormatting = DateFormatting.fixed;
+    }
   }
 }

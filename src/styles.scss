@@ -72,6 +72,17 @@ span[red] {
 .color-dark-orange {
   color: $color-dark-orange;
 }
+.date-header-container {
+  display: flex;
+  justify-content: space-between;
+}
+.toggle-date-formatting-icon {
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.6);
+}
+.toggle-date-formatting-icon:hover {
+  color: #007bff;
+}
 
 @media (min-width: 1700px) {
   .container-fluid {

@@ -3,9 +3,10 @@ import {StatsService} from '../stats.service';
 import * as moment from 'moment';
 import Capacity from '../capacity';
 import {SnippetService} from '../snippet.service';
-import {faCubes} from '@fortawesome/free-solid-svg-icons';
+import {faCubes, faExchangeAlt} from '@fortawesome/free-solid-svg-icons';
 import {getEffortColor} from '../util';
 import BigNumber from 'bignumber.js';
+import {ConfigService, DateFormatting} from '../config.service';
 
 @Component({
   selector: 'app-blocks-won',
@@ -21,12 +22,14 @@ export class BlocksWonComponent implements OnInit {
   public rewardStats:any = {};
 
   public faCubes = faCubes;
+  public faExchangeAlt = faExchangeAlt;
   public page = 1;
   public pageSize = 25;
 
   constructor(
     private statsService: StatsService,
     private _snippetService: SnippetService,
+    private configService: ConfigService,
   ) {}
 
   get snippetService(): SnippetService {
@@ -107,8 +110,12 @@ export class BlocksWonComponent implements OnInit {
     return recentlyWonBlocks;
   }
 
-  getBlockDate(block) {
-    return moment(block.createdAt).format('YYYY-MM-DD HH:mm');
+  getBlockDate(block): string {
+    if (this.configService.wonBlockDateFormatting === DateFormatting.fixed) {
+      return moment(block.createdAt).format('YYYY-MM-DD HH:mm');
+    } else {
+      return moment(block.createdAt).fromNow();
+    }
   }
 
   getFormattedCapacityFromTiB(capacityInTiB) {
@@ -182,5 +189,13 @@ export class BlocksWonComponent implements OnInit {
 
   trackBy(index, block) {
     return block.hash;
+  }
+
+  public toggleDateFormatting(): void {
+    if (this.configService.wonBlockDateFormatting === DateFormatting.fixed) {
+      this.configService.wonBlockDateFormatting = DateFormatting.relative;
+    } else {
+      this.configService.wonBlockDateFormatting = DateFormatting.fixed;
+    }
   }
 }

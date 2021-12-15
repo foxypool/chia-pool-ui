@@ -18,6 +18,7 @@ import {LeavePoolModalComponent} from '../leave-pool-modal/leave-pool-modal.comp
 import {UpdateMinimumPayoutModalComponent} from '../update-minimum-payout-modal/update-minimum-payout-modal.component';
 import {RatesService} from '../rates.service';
 import {Payout} from '../farmer-payout-history/farmer-payout-history.component';
+import {ConfigService, DateFormatting} from '../config.service';
 
 @Component({
   selector: 'app-my-farmer',
@@ -60,6 +61,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     public ratesService: RatesService,
     private route: ActivatedRoute,
     private router: Router,
+    private configService: ConfigService,
   ) {
     this.ecChartOptions = {
       title: {
@@ -262,8 +264,12 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
         return account.payoutAddress;
       }), distinctUntilChanged());
-    this.payoutsSubscription = combineLatest([this.statsService.lastPayouts.asObservable(), accountPayoutAddressSource])
-      .subscribe(([lastPayouts, payoutAddress]) => {
+    this.payoutsSubscription = combineLatest([
+      this.statsService.lastPayouts.asObservable(),
+      accountPayoutAddressSource,
+      this.configService.payoutDateFormattingSubject.asObservable()
+    ])
+      .subscribe(([lastPayouts, payoutAddress, payoutDateFormatting]) => {
         if (lastPayouts === null || !payoutAddress) {
           this.isLoadingPayoutHistory = true;
 
@@ -284,12 +290,18 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
                 BigNumber.ROUND_FLOOR
               ).toString();
             }
+            let formattedPayoutDate;
+            if (payoutDateFormatting === DateFormatting.fixed) {
+              formattedPayoutDate = payoutDate.format('YYYY-MM-DD HH:mm');
+            } else {
+              formattedPayoutDate = payoutDate.fromNow();
+            }
 
             return {
               coinId: matchingTransaction.coinIds[0],
               state: matchingTransaction.state,
               payoutDate: payoutDate.toDate(),
-              formattedPayoutDate: payoutDate.format('YYYY-MM-DD HH:mm'),
+              formattedPayoutDate,
               amount: payoutAmount,
             };
           })
