@@ -1,31 +1,19 @@
 import {Injectable} from '@angular/core';
 import {StatsService} from './stats.service';
-import {LocalStorageService} from './local-storage.service';
+import {ConfigService} from './config.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RatesService {
-  public static selectedCurrencyStorageKey = 'selectedCurrency';
-
   public currencies = [];
   private rates = [];
   private isTestnet = false;
-  private _selectedCurrency = null;
 
   constructor(
     private statsService: StatsService,
-    private localStorageService: LocalStorageService
+    private configService: ConfigService
   ) {
-    this.init();
-  }
-
-  init() {
-    this._selectedCurrency = this.localStorageService.getItem(RatesService.selectedCurrencyStorageKey);
-    if (!this.selectedCurrency) {
-      this.selectedCurrency = 'usd';
-    }
-
     const poolConfig = this.statsService.poolConfig.getValue();
     if (poolConfig && poolConfig.isTestnet !== undefined) {
       this.isTestnet = poolConfig.isTestnet;
@@ -57,7 +45,7 @@ export class RatesService {
     if (this.isTestnet) {
       return 0;
     }
-    const rate = this.rates[this.selectedCurrency];
+    const rate = this.rates[this.configService.selectedCurrency];
     if (!rate) {
       return 0;
     }
@@ -69,7 +57,7 @@ export class RatesService {
     const fiatAmount = this._getCoinValueAsFiat(value);
     const decimalPlaces = this._getDecimalPlaces(fiatAmount);
 
-    return `${fiatAmount.toFixed(decimalPlaces)} ${this.selectedCurrency.toUpperCase()}`;
+    return `${fiatAmount.toFixed(decimalPlaces)} ${this.configService.selectedCurrency.toUpperCase()}`;
   }
 
   _getDecimalPlaces(value) {
@@ -87,14 +75,5 @@ export class RatesService {
     }
 
     return decimalPlaces;
-  }
-
-  get selectedCurrency(): any {
-    return this._selectedCurrency;
-  }
-
-  set selectedCurrency(selectedCurrency: any) {
-    this._selectedCurrency = selectedCurrency;
-    this.localStorageService.setItem(RatesService.selectedCurrencyStorageKey, selectedCurrency);
   }
 }

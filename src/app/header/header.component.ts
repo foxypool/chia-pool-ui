@@ -6,6 +6,7 @@ import {AccountService} from '../account.service';
 import {RatesService} from '../rates.service';
 import {Router} from '@angular/router';
 import {faSearch} from '@fortawesome/free-solid-svg-icons';
+import {ConfigService} from '../config.service';
 
 @Component({
   selector: 'app-header',
@@ -27,6 +28,7 @@ export class HeaderComponent implements OnInit {
     private _snippetService: SnippetService,
     private poolsProvider: PoolsProvider,
     public ratesService: RatesService,
+    public configService: ConfigService,
     private router: Router,
   ) {}
 

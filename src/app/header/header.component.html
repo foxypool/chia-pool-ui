@@ -69,7 +69,7 @@
       <button class="btn dark-background btn-outline-danger logout-button" (click)="accountService.logout()">{{snippetService.getSnippet('header-component.button.logout')}}</button>
     </div>
     <div class="currency-select-wrapper header-row-item" *ngIf="ratesService.currencies && ratesService.currencies.length > 0">
-      <select class="custom-select currency-select dark-background" [(ngModel)]="ratesService.selectedCurrency">
+      <select class="custom-select currency-select dark-background" [ngModel]="configService.selectedCurrencySubject | async" (ngModelChange)="configService.selectedCurrencySubject.next($event)">
         <option *ngFor="let currency of ratesService.currencies" [ngValue]="currency" class="currency-select-option">{{ currency.toUpperCase() }}</option>
       </select>
     </div>
