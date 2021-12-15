@@ -32,7 +32,6 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   @ViewChild(UpdateMinimumPayoutModalComponent) updateMinimumPayoutModal;
 
   public poolConfig:any = {};
-  public exchangeStats:any = {};
   public poolPublicKeyInput = null;
   public faCircleNotch = faCircleNotch;
   public faUserCheck = faUserCheck;
@@ -245,9 +244,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
-    this.statsService.exchangeStats.asObservable().subscribe((exchangeStats => this.exchangeStats = exchangeStats));
     this.poolConfig = this.statsService.poolConfig.getValue();
-    this.exchangeStats = this.statsService.exchangeStats.getValue();
 
     this.statsService.accountStats.asObservable().subscribe(async accountStats => {
       this.poolEc = accountStats.ecSum;
@@ -267,7 +264,9 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     this.payoutsSubscription = combineLatest([
       this.statsService.lastPayouts.asObservable(),
       accountPayoutAddressSource,
-      this.configService.payoutDateFormattingSubject.asObservable()
+      this.configService.payoutDateFormattingSubject.asObservable(),
+      this.configService.selectedCurrencySubject.asObservable(),
+      this.statsService.exchangeStats.asObservable(),
     ])
       .subscribe(([lastPayouts, payoutAddress, payoutDateFormatting]) => {
         if (lastPayouts === null || !payoutAddress) {
@@ -303,6 +302,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
               payoutDate: payoutDate.toDate(),
               formattedPayoutDate,
               amount: payoutAmount,
+              fiatAmountFormatted: this.ratesService.getValuesInFiatFormatted(parseFloat(payoutAmount) || 0),
             };
           })
           .filter(payout => payout !== null);

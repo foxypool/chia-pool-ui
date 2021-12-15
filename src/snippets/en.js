@@ -135,6 +135,7 @@ export default {
   'my-farmer-component.tabs.recent-payouts.label': 'Recent payouts',
   'notices-component.title': 'Notices',
   'payouts-component.headers.amount': 'Amount',
+  'payouts-component.headers.fiat-amount': 'Fiat amount',
   'payouts-component.headers.date': 'Date',
   'payouts-component.headers.state': 'State',
   'payouts-component.headers.transaction': 'Transaction',

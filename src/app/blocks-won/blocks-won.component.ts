@@ -18,7 +18,6 @@ export class BlocksWonComponent implements OnInit {
   @Input() limit: number|null = null;
   private _poolConfig:any = {};
   private _poolStats:any = {};
-  private _exchangeStats:any = {};
   public rewardStats:any = {};
 
   public faCubes = faCubes;
@@ -40,11 +39,9 @@ export class BlocksWonComponent implements OnInit {
     this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
     this.statsService.poolStats.asObservable().subscribe((poolStats => this.poolStats = poolStats));
     this.statsService.rewardStats.asObservable().subscribe((rewardStats => this.rewardStats = rewardStats));
-    this.statsService.exchangeStats.asObservable().subscribe((exchangeStats => this.exchangeStats = exchangeStats));
     this.poolConfig = this.statsService.poolConfig.getValue();
     this.poolStats = this.statsService.poolStats.getValue();
     this.rewardStats = this.statsService.rewardStats.getValue();
-    this.exchangeStats = this.statsService.exchangeStats.getValue();
   }
 
   get dr() {
@@ -65,10 +62,6 @@ export class BlocksWonComponent implements OnInit {
 
   get distributionRatiosLength() {
     return this.distributionRatios.length;
-  }
-
-  set exchangeStats(value: any) {
-    this._exchangeStats = value;
   }
 
   set poolConfig(poolConfig) {

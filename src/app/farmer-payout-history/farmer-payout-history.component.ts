@@ -123,5 +123,6 @@ export type Payout = {
   formattedPayoutDate: string,
   payoutDate: Date,
   amount: string,
+  fiatAmountFormatted: string,
   state: string,
 };
