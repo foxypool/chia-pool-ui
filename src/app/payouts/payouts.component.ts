@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {StatsService} from '../stats.service';
 import * as moment from 'moment';
 import {SnippetService} from '../snippet.service';
@@ -7,13 +7,14 @@ import {BigNumber} from 'bignumber.js';
 import {PoolsProvider} from '../pools.provider';
 import {ensureHexPrefix} from '../util';
 import {ConfigService, DateFormatting} from '../config.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-payouts',
   templateUrl: './payouts.component.html',
   styleUrls: ['./payouts.component.scss']
 })
-export class PayoutsComponent implements OnInit {
+export class PayoutsComponent implements OnDestroy {
 
   @Input() limit: number|null = null;
   private _poolConfig:any = {};
@@ -25,6 +26,12 @@ export class PayoutsComponent implements OnInit {
   public faMoneyCheck = faMoneyCheckAlt;
   public faExchangeAlt = faExchangeAlt;
 
+  private subscriptions: Subscription[] = [
+    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig)),
+    this.statsService.poolStats.asObservable().subscribe((poolStats => this.poolStats = poolStats)),
+    this.statsService.lastPayouts.asObservable().subscribe((lastPayouts => this.lastPayouts = lastPayouts)),
+  ];
+
   constructor(
     private statsService: StatsService,
     private _snippetService: SnippetService,
@@ -32,17 +39,12 @@ export class PayoutsComponent implements OnInit {
     private configService: ConfigService,
   ) {}
 
-  get snippetService(): SnippetService {
-    return this._snippetService;
+  public ngOnDestroy(): void {
+    this.subscriptions.map(subscription => subscription.unsubscribe());
   }
 
-  ngOnInit() {
-    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
-    this.statsService.poolStats.asObservable().subscribe((poolStats => this.poolStats = poolStats));
-    this.statsService.lastPayouts.asObservable().subscribe((lastPayouts => this.lastPayouts = lastPayouts));
-    this.poolConfig = this.statsService.poolConfig.getValue();
-    this.poolStats = this.statsService.poolStats.getValue();
-    this.lastPayouts = this.statsService.lastPayouts.getValue();
+  get snippetService(): SnippetService {
+    return this._snippetService;
   }
 
   set poolConfig(poolConfig) {

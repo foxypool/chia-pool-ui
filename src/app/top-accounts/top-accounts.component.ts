@@ -1,15 +1,16 @@
 import {StatsService} from '../stats.service';
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import Capacity from '../capacity';
 import {SnippetService} from '../snippet.service';
 import {faHdd} from '@fortawesome/free-regular-svg-icons';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-top-accounts',
   templateUrl: './top-accounts.component.html',
   styleUrls: ['./top-accounts.component.scss']
 })
-export class TopAccountsComponent implements OnInit {
+export class TopAccountsComponent implements OnDestroy {
 
   private _poolConfig:any = {};
   private _poolStats:any = {};
@@ -17,22 +18,23 @@ export class TopAccountsComponent implements OnInit {
 
   public faHdd = faHdd;
 
+  private subscriptions: Subscription[] = [
+    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig)),
+    this.statsService.poolStats.asObservable().subscribe((poolStats => this.poolStats = poolStats)),
+    this.statsService.accountStats.asObservable().subscribe((accountStats => this.accountStats = accountStats)),
+  ];
+
   constructor(
     private statsService: StatsService,
     private _snippetService: SnippetService,
   ) {}
 
-  get snippetService(): SnippetService {
-    return this._snippetService;
+  public ngOnDestroy(): void {
+    this.subscriptions.map(subscription => subscription.unsubscribe());
   }
 
-  ngOnInit() {
-    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
-    this.statsService.poolStats.asObservable().subscribe((poolStats => this.poolStats = poolStats));
-    this.statsService.accountStats.asObservable().subscribe((accountStats => this.accountStats = accountStats));
-    this.poolConfig = this.statsService.poolConfig.getValue();
-    this.poolStats = this.statsService.poolStats.getValue();
-    this.accountStats = this.statsService.accountStats.getValue();
+  get snippetService(): SnippetService {
+    return this._snippetService;
   }
 
   set poolConfig(poolConfig) {

@@ -1,18 +1,23 @@
-import { Component } from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {EChartsOption} from 'echarts';
 import {StatsService} from '../stats.service';
 import {SnippetService} from '../snippet.service';
 import * as moment from 'moment';
 import BigNumber from 'bignumber.js';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-pool-history',
   templateUrl: './pool-history.component.html',
   styleUrls: ['./pool-history.component.scss']
 })
-export class PoolHistoryComponent {
+export class PoolHistoryComponent implements OnDestroy {
   public chartOptions: EChartsOption;
   public chartUpdateOptions: EChartsOption;
+
+  private subscriptions: Subscription[] = [
+    this.statsService.poolHistoricalStats.subscribe(historicalStats => this.chartUpdateOptions = this.makeChartUpdateOptions(historicalStats)),
+  ];
 
   constructor(
     private snippetService: SnippetService,
@@ -96,9 +101,10 @@ export class PoolHistoryComponent {
         yAxisIndex: 1,
       }],
     };
-    this.statsService.poolHistoricalStats.subscribe(historicalStats => {
-      this.chartUpdateOptions = this.makeChartUpdateOptions(historicalStats);
-    });
+  }
+
+  public ngOnDestroy(): void {
+    this.subscriptions.map(subscription => subscription.unsubscribe());
   }
 
   private makeChartUpdateOptions(historicalStats): EChartsOption {

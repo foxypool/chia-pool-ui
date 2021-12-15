@@ -50,7 +50,30 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   private dailyRewardPerPib = 0;
 
   private historicalIntervalInMinutes = 15;
-  private payoutsSubscription: Subscription;
+
+  private subscriptions: Subscription[] = [
+    this.route.params.subscribe(async params => {
+      if (params.poolPublicKey) {
+        this.accountService.poolPublicKey = params.poolPublicKey;
+        this.accountService.isMyFarmerPage = false;
+      } else {
+        this.accountService.isMyFarmerPage = true;
+        if (this.accountService.poolPublicKey !== this.accountService.poolPublicKeyFromLocalStorage) {
+          this.accountService.poolPublicKey = this.accountService.poolPublicKeyFromLocalStorage;
+        }
+      }
+      await this.initAccount();
+    }),
+    this.accountService.accountHistoricalStats
+      .pipe(skip(1))
+      .subscribe(historicalStats => {
+        this.ecChartUpdateOptions = this.makeEcChartUpdateOptions(historicalStats);
+        this.sharesChartUpdateOptions = this.makeSharesChartUpdateOptions(historicalStats);
+      }),
+    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig)),
+    this.statsService.accountStats.asObservable().subscribe(accountStats => this.poolEc = accountStats.ecSum),
+    this.statsService.rewardStats.asObservable().subscribe(rewardStats => this.dailyRewardPerPib = rewardStats.dailyRewardPerPiB),
+  ];
 
   constructor(
     public snippetService: SnippetService,
@@ -210,30 +233,10 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         },
       }],
     };
-
-    this.route.params.subscribe(async params => {
-      if (params.poolPublicKey) {
-        this.accountService.poolPublicKey = params.poolPublicKey;
-        this.accountService.isMyFarmerPage = false;
-      } else {
-        this.accountService.isMyFarmerPage = true;
-        if (this.accountService.poolPublicKey !== this.accountService.poolPublicKeyFromLocalStorage) {
-          this.accountService.poolPublicKey = this.accountService.poolPublicKeyFromLocalStorage;
-        }
-      }
-      await this.initAccount();
-    });
-
-    this.accountService.accountHistoricalStats
-      .pipe(skip(1))
-      .subscribe(historicalStats => {
-        this.ecChartUpdateOptions = this.makeEcChartUpdateOptions(historicalStats);
-        this.sharesChartUpdateOptions = this.makeSharesChartUpdateOptions(historicalStats);
-      });
   }
 
   ngOnDestroy(): void {
-    this.payoutsSubscription.unsubscribe();
+    this.subscriptions.map(subscription => subscription.unsubscribe());
 
     if (this.accountService.isMyFarmerPage) {
       return;
@@ -243,16 +246,6 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
-    this.poolConfig = this.statsService.poolConfig.getValue();
-
-    this.statsService.accountStats.asObservable().subscribe(async accountStats => {
-      this.poolEc = accountStats.ecSum;
-    });
-    this.statsService.rewardStats.asObservable().subscribe(async rewardStats => {
-      this.dailyRewardPerPib = rewardStats.dailyRewardPerPiB;
-    });
-
     const accountPayoutAddressSource = this.accountService.accountSubject.asObservable()
       .pipe(map(account => {
         if (!account || !account.payoutAddress) {
@@ -261,7 +254,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
         return account.payoutAddress;
       }), distinctUntilChanged());
-    this.payoutsSubscription = combineLatest([
+    const payoutsSubscription = combineLatest([
       this.statsService.lastPayouts.asObservable(),
       accountPayoutAddressSource,
       this.configService.payoutDateFormattingSubject.asObservable(),
@@ -307,6 +300,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
           })
           .filter(payout => payout !== null);
       });
+    this.subscriptions.push(payoutsSubscription);
 
     setInterval(async () => {
       if (!this.accountService.havePoolPublicKey) {

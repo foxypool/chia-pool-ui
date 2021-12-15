@@ -1,38 +1,31 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {StatsService} from './stats.service';
 import {ConfigService} from './config.service';
+import {Subscription} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class RatesService {
+export class RatesService implements OnDestroy {
   public currencies = [];
-  private rates = [];
+  private rates = {};
   private isTestnet = false;
+
+  private subscriptions: Subscription[] = [
+    this.statsService.poolConfig.asObservable().subscribe(poolConfig => this.isTestnet = poolConfig.isTestnet),
+    this.statsService.exchangeStats.asObservable().subscribe(exchangeStats => {
+      this.rates = exchangeStats.rates;
+      this.currencies = exchangeStats.currencies;
+    }),
+  ];
 
   constructor(
     private statsService: StatsService,
     private configService: ConfigService
-  ) {
-    const poolConfig = this.statsService.poolConfig.getValue();
-    if (poolConfig && poolConfig.isTestnet !== undefined) {
-      this.isTestnet = poolConfig.isTestnet;
-    }
-    this.statsService.poolConfig.asObservable().subscribe(poolConfig => {
-      this.isTestnet = poolConfig.isTestnet;
-    });
+  ) {}
 
-    const exchangeStats = this.statsService.exchangeStats.getValue();
-    if (exchangeStats && exchangeStats.rates) {
-      this.rates = exchangeStats.rates;
-    }
-    if (exchangeStats && exchangeStats.currencies) {
-      this.currencies = exchangeStats.currencies;
-    }
-    this.statsService.exchangeStats.asObservable().subscribe(exchangeStats => {
-      this.rates = exchangeStats.rates;
-      this.currencies = exchangeStats.currencies;
-    });
+  public ngOnDestroy(): void {
+    this.subscriptions.map(subscription => subscription.unsubscribe());
   }
 
   _getCoinValueAsFiat(value) {

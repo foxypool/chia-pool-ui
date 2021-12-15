@@ -1,16 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {StatsService} from '../stats.service';
 import {SnippetService} from '../snippet.service';
 import {PoolsProvider} from '../pools.provider';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-info',
   templateUrl: './info.component.html',
   styleUrls: ['./info.component.scss']
 })
-export class InfoComponent implements OnInit {
+export class InfoComponent implements OnDestroy {
 
   private _poolConfig:any = {};
+
+  private subscriptions: Subscription[] = [
+    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig)),
+  ];
 
   constructor(
     public statsService: StatsService,
@@ -18,13 +23,12 @@ export class InfoComponent implements OnInit {
     private poolsProvider: PoolsProvider,
   ) {}
 
-  get snippetService(): SnippetService {
-    return this._snippetService;
+  public ngOnDestroy(): void {
+    this.subscriptions.map(subscription => subscription.unsubscribe());
   }
 
-  ngOnInit() {
-    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
-    this.poolConfig = this.statsService.poolConfig.getValue();
+  get snippetService(): SnippetService {
+    return this._snippetService;
   }
 
   set poolConfig(poolConfig) {
@@ -33,14 +37,6 @@ export class InfoComponent implements OnInit {
 
   get poolConfig() {
     return this._poolConfig;
-  }
-
-  get poolRatioString() {
-    if (this.poolConfig.defaultDistributionRatio === undefined) {
-      return '0-100';
-    }
-
-    return this.poolConfig.defaultDistributionRatio;
   }
 
   get historicalTimeInHours() {

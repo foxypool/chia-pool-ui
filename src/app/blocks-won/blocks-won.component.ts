@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy} from '@angular/core';
 import {StatsService} from '../stats.service';
 import * as moment from 'moment';
 import Capacity from '../capacity';
@@ -7,13 +7,14 @@ import {faCubes, faExchangeAlt} from '@fortawesome/free-solid-svg-icons';
 import {getEffortColor} from '../util';
 import BigNumber from 'bignumber.js';
 import {ConfigService, DateFormatting} from '../config.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-blocks-won',
   templateUrl: './blocks-won.component.html',
   styleUrls: ['./blocks-won.component.scss']
 })
-export class BlocksWonComponent implements OnInit {
+export class BlocksWonComponent implements OnDestroy {
 
   @Input() limit: number|null = null;
   private _poolConfig:any = {};
@@ -25,23 +26,24 @@ export class BlocksWonComponent implements OnInit {
   public page = 1;
   public pageSize = 25;
 
+  private subscriptions: Subscription[] = [
+    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig)),
+    this.statsService.poolStats.asObservable().subscribe((poolStats => this.poolStats = poolStats)),
+    this.statsService.rewardStats.asObservable().subscribe((rewardStats => this.rewardStats = rewardStats)),
+  ];
+
   constructor(
     private statsService: StatsService,
     private _snippetService: SnippetService,
     private configService: ConfigService,
   ) {}
 
-  get snippetService(): SnippetService {
-    return this._snippetService;
+  public ngOnDestroy(): void {
+    this.subscriptions.map(subscription => subscription.unsubscribe());
   }
 
-  ngOnInit() {
-    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig));
-    this.statsService.poolStats.asObservable().subscribe((poolStats => this.poolStats = poolStats));
-    this.statsService.rewardStats.asObservable().subscribe((rewardStats => this.rewardStats = rewardStats));
-    this.poolConfig = this.statsService.poolConfig.getValue();
-    this.poolStats = this.statsService.poolStats.getValue();
-    this.rewardStats = this.statsService.rewardStats.getValue();
+  get snippetService(): SnippetService {
+    return this._snippetService;
   }
 
   get dr() {
