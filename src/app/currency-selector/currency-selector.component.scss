@@ -1,0 +1,35 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+
+.currency-select {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+}
+.currency-select::-webkit-scrollbar {
+  width: 6px;
+}
+.currency-select::-webkit-scrollbar-track {
+  background: transparent;
+}
+.currency-select::-webkit-scrollbar-thumb {
+  background-color: rgba(155, 155, 155, 0.5);
+  border-radius: 20px;
+  border: transparent;
+}
+.currency-select-option {
+  background-color: #262629;
+}
+.dark-background {
+  background-color: #262629;
+  color: #cfd0d1;
+  border-color: #6c757d;
+}
+.currency-select-rate-label {
+  font-size: small;
+}
+@media (min-width: 1200px) and (max-width: 1500px) {
+  .hide-on-smaller-screens {
+    display: none;
+  }
+}

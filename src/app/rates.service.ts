@@ -46,7 +46,7 @@ export class RatesService implements OnDestroy {
     return value * rate;
   }
 
-  getValuesInFiatFormatted(value) {
+  public getValuesInFiatFormatted(value: number|null): string {
     const fiatAmount = this._getCoinValueAsFiat(value);
     const decimalPlaces = this._getDecimalPlaces(fiatAmount);
 

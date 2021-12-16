@@ -42,27 +42,6 @@
     padding-right: 7%;
   }
 }
-.currency-select-wrapper {
-  display: inline-block;
-}
-.currency-select {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
-}
-.currency-select::-webkit-scrollbar {
-  width: 6px;
-}
-.currency-select::-webkit-scrollbar-track {
-  background: transparent;
-}
-.currency-select::-webkit-scrollbar-thumb {
-  background-color: rgba(155, 155, 155, 0.5);
-  border-radius: 20px;
-  border: transparent;
-}
-.currency-select-option {
-  background-color: #262629;
-}
 .dark-background {
   background-color: #262629;
   color: #cfd0d1;
@@ -83,4 +62,7 @@
 }
 .search-input {
   max-width: 16em;
+}
+.non-breaking {
+  white-space: nowrap;
 }

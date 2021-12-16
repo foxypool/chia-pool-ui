@@ -34,7 +34,6 @@ export class HeaderComponent implements OnDestroy {
     private _snippetService: SnippetService,
     private poolsProvider: PoolsProvider,
     public ratesService: RatesService,
-    public configService: ConfigService,
     private router: Router,
   ) {}
 

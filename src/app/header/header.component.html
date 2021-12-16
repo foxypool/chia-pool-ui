@@ -10,56 +10,56 @@
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
         <a class="nav-link">
-          <button type="button" class="btn btn-outline-primary" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="onTabButtonClick()">
+          <button type="button" class="btn btn-outline-primary non-breaking" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="onTabButtonClick()">
             {{snippetService.getSnippet('header-component.button.dashboard')}}
           </button>
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link">
-          <button type="button" class="btn btn-outline-primary" routerLink="/my-farmer" routerLinkActive="active" (click)="onTabButtonClick()">
+          <button type="button" class="btn btn-outline-primary non-breaking" routerLink="/my-farmer" routerLinkActive="active" (click)="onTabButtonClick()">
             {{snippetService.getSnippet('header-component.button.my-farmer')}}
           </button>
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link">
-          <button type="button" class="btn btn-outline-primary" routerLink="/blocks-won" routerLinkActive="active" (click)="onTabButtonClick()">
+          <button type="button" class="btn btn-outline-primary non-breaking" routerLink="/blocks-won" routerLinkActive="active" (click)="onTabButtonClick()">
             {{snippetService.getSnippet('header-component.button.blocks-won')}}
           </button>
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link">
-          <button type="button" class="btn btn-outline-primary" routerLink="/payouts" routerLinkActive="active" (click)="onTabButtonClick()">
+          <button type="button" class="btn btn-outline-primary non-breaking" routerLink="/payouts" routerLinkActive="active" (click)="onTabButtonClick()">
             {{snippetService.getSnippet('header-component.button.payouts')}}
           </button>
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link">
-          <button type="button" class="btn btn-outline-primary" routerLink="/info" routerLinkActive="active" (click)="onTabButtonClick()">
+          <button type="button" class="btn btn-outline-primary non-breaking" routerLink="/info" routerLinkActive="active" (click)="onTabButtonClick()">
             {{snippetService.getSnippet('header-component.button.info')}}
           </button>
         </a>
       </li>
       <li class="nav-item" *ngIf="poolConfig.supportsFaucet">
         <a class="nav-link">
-          <button type="button" class="btn btn-outline-primary" routerLink="/faucet" routerLinkActive="active" (click)="onTabButtonClick()">
+          <button type="button" class="btn btn-outline-primary non-breaking" routerLink="/faucet" routerLinkActive="active" (click)="onTabButtonClick()">
             {{snippetService.getSnippet('header-component.button.faucet')}}
           </button>
         </a>
       </li>
       <li class="nav-item" *ngIf="poolConfig.notices && poolConfig.notices.length > 0">
         <a class="nav-link">
-          <button type="button" class="btn btn-outline-primary" routerLink="/notices" routerLinkActive="active" (click)="onTabButtonClick()">
+          <button type="button" class="btn btn-outline-primary non-breaking" routerLink="/notices" routerLinkActive="active" (click)="onTabButtonClick()">
             {{snippetService.getSnippet('header-component.button.notices')}}
           </button>
         </a>
       </li>
       <li class="nav-item" *ngIf="poolStats.events && poolStats.events.length > 0">
         <a class="nav-link">
-          <button type="button" class="btn btn-outline-primary" routerLink="/events" routerLinkActive="active" (click)="onTabButtonClick()">
+          <button type="button" class="btn btn-outline-primary non-breaking" routerLink="/events" routerLinkActive="active" (click)="onTabButtonClick()">
             {{snippetService.getSnippet('header-component.button.events')}}
           </button>
         </a>
@@ -68,10 +68,8 @@
     <div class="header-row-item-start" *ngIf="showLogoutButton">
       <button class="btn dark-background btn-outline-danger logout-button" (click)="accountService.logout()">{{snippetService.getSnippet('header-component.button.logout')}}</button>
     </div>
-    <div class="currency-select-wrapper header-row-item" *ngIf="ratesService.currencies && ratesService.currencies.length > 0">
-      <select class="custom-select currency-select dark-background" [ngModel]="configService.selectedCurrencySubject | async" (ngModelChange)="configService.selectedCurrencySubject.next($event)">
-        <option *ngFor="let currency of ratesService.currencies" [ngValue]="currency" class="currency-select-option">{{ currency.toUpperCase() }}</option>
-      </select>
+    <div class="header-row-item" *ngIf="ratesService.currencies && ratesService.currencies.length > 0">
+      <app-currency-selector></app-currency-selector>
     </div>
     <div class="input-group header-row-item search-input">
       <input
@@ -83,12 +81,7 @@
         aria-label="Search"
       >
       <div class="input-group-append">
-        <div
-          class="input-group-text dark-background search-button"
-          (click)="search()"
-          [ngbTooltip]="snippetService.getSnippet('header-component.search.title')"
-          placement="right"
-        >
+        <div class="input-group-text dark-background search-button" (click)="search()">
           <fa-icon [icon]="searchIcon" class="color-green"></fa-icon>
         </div>
       </div>
