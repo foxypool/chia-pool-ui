@@ -5,6 +5,7 @@
 .currency-select {
   scrollbar-width: thin;
   scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+  max-width: 6rem;
 }
 .currency-select::-webkit-scrollbar {
   width: 6px;

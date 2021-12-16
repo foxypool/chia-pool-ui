@@ -15,7 +15,7 @@
     </div>
   </div>
 </div>
-<table class="table table-dark dark-theme">
+<table class="table table-responsive-lg table-dark dark-theme">
   <thead>
   <tr>
     <th scope="col">
@@ -44,14 +44,14 @@
       </td>
     </tr>
   <tr *ngFor="let block of recentlyWonBlocks | slice: (page - 1) * pageSize : page * pageSize; trackBy: trackBy">
-    <td>{{getBlockDate(block)}}</td>
+    <td class="no-wrap">{{getBlockDate(block)}}</td>
     <td *ngIf="poolConfig.blockExplorerBlockUrlTemplate"><a href="{{getBlockExplorerBlockLink(block)}}" target="_blank" style="color: #b45bff">{{block.height}}</a></td>
     <td *ngIf="!poolConfig.blockExplorerBlockUrlTemplate">{{block.height}}</td>
-    <td>{{block.networkSpaceInTib ? getFormattedCapacityFromTiB(block.networkSpaceInTib) : snippetService.getSnippet('general.not-available.short')}}</td>
-    <td><span [class]="getEffortColor(block)">{{getBlockEffort(block)}}</span></td>
+    <td class="no-wrap">{{block.networkSpaceInTib ? getFormattedCapacityFromTiB(block.networkSpaceInTib) : snippetService.getSnippet('general.not-available.short')}}</td>
+    <td class="no-wrap"><span [class]="getEffortColor(block)">{{getBlockEffort(block)}}</span></td>
     <td class="ellipsis">{{block.winner.name || block.winner.payoutAddress || snippetService.getSnippet('general.unknown')}}</td>
-    <td>{{block.reward}} {{poolConfig.ticker}}</td>
-    <td [style.padding-top]="block.distributed ? '12px' : '2px'" [style.padding-bottom]="block.distributed ? '12px' : '8px'">
+    <td class="no-wrap">{{block.reward}} {{poolConfig.ticker}}</td>
+    <td class="no-wrap" [style.padding-top]="block.distributed ? '12px' : '2px'" [style.padding-bottom]="block.distributed ? '12px' : '8px'">
       {{getBlockDistributedLabel(block)}}
       <span *ngIf="!block.distributed">({{getBlockConfirms(block)}} / {{poolConfig.blockRewardDistributionDelay}})</span>
       <ngb-progressbar *ngIf="!block.distributed" [striped]="true" [animated]="true" [type]="getBlockProgressType(block)" [value]="getBlockProgress(block)"></ngb-progressbar>
