@@ -9,13 +9,11 @@ import {StatsService} from '../stats.service';
   styleUrls: ['./currency-selector.component.scss']
 })
 export class CurrencySelectorComponent {
+  public rateForCurrencyFormatted = this.ratesService.makeObservableForFormattedFiatValue(1);
+
   constructor(
     public configService: ConfigService,
     public ratesService: RatesService,
     public statsService: StatsService,
   ) {}
-
-  public get rateForCurrencyFormatted(): string {
-    return this.ratesService.getValuesInFiatFormatted(1);
-  }
 }

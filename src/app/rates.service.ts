@@ -1,7 +1,8 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {StatsService} from './stats.service';
 import {ConfigService} from './config.service';
-import {Subscription} from 'rxjs';
+import {combineLatest, Observable, Subscription} from 'rxjs';
+import {distinctUntilChanged, map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -51,6 +52,38 @@ export class RatesService implements OnDestroy {
     const decimalPlaces = this._getDecimalPlaces(fiatAmount);
 
     return `${fiatAmount.toFixed(decimalPlaces)} ${this.configService.selectedCurrency.toUpperCase()}`;
+  }
+
+  public makeObservableForFormattedFiatValue(value: number): Observable<string> {
+    return combineLatest([
+      this.statsService.exchangeStats,
+      this.configService.selectedCurrencySubject,
+    ]).pipe(
+      map(([exchangeStats]) => exchangeStats.rates),
+      map(rates => {
+        if (!rates) {
+          return 0;
+        }
+        if (!value) {
+          return 0;
+        }
+        if (this.isTestnet) {
+          return 0;
+        }
+        const rate = rates[this.configService.selectedCurrency];
+        if (!rate) {
+          return 0;
+        }
+
+        return value * rate;
+      }),
+      distinctUntilChanged(),
+      map(fiatAmount => {
+        const decimalPlaces = this._getDecimalPlaces(fiatAmount);
+
+        return `${fiatAmount.toFixed(decimalPlaces)} ${this.configService.selectedCurrency.toUpperCase()}`;
+      }),
+    );
   }
 
   _getDecimalPlaces(value) {

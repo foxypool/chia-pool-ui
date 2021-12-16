@@ -4,7 +4,7 @@
   </select>
   <div class="input-group-append hide-on-smaller-screens">
     <label class="input-group-text dark-background currency-select-rate-label">
-      1 {{(statsService.poolConfig | async).ticker?.toUpperCase()}} ≈ {{rateForCurrencyFormatted}}
+      1 {{(statsService.poolConfig | async).ticker?.toUpperCase()}} ≈ {{rateForCurrencyFormatted | async}}
     </label>
   </div>
 </div>
