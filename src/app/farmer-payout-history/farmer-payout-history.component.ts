@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 import {SnippetService} from '../snippet.service';
 import {ensureHexPrefix} from '../util';
 import {ConfigService, DateFormatting} from '../config.service';
+import {CsvExporter} from '../csv-exporter';
 
 @Component({
   selector: 'app-farmer-payout-history',
@@ -70,6 +71,7 @@ export class FarmerPayoutHistoryComponent implements OnChanges {
   constructor(
     public snippetService: SnippetService,
     private configService: ConfigService,
+    private csvExporter: CsvExporter,
   ) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -104,6 +106,20 @@ export class FarmerPayoutHistoryComponent implements OnChanges {
     }
   }
 
+  public exportCsv(): void {
+    this.csvExporter.export(`payouts-${moment().format('YYYY-MM-DD')}.csv`, [
+      'Date',
+      'Amount',
+      'State',
+      'Confirmed at',
+    ], this.recentPayouts.map(payout => ([
+      moment(payout.payoutDate).format('YYYY-MM-DD HH:mm'),
+      payout.amount,
+      payout.state,
+      payout.confirmedAtHeight,
+    ])));
+  }
+
   private makeChartUpdateOptions(): EChartsOption {
     return {
       tooltip: {
@@ -125,4 +141,5 @@ export type Payout = {
   amount: string,
   fiatAmountFormatted: string,
   state: string,
+  confirmedAtHeight: number,
 };

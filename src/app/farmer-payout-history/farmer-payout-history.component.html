@@ -3,6 +3,7 @@
     <div echarts [options]="chartOptions" [merge]="chartUpdateOptions" theme="default" class="recent-payouts-chart"></div>
   </div>
   <div class="col-md-12">
+    <button *ngIf="recentPayouts.length > 0" type="button" class="btn btn-outline-info btn-sm" style="float: right" (click)="exportCsv()">{{snippetService.getSnippet('download-csv-button.title')}}</button>
     <table class="table table-responsive-lg table-dark dark-theme">
       <thead>
         <tr>

@@ -1,19 +1,21 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import * as moment from 'moment';
 import BigNumber from 'bignumber.js';
 import {faCubes, faExchangeAlt} from '@fortawesome/free-solid-svg-icons';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 
 import {SnippetService} from '../snippet.service';
 import {ConfigService, DateFormatting} from '../config.service';
 import {getEffortColor} from '../util';
+import {CsvExporter} from '../csv-exporter';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-farmer-won-blocks',
   templateUrl: './farmer-won-blocks.component.html',
   styleUrls: ['./farmer-won-blocks.component.scss']
 })
-export class FarmerWonBlocksComponent {
+export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
   @Input() wonBlocksObservable: Observable<WonBlock[]>;
   @Input() isLoading = false;
   @Input() poolConfig = {
@@ -23,11 +25,25 @@ export class FarmerWonBlocksComponent {
 
   public faCubes = faCubes;
   public faExchangeAlt = faExchangeAlt;
+  public hasWonBlocksObservable: Observable<boolean>;
+
+  private wonBlocksSubject: BehaviorSubject<WonBlock[]> = new BehaviorSubject<WonBlock[]>([]);
+  private subscriptions: Subscription[] = [];
 
   constructor(
     public snippetService: SnippetService,
     private configService: ConfigService,
+    private csvExporter: CsvExporter,
   ) {}
+
+  public ngOnInit(): void {
+    this.hasWonBlocksObservable = this.wonBlocksObservable.pipe(map(wonBlocks => wonBlocks.length > 0));
+    this.subscriptions.push(this.wonBlocksObservable.subscribe(this.wonBlocksSubject));
+  }
+
+  public ngOnDestroy(): void {
+    this.subscriptions.map(subscription => subscription.unsubscribe());
+  }
 
   public trackBlockByHash(index: number, block: WonBlock): string {
     return block.hash;
@@ -68,6 +84,20 @@ export class FarmerWonBlocksComponent {
     } else {
       this.configService.wonBlockDateFormatting = DateFormatting.fixed;
     }
+  }
+
+  public exportCsv(): void {
+    this.csvExporter.export(`blocks-${moment().format('YYYY-MM-DD')}.csv`, [
+      'Date',
+      'Height',
+      'Hash',
+      'Effort',
+    ], this.wonBlocksSubject.getValue().map(wonBlock => ([
+      moment(wonBlock.createdAt).format('YYYY-MM-DD HH:mm'),
+      wonBlock.height,
+      wonBlock.hash,
+      wonBlock.effort,
+    ])));
   }
 }
 

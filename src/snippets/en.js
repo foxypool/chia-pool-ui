@@ -35,6 +35,7 @@ export default {
   'blocks-won-component.title': 'Recently won Blocks',
   'blocks-won-component.unclaimed': 'Unclaimed',
   'dashboard-component.latest-notices.title': 'Latest notices',
+  'download-csv-button.title': 'Download CSV',
   'events-component.block-winner-extra-reward.title': 'Block winner extra rewards',
   'events-component.ended-at': 'Ended at',
   'events-component.extra-block-reward.title': 'Extra block rewards',

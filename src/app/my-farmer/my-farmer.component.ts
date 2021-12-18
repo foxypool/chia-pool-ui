@@ -245,7 +245,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     };
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.subscriptions.map(subscription => subscription.unsubscribe());
     if (this.accountUpdateInterval) {
       clearInterval(this.accountUpdateInterval);
@@ -315,6 +315,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
               formattedPayoutDate,
               amount: payoutAmount,
               fiatAmountFormatted: this.ratesService.getValuesInFiatFormatted(parseFloat(payoutAmount) || 0),
+              confirmedAtHeight: matchingTransaction.confirmedAtHeight,
             };
           })
           .filter(payout => payout !== null);
