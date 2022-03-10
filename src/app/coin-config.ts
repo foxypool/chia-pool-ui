@@ -1,12 +1,12 @@
 const config = {
   CHIA: {
     cliCommandPrefix: 'chia',
-    hdKeyPoolPublicKeyPath: 'm/12381/8444/1/0',
+    hdKeyPoolPublicKeyPath: 'm/12381n/8444n/1n/0n',
     decimalPlaces: 12,
   },
   FLAX: {
     cliCommandPrefix: 'flax',
-    hdKeyPoolPublicKeyPath: 'm/12381/8444/1/0',
+    hdKeyPoolPublicKeyPath: 'm/12381n/8444n/1n/0n',
     decimalPlaces: 12,
   },
   CHIVES: {
