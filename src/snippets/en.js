@@ -222,9 +222,12 @@ export default {
   'update-minimum-payout-modal.update-success': 'Successfully updated the minimum payout to {1} {2}',
   'update-minimum-payout-modal.updating': 'Updating',
   'update-name-modal.account-name': 'Account name',
-  'update-name-modal.success': 'Successfully updated the name to "{1}"',
+  'update-name-modal.error.name-too-long': 'The name is too long.',
+  'update-name-modal.remove-name': 'Remove name',
+  'update-name-modal.remove-success': 'Successfully removed the name',
   'update-name-modal.title': 'Update the account name',
   'update-name-modal.update-name': 'Update name',
+  'update-name-modal.update-success': 'Successfully updated the name to "{1}"',
   'update-name-modal.updating': 'Updating',
   'update-service.updating': 'Updating to the latest version ..',
 };

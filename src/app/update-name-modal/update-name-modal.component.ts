@@ -26,14 +26,41 @@ export class UpdateNameModalComponent  {
     private toastService: ToastService,
   ) {}
 
-  async updateName() {
+  get isNewNameValid(): boolean {
+    return !this.newNameOrUndefined || this.newNameOrUndefined.length <= 64;
+  }
+
+  get canUpdateName(): boolean {
+    if (this.accountService.isUpdatingAccount) {
+      return false;
+    }
+    if (!this.isNewNameValid) {
+      return false;
+    }
+
+    return this.accountService.account.name !== this.newNameOrUndefined;
+  }
+
+  get newNameOrUndefined(): string|undefined {
+    return this.newName ? this.newName.trim() : undefined;
+  }
+
+  get accountHasName(): boolean {
+    return this.accountService.account.name !== undefined;
+  }
+
+  async updateName(): Promise<void> {
     if (this.accountService.isUpdatingAccount) {
       return;
     }
-    const newName = this.newName.trim();
+    const newName = this.newNameOrUndefined;
     try {
       await this.accountService.updateName({ newName });
-      this.toastService.showSuccessToast(this.snippetService.getSnippet('update-name-modal.success', newName));
+      if (newName) {
+        this.toastService.showSuccessToast(this.snippetService.getSnippet('update-name-modal.update-success', newName));
+      } else {
+        this.toastService.showSuccessToast(this.snippetService.getSnippet('update-name-modal.remove-success'));
+      }
       this.modalRef.close(true);
     } catch (err) {
       this.toastService.showErrorToast(err.message);
@@ -45,7 +72,7 @@ export class UpdateNameModalComponent  {
   }
 
   openModal() {
-    this.newName = this.accountService.account.name || '';
+    this.newName = this.accountService.account.name;
     this.modalRef = this.modalService.open(this.modal);
     this.modalRef.result.then(() => {
       this.onModalClose();

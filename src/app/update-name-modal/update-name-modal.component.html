@@ -8,15 +8,25 @@
   <div class="modal-body">
     <div class="row">
       <div class="col-12">
-        <input type="text" class="form-control" placeholder="{{snippetService.getSnippet('update-name-modal.account-name')}}" [(ngModel)]="newName">
+        <input type="text"
+               class="form-control"
+               aria-describedby="nameFeedback"
+               placeholder="{{snippetService.getSnippet('update-name-modal.account-name')}}"
+               [class.is-invalid]="!isNewNameValid"
+               [(ngModel)]="newName"
+        >
+        <div id="nameFeedback" class="invalid-feedback">
+          {{snippetService.getSnippet('update-name-modal.error.name-too-long')}}
+        </div>
       </div>
     </div>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel')">{{snippetService.getSnippet('general.cancel')}}</button>
-    <button type="button" class="btn btn-success" (click)="updateName()" [disabled]="accountService.isUpdatingAccount || !newName || newName === accountService.account.name">
+    <button type="button" class="btn btn-success" (click)="updateName()" [disabled]="!canUpdateName">
       <span *ngIf="accountService.isUpdatingAccount">{{snippetService.getSnippet('update-name-modal.updating')}}</span>
-      <span *ngIf="!accountService.isUpdatingAccount">{{snippetService.getSnippet('update-name-modal.update-name')}}</span>
+      <span *ngIf="!accountService.isUpdatingAccount && (newNameOrUndefined || !accountHasName)">{{snippetService.getSnippet('update-name-modal.update-name')}}</span>
+      <span *ngIf="!accountService.isUpdatingAccount && !newNameOrUndefined && accountHasName">{{snippetService.getSnippet('update-name-modal.remove-name')}}</span>
       <fa-icon [icon]="faCircleNotch" [spin]="true" *ngIf="accountService.isUpdatingAccount" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
     </button>
   </div>
