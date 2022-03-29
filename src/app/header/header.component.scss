@@ -1,11 +1,6 @@
-.header-row-item-start {
-  padding: 8px 4px 8px 0;
-}
 .header-row-item {
-  padding: 8px 4px;
-}
-.header-row-item-end {
-  padding: 8px 0 8px 4px;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 .dropdown-menu {
   background-color: #2f3136;
@@ -62,4 +57,18 @@
 }
 .search-input {
   max-width: 16em;
+}
+@media (max-width: 1200px) {
+  .navbar-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .nav-item {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  .header-row-item {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
 }

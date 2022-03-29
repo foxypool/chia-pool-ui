@@ -65,7 +65,7 @@
         </a>
       </li>
     </ul>
-    <div class="header-row-item-start" *ngIf="showLogoutButton">
+    <div class="header-row-item" *ngIf="showLogoutButton">
       <button class="btn dark-background btn-outline-danger logout-button" (click)="accountService.logout()">{{snippetService.getSnippet('header-component.button.logout')}}</button>
     </div>
     <div class="header-row-item" *ngIf="ratesService.currencies && ratesService.currencies.length > 0">
