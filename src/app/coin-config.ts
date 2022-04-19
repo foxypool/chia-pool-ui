@@ -20,8 +20,8 @@ const config = {
     decimalPlaces: 12,
   },
   STAI: {
-    cliCommandPrefix: 'staicoin',
-    hdKeyPoolPublicKeyPath: 'm/12381/8444/1/0',
+    cliCommandPrefix: 'stai',
+    hdKeyPoolPublicKeyPath: 'm/12381n/8444n/1n/0n',
     decimalPlaces: 9,
   },
 };
