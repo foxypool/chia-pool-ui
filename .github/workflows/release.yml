@@ -9,11 +9,11 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Node.js 14
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - name: Set up Node.js 16
+        uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 16.x
       - name: Install
         run: yarn install
       - name: Build with source maps
