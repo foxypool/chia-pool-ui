@@ -11,7 +11,7 @@ const config = {
   },
   CHIVES: {
     cliCommandPrefix: 'chives',
-    hdKeyPoolPublicKeyPath: 'm/12381/9699/1/0',
+    hdKeyPoolPublicKeyPath: 'm/12381n/9699n/1n/0n',
     decimalPlaces: 8,
   },
   HDDCOIN: {
