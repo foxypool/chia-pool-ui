@@ -25,8 +25,8 @@
       </td>
     </tr>
   <tr *ngFor="let payout of lastPayoutsArray; trackBy: trackPayoutBy">
-    <td>{{getPayoutDate(payout)}}</td>
-    <td>
+    <td class="no-wrap">{{getPayoutDate(payout)}}</td>
+    <td class="no-wrap">
       <span *ngFor="let coinId of getCoinIdsForPayout(payout); let lastCoinId = last">
         <a *ngIf="poolConfig.blockExplorerCoinUrlTemplate" href="{{getBlockExplorerCoinLink(coinId)}}" target="_blank" style="color: #b45bff">{{coinId}}</a>
         <span *ngIf="!poolConfig.blockExplorerCoinUrlTemplate">{{coinId}}</span>
@@ -34,7 +34,7 @@
         <br *ngIf="splitMultiPayoutsByBreak && !lastCoinId">
       </span>
     </td>
-    <td>
+    <td class="no-wrap">
       <span (click)="toggleShowPayout(payout)">{{getTotalPayout(payout.transactions)}} {{poolConfig.ticker}}</span>
       <span *ngIf="showPayout(payout._id)">
         <span *ngFor="let data of getAddressAmountPairs(payout._id)">
@@ -43,7 +43,7 @@
         </span>
       </span>
     </td>
-    <td>{{getPaymentState(payout)}}</td>
+    <td class="no-wrap">{{getPaymentState(payout)}}</td>
   </tr>
   </tbody>
 </table>
