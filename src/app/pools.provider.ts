@@ -15,6 +15,7 @@ export class PoolsProvider {
       hostnames: ['chia.foxypool.io'],
       apiUrl: 'https://api2.foxypool.io',
       algorithm: 'Proof of Spacetime',
+      downloadUrl: 'https://github.com/Chia-Network/chia-blockchain/releases/latest',
     },{
       group: 'CHIA',
       name: 'Foxy-Pool CHIA (OG)',
@@ -23,6 +24,7 @@ export class PoolsProvider {
       hostnames: ['chia-og.foxypool.io', 'localhost'],
       apiUrl: 'https://api2.foxypool.io',
       algorithm: 'Proof of Spacetime',
+      downloadUrl: 'https://github.com/foxypool/chia-blockchain/releases/latest',
     },{
       group: 'FLAX',
       name: 'Foxy-Pool FLAX (OG)',
@@ -31,6 +33,7 @@ export class PoolsProvider {
       hostnames: ['flax-og.foxypool.io'],
       apiUrl: 'https://api2.foxypool.io',
       algorithm: 'Proof of Spacetime',
+      downloadUrl: 'https://github.com/foxypool/flax-blockchain/releases/latest',
     },{
       group: 'CHIVES',
       name: 'Foxy-Pool CHIVES',
@@ -39,6 +42,7 @@ export class PoolsProvider {
       hostnames: ['chives.foxypool.io'],
       apiUrl: 'https://api2.foxypool.io',
       algorithm: 'Proof of Spacetime',
+      downloadUrl: 'https://github.com/HiveProject2021/chives-blockchain/releases/latest',
     },{
       group: 'CHIVES',
       name: 'Foxy-Pool CHIVES (OG)',
@@ -47,6 +51,7 @@ export class PoolsProvider {
       hostnames: ['chives-og.foxypool.io'],
       apiUrl: 'https://api2.foxypool.io',
       algorithm: 'Proof of Spacetime',
+      downloadUrl: 'https://github.com/foxypool/chives-blockchain/releases/latest',
     },{
       group: 'HDDCOIN',
       name: 'Foxy-Pool HDDCOIN (OG)',
@@ -55,6 +60,7 @@ export class PoolsProvider {
       hostnames: ['hddcoin-og.foxypool.io'],
       apiUrl: 'https://api2.foxypool.io',
       algorithm: 'Proof of Spacetime',
+      downloadUrl: 'https://github.com/foxypool/hddcoin-blockchain/releases/latest',
     },{
       group: 'STAI',
       name: 'Foxy-Pool STAI (OG)',
@@ -63,6 +69,7 @@ export class PoolsProvider {
       hostnames: ['stai-og.foxypool.io'],
       apiUrl: 'https://api2.foxypool.io',
       algorithm: 'Proof of Spacetime',
+      downloadUrl: 'https://github.com/foxypool/stai-blockchain/releases/latest',
     },{
       group: 'BHD',
       name: 'Foxy-Pool BHD',
@@ -76,6 +83,7 @@ export class PoolsProvider {
     },
   ];
 
+  public readonly pool = null;
   public readonly apiUrl = null;
   private readonly _poolIdentifier = null;
   private readonly _coin = null;
@@ -88,6 +96,7 @@ export class PoolsProvider {
       .filter(pool => pool.hostnames)
       .find(pool => pool.hostnames.some(curr => curr === hostname));
     if (pool) {
+      this.pool = pool;
       this._poolIdentifier = pool.poolIdentifier;
       this._coin = pool.group;
       this.apiUrl = pool.apiUrl;
