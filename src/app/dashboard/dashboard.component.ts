@@ -28,12 +28,12 @@ export class DashboardComponent  {
     return poolConfig.notices.slice(0, 10);
   }
 
-  get noticesInTheLast3DaysOrLess() {
-    return this.notices.filter(notice => moment(notice.date).isAfter(moment().subtract(3, 'days')));
+  get noticesInTheLastWeekOrLess() {
+    return this.notices.filter(notice => moment(notice.date).isAfter(moment().subtract(1, 'week')));
   }
 
   get hasNotices() {
-    return this.noticesInTheLast3DaysOrLess.length > 0;
+    return this.noticesInTheLastWeekOrLess.length > 0;
   }
 
   getTranslatedNoticeText(notice) {
