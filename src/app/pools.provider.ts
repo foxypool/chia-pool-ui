@@ -24,14 +24,6 @@ export class PoolsProvider {
       apiUrl: 'https://api2.foxypool.io',
       algorithm: 'Proof of Spacetime',
     },{
-      group: 'FLAX',
-      name: 'Foxy-Pool FLAX (OG)',
-      url: 'https://flax-og.foxypool.io',
-      poolIdentifier: 'flax-og',
-      hostnames: ['flax-og.foxypool.io'],
-      apiUrl: 'https://api2.foxypool.io',
-      algorithm: 'Proof of Spacetime',
-    },{
       group: 'CHIVES',
       name: 'Foxy-Pool CHIVES',
       url: 'https://chives.foxypool.io',
@@ -45,22 +37,6 @@ export class PoolsProvider {
       url: 'https://chives-og.foxypool.io',
       poolIdentifier: 'chives-og',
       hostnames: ['chives-og.foxypool.io'],
-      apiUrl: 'https://api2.foxypool.io',
-      algorithm: 'Proof of Spacetime',
-    },{
-      group: 'HDDCOIN',
-      name: 'Foxy-Pool HDDCOIN (OG)',
-      url: 'https://hddcoin-og.foxypool.io',
-      poolIdentifier: 'hddcoin-og',
-      hostnames: ['hddcoin-og.foxypool.io'],
-      apiUrl: 'https://api2.foxypool.io',
-      algorithm: 'Proof of Spacetime',
-    },{
-      group: 'STAI',
-      name: 'Foxy-Pool STAI (OG)',
-      url: 'https://stai-og.foxypool.io',
-      poolIdentifier: 'stai-og',
-      hostnames: ['stai-og.foxypool.io'],
       apiUrl: 'https://api2.foxypool.io',
       algorithm: 'Proof of Spacetime',
     },{
