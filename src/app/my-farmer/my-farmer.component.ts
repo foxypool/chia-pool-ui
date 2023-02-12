@@ -57,6 +57,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   private dailyRewardPerPib = 0;
 
   private historicalIntervalInMinutes = 15;
+  private currentEcSeriesName = 'Current Effective Capacity'
+  private averageEcSeriesName = 'Average Effective Capacity'
 
   private subscriptions: Subscription[] = [
     this.route.params.subscribe(async params => {
@@ -104,15 +106,52 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
           color: '#cfd0d1'
         }
       },
+      legend: {
+        data: [
+          this.currentEcSeriesName,
+          this.averageEcSeriesName,
+        ],
+        top: 25,
+        textStyle: {
+          color: '#cfd0d1',
+        },
+        tooltip: {
+          show: true,
+          backgroundColor: '#151517',
+          borderWidth: 0,
+          padding: 7,
+          textStyle: {
+            color: '#cfd0d1',
+          },
+          formatter: params => {
+            if (params.name === this.currentEcSeriesName) {
+              return 'Uses the last 1h of partials'
+            }
+
+            return 'Uses the last 24h of partials'
+          },
+        },
+      },
       grid: {
         left: 65,
-        top: 50,
+        top: this.ecChartTopMargin,
         right: 15,
         bottom: 20,
       },
       tooltip: {
         trigger: 'axis',
-        formatter: params => `${moment(params[0].value[0]).format('yyyy-mm-dd HH:mm')}: <strong>${params[0].value[1]} GiB</strong>`,
+        axisPointer: {
+          type: 'cross',
+          label: {
+            formatter: params => {
+              if (params.axisDimension === 'x') {
+                return moment(params.value).format('YYYY-MM-DD HH:mm');
+              }
+
+              return `${(params.value as number).toFixed(1)} GiB`;
+            },
+          },
+        },
       },
       xAxis: {
         type: 'time',
@@ -120,6 +159,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       },
       yAxis: {
         type: 'value',
+        name: 'Capacity',
         axisLabel : {
           formatter: '{value} GiB',
         },
@@ -133,17 +173,24 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       series: [{
         data: [],
         type: 'line',
+        name: this.currentEcSeriesName,
+        symbol: 'none',
+        smooth: true,
+        color: '#037ffc',
+        lineStyle: {
+          width: 4,
+          cap: 'round',
+        },
+      }, {
+        data: [],
+        type: 'line',
+        name: this.averageEcSeriesName,
         symbol: 'none',
         smooth: true,
         color: '#4bd28f',
-        areaStyle: {
-          color: new graphic.LinearGradient(0, 0, 0, 1, [{
-            offset: 0,
-            color: '#4bd28f',
-          }, {
-            offset: 1,
-            color: '#01bfec',
-          }]),
+        lineStyle: {
+          width: 4,
+          cap: 'round',
         },
       }],
     };
@@ -164,7 +211,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
           this.snippetService.getSnippet('my-farmer-component.shares-chart.difficulty.name'),
           this.snippetService.getSnippet('my-farmer-component.shares-chart.partials.name'),
         ],
-        top: 20,
+        top: 25,
         textStyle: {
           color: '#cfd0d1',
         },
@@ -366,10 +413,18 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       return 50;
     }
     if (window.innerWidth >= 541) {
-      return 70;
+      return 75;
     }
 
-    return 94;
+    return 99;
+  }
+
+  private get ecChartTopMargin(): number {
+    if (window.innerWidth >= 600) {
+      return 50
+    }
+
+    return 75
   }
 
   private get minimumPayout() {
@@ -420,7 +475,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   private makeEcChartUpdateOptions(historicalStats): EChartsOption {
     const biggestEc = historicalStats.reduce((acc, curr) => acc > curr.ec ? acc : curr.ec, 0);
     const { unit, unitIndex } = this.getUnitForCapacity(biggestEc);
-    const historicalStatsSeries = historicalStats.map(stats => [stats.createdAt, (new BigNumber(stats.ec)).dividedBy((new BigNumber(1024)).exponentiatedBy(unitIndex)).decimalPlaces(2).toNumber()]);
+    const ecInLastHourSeries = historicalStats.map(stats => [stats.createdAt, (new BigNumber(stats.ecLastHour || 0)).dividedBy((new BigNumber(1024)).exponentiatedBy(unitIndex)).decimalPlaces(2).toNumber()]);
+    const ecSeries = historicalStats.map(stats => [stats.createdAt, (new BigNumber(stats.ec)).dividedBy((new BigNumber(1024)).exponentiatedBy(unitIndex)).decimalPlaces(2).toNumber()]);
     const lastDate = historicalStats.length > 0 ? historicalStats[0].createdAt : new Date();
     const missingDataLeading = [];
     if (moment(lastDate).isAfter(moment().subtract(23, 'hours'))) {
@@ -442,7 +498,18 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
     return {
       tooltip: {
-        formatter: params => `${moment(params[0].value[0]).format('YYYY-MM-DD HH:mm')}<br/> <strong>${params[0].value[1]} ${unit}</strong>`,
+        formatter: this.ecChartTooltipFormatter.bind(this, unit),
+        axisPointer: {
+          label: {
+            formatter: params => {
+              if (params.axisDimension === 'x') {
+                return moment(params.value).format('YYYY-MM-DD HH:mm');
+              }
+
+              return `${(params.value as number).toFixed(1)} ${unit}`;
+            },
+          },
+        },
       },
       yAxis: {
         axisLabel: {
@@ -450,7 +517,9 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         },
       },
       series: [{
-        data: missingDataLeading.concat(historicalStatsSeries, missingDataTrailing),
+        data: missingDataLeading.concat(ecInLastHourSeries, missingDataTrailing),
+      },{
+        data: missingDataLeading.concat(ecSeries, missingDataTrailing),
       }],
     };
   }
@@ -501,6 +570,12 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         data: missingShareCountDataLeading.concat(historicalShareCountSeries, missingShareCountDataTrailing),
       }],
     };
+  }
+
+  private ecChartTooltipFormatter(unit, params) {
+    return params.map(series => {
+      return `${series.marker}${series.seriesName} <span style="padding-left: 10px; float: right"><strong>${series.value[1]} ${unit}</strong></span>`;
+    }).join('<br/>');
   }
 
   private getUnitForCapacity(capacityInGib) {

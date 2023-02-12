@@ -37,7 +37,7 @@ export class PoolHistoryComponent implements OnDestroy {
           this.snippetService.getSnippet('pool-history-component.chart.blocks.name'),
           this.snippetService.getSnippet('pool-history-component.chart.pool-ec.name'),
         ],
-        top: 20,
+        top: 25,
         textStyle: {
           color: '#cfd0d1',
         },

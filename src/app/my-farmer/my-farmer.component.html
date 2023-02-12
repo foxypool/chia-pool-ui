@@ -56,7 +56,7 @@
           <div class="p-1 col-md-6 col-lg-6 col-xxl-6">
             <div class="card">
               <div class="card-header text-align-center">
-                <h5 ngbTooltip="{{snippetService.getSnippet('general.ec')}}">EC</h5>
+                <h5>Average Effective Capacity</h5>
                 <fa-icon
                   [icon]="faInfoCircle"
                   [ngbTooltip]="snippetService.getSnippet('my-farmer-component.ec-card.help')"
@@ -65,7 +65,7 @@
                 ></fa-icon>
               </div>
               <div class="card-body text-align-center card-font-size">
-                {{getFormattedCapacity(accountService.account.ec)}} <small>({{ecShare}} %)</small>
+                {{getFormattedCapacity(accountService.account.ec)}} <span style="font-size: 14.4px">({{ecShare}} %)</span>
               </div>
             </div>
           </div>
