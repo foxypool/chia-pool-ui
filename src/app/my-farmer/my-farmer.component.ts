@@ -423,8 +423,11 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     if (window.innerWidth >= 600) {
       return 50
     }
+    if (window.innerWidth >= 450) {
+      return 75
+    }
 
-    return 75
+    return 99
   }
 
   private get minimumPayout() {
