@@ -19,6 +19,7 @@ import {UpdateMinimumPayoutModalComponent} from '../update-minimum-payout-modal/
 import {RatesService} from '../rates.service';
 import {Payout} from '../farmer-payout-history/farmer-payout-history.component';
 import {ConfigService, DateFormatting} from '../config.service';
+import { getEffortColor } from '../util';
 
 @Component({
   selector: 'app-my-farmer',
@@ -55,6 +56,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
   private poolEc = 0;
   private dailyRewardPerPib = 0;
+  private networkSpaceInTiB = 0
+  private currentHeight = 0
 
   private historicalIntervalInMinutes = 15;
   private currentEcSeriesName = 'Current Effective Capacity'
@@ -82,6 +85,10 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig)),
     this.statsService.accountStats.asObservable().subscribe(accountStats => this.poolEc = accountStats.ecSum),
     this.statsService.rewardStats.asObservable().subscribe(rewardStats => this.dailyRewardPerPib = rewardStats.dailyRewardPerPiB),
+    this.statsService.poolStats.asObservable().subscribe((poolStats => {
+      this.currentHeight = poolStats.height
+      this.networkSpaceInTiB = poolStats.networkSpaceInTiB
+    })),
   ];
   private accountUpdateInterval: number = null;
   private accountHistoricalUpdateInterval: number = null;
@@ -406,6 +413,32 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       this.accountService.updateAccountHistoricalStats(),
       this.accountService.updateAccountWonBlocks(),
     ]);
+  }
+
+  public get currentEffort(): BigNumber | null {
+    if (this.accountService.accountWonBlocks.value.length === 0 || !this.accountService.account.ec || !this.currentHeight || !this.networkSpaceInTiB) {
+      return null
+    }
+
+    const lastWonBlockHeight = this.accountService.accountWonBlocks.value[0].height
+    const passedBlocks = this.currentHeight - lastWonBlockHeight
+    const chanceToWinABlock = (new BigNumber(this.accountService.account.ec)).dividedBy(1024).dividedBy(this.networkSpaceInTiB)
+    const blockCountFor100PercentEffort = new BigNumber(1).dividedBy(chanceToWinABlock)
+
+    return (new BigNumber(passedBlocks)).dividedBy(blockCountFor100PercentEffort)
+  }
+
+  public get currentEffortFormatted(): string {
+    const effort = this.currentEffort
+    if (effort === null) {
+      return 'N/A'
+    }
+
+    return `${effort.multipliedBy(100).toFixed(2)} %`
+  }
+
+  public getEffortColor(effort: BigNumber | null): string {
+    return getEffortColor(effort)
   }
 
   private get shareChartTopMargin(): number {

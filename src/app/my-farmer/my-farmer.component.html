@@ -138,6 +138,22 @@
               </div>
             </div>
           </div>
+          <div class="p-1 col-md-3 col-lg-3 col-xxl-6">
+            <div class="card">
+              <div class="card-header text-align-center">
+                <h5>Current Effort</h5>
+                <fa-icon
+                  [icon]="faInfoCircle"
+                  ngbTooltip="The current effort shows the effort since the last won block based on your average effective capacity. The effort is given in percent, where 100% equals the your estimated time to win."
+                  placement="bottom"
+                  class="header-info-icon"
+                ></fa-icon>
+              </div>
+              <div class="card-body text-align-center card-font-size">
+                <span [class]="getEffortColor(currentEffort)">{{currentEffortFormatted}}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="p-1 col-md-12 col-lg-3 col-xxl-4">
