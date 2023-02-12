@@ -473,7 +473,11 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   private makeEcChartUpdateOptions(historicalStats): EChartsOption {
-    const biggestEc = historicalStats.reduce((acc, curr) => acc > curr.ec ? acc : curr.ec, 0);
+    const biggestEc = historicalStats.reduce((acc, curr) => {
+      const currBiggestEc = (curr.ecLastHour || 0) > curr.ec ? curr.ecLastHour : curr.ec
+
+      return acc > currBiggestEc ? acc : currBiggestEc
+    }, 0);
     const { unit, unitIndex } = this.getUnitForCapacity(biggestEc);
     const ecInLastHourSeries = historicalStats.map(stats => [stats.createdAt, (new BigNumber(stats.ecLastHour || 0)).dividedBy((new BigNumber(1024)).exponentiatedBy(unitIndex)).decimalPlaces(2).toNumber()]);
     const ecSeries = historicalStats.map(stats => [stats.createdAt, (new BigNumber(stats.ec)).dividedBy((new BigNumber(1024)).exponentiatedBy(unitIndex)).decimalPlaces(2).toNumber()]);
