@@ -20,6 +20,7 @@ import {RatesService} from '../rates.service';
 import {Payout} from '../farmer-payout-history/farmer-payout-history.component';
 import {ConfigService, DateFormatting} from '../config.service';
 import { getEffortColor } from '../util';
+import {UpdateDifficultyModalComponent} from '../update-difficulty-modal/update-difficulty-modal.component'
 
 @Component({
   selector: 'app-my-farmer',
@@ -31,6 +32,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   @ViewChild(UpdateNameModalComponent) updateNameModal;
   @ViewChild(LeavePoolModalComponent) leavePoolModal;
   @ViewChild(UpdateMinimumPayoutModalComponent) updateMinimumPayoutModal;
+  @ViewChild(UpdateDifficultyModalComponent) updateDifficultyModal
 
   public poolConfig:any = {};
   public poolPublicKeyInput = null;
@@ -712,6 +714,10 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
   async updateMinimumPayout() {
     this.updateMinimumPayoutModal.openModal();
+  }
+
+  public updateDifficulty(): void {
+    this.updateDifficultyModal.openModal()
   }
 
   async rejoinPool() {

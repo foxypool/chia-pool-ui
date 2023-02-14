@@ -316,6 +316,24 @@ export class AccountService {
     }
   }
 
+  public async updateDifficulty({ difficulty, isFixedDifficulty }): Promise<void> {
+    if (!this.isAuthenticated) {
+      return
+    }
+    this.isUpdatingAccount = true
+    try {
+      await this.statsService.updateAccountDifficulty({
+        poolPublicKey: this.poolPublicKey,
+        authToken: this.authToken,
+        difficulty,
+        isFixedDifficulty,
+      })
+      await this.updateAccount()
+    } finally {
+      this.isUpdatingAccount = false
+    }
+  }
+
   private migrateLegacyConfig() {
     const legacyAuthToken = this.localStorageService.getItem('authToken');
     if (legacyAuthToken) {

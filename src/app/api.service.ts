@@ -108,6 +108,17 @@ export class ApiService {
     return data;
   }
 
+  public async updateAccountDifficulty({ poolIdentifier, poolPublicKey, authToken, difficulty, isFixedDifficulty }): Promise<unknown> {
+    const { data } = await this.client.put(`${poolIdentifier}/account/${poolPublicKey}/difficulty`, {
+      difficulty,
+      isFixedDifficulty,
+    }, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    })
+
+    return data
+  }
+
   async leavePool({ poolIdentifier, poolPublicKey, authToken, leaveForEver }) {
     const { data } = await this.client.post(`${poolIdentifier}/account/${poolPublicKey}/leave-pool`, {
       leaveForEver,

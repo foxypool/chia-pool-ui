@@ -34,6 +34,7 @@ import { PoolHistoryComponent } from './pool-history/pool-history.component';
 import { FarmerPayoutHistoryComponent } from './farmer-payout-history/farmer-payout-history.component';
 import { FarmerWonBlocksComponent } from './farmer-won-blocks/farmer-won-blocks.component';
 import { CurrencySelectorComponent } from './currency-selector/currency-selector.component';
+import {UpdateDifficultyModalComponent} from './update-difficulty-modal/update-difficulty-modal.component'
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { CurrencySelectorComponent } from './currency-selector/currency-selector
     UpdateNameModalComponent,
     LeavePoolModalComponent,
     UpdateMinimumPayoutModalComponent,
+    UpdateDifficultyModalComponent,
     PoolHistoryComponent,
     FarmerPayoutHistoryComponent,
     FarmerWonBlocksComponent,

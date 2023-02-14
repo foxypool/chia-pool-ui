@@ -7,6 +7,7 @@ export default {
   'api.error.account_has_not_left_the_pool': 'This account has not left the pool yet!',
   'api.error.account_is_cheating': 'This account is banned for cheating, can not leave the pool!',
   'api.error.account_not_found': 'The account was not found.',
+  'api.error.difficulty_update_rate_limited': 'Slow down, you are updating the difficulty too often!',
   'api.error.distribution_ratio_changed_recently': 'The distribution ratio was changed recently, please allow up to 2h before trying again.',
   'api.error.invalid_distribution_ratio': 'The distribution ratio is invalid!',
   'api.error.invalid_message': 'The message is invalid!',

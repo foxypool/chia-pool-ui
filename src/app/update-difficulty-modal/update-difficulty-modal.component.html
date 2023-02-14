@@ -1,0 +1,43 @@
+<ng-template #updateDifficultyModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" style="color: #474747">Update your Farmer difficulty</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-12">
+        <div class="custom-control custom-switch" style="padding-bottom: 0.5rem">
+          <input type="checkbox" class="custom-control-input" id="isFixedDifficultyCheckbox" [(ngModel)]="isFixedDifficulty">
+          <label class="custom-control-label text-color" for="isFixedDifficultyCheckbox" style="vertical-align: text-top">Fixed difficulty</label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <input
+          type="number"
+          class="form-control"
+          id="difficulty"
+          aria-describedby="difficultyFeedback"
+          [placeholder]="currentDifficulty"
+          [min]="1"
+          [class.is-invalid]="!isValidDifficulty"
+          [(ngModel)]="newDifficulty"
+        >
+        <div id="difficultyFeedback" class="invalid-feedback">
+          The difficulty must be an integer number greater or equal to 1.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel')">{{snippetService.getSnippet('general.cancel')}}</button>
+    <button type="button" class="btn btn-success" (click)="updateDifficulty()" [disabled]="!canUpdateDifficulty">
+      <span *ngIf="accountService.isUpdatingAccount">Updating</span>
+      <span *ngIf="!accountService.isUpdatingAccount">Update difficulty</span>
+      <fa-icon [icon]="faCircleNotch" [spin]="true" *ngIf="accountService.isUpdatingAccount" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
+    </button>
+  </div>
+</ng-template>
