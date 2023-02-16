@@ -55,16 +55,6 @@ export class UpdateDifficultyModalComponent  {
     this.newDifficulty = this.currentDifficulty
     this.isFixedDifficulty = this.currentIsFixedDifficulty
     this.modalRef = this.modalService.open(this.modal)
-    this.modalRef.result.then(() => {
-      this.onModalClose()
-    }, () => {
-      this.onModalClose()
-    })
-  }
-
-  private onModalClose() {
-    this.newDifficulty = undefined
-    this.isFixedDifficulty = false
   }
 
   private get currentIsFixedDifficulty(): boolean {
