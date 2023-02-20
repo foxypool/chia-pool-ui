@@ -69,6 +69,12 @@ export class ApiService {
     return data;
   }
 
+  async getAccountPayouts({ poolIdentifier, poolPublicKey }) {
+    const { data } = await this.client.get(`${poolIdentifier}/account/${poolPublicKey}/payouts`)
+
+    return data
+  }
+
   async authenticateAccount({ poolIdentifier, poolPublicKey, message, signature }) {
     const { data } = await this.client.post(`${poolIdentifier}/account/${poolPublicKey}/authenticate`, {
       message,

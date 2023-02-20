@@ -237,9 +237,13 @@
             <ng-template ngbNavContent>
               <div class="p-1 col-md-12">
                 <app-farmer-payout-history
-                  [isLoading]="isLoadingPayoutHistory"
+                  [isLoading]="isAccountLoading | async"
                   [poolConfig]="poolConfig"
-                  [recentPayouts]="recentPayouts"
+                  [coinConfig]="statsService.coinConfig"
+                  [payoutDateFormattingObservable]="payoutDateFormattingObservable"
+                  [selectedCurrencyObservable]="selectedCurrencyObservable"
+                  [exchangeStatsObservable]="exchangeStatsObservable"
+                  [payouts]="accountService.accountPayouts"
                 ></app-farmer-payout-history>
               </div>
             </ng-template>

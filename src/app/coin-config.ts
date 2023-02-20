@@ -11,6 +11,12 @@ const config = {
   },
 };
 
-export function configForCoin(coin) {
-  return config[coin];
+export interface CoinConfig {
+  cliCommandPrefix: string
+  hdKeyPoolPublicKeyPath: string
+  decimalPlaces: number
+}
+
+export function configForCoin(coin: string): CoinConfig {
+  return config[coin]
 }

@@ -9,6 +9,7 @@ import {SnippetService} from './snippet.service';
 import * as Sentry from '@sentry/angular';
 import {BehaviorSubject} from 'rxjs';
 import {WonBlock} from './farmer-won-blocks/farmer-won-blocks.component';
+import {AccountPayout} from './farmer-payout-history/farmer-payout-history.component'
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class AccountService {
   public accountSubject = new BehaviorSubject<any>(null);
   public accountHistoricalStats = new BehaviorSubject<any[]>([]);
   public accountWonBlocks = new BehaviorSubject<WonBlock[]>([]);
+  public accountPayouts = new BehaviorSubject<AccountPayout[]>([])
   public isLoading = false;
   public isAuthenticating = false;
   public isUpdatingAccount = false;
@@ -84,6 +86,7 @@ export class AccountService {
     await Promise.all([
       this.updateAccountHistoricalStats(),
       this.updateAccountWonBlocks(),
+      this.updateAccountPayouts(),
     ]);
     this.toastService.showSuccessToast(this.snippetService.getSnippet('account-service.login.success'));
 
@@ -115,6 +118,7 @@ export class AccountService {
     this.account = null;
     this.accountHistoricalStats.next([]);
     this.accountWonBlocks.next([]);
+    this.accountPayouts.next([])
   }
 
   removePoolPublicKeyFromLocalStorage(): void {
@@ -162,6 +166,7 @@ export class AccountService {
       }
       this.accountHistoricalStats.next([]);
       this.accountWonBlocks.next([]);
+      this.accountPayouts.next([])
       this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', this.poolPublicKey));
     }
   }
@@ -172,6 +177,10 @@ export class AccountService {
 
   async updateAccountWonBlocks() {
     this.accountWonBlocks.next(await this.getAccountWonBlocks({ poolPublicKey: this.poolPublicKey }));
+  }
+
+  async updateAccountPayouts() {
+    this.accountPayouts.next(await this.getAccountPayouts({ poolPublicKey: this.poolPublicKey }));
   }
 
   async getAccount({ poolPublicKey }) {
@@ -217,6 +226,18 @@ export class AccountService {
     }
 
     return accountWonBlocks;
+  }
+
+  private async getAccountPayouts({ poolPublicKey }) {
+    this.isLoading = true
+    let accountPayouts = []
+    try {
+      accountPayouts = await this.statsService.getAccountPayouts({ poolPublicKey })
+    } finally {
+      this.isLoading = false
+    }
+
+    return accountPayouts
   }
 
   patchAccount(account): void {

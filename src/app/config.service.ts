@@ -16,10 +16,10 @@ export class ConfigService implements OnDestroy {
     this.localStorageService.getItem(ConfigService.selectedCurrencyStorageKey) || 'usd'
   );
   public wonBlockDateFormattingSubject = new BehaviorSubject<DateFormatting>(
-    DateFormatting[this.localStorageService.getItem(ConfigService.wonBlockDateFormattingStorageKey) || 'fixed']
+    DateFormatting[this.localStorageService.getItem(ConfigService.wonBlockDateFormattingStorageKey) || DateFormatting.fixed]
   );
   public payoutDateFormattingSubject = new BehaviorSubject<DateFormatting>(
-    DateFormatting[this.localStorageService.getItem(ConfigService.payoutDateFormattingStorageKey) || 'fixed']
+    DateFormatting[this.localStorageService.getItem(ConfigService.payoutDateFormattingStorageKey) || DateFormatting.fixed]
   );
 
   private subscriptions: Subscription[] = [

@@ -1,9 +1,9 @@
 <div class="row">
-  <div *ngIf="recentPayouts.length > 0" class="col-md-12">
+  <div *ngIf="payouts.getValue().length > 0" class="col-md-12">
     <div echarts [options]="chartOptions" [merge]="chartUpdateOptions" theme="default" class="recent-payouts-chart"></div>
   </div>
   <div class="col-md-12">
-    <button *ngIf="recentPayouts.length > 0" type="button" class="btn btn-outline-info btn-sm" style="margin-top: 0.5rem;float: right" (click)="exportCsv()">{{snippetService.getSnippet('download-csv-button.title')}}</button>
+    <button *ngIf="payouts.getValue().length > 0" type="button" class="btn btn-outline-info btn-sm" style="margin-top: 0.5rem;float: right" (click)="exportCsv()">{{snippetService.getSnippet('download-csv-button.title')}}</button>
     <table class="table table-responsive-lg table-dark dark-theme">
       <thead>
         <tr>
@@ -20,25 +20,25 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngIf="isLoading && recentPayouts.length === 0">
+        <tr *ngIf="isLoading && payouts.getValue().length === 0">
           <td colspan="5" style="text-align: center">
             <app-loading-state></app-loading-state>
           </td>
         </tr>
-        <tr *ngIf="!isLoading && recentPayouts.length === 0">
+        <tr *ngIf="!isLoading && payouts.getValue().length === 0">
           <td colspan="5" style="text-align: center; padding-top: 1rem">
             <app-empty-state [text]="snippetService.getSnippet('payouts-component.no-payouts-sent-yet')" [icon]="faMoneyCheck"></app-empty-state>
           </td>
         </tr>
-        <tr *ngFor="let payout of recentPayouts; trackBy: trackPayoutById">
+        <tr *ngFor="let payout of (payoutsObservable | async); trackBy: trackPayoutById">
           <td>{{payout.formattedPayoutDate}}</td>
           <td>
-            <a *ngIf="poolConfig.blockExplorerCoinUrlTemplate" href="{{getBlockExplorerCoinLink(payout.coinId)}}" target="_blank" style="color: #b45bff">{{payout.coinId}}</a>
-            <span *ngIf="!poolConfig.blockExplorerCoinUrlTemplate">{{payout.coinId}}</span>
+            <a *ngIf="payout.blockExplorerUrl !== undefined" href="{{payout.blockExplorerUrl}}" target="_blank" style="color: #b45bff">{{payout.coinId}}</a>
+            <span *ngIf="payout.blockExplorerUrl === undefined">{{payout.coinId}}</span>
           </td>
-          <td>{{payout.amount}} {{poolConfig.ticker}}</td>
+          <td>{{payout.amountFormatted}} {{poolConfig.ticker}}</td>
           <td>{{payout.fiatAmountFormatted}}</td>
-          <td>{{getPaymentState(payout.state)}}</td>
+          <td>{{payout.state}}</td>
         </tr>
       </tbody>
     </table>

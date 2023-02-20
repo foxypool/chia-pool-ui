@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core'
 import {faMoneyCheckAlt, faExchangeAlt} from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
 import {EChartsOption} from 'echarts';
@@ -8,20 +8,27 @@ import {SnippetService} from '../snippet.service';
 import {ensureHexPrefix} from '../util';
 import {ConfigService, DateFormatting} from '../config.service';
 import {CsvExporter} from '../csv-exporter';
+import {BehaviorSubject, combineLatest, from, Observable, Subscription} from 'rxjs'
+import {map} from 'rxjs/operators'
+import {CoinConfig} from '../coin-config'
+import {RatesService} from '../rates.service'
+import {Moment} from 'moment'
 
 @Component({
   selector: 'app-farmer-payout-history',
   templateUrl: './farmer-payout-history.component.html',
   styleUrls: ['./farmer-payout-history.component.scss']
 })
-export class FarmerPayoutHistoryComponent implements OnChanges {
-  @Input() recentPayouts: Payout[] = [];
-  @Input() isLoading = false;
-  @Input() poolConfig = {
-    blockExplorerCoinUrlTemplate: null,
-    ticker: '',
-  };
+export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
+  @Input() payouts: BehaviorSubject<AccountPayout[]>
+  @Input() isLoading = false
+  @Input() poolConfig: PoolConfig
+  @Input() coinConfig: CoinConfig
+  @Input() payoutDateFormattingObservable: Observable<DateFormatting>
+  @Input() selectedCurrencyObservable: Observable<string>
+  @Input() exchangeStatsObservable: Observable<unknown>
 
+  public payoutsObservable: Observable<FormattedAccountPayout[]>
   public faMoneyCheck = faMoneyCheckAlt;
   public faExchangeAlt = faExchangeAlt;
   public chartOptions: EChartsOption = {
@@ -67,35 +74,87 @@ export class FarmerPayoutHistoryComponent implements OnChanges {
     }],
   };
   public chartUpdateOptions: EChartsOption;
+  private subscriptions: Subscription[] = []
 
   constructor(
     public snippetService: SnippetService,
     private configService: ConfigService,
     private csvExporter: CsvExporter,
+    private ratesService: RatesService,
   ) {}
 
-  public ngOnChanges(changes: SimpleChanges): void {
-    const recentPayoutsChange = changes.recentPayouts;
-    if (!recentPayoutsChange) {
-      return;
-    }
-    this.chartUpdateOptions = this.makeChartUpdateOptions();
+  public exportCsv(): void {
+    this.csvExporter.export(`payouts-${moment().format('YYYY-MM-DD')}.csv`, [
+      'Date',
+      'Coin',
+      'Amount',
+      'State',
+    ], this.payouts.getValue().map(payout => ([
+      moment(payout.createdAt).format('YYYY-MM-DD HH:mm'),
+      payout.coinId,
+      payout.amount,
+      payout.state,
+    ])));
   }
 
-  public trackPayoutById(index: number, payout: Payout): string {
+  public ngOnInit(): void {
+    this.payoutsObservable = combineLatest([
+      this.payouts.asObservable(),
+      this.payoutDateFormattingObservable,
+      this.selectedCurrencyObservable,
+      this.exchangeStatsObservable,
+    ])
+      .pipe(map(([accountPayouts, payoutDateFormatting]) => {
+        return accountPayouts.map(accountPayout => {
+          return {
+            coinId: accountPayout.coinId,
+            amountFormatted: (new BigNumber(accountPayout.amount))
+              .decimalPlaces(this.coinConfig.decimalPlaces, BigNumber.ROUND_FLOOR)
+              .toString(),
+            fiatAmountFormatted: this.ratesService.getValuesInFiatFormatted(parseFloat(accountPayout.amount) || 0),
+            state: this.getFormattedPaymentState(accountPayout.state),
+            formattedPayoutDate: this.formatDate(moment(accountPayout.createdAt), payoutDateFormatting),
+            blockExplorerUrl: this.getBlockExplorerCoinLink(accountPayout.coinId),
+          }
+        })
+      }))
+    this.subscriptions.push(
+      this.payouts.subscribe(payouts => this.chartUpdateOptions = this.makeChartUpdateOptions(payouts)),
+    )
+  }
+
+  public ngOnDestroy(): void {
+    this.subscriptions.map(subscription => subscription.unsubscribe());
+  }
+
+  public trackPayoutById(index: number, payout: FormattedAccountPayout): string {
     return payout.coinId;
   }
 
-  public getBlockExplorerCoinLink(coinId: string): string {
+  private formatDate(date: Moment, dateFormatting: DateFormatting): string {
+    switch (dateFormatting) {
+      case DateFormatting.fixed:
+        return date.format('YYYY-MM-DD HH:mm')
+      case DateFormatting.relative:
+        return date.fromNow()
+    }
+  }
+
+  private getBlockExplorerCoinLink(coinId: string): string|undefined {
+    if (!this.poolConfig.blockExplorerCoinUrlTemplate) {
+      return
+    }
+
     return this.poolConfig.blockExplorerCoinUrlTemplate.replace('#COIN#', ensureHexPrefix(coinId));
   }
 
-  public getPaymentState(payoutState: string): string {
-    if (!payoutState || payoutState === 'IN_MEMPOOL') {
-      return this.snippetService.getSnippet('payouts-component.in-mempool');
+  private getFormattedPaymentState(payoutState: AccountPayoutState): string {
+    switch (payoutState) {
+      case AccountPayoutState.inMempool:
+        return this.snippetService.getSnippet('payouts-component.in-mempool')
+      case AccountPayoutState.confirmed:
+        return this.snippetService.getSnippet('payouts-component.confirmed')
     }
-
-    return this.snippetService.getSnippet('payouts-component.confirmed');
   }
 
   public toggleDateFormatting(): void {
@@ -106,40 +165,42 @@ export class FarmerPayoutHistoryComponent implements OnChanges {
     }
   }
 
-  public exportCsv(): void {
-    this.csvExporter.export(`payouts-${moment().format('YYYY-MM-DD')}.csv`, [
-      'Date',
-      'Amount',
-      'State',
-      'Confirmed at',
-    ], this.recentPayouts.map(payout => ([
-      moment(payout.payoutDate).format('YYYY-MM-DD HH:mm'),
-      payout.amount,
-      payout.state,
-      payout.confirmedAtHeight,
-    ])));
-  }
-
-  private makeChartUpdateOptions(): EChartsOption {
+  private makeChartUpdateOptions(payouts: AccountPayout[]): EChartsOption {
     return {
       tooltip: {
         formatter: params => `<strong>${params[0].value[1]} ${this.poolConfig.ticker}</strong>`,
       },
       series: [{
-        data: this.recentPayouts.map(payout => ({
-          value: [payout.payoutDate, (new BigNumber(payout.amount)).toNumber()],
+        data: payouts.map(payout => ({
+          value: [payout.createdAt, (new BigNumber(payout.amount)).toNumber()],
         })),
       }],
     };
   }
 }
 
-export type Payout = {
+enum AccountPayoutState {
+  inMempool = 'IN_MEMPOOL',
+  confirmed = 'CONFIRMED',
+}
+
+export interface AccountPayout {
   coinId: string,
-  formattedPayoutDate: string,
-  payoutDate: Date,
   amount: string,
+  state: AccountPayoutState,
+  createdAt: Date,
+}
+
+interface FormattedAccountPayout {
+  coinId: string,
+  amountFormatted: string,
   fiatAmountFormatted: string,
   state: string,
-  confirmedAtHeight: number,
-};
+  formattedPayoutDate: string,
+  blockExplorerUrl?: string,
+}
+
+interface PoolConfig {
+  blockExplorerCoinUrlTemplate?: string
+  ticker: string
+}
