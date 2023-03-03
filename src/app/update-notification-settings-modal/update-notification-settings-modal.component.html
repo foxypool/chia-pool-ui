@@ -1,0 +1,66 @@
+<ng-template #updateNotificationSettingsModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" style="color: #474747">Notification settings</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-12">
+        <div class="form-check custom-control custom-checkbox checkbox-lg" style="padding-bottom: 1rem">
+          <input class="form-check-input custom-control-input" type="checkbox" id="enableNotifications" [(ngModel)]="areNotificationsEnabled">
+          <label class="form-check-label custom-control-label text-color-and-size" for="enableNotifications">
+            Enable notifications
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group">
+          <label for="ecLastHourThreshold" class="text-color-and-size">Notify when the current EC drops below</label>
+          <div class="input-group">
+            <input
+              type="number"
+              class="form-control"
+              id="ecLastHourThreshold"
+              aria-describedby="ecLastHourThresholdFeedback"
+              [placeholder]="currentEcLastHourThreshold"
+              [min]="0"
+              [class.is-invalid]="!isValidEcLastHourThreshold"
+              [(ngModel)]="newEcLastHourThreshold"
+            >
+            <div class="input-group-append">
+              <label>
+                <select class="custom-select dropdown" [(ngModel)]="selectedCapacityDenominator">
+                  <option *ngFor="let denominator of possibleCapacityDenominators" [value]="denominator">{{denominator}}</option>
+                </select>
+              </label>
+            </div>
+            <div id="ecLastHourThresholdFeedback" class="invalid-feedback">
+              The current EC threshold must be a number greater than or equal to 0.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12" >
+        <div class="alert alert-info" role="alert" style="font-size: 1.1rem">
+          You can subscribe and unsubscribe to your accounts notification using your discord account by using the corresponding slash command:<br>
+          <code>/subscribe-to-notifications</code><br>
+          or <code>/unsubscribe-from-notifications</code>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('cancel')">{{snippetService.getSnippet('general.cancel')}}</button>
+    <button type="button" class="btn btn-success" (click)="updateNotificationSettings()" [disabled]="!canUpdateNotificationSettings">
+      <span *ngIf="accountService.isUpdatingAccount">Saving</span>
+      <span *ngIf="!accountService.isUpdatingAccount">Save settings</span>
+      <fa-icon [icon]="faCircleNotch" [spin]="true" *ngIf="accountService.isUpdatingAccount" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
+    </button>
+  </div>
+</ng-template>

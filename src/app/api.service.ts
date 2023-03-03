@@ -51,8 +51,12 @@ export class ApiService {
     return data;
   }
 
-  async getAccount({ poolIdentifier, poolPublicKey }) {
-    const { data } = await this.client.get(`${poolIdentifier}/account/${poolPublicKey}`);
+  async getAccount({ poolIdentifier, poolPublicKey, bustCache = false }) {
+    const params: any = {}
+    if (bustCache) {
+      params.cacheBuster = Math.random()
+    }
+    const { data } = await this.client.get(`${poolIdentifier}/account/${poolPublicKey}`, { params });
 
     return data;
   }
@@ -118,6 +122,17 @@ export class ApiService {
     const { data } = await this.client.put(`${poolIdentifier}/account/${poolPublicKey}/difficulty`, {
       difficulty,
       isFixedDifficulty,
+    }, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    })
+
+    return data
+  }
+
+  public async updateNotificationSettings({ poolIdentifier, poolPublicKey, authToken, ecLastHourThreshold, areNotificationsEnabled }): Promise<unknown> {
+    const { data } = await this.client.put(`${poolIdentifier}/account/${poolPublicKey}/notification-settings`, {
+      ecLastHourThreshold,
+      areNotificationsEnabled,
     }, {
       headers: { Authorization: `Bearer ${authToken}` },
     })

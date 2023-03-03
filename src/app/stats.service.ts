@@ -136,8 +136,8 @@ export class StatsService {
     this.exchangeStats.next(exchangeStats);
   }
 
-  getAccount({ poolPublicKey}) {
-    return this.apiService.getAccount({ poolIdentifier: this.poolIdentifier, poolPublicKey });
+  getAccount({ poolPublicKey, bustCache = false }) {
+    return this.apiService.getAccount({ poolIdentifier: this.poolIdentifier, poolPublicKey, bustCache });
   }
 
   getAccountHistoricalStats({ poolPublicKey}) {
@@ -170,6 +170,10 @@ export class StatsService {
 
   public updateAccountDifficulty({ poolPublicKey, authToken, difficulty, isFixedDifficulty }): Promise<unknown> {
     return this.requestWithError(this.apiService.updateAccountDifficulty({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, difficulty, isFixedDifficulty }));
+  }
+
+  public updateNotificationSettings({ poolPublicKey, authToken, ecLastHourThreshold, areNotificationsEnabled }): Promise<unknown> {
+    return this.requestWithError(this.apiService.updateNotificationSettings({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, ecLastHourThreshold, areNotificationsEnabled }));
   }
 
   leavePool({ poolPublicKey, authToken, leaveForEver }) {

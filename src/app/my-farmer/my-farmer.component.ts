@@ -20,6 +20,10 @@ import {RatesService} from '../rates.service';
 import {ConfigService, DateFormatting} from '../config.service'
 import { getEffortColor } from '../util';
 import {UpdateDifficultyModalComponent} from '../update-difficulty-modal/update-difficulty-modal.component'
+import {
+  UpdateNotificationSettingsModalComponent
+} from '../update-notification-settings-modal/update-notification-settings-modal.component'
+import {PoolsProvider} from '../pools.provider'
 
 @Component({
   selector: 'app-my-farmer',
@@ -32,6 +36,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   @ViewChild(LeavePoolModalComponent) leavePoolModal;
   @ViewChild(UpdateMinimumPayoutModalComponent) updateMinimumPayoutModal;
   @ViewChild(UpdateDifficultyModalComponent) updateDifficultyModal
+  @ViewChild(UpdateNotificationSettingsModalComponent) updateNotificationSettingsModal
 
   public poolConfig:any = {};
   public poolPublicKeyInput = null;
@@ -104,6 +109,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     public ratesService: RatesService,
     private route: ActivatedRoute,
     private router: Router,
+    private poolsProvider: PoolsProvider,
     configService: ConfigService,
   ) {
     this.ecChartOptions = {
@@ -635,6 +641,10 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     return ecInPib.multipliedBy(this.dailyRewardPerPib).toFixed(4);
   }
 
+  get supportsNotifications(): boolean {
+    return this.poolsProvider.coin === 'CHIA'
+  }
+
   get canLeavePool() {
     if (!this.accountService.account) {
       return false;
@@ -674,6 +684,10 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
   public updateDifficulty(): void {
     this.updateDifficultyModal.openModal()
+  }
+
+  public updateNotificationSettings(): void {
+    this.updateNotificationSettingsModal.openModal()
   }
 
   async rejoinPool() {

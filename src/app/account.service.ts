@@ -157,8 +157,8 @@ export class AccountService {
     return this.poolPublicKey !== this.poolPublicKeyFromLocalStorage;
   }
 
-  async updateAccount() {
-    this.account = await this.getAccount({ poolPublicKey: this.poolPublicKey });
+  async updateAccount({ bustCache = false } = {}) {
+    this.account = await this.getAccount({ poolPublicKey: this.poolPublicKey, bustCache });
     if (!this.haveAccount) {
       if (this.isMyFarmerPage) {
         this.removeAuthTokenFromLocalStorage();
@@ -183,11 +183,11 @@ export class AccountService {
     this.accountPayouts.next(await this.getAccountPayouts({ poolPublicKey: this.poolPublicKey }));
   }
 
-  async getAccount({ poolPublicKey }) {
+  async getAccount({ poolPublicKey, bustCache = false }) {
     this.isLoading = true;
     let account = null;
     try {
-      account = await this.statsService.getAccount({ poolPublicKey });
+      account = await this.statsService.getAccount({ poolPublicKey, bustCache });
       if (account) {
         this.patchAccount(account);
       }
@@ -277,7 +277,7 @@ export class AccountService {
         authToken: this.authToken,
         newName,
       });
-      await this.updateAccount();
+      await this.updateAccount({ bustCache: true });
     } finally {
       this.isUpdatingAccount = false;
     }
@@ -295,7 +295,7 @@ export class AccountService {
         authToken: this.authToken,
         leaveForEver,
       });
-      await this.updateAccount();
+      await this.updateAccount({ bustCache: true });
     } finally {
       this.isUpdatingAccount = false;
       this.isLeavingPool = false;
@@ -312,7 +312,7 @@ export class AccountService {
         poolPublicKey: this.poolPublicKey,
         authToken: this.authToken,
       });
-      await this.updateAccount();
+      await this.updateAccount({ bustCache: true });
     } catch (err) {
       this.toastService.showErrorToast(err.message);
     } finally {
@@ -331,7 +331,7 @@ export class AccountService {
         authToken: this.authToken,
         minimumPayout: newMinimumPayout,
       });
-      await this.updateAccount();
+      await this.updateAccount({ bustCache: true });
     } finally {
       this.isUpdatingAccount = false;
     }
@@ -349,7 +349,25 @@ export class AccountService {
         difficulty,
         isFixedDifficulty,
       })
-      await this.updateAccount()
+      await this.updateAccount({ bustCache: true })
+    } finally {
+      this.isUpdatingAccount = false
+    }
+  }
+
+  public async updateNotificationSettings({ ecLastHourThreshold, areNotificationsEnabled }): Promise<void> {
+    if (!this.isAuthenticated) {
+      return
+    }
+    this.isUpdatingAccount = true
+    try {
+      await this.statsService.updateNotificationSettings({
+        poolPublicKey: this.poolPublicKey,
+        authToken: this.authToken,
+        ecLastHourThreshold,
+        areNotificationsEnabled,
+      })
+      await this.updateAccount({ bustCache: true })
     } finally {
       this.isUpdatingAccount = false
     }

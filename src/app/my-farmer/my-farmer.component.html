@@ -201,6 +201,11 @@
                       <button class="btn btn-outline-light" (click)="updateDifficulty()">Update difficulty</button>
                     </div>
                   </div>
+                  <div class="p-1 row" *ngIf="supportsNotifications">
+                    <div class="col-12">
+                      <button class="btn btn-outline-light" (click)="updateNotificationSettings()">Notifications</button>
+                    </div>
+                  </div>
                   <div class="p-1 row" *ngIf="canLeavePool">
                     <div class="col-12">
                       <button class="btn btn-outline-light" (click)="leavePool()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.action.leave-pool')}}</button>
@@ -271,3 +276,4 @@
 <app-leave-pool-modal></app-leave-pool-modal>
 <app-update-minimum-payout-modal></app-update-minimum-payout-modal>
 <app-update-difficulty-modal></app-update-difficulty-modal>
+<app-update-notification-settings-modal></app-update-notification-settings-modal>

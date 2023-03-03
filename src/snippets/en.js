@@ -13,6 +13,7 @@ export default {
   'api.error.invalid_message': 'The message is invalid!',
   'api.error.invalid_minimum_payout': 'The minimum payout amount is invalid!',
   'api.error.invalid_name': 'The name is invalid!',
+  'api.error.invalid_notification_settings': 'The provided notification settings are invalid!',
   'api.error.invalid_signature': 'The signature is invalid!',
   'authentication-modal.authenticate': 'Authenticate',
   'authentication-modal.authenticating': 'Authenticating',
