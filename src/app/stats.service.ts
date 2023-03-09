@@ -172,8 +172,21 @@ export class StatsService {
     return this.requestWithError(this.apiService.updateAccountDifficulty({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, difficulty, isFixedDifficulty }));
   }
 
-  public updateNotificationSettings({ poolPublicKey, authToken, ecLastHourThreshold, areNotificationsEnabled }): Promise<unknown> {
-    return this.requestWithError(this.apiService.updateNotificationSettings({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, ecLastHourThreshold, areNotificationsEnabled }));
+  public updateNotificationSettings({
+    poolPublicKey,
+    authToken,
+    ecLastHourThreshold,
+    areEcChangeNotificationsEnabled,
+    areBlockWonNotificationsEnabled,
+  }): Promise<unknown> {
+    return this.requestWithError(this.apiService.updateNotificationSettings({
+      poolIdentifier: this.poolIdentifier,
+      poolPublicKey,
+      authToken,
+      ecLastHourThreshold,
+      areEcChangeNotificationsEnabled,
+      areBlockWonNotificationsEnabled,
+    }));
   }
 
   leavePool({ poolPublicKey, authToken, leaveForEver }) {

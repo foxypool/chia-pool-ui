@@ -129,10 +129,18 @@ export class ApiService {
     return data
   }
 
-  public async updateNotificationSettings({ poolIdentifier, poolPublicKey, authToken, ecLastHourThreshold, areNotificationsEnabled }): Promise<unknown> {
+  public async updateNotificationSettings({
+    poolIdentifier,
+    poolPublicKey,
+    authToken,
+    ecLastHourThreshold,
+    areEcChangeNotificationsEnabled,
+    areBlockWonNotificationsEnabled,
+  }): Promise<unknown> {
     const { data } = await this.client.put(`${poolIdentifier}/account/${poolPublicKey}/notification-settings`, {
       ecLastHourThreshold,
-      areNotificationsEnabled,
+      areEcChangeNotificationsEnabled,
+      areBlockWonNotificationsEnabled,
     }, {
       headers: { Authorization: `Bearer ${authToken}` },
     })

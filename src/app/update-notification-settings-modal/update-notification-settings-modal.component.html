@@ -8,18 +8,15 @@
   <div class="modal-body">
     <div class="row">
       <div class="col-12">
-        <div class="form-check custom-control custom-checkbox checkbox-lg" style="padding-bottom: 1rem">
-          <input class="form-check-input custom-control-input" type="checkbox" id="enableNotifications" [(ngModel)]="areNotificationsEnabled">
-          <label class="form-check-label custom-control-label text-color-and-size" for="enableNotifications">
-            Enable notifications
-          </label>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
         <div class="form-group">
-          <label for="ecLastHourThreshold" class="text-color-and-size">Notify when the current EC drops below</label>
+          <label for="ecLastHourThreshold">
+            <div class="custom-control custom-switch">
+              <input class="custom-control-input" type="checkbox" id="enableEcChangeNotifications" [(ngModel)]="areEcChangeNotificationsEnabled">
+              <label class="custom-control-label text-color-and-size" for="enableEcChangeNotifications" style="display: inline">
+                Notify when the current EC drops below
+              </label>
+            </div>
+          </label>
           <div class="input-group">
             <input
               type="number"
@@ -42,6 +39,16 @@
               The current EC threshold must be a number greater than or equal to 0.
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="custom-control custom-switch" style="padding-bottom: 1rem">
+          <input class="custom-control-input" type="checkbox" id="enableBlockWonNotifications" [(ngModel)]="areBlockWonNotificationsEnabled">
+          <label class="custom-control-label text-color-and-size" for="enableBlockWonNotifications" style="display: inline">
+            Notify on block win
+          </label>
         </div>
       </div>
     </div>

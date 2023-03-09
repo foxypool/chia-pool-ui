@@ -355,7 +355,11 @@ export class AccountService {
     }
   }
 
-  public async updateNotificationSettings({ ecLastHourThreshold, areNotificationsEnabled }): Promise<void> {
+  public async updateNotificationSettings({
+    ecLastHourThreshold,
+    areEcChangeNotificationsEnabled,
+    areBlockWonNotificationsEnabled,
+  }): Promise<void> {
     if (!this.isAuthenticated) {
       return
     }
@@ -365,7 +369,8 @@ export class AccountService {
         poolPublicKey: this.poolPublicKey,
         authToken: this.authToken,
         ecLastHourThreshold,
-        areNotificationsEnabled,
+        areEcChangeNotificationsEnabled,
+        areBlockWonNotificationsEnabled,
       })
       await this.updateAccount({ bustCache: true })
     } finally {

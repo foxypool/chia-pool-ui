@@ -18,7 +18,8 @@ export class UpdateNotificationSettingsModalComponent {
   public selectedCapacityDenominator = 'TiB'
   public faCircleNotch = faCircleNotch
   public newEcLastHourThresholdInGib: number | undefined
-  public areNotificationsEnabled = false
+  public areEcChangeNotificationsEnabled = false
+  public areBlockWonNotificationsEnabled = false
 
   private modalRef: NgbModalRef = null
 
@@ -74,7 +75,8 @@ export class UpdateNotificationSettingsModalComponent {
     try {
       await this.accountService.updateNotificationSettings({
         ecLastHourThreshold: this.newEcLastHourThresholdInGib,
-        areNotificationsEnabled: this.areNotificationsEnabled,
+        areEcChangeNotificationsEnabled: this.areEcChangeNotificationsEnabled,
+        areBlockWonNotificationsEnabled: this.areBlockWonNotificationsEnabled,
       })
       this.toastService.showSuccessToast('Successfully saved the notification settings')
       this.modalRef.close(true)
@@ -85,15 +87,20 @@ export class UpdateNotificationSettingsModalComponent {
 
   public openModal(): void {
     this.newEcLastHourThresholdInGib = this.currentEcLastHourThresholdInGib
-    this.areNotificationsEnabled = this.currentAreNotificationsEnabled
+    this.areEcChangeNotificationsEnabled = this.currentAreEcChangeNotificationsEnabled
+    this.areBlockWonNotificationsEnabled = this.currentAreBlockWonNotificationsEnabled
     this.modalRef = this.modalService.open(this.modal)
   }
 
-  private get currentAreNotificationsEnabled(): boolean {
-    return this.accountService.account.notificationSettings.areNotificationsEnabled
+  private get currentAreEcChangeNotificationsEnabled(): boolean {
+    return this.accountService.account.notificationSettings?.areEcChangeNotificationsEnabled ?? false
+  }
+
+  private get currentAreBlockWonNotificationsEnabled(): boolean {
+    return this.accountService.account.notificationSettings?.areBlockWonNotificationsEnabled ?? false
   }
 
   private get currentEcLastHourThresholdInGib(): number {
-    return this.accountService.account.notificationSettings.ecLastHourThreshold
+    return this.accountService.account.notificationSettings?.ecLastHourThreshold ?? 0
   }
 }
