@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core'
-import {faCircleNotch, faInfoCircle} from '@fortawesome/free-solid-svg-icons'
+import {faCircleNotch} from '@fortawesome/free-solid-svg-icons'
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap'
 import {AccountService} from '../account.service'
 import {SnippetService} from '../snippet.service'
@@ -13,7 +13,6 @@ import {ToastService} from '../toast.service'
 export class UpdateDifficultyModalComponent  {
   @ViewChild('updateDifficultyModal') modal
 
-  public faInfoCircle = faInfoCircle;
   public faCircleNotch = faCircleNotch
   public newDifficulty: number | undefined
   public isFixedDifficulty = false
