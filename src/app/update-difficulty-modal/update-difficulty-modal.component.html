@@ -10,7 +10,7 @@
       <div class="col-12">
         <div class="custom-control custom-switch" style="padding-bottom: 0.5rem">
           <input type="checkbox" class="custom-control-input" id="isFixedDifficultyCheckbox" [(ngModel)]="isFixedDifficulty">
-          <label class="custom-control-label text-color" for="isFixedDifficultyCheckbox" style="vertical-align: text-top">Fixed difficulty</label>
+          <label class="custom-control-label text-color" for="isFixedDifficultyCheckbox" style="display: inline">Fixed difficulty</label>
         </div>
       </div>
     </div>
@@ -28,6 +28,13 @@
         >
         <div id="difficultyFeedback" class="invalid-feedback">
           The difficulty must be an integer number greater or equal to 1.
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div *ngIf="isFixedDifficulty" class="alert alert-info" role="alert" style="margin-bottom: 0; margin-top: 1rem">
+          <a href="https://xchdata.io/diffcalc" target="_blank">xchdata.io/diffcalc</a> can be used to calculate the optimal fixed difficulty
         </div>
       </div>
     </div>
