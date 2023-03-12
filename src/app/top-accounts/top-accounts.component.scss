@@ -37,4 +37,13 @@ span[negative] {
   white-space: nowrap;
   max-width: 200px;
 }
-
+.farmer-page-link {
+  color: #cfd0d1;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  -webkit-transition: border-bottom 0.2s;
+  transition: border-bottom 0.2s;
+}
+.farmer-page-link:hover {
+  border-bottom: 2px solid rgb(66, 134, 244);
+}
