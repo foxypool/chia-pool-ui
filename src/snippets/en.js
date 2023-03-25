@@ -114,7 +114,7 @@ export default {
   'my-farmer-component.manage-account-card.action.rejoin-pool': 'Rejoin Pool',
   'my-farmer-component.manage-account-card.action.update-minimum-payout': 'Set min payout',
   'my-farmer-component.manage-account-card.action.update-name': 'Update Name',
-  'my-farmer-component.manage-account-card.auth-info': 'Allows updating your name and leaving/rejoining the pool',
+  'my-farmer-component.manage-account-card.auth-info': 'Allows updating your name, minimum payout, difficulty, notifications and leaving/rejoining the pool',
   'my-farmer-component.manage-account-card.authenticate': 'Authenticate',
   'my-farmer-component.manage-account-card.authenticated': 'Authenticated',
   'my-farmer-component.manage-account-card.title': 'Manage Account',
