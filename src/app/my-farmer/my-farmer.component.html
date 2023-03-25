@@ -233,7 +233,7 @@
                 <div echarts [options]="ecChartOptions" [merge]="ecChartUpdateOptions" theme="default" class="ec-chart"></div>
               </div>
               <div class="p-1 col-md-12">
-                <div echarts [options]="sharesChartOptions" [merge]="sharesChartUpdateOptions" theme="default" class="shares-chart"></div>
+                <div echarts [options]="sharesChartOptions" [merge]="sharesChartUpdateOptions" (chartLegendSelectChanged)="onSharesChartLegendSelectChanged($event)" theme="default" class="shares-chart"></div>
               </div>
             </ng-template>
           </li>

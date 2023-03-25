@@ -3,6 +3,7 @@ import {faCircleNotch, faInfoCircle, faUserCheck} from '@fortawesome/free-solid-
 import * as moment from 'moment';
 import BigNumber from 'bignumber.js';
 import {EChartsOption} from 'echarts';
+import {YAXisOption} from 'echarts/types/dist/shared'
 import {ActivatedRoute, Router} from '@angular/router';
 import {distinctUntilChanged, map, skip} from 'rxjs/operators';
 import {Observable, Subscription} from 'rxjs';
@@ -244,22 +245,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         type: 'time',
         minInterval: this.historicalIntervalInMinutes * 60 * 1000,
       },
-      yAxis: [{
-        type: 'value',
-        name: this.snippetService.getSnippet('my-farmer-component.shares-chart.shares.name'),
-        splitLine: {
-          lineStyle: {
-            type: 'solid',
-            color: 'grey',
-          },
-        },
-      }, {
-        type: 'value',
-        name: this.snippetService.getSnippet('my-farmer-component.shares-chart.difficulty.name'),
-        splitLine: {
-          show: false,
-        },
-      }],
+      yAxis: this.makeShareChartYAxis({ isShowingDifficultySeries: true }),
       series: [{
         data: [],
         type: 'bar',
@@ -357,6 +343,32 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       }
       await this.accountService.updateAccountPayouts()
     }, 11 * 60 * 1000)
+  }
+
+  public onSharesChartLegendSelectChanged(event): void {
+    const isShowingDifficultySeries = event.selected.Difficulty
+    this.sharesChartUpdateOptions = {
+      yAxis: this.makeShareChartYAxis({ isShowingDifficultySeries }),
+    }
+  }
+
+  private makeShareChartYAxis({ isShowingDifficultySeries }: { isShowingDifficultySeries: boolean }): YAXisOption[] {
+    return [{
+      type: 'value',
+      name: this.snippetService.getSnippet('my-farmer-component.shares-chart.shares.name'),
+      splitLine: {
+        lineStyle: {
+          type: 'solid',
+          color: 'grey',
+        },
+      },
+    }, {
+      type: 'value',
+      name: isShowingDifficultySeries ? this.snippetService.getSnippet('my-farmer-component.shares-chart.difficulty.name') : 'Partials',
+      splitLine: {
+        show: false,
+      },
+    }]
   }
 
   private async initAccount() {
