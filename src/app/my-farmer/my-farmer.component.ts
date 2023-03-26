@@ -347,8 +347,11 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
   public onSharesChartLegendSelectChanged(event): void {
     const isShowingDifficultySeries = event.selected.Difficulty
-    this.sharesChartUpdateOptions = {
-      yAxis: this.makeShareChartYAxis({ isShowingDifficultySeries }),
+    const yAxis = this.makeShareChartYAxis({ isShowingDifficultySeries })
+    if (this.sharesChartUpdateOptions !== undefined) {
+      this.sharesChartUpdateOptions.yAxis = yAxis
+    } else {
+      this.sharesChartUpdateOptions = { yAxis }
     }
   }
 
