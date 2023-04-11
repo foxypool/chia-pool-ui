@@ -78,6 +78,43 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
     return `${(block.effort * 100).toFixed(2)} %`;
   }
 
+  public getRemarkClasses(remark: Remark): string[] {
+    switch (remark.type) {
+      case RemarkType.gigahorseDevFee:
+        return ['badge-info']
+      case RemarkType.corePoolFarmerReward:
+      case RemarkType.hpoolFarmerReward:
+      case RemarkType.farmerRewardAddressDiffers:
+        return ['background-color-orange']
+    }
+  }
+
+  public getRemarkDetail(remark: Remark): string {
+    switch (remark.type) {
+      case RemarkType.gigahorseDevFee:
+        return 'Gigahorse Dev Fee'
+      case RemarkType.corePoolFarmerReward:
+        return 'Core Pool reward address'
+      case RemarkType.hpoolFarmerReward:
+        return 'HPool reward address'
+      case RemarkType.farmerRewardAddressDiffers:
+        return 'Farmer reward address differs'
+    }
+  }
+
+  public getRemarkTooltip(remark: Remark): string|undefined {
+    switch (remark.type) {
+      case RemarkType.gigahorseDevFee:
+        return 'The farmer reward for this block win is taken as dev fee for using Gigahorse'
+      case RemarkType.corePoolFarmerReward:
+        return 'The farmer reward for this block win was credited to Core Pool, please change your config immediately!'
+      case RemarkType.hpoolFarmerReward:
+        return 'The farmer reward for this block win was credited to HPool, please change your config immediately!'
+      case RemarkType.farmerRewardAddressDiffers:
+        return `The Farmer reward for this block win was credited to address ${remark.meta.farmerRewardAddress}. Please ensure this address belongs to you.`
+    }
+  }
+
   public toggleDateFormatting(): void {
     if (this.configService.wonBlockDateFormatting === DateFormatting.fixed) {
       this.configService.wonBlockDateFormatting = DateFormatting.relative;
@@ -92,18 +129,33 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
       'Height',
       'Hash',
       'Effort',
+      'Remarks',
     ], this.wonBlocksSubject.getValue().map(wonBlock => ([
       moment(wonBlock.createdAt).format('YYYY-MM-DD HH:mm'),
       wonBlock.height,
       wonBlock.hash,
       wonBlock.effort,
+      wonBlock.remarks.join(', '),
     ])));
   }
 }
 
 export type WonBlock = {
-  height: number,
-  hash: string,
-  effort: number|null,
-  createdAt: string,
-};
+  height: number
+  hash: string
+  effort: number|null
+  createdAt: string
+  remarks: Remark[]
+}
+
+export interface Remark {
+  type: RemarkType
+  meta?: any
+}
+
+enum RemarkType {
+  gigahorseDevFee = 'GIGAHORSE_DEV_FEE',
+  corePoolFarmerReward = 'CORE_POOL_FARMER_REWARD',
+  hpoolFarmerReward = 'HPOOL_FARMER_REWARD',
+  farmerRewardAddressDiffers = 'FARMER_REWARD_ADDRESS_DIFFERS',
+}
