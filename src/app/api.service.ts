@@ -136,11 +136,13 @@ export class ApiService {
     ecLastHourThreshold,
     areEcChangeNotificationsEnabled,
     areBlockWonNotificationsEnabled,
+    arePayoutAddressChangeNotificationsEnabled,
   }): Promise<unknown> {
     const { data } = await this.client.put(`${poolIdentifier}/account/${poolPublicKey}/notification-settings`, {
       ecLastHourThreshold,
       areEcChangeNotificationsEnabled,
       areBlockWonNotificationsEnabled,
+      arePayoutAddressChangeNotificationsEnabled,
     }, {
       headers: { Authorization: `Bearer ${authToken}` },
     })

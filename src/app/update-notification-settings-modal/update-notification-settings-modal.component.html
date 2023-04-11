@@ -53,6 +53,16 @@
       </div>
     </div>
     <div class="row">
+      <div class="col-12">
+        <div class="custom-control custom-switch" style="padding-bottom: 1rem">
+          <input class="custom-control-input" type="checkbox" id="enablePayoutAddressChangeNotifications" [(ngModel)]="arePayoutAddressChangeNotificationsEnabled">
+          <label class="custom-control-label text-color-and-size" for="enablePayoutAddressChangeNotifications" style="display: inline">
+            Notify on payout address change
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
       <div class="col-12" >
         <div class="alert alert-info" role="alert" style="font-size: 1.1rem">
           You can subscribe and unsubscribe to your accounts notification using your discord account by using the corresponding slash command:<br>

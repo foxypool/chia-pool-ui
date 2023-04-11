@@ -359,6 +359,7 @@ export class AccountService {
     ecLastHourThreshold,
     areEcChangeNotificationsEnabled,
     areBlockWonNotificationsEnabled,
+    arePayoutAddressChangeNotificationsEnabled,
   }): Promise<void> {
     if (!this.isAuthenticated) {
       return
@@ -371,6 +372,7 @@ export class AccountService {
         ecLastHourThreshold,
         areEcChangeNotificationsEnabled,
         areBlockWonNotificationsEnabled,
+        arePayoutAddressChangeNotificationsEnabled,
       })
       await this.updateAccount({ bustCache: true })
     } finally {

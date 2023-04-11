@@ -178,6 +178,7 @@ export class StatsService {
     ecLastHourThreshold,
     areEcChangeNotificationsEnabled,
     areBlockWonNotificationsEnabled,
+    arePayoutAddressChangeNotificationsEnabled,
   }): Promise<unknown> {
     return this.requestWithError(this.apiService.updateNotificationSettings({
       poolIdentifier: this.poolIdentifier,
@@ -186,6 +187,7 @@ export class StatsService {
       ecLastHourThreshold,
       areEcChangeNotificationsEnabled,
       areBlockWonNotificationsEnabled,
+      arePayoutAddressChangeNotificationsEnabled,
     }));
   }
 

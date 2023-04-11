@@ -20,6 +20,7 @@ export class UpdateNotificationSettingsModalComponent {
   public newEcLastHourThresholdInGib: number | undefined
   public areEcChangeNotificationsEnabled = false
   public areBlockWonNotificationsEnabled = false
+  public arePayoutAddressChangeNotificationsEnabled = false
 
   private modalRef: NgbModalRef = null
 
@@ -77,6 +78,7 @@ export class UpdateNotificationSettingsModalComponent {
         ecLastHourThreshold: this.newEcLastHourThresholdInGib,
         areEcChangeNotificationsEnabled: this.areEcChangeNotificationsEnabled,
         areBlockWonNotificationsEnabled: this.areBlockWonNotificationsEnabled,
+        arePayoutAddressChangeNotificationsEnabled: this.arePayoutAddressChangeNotificationsEnabled,
       })
       this.toastService.showSuccessToast('Successfully saved the notification settings')
       this.modalRef.close(true)
@@ -89,6 +91,7 @@ export class UpdateNotificationSettingsModalComponent {
     this.newEcLastHourThresholdInGib = this.currentEcLastHourThresholdInGib
     this.areEcChangeNotificationsEnabled = this.currentAreEcChangeNotificationsEnabled
     this.areBlockWonNotificationsEnabled = this.currentAreBlockWonNotificationsEnabled
+    this.arePayoutAddressChangeNotificationsEnabled = this.currentArePayoutAddressChangeNotificationsEnabled
     this.modalRef = this.modalService.open(this.modal)
   }
 
@@ -98,6 +101,10 @@ export class UpdateNotificationSettingsModalComponent {
 
   private get currentAreBlockWonNotificationsEnabled(): boolean {
     return this.accountService.account.notificationSettings?.areBlockWonNotificationsEnabled ?? false
+  }
+
+  private get currentArePayoutAddressChangeNotificationsEnabled(): boolean {
+    return this.accountService.account.notificationSettings?.arePayoutAddressChangeNotificationsEnabled ?? false
   }
 
   private get currentEcLastHourThresholdInGib(): number {
