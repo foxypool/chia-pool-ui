@@ -8,9 +8,18 @@
     <app-empty-state text="No harvesters available" [icon]="faTractor"></app-empty-state>
   </div>
 </div>
-<div class="row mb-3" *ngFor="let harvester of harvesters | async; trackBy: trackBy">
+<div class="row mb-3" *ngFor="let harvester of harvesters | async | slice: (page - 1) * pageSize : page * pageSize; trackBy: trackBy">
   <div class="col-12">
     <app-harvester-card [harvester]="harvester"></app-harvester-card>
   </div>
 </div>
-
+<ngb-pagination
+  *ngIf="(harvesters | async).length > pageSize"
+  class="d-flex justify-content-center"
+  [(page)]="page"
+  [pageSize]="pageSize"
+  [collectionSize]="(harvesters | async).length"
+  [maxSize]="5"
+  [rotate]="true"
+  [boundaryLinks]="true">
+</ngb-pagination>

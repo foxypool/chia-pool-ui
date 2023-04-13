@@ -3,7 +3,7 @@ import {AccountService} from '../account.service'
 import {Harvester} from '../types'
 import {BehaviorSubject, Observable, Subscription} from 'rxjs'
 import {faTractor} from '@fortawesome/free-solid-svg-icons';
-import {distinctUntilChanged, map, shareReplay, skip} from 'rxjs/operators'
+import {skip} from 'rxjs/operators'
 
 @Component({
   selector: 'app-farmer-harvesters',
@@ -11,6 +11,8 @@ import {distinctUntilChanged, map, shareReplay, skip} from 'rxjs/operators'
   styleUrls: ['./farmer-harvesters.component.scss']
 })
 export class FarmerHarvestersComponent implements OnInit, OnDestroy {
+  public page = 1
+  public pageSize = 5
   public readonly faTractor = faTractor
   public readonly isLoading: Observable<boolean>
   public readonly harvesters: Observable<Harvester[]>
@@ -19,6 +21,7 @@ export class FarmerHarvestersComponent implements OnInit, OnDestroy {
   private harvestersUpdateInterval?: number
   private subscriptions: Subscription[] = [
     this.accountService.currentAccountIdentifier.pipe(skip(1)).subscribe(async () => {
+      this.page = 1
       await this.updateHarvesters()
     })
   ]
