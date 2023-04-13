@@ -7,9 +7,10 @@ import {ToastService} from './toast.service';
 import {BigNumber} from 'bignumber.js';
 import {SnippetService} from './snippet.service';
 import * as Sentry from '@sentry/angular';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs'
 import {WonBlock} from './farmer-won-blocks/farmer-won-blocks.component';
 import {AccountPayout} from './farmer-payout-history/farmer-payout-history.component'
+import {distinctUntilChanged, filter, map, shareReplay} from 'rxjs/operators'
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export class AccountService {
   public static poolPublicKeyStorageKey = 'poolPublicKey';
   public static authTokenStorageKey = (poolPublicKey: string): string => `authToken:${poolPublicKey}`;
 
+  public currentAccountIdentifier: Observable<string>
   public accountSubject = new BehaviorSubject<any>(null);
   public accountHistoricalStats = new BehaviorSubject<any[]>([]);
   public accountWonBlocks = new BehaviorSubject<WonBlock[]>([]);
@@ -39,6 +41,14 @@ export class AccountService {
   ) {
     this.migrateLegacyConfig();
     this.poolPublicKey = this.poolPublicKeyFromLocalStorage;
+    this.currentAccountIdentifier = this.accountSubject
+      .asObservable()
+      .pipe(
+        filter(account => account !== null),
+        map(account => account.poolPublicKey),
+        distinctUntilChanged(),
+        shareReplay(),
+      )
   }
 
   get account(): any {
@@ -204,6 +214,18 @@ export class AccountService {
     return account;
   }
 
+  async getAccountHarvesters() {
+    this.isLoading = true;
+    let accountHarvesters = [];
+    try {
+      accountHarvesters = await this.statsService.getAccountHarvesters({ poolPublicKey: this.poolPublicKey });
+    } finally {
+      this.isLoading = false;
+    }
+
+    return accountHarvesters;
+  }
+
   async getAccountHistoricalStats({ poolPublicKey }) {
     this.isLoading = true;
     let accountHistoricalStats = [];
@@ -281,6 +303,18 @@ export class AccountService {
     } finally {
       this.isUpdatingAccount = false;
     }
+  }
+
+  public async updateHarvesterName({ harvesterPeerId, newName }): Promise<void> {
+    if (!this.isAuthenticated) {
+      return
+    }
+    await this.statsService.updateHarvesterName({
+      poolPublicKey: this.poolPublicKey,
+      authToken: this.authToken,
+      harvesterPeerId,
+      newName,
+    })
   }
 
   async leavePool({ leaveForEver }) {

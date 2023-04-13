@@ -37,7 +37,10 @@ import { CurrencySelectorComponent } from './currency-selector/currency-selector
 import {UpdateDifficultyModalComponent} from './update-difficulty-modal/update-difficulty-modal.component'
 import {
   UpdateNotificationSettingsModalComponent
-} from './update-notification-settings-modal/update-notification-settings-modal.component'
+} from './update-notification-settings-modal/update-notification-settings-modal.component';
+import { FarmerHarvestersComponent } from './farmer-harvesters/farmer-harvesters.component';
+import { HarvesterCardComponent } from './harvester-card/harvester-card.component';
+import { EditableModule } from '@ngneat/edit-in-place'
 
 @NgModule({
   declarations: [
@@ -62,6 +65,8 @@ import {
     FarmerPayoutHistoryComponent,
     FarmerWonBlocksComponent,
     CurrencySelectorComponent,
+    FarmerHarvestersComponent,
+    HarvesterCardComponent,
   ],
   imports: [
     BrowserModule,
@@ -85,6 +90,7 @@ import {
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
+    EditableModule,
   ],
   providers: [
     WINDOW_PROVIDERS,

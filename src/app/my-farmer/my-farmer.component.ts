@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import {EChartsOption} from 'echarts';
 import {YAXisOption} from 'echarts/types/dist/shared'
 import {ActivatedRoute, Router} from '@angular/router';
-import {distinctUntilChanged, map, skip} from 'rxjs/operators';
+import {distinctUntilChanged, map, shareReplay, skip} from 'rxjs/operators'
 import {Observable, Subscription} from 'rxjs';
 
 import {StatsService} from '../stats.service';
@@ -55,7 +55,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     .asObservable()
     .pipe(
       map(account => !account || !account.payoutAddress),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      shareReplay(),
     );
   public payoutDateFormattingObservable: Observable<DateFormatting>
   public selectedCurrencyObservable: Observable<string>

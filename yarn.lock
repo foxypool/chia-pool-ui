@@ -1461,6 +1461,13 @@
   dependencies:
     tslib "^2.1.0"
 
+"@ngneat/edit-in-place@1.6.1":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@ngneat/edit-in-place/-/edit-in-place-1.6.1.tgz#dd42ac4cda09e547e396e5071fdcc187d82b9692"
+  integrity sha512-7TJlCMSBe0meyBmEfUrvQlFkmzL7Z465Uvxn1N/XMpZCWIQ4Z05wA+5WyGLHwINwl1koDx1pEkU7YlCwIGXtYQ==
+  dependencies:
+    tslib "^2.0.0"
+
 "@ngtools/webpack@12.2.18":
   version "12.2.18"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-12.2.18.tgz#a7ec5fb2c1ac809425e4f5bb224cf603525c81aa"

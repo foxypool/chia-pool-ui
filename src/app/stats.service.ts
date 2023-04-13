@@ -6,7 +6,7 @@ import * as moment from 'moment';
 import {PoolsProvider} from './pools.provider';
 import {SnippetService} from './snippet.service';
 import {configForCoin} from './coin-config';
-import {ApiService} from './api.service';
+import {ApiService, HarvesterStats} from './api.service'
 
 @Injectable({
   providedIn: 'root'
@@ -140,6 +140,10 @@ export class StatsService {
     return this.apiService.getAccount({ poolIdentifier: this.poolIdentifier, poolPublicKey, bustCache });
   }
 
+  getAccountHarvesters({ poolPublicKey}) {
+    return this.apiService.getAccountHarvesters({ poolIdentifier: this.poolIdentifier, poolPublicKey });
+  }
+
   getAccountHistoricalStats({ poolPublicKey}) {
     return this.apiService.getAccountHistoricalStats({ poolIdentifier: this.poolIdentifier, poolPublicKey });
   }
@@ -152,12 +156,20 @@ export class StatsService {
     return this.apiService.getAccountPayouts({ poolIdentifier: this.poolIdentifier, poolPublicKey })
   }
 
+  public async getHarvesterStats(harvesterId: string): Promise<HarvesterStats> {
+    return this.apiService.getHarvesterStats({ poolIdentifier: this.poolIdentifier, harvesterId });
+  }
+
   authenticate({ poolPublicKey, message, signature }): any {
     return this.requestWithError(this.apiService.authenticateAccount({ poolIdentifier: this.poolIdentifier, poolPublicKey, message, signature }));
   }
 
   async updateAccountName({ poolPublicKey, authToken, newName }) {
     return this.requestWithError(this.apiService.updateAccountName({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, newName }));
+  }
+
+  public async updateHarvesterName({ poolPublicKey, authToken, harvesterPeerId, newName }): Promise<unknown> {
+    return this.requestWithError(this.apiService.updateHarvesterName({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, harvesterPeerId, newName }))
   }
 
   updateAccountDistributionRatio({ poolPublicKey, authToken, newDistributionRatio }) {

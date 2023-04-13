@@ -61,6 +61,18 @@ export class ApiService {
     return data;
   }
 
+  async getAccountHarvesters({ poolIdentifier, poolPublicKey }) {
+    const { data } = await this.client.get(`${poolIdentifier}/account/${poolPublicKey}/harvesters`);
+
+    return data;
+  }
+
+  public async getHarvesterStats({ poolIdentifier, harvesterId }: { poolIdentifier: string, harvesterId: string }): Promise<HarvesterStats> {
+    const { data } = await this.client.get<HarvesterStats>(`${poolIdentifier}/harvester/${harvesterId}/stats`)
+
+    return data
+  }
+
   async getAccountHistoricalStats({ poolIdentifier, poolPublicKey }) {
     const { data } = await this.client.get(`${poolIdentifier}/account/${poolPublicKey}/historical`);
 
@@ -96,6 +108,16 @@ export class ApiService {
     });
 
     return data;
+  }
+
+  public async updateHarvesterName({ poolIdentifier, poolPublicKey, authToken, harvesterPeerId, newName }): Promise<unknown> {
+    const { data } = await this.client.put(`${poolIdentifier}/account/${poolPublicKey}/harvester/${harvesterPeerId}/name`, {
+      newName,
+    }, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    })
+
+    return data
   }
 
   async updateAccountDistributionRatio({ poolIdentifier, poolPublicKey, authToken, newDistributionRatio }) {
@@ -167,4 +189,24 @@ export class ApiService {
 
     return data;
   }
+}
+
+export interface HarvesterStats {
+  submissionStats: SubmissionStat[]
+  rejectedSubmissionStats: RejectedSubmissionStat[]
+}
+
+interface SubmissionStat {
+  shares: number
+  partials: number
+  date: string
+}
+
+interface RejectedSubmissionStat extends SubmissionStat {
+  type: RejectedSubmissionType
+}
+
+export enum RejectedSubmissionType {
+  stale = 'STALE',
+  invalid = 'INVALID',
 }

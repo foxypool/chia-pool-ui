@@ -265,6 +265,14 @@
               </div>
             </ng-template>
           </li>
+          <li ngbNavItem="harvesters" [destroyOnHide]="true">
+            <a ngbNavLink><h5>Harvesters</h5></a>
+            <ng-template ngbNavContent>
+              <div class="p-1 col-md-12">
+                <app-farmer-harvesters></app-farmer-harvesters>
+              </div>
+            </ng-template>
+          </li>
         </ul>
         <div [ngbNavOutlet]="nav" class="mt-2"></div>
       </div>
