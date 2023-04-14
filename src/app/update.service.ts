@@ -1,8 +1,8 @@
 import {ApplicationRef, Injectable, OnDestroy} from '@angular/core';
-import {SwUpdate} from '@angular/service-worker';
+import {SwUpdate, VersionReadyEvent} from '@angular/service-worker'
 import {ToastService} from './toast.service';
 import {SnippetService} from './snippet.service';
-import {first} from 'rxjs/operators';
+import {filter, first} from 'rxjs/operators'
 import {concat, interval, Subscription} from 'rxjs';
 
 @Injectable({
@@ -10,12 +10,14 @@ import {concat, interval, Subscription} from 'rxjs';
 })
 export class UpdateService implements OnDestroy {
   private subscriptions: Subscription[] = [
-    this.swUpdate.available.subscribe(async () => {
-      this.toastService.showInfoToast(this.snippetService.getSnippet('update-service.updating'), '', { timeOut: 2 * 1000 });
-      await new Promise(resolve => setTimeout(resolve, 2 * 1000));
-      await this.swUpdate.activateUpdate();
-      document.location.reload();
-    }),
+    this.swUpdate.versionUpdates
+      .pipe(filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'))
+      .subscribe(async () => {
+        this.toastService.showInfoToast(this.snippetService.getSnippet('update-service.updating'), '', { timeOut: 2 * 1000 });
+        await new Promise(resolve => setTimeout(resolve, 2 * 1000));
+        await this.swUpdate.activateUpdate();
+        document.location.reload();
+      }),
     this.swUpdate.unrecoverable.subscribe(async () => {
       console.error('SW reached unrecoverable state, clearing cache and reloading ..');
       await this.clearCacheStorage();
