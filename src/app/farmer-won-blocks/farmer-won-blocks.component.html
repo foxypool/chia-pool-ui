@@ -37,11 +37,11 @@
             <td *ngIf="!poolConfig.blockExplorerBlockUrlTemplate">{{block.height}}</td>
             <td><span [class]="getEffortColor(block)">{{getBlockEffort(block)}}</span></td>
             <td *ngIf="block.remarks === undefined || block.remarks.length === 0">
-              <span class="badge badge-pill remark-pill badge-success background-color-light-green">OK</span>
+              <span class="badge remark-pill background-color-light-green">OK</span>
             </td>
             <td *ngIf="block.remarks !== undefined && block.remarks.length > 0">
             <span *ngFor="let remark of block.remarks; let last = last;">
-              <span class="badge badge-pill remark-pill"
+              <span class="badge remark-pill"
                     [ngClass]="getRemarkClasses(remark)"
                     ngbTooltip="{{getRemarkTooltip(remark)}}"
               >{{getRemarkDetail(remark)}}</span>

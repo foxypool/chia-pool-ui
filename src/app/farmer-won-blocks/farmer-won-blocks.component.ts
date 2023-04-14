@@ -81,7 +81,7 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
   public getRemarkClasses(remark: Remark): string[] {
     switch (remark.type) {
       case RemarkType.gigahorseDevFee:
-        return ['badge-info']
+        return ['text-bg-info']
       case RemarkType.corePoolFarmerReward:
       case RemarkType.hpoolFarmerReward:
       case RemarkType.farmerRewardAddressDiffers:
