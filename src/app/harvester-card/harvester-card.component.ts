@@ -221,7 +221,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   public async updateName(): Promise<void> {
-    const newName = this.nameControl.value.trim() || undefined
+    const newName = this.nameControl.value?.trim() || undefined
     if (newName === this.harvester.name) {
       return
     }
