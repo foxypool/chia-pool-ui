@@ -11,6 +11,7 @@ import {distinctUntilChanged, filter, map, shareReplay} from 'rxjs/operators'
 import {BigNumber} from 'bignumber.js'
 import Capacity from '../capacity'
 import {EChartsOption} from 'echarts'
+import {Moment} from 'moment'
 
 const sharesPerDayPerK32 = 10
 const k32SizeInGb = 108.837
@@ -71,11 +72,6 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
           'Stale Shares',
           'Valid Shares',
         ],
-        selected: {
-          'Invalid Shares': true,
-          'Stale Shares': true,
-          'Valid Shares': true,
-        },
         top: 25,
         textStyle: {
           color: '#cfd0d1',
@@ -251,51 +247,43 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       .filter(stat => stat.type === RejectedSubmissionType.invalid)
       .map(stats => [stats.date, stats.shares])
 
-    const makeMissingLeadingData = (series: (string | number)[][], fallbackDate: string) => {
-      const missingDataLeading = []
-      const lastDate = series.length > 0 ? series[0][0] : fallbackDate
-      if (moment(lastDate).isAfter(moment().subtract(23, 'hours'))) {
-        let startDate = moment(lastDate).subtract(15, 'minutes')
-        while (startDate.isAfter(moment().subtract(1, 'day'))) {
-          missingDataLeading.unshift([startDate.toISOString(), 0])
-          startDate = startDate.subtract(15, 'minutes')
-        }
-      }
+    const roundToNextLower15Min = (date: Moment): Moment => {
+      const minutesRoundedDown = Math.floor(date.minutes() / 15) * 15
 
-      return missingDataLeading
-    }
-    const makeMissingTrailingData = (series: (string | number)[][], fallbackDate: string) => {
-      const missingDataTrailing = []
-      const latestDate = series.length > 0 ? series[series.length - 1][0] : fallbackDate
-      if (moment(latestDate).isBefore(moment().subtract(1, 'hours'))) {
-        let endDate = moment(latestDate).add(15, 'minutes')
-        while (endDate.isBefore(moment())) {
-          missingDataTrailing.push([endDate.toISOString(), 0])
-          endDate = endDate.add(15, 'minutes')
-        }
-      }
-
-      return missingDataTrailing
+      return date.clone().set({ minutes: minutesRoundedDown, seconds: 0, milliseconds: 0 })
     }
 
-    let latestDate: string
-    if (validSharesSeries.length > 0) {
-      latestDate = validSharesSeries[validSharesSeries.length - 1][0] as string
-    } else if (staleSharesSeries.length > 0) {
-      latestDate = staleSharesSeries[staleSharesSeries.length - 1][0] as string
-    } else if (invalidSharesSeries.length > 0) {
-      latestDate = invalidSharesSeries[invalidSharesSeries.length - 1][0] as string
-    } else {
-      latestDate = (new Date()).toISOString()
+    const insertEmptyPositionIfNotExists = (position: number, date: Moment, series: (string | number)[][]) => {
+      const dateAsIsoString = date.toISOString()
+      if (position >= series.length) {
+        series.push([dateAsIsoString, 0])
+
+        return
+      }
+      const valueAtPos = series[position]
+      if (valueAtPos[0] === dateAsIsoString) {
+        return
+      }
+      series.splice(position, 0, [dateAsIsoString, 0])
+    }
+
+    let startDate = roundToNextLower15Min(moment()).subtract(1, 'day')
+    let currentPosition = 0
+    while (startDate.isBefore(moment())) {
+      insertEmptyPositionIfNotExists(currentPosition, startDate, invalidSharesSeries)
+      insertEmptyPositionIfNotExists(currentPosition, startDate, staleSharesSeries)
+      insertEmptyPositionIfNotExists(currentPosition, startDate, validSharesSeries)
+      currentPosition += 1
+      startDate = startDate.add(15, 'minutes')
     }
 
     return {
       series: [{
-        data: makeMissingLeadingData(invalidSharesSeries, latestDate).concat(invalidSharesSeries, makeMissingTrailingData(invalidSharesSeries, latestDate)),
+        data: invalidSharesSeries,
       }, {
-        data: makeMissingLeadingData(staleSharesSeries, latestDate).concat(staleSharesSeries, makeMissingTrailingData(staleSharesSeries, latestDate)),
+        data: staleSharesSeries,
       }, {
-        data: makeMissingLeadingData(validSharesSeries, latestDate).concat(validSharesSeries, makeMissingTrailingData(validSharesSeries, latestDate)),
+        data: validSharesSeries,
       }],
     };
   }
