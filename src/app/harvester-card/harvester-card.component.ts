@@ -1,6 +1,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core'
 import {Harvester} from '../types'
-import {FormControl} from '@angular/forms'
+import {UntypedFormControl} from '@angular/forms'
 import {ToastService} from '../toast.service'
 import {AccountService} from '../account.service'
 import * as moment from 'moment/moment'
@@ -25,7 +25,7 @@ const k32SizeInGib = (new BigNumber(k32SizeInGb)).shiftedBy(9).dividedBy((new Bi
 export class HarvesterCardComponent implements OnInit, OnDestroy {
   @Input() harvester: Harvester
 
-  public nameControl: FormControl
+  public nameControl: UntypedFormControl
   public readonly isLoading: Observable<boolean>
   public readonly averageEc: Observable<string>
   public readonly totalShares: Observable<string>
@@ -132,7 +132,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   public async ngOnInit(): Promise<void> {
-    this.nameControl = new FormControl(this.harvester.name)
+    this.nameControl = new UntypedFormControl(this.harvester.name)
     this.statsUpdateInterval = setInterval(this.updateStats.bind(this), 5 * 60 * 1000)
     await this.updateStats()
   }
