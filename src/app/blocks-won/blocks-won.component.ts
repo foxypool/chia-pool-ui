@@ -3,7 +3,7 @@ import {StatsService} from '../stats.service';
 import * as moment from 'moment';
 import Capacity from '../capacity';
 import {SnippetService} from '../snippet.service';
-import {faCubes, faExchangeAlt} from '@fortawesome/free-solid-svg-icons';
+import {faCubes, faExchangeAlt, faRightLeft} from '@fortawesome/free-solid-svg-icons'
 import {getEffortColor} from '../util';
 import BigNumber from 'bignumber.js';
 import {ConfigService, DateFormatting} from '../config.service';
@@ -22,7 +22,7 @@ export class BlocksWonComponent implements OnDestroy {
   public rewardStats:any = {};
 
   public faCubes = faCubes;
-  public faExchangeAlt = faExchangeAlt;
+  public faRightLeft = faRightLeft;
   public page = 1;
   public pageSize = 25;
 

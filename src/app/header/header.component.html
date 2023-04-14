@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-xl navbar-dark sticky-navbar">
-  <a class="navbar-brand">
+  <a class="navbar-brand text-decoration-none">
     <img src="https://static.foxypool.io/assets/icon/fox.svg" width="34" height="34" alt="">
     <span style="font-weight: 300; font-size: 1.1em;margin-left: 8px;vertical-align: top">{{poolTitle}}</span>
   </a>
@@ -7,7 +7,7 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" [ngbCollapse]="isMenuCollapsed">
-    <ul class="navbar-nav mr-auto">
+    <ul class="navbar-nav me-auto">
       <li class="nav-item">
         <a class="nav-link">
           <button type="button" class="btn btn-outline-primary no-wrap" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="onTabButtonClick()">
@@ -80,10 +80,8 @@
         (keyup.enter)="search()"
         aria-label="Search"
       >
-      <div class="input-group-append">
-        <div class="input-group-text dark-background search-button" (click)="search()">
-          <fa-icon [icon]="searchIcon" class="color-green"></fa-icon>
-        </div>
+      <div class="input-group-text dark-background search-button" (click)="search()">
+        <fa-icon [icon]="searchIcon" class="color-green"></fa-icon>
       </div>
     </div>
     <div ngbDropdown class="d-inline-block header-row-item" *ngIf="otherPools.length > 0">
@@ -93,7 +91,7 @@
       <div ngbDropdownMenu aria-labelledby="poolsDropdown">
         <div *ngFor="let pool of otherPools; let i = index" [attr.data-index]="i">
           <h6 *ngIf="!getPool(i - 1) || getPool(i - 1).algorithm !== pool.algorithm" class="dropdown-header">{{pool.algorithm}}</h6>
-          <a ngbDropdownItem href="{{pool.url}}" target="_blank">{{pool.name}}</a>
+          <a class="text-decoration-none" ngbDropdownItem href="{{pool.url}}" target="_blank">{{pool.name}}</a>
           <div *ngIf="getPool(i + 1) && getPool(i + 1).algorithm !== pool.algorithm" class="dropdown-divider"></div>
         </div>
       </div>

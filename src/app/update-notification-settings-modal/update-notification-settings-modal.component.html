@@ -1,18 +1,16 @@
 <ng-template #updateNotificationSettingsModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title" style="color: #474747">Notification settings</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
     <div class="row">
       <div class="col-12">
         <div class="form-group">
-          <label for="ecLastHourThreshold">
-            <div class="custom-control custom-switch">
-              <input class="custom-control-input" type="checkbox" id="enableEcChangeNotifications" [(ngModel)]="areEcChangeNotificationsEnabled">
-              <label class="custom-control-label text-color-and-size" for="enableEcChangeNotifications" style="display: inline">
+          <label for="ecLastHourThreshold" class="form-label">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="enableEcChangeNotifications" [(ngModel)]="areEcChangeNotificationsEnabled">
+              <label class="form-check-label text-color-and-size" for="enableEcChangeNotifications" style="display: inline">
                 Notify when the current EC drops below
               </label>
             </div>
@@ -28,13 +26,11 @@
               [class.is-invalid]="!isValidEcLastHourThreshold"
               [(ngModel)]="newEcLastHourThreshold"
             >
-            <div class="input-group-append">
-              <label>
-                <select class="custom-select dropdown" [(ngModel)]="selectedCapacityDenominator">
-                  <option *ngFor="let denominator of possibleCapacityDenominators" [value]="denominator">{{denominator}}</option>
-                </select>
-              </label>
-            </div>
+            <label>
+              <select class="form-select custom-select dropdown" [(ngModel)]="selectedCapacityDenominator">
+                <option *ngFor="let denominator of possibleCapacityDenominators" [value]="denominator">{{denominator}}</option>
+              </select>
+            </label>
             <div id="ecLastHourThresholdFeedback" class="invalid-feedback">
               The current EC threshold must be a number greater than or equal to 0.
             </div>
@@ -42,11 +38,11 @@
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row mt-4">
       <div class="col-12">
-        <div class="custom-control custom-switch" style="padding-bottom: 1rem">
-          <input class="custom-control-input" type="checkbox" id="enableBlockWonNotifications" [(ngModel)]="areBlockWonNotificationsEnabled">
-          <label class="custom-control-label text-color-and-size" for="enableBlockWonNotifications" style="display: inline">
+        <div class="form-check form-switch" style="padding-bottom: 1rem">
+          <input class="form-check-input" type="checkbox" role="switch" id="enableBlockWonNotifications" [(ngModel)]="areBlockWonNotificationsEnabled">
+          <label class="form-check-label text-color-and-size" for="enableBlockWonNotifications" style="display: inline">
             Notify on block win
           </label>
         </div>
@@ -54,9 +50,9 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <div class="custom-control custom-switch" style="padding-bottom: 1rem">
-          <input class="custom-control-input" type="checkbox" id="enablePayoutAddressChangeNotifications" [(ngModel)]="arePayoutAddressChangeNotificationsEnabled">
-          <label class="custom-control-label text-color-and-size" for="enablePayoutAddressChangeNotifications" style="display: inline">
+        <div class="form-check form-switch" style="padding-bottom: 1rem">
+          <input class="form-check-input" type="checkbox" role="switch" id="enablePayoutAddressChangeNotifications" [(ngModel)]="arePayoutAddressChangeNotificationsEnabled">
+          <label class="form-check-label text-color-and-size" for="enablePayoutAddressChangeNotifications" style="display: inline">
             Notify on payout address change
           </label>
         </div>

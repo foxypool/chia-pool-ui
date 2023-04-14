@@ -1,10 +1,8 @@
 <div class="input-group">
-  <select class="custom-select currency-select dark-background" [ngModel]="configService.selectedCurrencySubject | async" (ngModelChange)="configService.selectedCurrencySubject.next($event)">
+  <select class="form-select currency-select dark-background" [ngModel]="configService.selectedCurrencySubject | async" (ngModelChange)="configService.selectedCurrencySubject.next($event)">
     <option *ngFor="let currency of ratesService.currencies" [ngValue]="currency" class="currency-select-option">{{ currency.toUpperCase() }}</option>
   </select>
-  <div class="input-group-append hide-on-smaller-screens">
-    <label class="input-group-text dark-background currency-select-rate-label">
-      1 {{(statsService.poolConfig | async).ticker?.toUpperCase()}} ≈ {{rateForCurrencyFormatted | async}}
-    </label>
-  </div>
+  <label class="input-group-text dark-background currency-select-rate-label hide-on-smaller-screens">
+    1 {{(statsService.poolConfig | async).ticker?.toUpperCase()}} ≈ {{rateForCurrencyFormatted | async}}
+  </label>
 </div>

@@ -1,40 +1,45 @@
+<div class="row justify-content-end">
+  <div class="col-auto">
+    <button *ngIf="hasWonBlocksObservable | async" type="button" class="btn btn-outline-info btn-sm" style="float: right" (click)="exportCsv()">{{snippetService.getSnippet('download-csv-button.title')}}</button>
+  </div>
+</div>
 <div class="row">
   <div class="col-md-12">
-    <button *ngIf="hasWonBlocksObservable | async" type="button" class="btn btn-outline-info btn-sm" style="float: right" (click)="exportCsv()">{{snippetService.getSnippet('download-csv-button.title')}}</button>
-    <table class="table table-dark dark-theme">
-      <thead>
-        <tr>
-          <th scope="col">
-            <div class="date-header-container">
-              <span>{{snippetService.getSnippet('blocks-won-component.header.date')}}</span>
-              <fa-icon [icon]="faExchangeAlt" class="toggle-date-formatting-icon" (click)="toggleDateFormatting()"></fa-icon>
-            </div>
-          </th>
-          <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.height')}}</th>
-          <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.effort')}}</th>
-          <th scope="col">Remarks</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngIf="isLoading && (hasWonBlocksObservable | async) === false">
-          <td colspan="3" style="text-align: center">
-            <app-loading-state></app-loading-state>
-          </td>
-        </tr>
-        <tr *ngIf="!isLoading && (hasWonBlocksObservable | async) === false">
-          <td colspan="3" style="text-align: center; padding-top: 1rem">
-            <app-empty-state [text]="snippetService.getSnippet('blocks-won-component.no-blocks-won-yet')" [icon]="faCubes"></app-empty-state>
-          </td>
-        </tr>
-        <tr *ngFor="let block of (wonBlocksObservable | async); trackBy: trackBlockByHash">
-          <td>{{getBlockDate(block)}}</td>
-          <td *ngIf="poolConfig.blockExplorerBlockUrlTemplate"><a href="{{getBlockExplorerBlockLink(block)}}" target="_blank" style="color: #b45bff">{{block.height}}</a></td>
-          <td *ngIf="!poolConfig.blockExplorerBlockUrlTemplate">{{block.height}}</td>
-          <td><span [class]="getEffortColor(block)">{{getBlockEffort(block)}}</span></td>
-          <td *ngIf="block.remarks === undefined || block.remarks.length === 0">
-            <span class="badge badge-pill remark-pill badge-success background-color-light-green">OK</span>
-          </td>
-          <td *ngIf="block.remarks !== undefined && block.remarks.length > 0">
+    <div class="table-responsive-lg">
+      <table class="table dark-theme">
+        <thead>
+          <tr>
+            <th scope="col">
+              <div class="date-header-container">
+                <span>{{snippetService.getSnippet('blocks-won-component.header.date')}}</span>
+                <fa-icon [icon]="faExchangeAlt" class="toggle-date-formatting-icon" (click)="toggleDateFormatting()"></fa-icon>
+              </div>
+            </th>
+            <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.height')}}</th>
+            <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.effort')}}</th>
+            <th scope="col">Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="isLoading && (hasWonBlocksObservable | async) === false">
+            <td colspan="3" style="text-align: center">
+              <app-loading-state></app-loading-state>
+            </td>
+          </tr>
+          <tr *ngIf="!isLoading && (hasWonBlocksObservable | async) === false">
+            <td colspan="3" style="text-align: center; padding-top: 1rem">
+              <app-empty-state [text]="snippetService.getSnippet('blocks-won-component.no-blocks-won-yet')" [icon]="faCubes"></app-empty-state>
+            </td>
+          </tr>
+          <tr *ngFor="let block of (wonBlocksObservable | async); trackBy: trackBlockByHash">
+            <td>{{getBlockDate(block)}}</td>
+            <td *ngIf="poolConfig.blockExplorerBlockUrlTemplate"><a href="{{getBlockExplorerBlockLink(block)}}" target="_blank" style="color: #b45bff">{{block.height}}</a></td>
+            <td *ngIf="!poolConfig.blockExplorerBlockUrlTemplate">{{block.height}}</td>
+            <td><span [class]="getEffortColor(block)">{{getBlockEffort(block)}}</span></td>
+            <td *ngIf="block.remarks === undefined || block.remarks.length === 0">
+              <span class="badge badge-pill remark-pill badge-success background-color-light-green">OK</span>
+            </td>
+            <td *ngIf="block.remarks !== undefined && block.remarks.length > 0">
             <span *ngFor="let remark of block.remarks; let last = last;">
               <span class="badge badge-pill remark-pill"
                     [ngClass]="getRemarkClasses(remark)"
@@ -42,9 +47,10 @@
               >{{getRemarkDetail(remark)}}</span>
               <span *ngIf="!last">&nbsp;</span>
             </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

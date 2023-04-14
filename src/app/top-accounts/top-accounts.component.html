@@ -1,37 +1,39 @@
 <div style="display: flex;flex-direction: row;justify-content: space-between;">
   <h5>{{snippetService.getSnippet('top-accounts-component.title')}}</h5>
 </div>
-<table class="table table-responsive-sm table-dark dark-theme">
-  <thead>
-  <tr>
-    <th scope="col">{{snippetService.getSnippet('top-accounts-component.headers.address')}}</th>
-    <th scope="col">
+<div class="table-responsive-sm">
+  <table class="table dark-theme">
+    <thead>
+      <tr>
+        <th scope="col">{{snippetService.getSnippet('top-accounts-component.headers.address')}}</th>
+        <th scope="col">
       <span ngbTooltip="{{snippetService.getSnippet('top-accounts-component.headers.pending.tooltip')}}">
         {{snippetService.getSnippet('top-accounts-component.headers.pending')}}
       </span>
-    </th>
-    <th scope="col">
+        </th>
+        <th scope="col">
       <span ngbTooltip="{{snippetService.getSnippet('general.avg-ec')}}">
         EC
       </span>
-    </th>
-  </tr>
-  </thead>
-  <tbody>
-    <tr *ngIf="!accountStats.topAccounts">
-      <td colspan="3" style="text-align: center">
-        <app-loading-state></app-loading-state>
-      </td>
-    </tr>
-    <tr *ngIf="accountStats.topAccounts && topAccounts.length === 0">
-      <td colspan="3" style="text-align: center; padding-top: 1rem">
-        <app-empty-state [text]="snippetService.getSnippet('top-accounts-component.no-miners-found')" [icon]="faHdd"></app-empty-state>
-      </td>
-    </tr>
-  <tr *ngFor="let account of topAccounts; trackBy: trackBy">
-    <td class="ellipsis"><a class="farmer-page-link" routerLink="/farmer/{{account.poolPublicKey}}">{{account.name ? account.name : account.payoutAddress}}</a></td>
-    <td class="no-wrap">{{account.pendingRounded}}<span *ngIf="account.pendingRounded === 0 && account.collateral"><span style="font-size: 12.8px"> +{{account.collateralRounded}}</span></span> {{poolConfig.ticker}}</td>
-    <td class="no-wrap">{{getFormattedCapacity(account.ec)}} <span style="font-size: 12.8px">({{getEcShare(account)}} %)</span></td>
-  </tr>
-  </tbody>
-</table>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="!accountStats.topAccounts">
+        <td colspan="3" style="text-align: center">
+          <app-loading-state></app-loading-state>
+        </td>
+      </tr>
+      <tr *ngIf="accountStats.topAccounts && topAccounts.length === 0">
+        <td colspan="3" style="text-align: center; padding-top: 1rem">
+          <app-empty-state [text]="snippetService.getSnippet('top-accounts-component.no-miners-found')" [icon]="faHdd"></app-empty-state>
+        </td>
+      </tr>
+      <tr *ngFor="let account of topAccounts; trackBy: trackBy">
+        <td class="ellipsis"><a class="farmer-page-link" routerLink="/farmer/{{account.poolPublicKey}}">{{account.name ? account.name : account.payoutAddress}}</a></td>
+        <td class="no-wrap">{{account.pendingRounded}}<span *ngIf="account.pendingRounded === 0 && account.collateral"><span style="font-size: 12.8px"> +{{account.collateralRounded}}</span></span> {{poolConfig.ticker}}</td>
+        <td class="no-wrap">{{getFormattedCapacity(account.ec)}} <span style="font-size: 12.8px">({{getEcShare(account)}} %)</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

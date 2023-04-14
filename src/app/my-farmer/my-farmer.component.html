@@ -176,7 +176,7 @@
                 <h5>{{snippetService.getSnippet('my-farmer-component.manage-account-card.title')}}</h5>
               </div>
               <div class="card-body">
-                <div class="row justify-content-center" *ngIf="!accountService.haveAuthToken" >
+                <div style="display: flex" class="justify-content-center" *ngIf="!accountService.haveAuthToken">
                   <button class="btn btn-success" (click)="authenticate()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.authenticate')}}</button>
                   &nbsp;&nbsp;<fa-icon style="font-size: 1.5rem" [icon]="faInfoCircle" placement="bottom" [ngbTooltip]="snippetService.getSnippet('my-farmer-component.manage-account-card.auth-info')"></fa-icon>
                 </div>
@@ -227,7 +227,7 @@
       <div class="p-2 col-md-12">
         <ul ngbNav #nav="ngbNav" class="nav-tabs">
           <li ngbNavItem="stats" [destroyOnHide]="true">
-            <a ngbNavLink><h5>{{snippetService.getSnippet('my-farmer-component.tabs.stats.label')}}</h5></a>
+            <a class="text-decoration-none" ngbNavLink><h5>{{snippetService.getSnippet('my-farmer-component.tabs.stats.label')}}</h5></a>
             <ng-template ngbNavContent>
               <div class="p-1 col-md-12">
                 <div echarts [options]="ecChartOptions" [merge]="ecChartUpdateOptions" theme="default" class="ec-chart"></div>
@@ -238,7 +238,7 @@
             </ng-template>
           </li>
           <li ngbNavItem="recent-payouts" [destroyOnHide]="true">
-            <a ngbNavLink><h5>{{snippetService.getSnippet('my-farmer-component.tabs.recent-payouts.label')}}</h5></a>
+            <a class="text-decoration-none" ngbNavLink><h5>{{snippetService.getSnippet('my-farmer-component.tabs.recent-payouts.label')}}</h5></a>
             <ng-template ngbNavContent>
               <div class="p-1 col-md-12">
                 <app-farmer-payout-history
@@ -254,7 +254,7 @@
             </ng-template>
           </li>
           <li ngbNavItem="won-blocks" [destroyOnHide]="true">
-            <a ngbNavLink><h5>{{snippetService.getSnippet('my-farmer-component.tabs.won-blocks.label')}}</h5></a>
+            <a class="text-decoration-none" ngbNavLink><h5>{{snippetService.getSnippet('my-farmer-component.tabs.won-blocks.label')}}</h5></a>
             <ng-template ngbNavContent>
               <div class="p-1 col-md-12">
                 <app-farmer-won-blocks
@@ -266,7 +266,7 @@
             </ng-template>
           </li>
           <li ngbNavItem="harvesters" [destroyOnHide]="true">
-            <a ngbNavLink><h5>Harvesters</h5></a>
+            <a class="text-decoration-none" ngbNavLink><h5>Harvesters</h5></a>
             <ng-template ngbNavContent>
               <div class="p-1 col-md-12">
                 <app-farmer-harvesters></app-farmer-harvesters>

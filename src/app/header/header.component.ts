@@ -6,7 +6,6 @@ import {AccountService} from '../account.service';
 import {RatesService} from '../rates.service';
 import {Router} from '@angular/router';
 import {faSearch} from '@fortawesome/free-solid-svg-icons';
-import {ConfigService} from '../config.service';
 import {Subscription} from 'rxjs';
 
 @Component({

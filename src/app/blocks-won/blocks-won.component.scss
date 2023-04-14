@@ -28,10 +28,13 @@
   transition: color 0.3s;
   color: rgba(255, 255, 255, 0.6);
 }
-::ng-deep .page-link:hover{
+::ng-deep .page-link:hover {
   color: rgba(255, 255, 255, 0.9);
-  background-color: #262629;
   border-color: #18191c;
+  text-decoration: none;
+}
+::ng-deep .page-item:not(.active) .page-link:hover {
+  background-color: #262629;
 }
 ::ng-deep .page-item.disabled .page-link {
   background-color: #262629;

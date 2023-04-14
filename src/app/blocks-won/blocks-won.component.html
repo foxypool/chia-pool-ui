@@ -3,62 +3,53 @@
     {{snippetService.getSnippet('blocks-won-component.title')}}
     <span *ngIf="limit">| {{snippetService.getSnippet('blocks-won-component.blocks-won-in-the-last-24h', getBlocksWonLast24H())}}</span>
   </h5>
-  <div *ngIf="distributionRatiosLength > 1" ngbDropdown class="d-inline-block" style="margin-right: 10px" ngbTooltip="{{snippetService.getSnippet('general.distribution-ratio')}}">
-    <button class="btn btn-outline-primary" id="drDropdown" ngbDropdownToggle>
-      DR: {{dr || snippetService.getSnippet('general.all')}}
-    </button>
-    <div ngbDropdownMenu aria-labelledby="drDropdown">
-      <div *ngFor="let ratio of distributionRatiosWithNull; let i = index" [attr.data-index]="i">
-        <div ngbDropdownItem (click)="dr = ratio" style="cursor: pointer;">{{ratio || snippetService.getSnippet('general.all')}}</div>
-        <div *ngIf="distributionRatiosWithNull.length !== (i + 1)" class="dropdown-divider"></div>
-      </div>
-    </div>
-  </div>
 </div>
-<table class="table table-responsive-lg table-dark dark-theme">
-  <thead>
-  <tr>
-    <th scope="col">
-      <div class="date-header-container">
-        <span>{{snippetService.getSnippet('blocks-won-component.header.date')}}</span>
-        <fa-icon [icon]="faExchangeAlt" class="toggle-date-formatting-icon" (click)="toggleDateFormatting()"></fa-icon>
-      </div>
-    </th>
-    <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.height')}}</th>
-    <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.network-capacity')}}</th>
-    <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.effort')}}</th>
-    <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.winner')}}</th>
-    <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.reward')}}</th>
-    <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.distributed')}}</th>
-  </tr>
-  </thead>
-  <tbody>
-    <tr *ngIf="!rewardStats.recentlyWonBlocks">
-      <td colspan="7" style="text-align: center">
-        <app-loading-state></app-loading-state>
-      </td>
-    </tr>
-    <tr *ngIf="rewardStats.recentlyWonBlocks && recentlyWonBlocks.length === 0">
-      <td colspan="7" style="text-align: center; padding-top: 1rem">
-        <app-empty-state [text]="snippetService.getSnippet('blocks-won-component.no-blocks-won-yet')" [icon]="faCubes"></app-empty-state>
-      </td>
-    </tr>
-  <tr *ngFor="let block of recentlyWonBlocks | slice: (page - 1) * pageSize : page * pageSize; trackBy: trackBy">
-    <td class="no-wrap">{{getBlockDate(block)}}</td>
-    <td *ngIf="poolConfig.blockExplorerBlockUrlTemplate"><a href="{{getBlockExplorerBlockLink(block)}}" target="_blank" style="color: #b45bff">{{block.height}}</a></td>
-    <td *ngIf="!poolConfig.blockExplorerBlockUrlTemplate">{{block.height}}</td>
-    <td class="no-wrap">{{block.networkSpaceInTib ? getFormattedCapacityFromTiB(block.networkSpaceInTib) : snippetService.getSnippet('general.not-available.short')}}</td>
-    <td class="no-wrap"><span [class]="getEffortColor(block)">{{getBlockEffort(block)}}</span></td>
-    <td class="ellipsis">{{block.winner.name || block.winner.payoutAddress || snippetService.getSnippet('general.unknown')}}</td>
-    <td class="no-wrap">{{block.reward}} {{poolConfig.ticker}}</td>
-    <td class="no-wrap" [style.padding-top]="block.distributed ? '12px' : '2px'" [style.padding-bottom]="block.distributed ? '12px' : '8px'">
-      {{getBlockDistributedLabel(block)}}
-      <span *ngIf="!block.distributed">({{getBlockConfirms(block)}} / {{poolConfig.blockRewardDistributionDelay}})</span>
-      <ngb-progressbar *ngIf="!block.distributed" [striped]="true" [animated]="true" [type]="getBlockProgressType(block)" [value]="getBlockProgress(block)"></ngb-progressbar>
-    </td>
-  </tr>
-  </tbody>
-</table>
+<div class="table-responsive-lg">
+  <table class="table dark-theme">
+    <thead>
+      <tr>
+        <th scope="col">
+          <div class="date-header-container">
+            <span>{{snippetService.getSnippet('blocks-won-component.header.date')}}</span>
+            <fa-icon [icon]="faRightLeft" class="toggle-date-formatting-icon" (click)="toggleDateFormatting()"></fa-icon>
+          </div>
+        </th>
+        <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.height')}}</th>
+        <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.network-capacity')}}</th>
+        <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.effort')}}</th>
+        <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.winner')}}</th>
+        <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.reward')}}</th>
+        <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.distributed')}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="!rewardStats.recentlyWonBlocks">
+        <td colspan="7" style="text-align: center">
+          <app-loading-state></app-loading-state>
+        </td>
+      </tr>
+      <tr *ngIf="rewardStats.recentlyWonBlocks && recentlyWonBlocks.length === 0">
+        <td colspan="7" style="text-align: center; padding-top: 1rem">
+          <app-empty-state [text]="snippetService.getSnippet('blocks-won-component.no-blocks-won-yet')" [icon]="faCubes"></app-empty-state>
+        </td>
+      </tr>
+      <tr *ngFor="let block of recentlyWonBlocks | slice: (page - 1) * pageSize : page * pageSize; trackBy: trackBy">
+        <td class="no-wrap">{{getBlockDate(block)}}</td>
+        <td *ngIf="poolConfig.blockExplorerBlockUrlTemplate"><a href="{{getBlockExplorerBlockLink(block)}}" target="_blank" style="color: #b45bff">{{block.height}}</a></td>
+        <td *ngIf="!poolConfig.blockExplorerBlockUrlTemplate">{{block.height}}</td>
+        <td class="no-wrap">{{block.networkSpaceInTib ? getFormattedCapacityFromTiB(block.networkSpaceInTib) : snippetService.getSnippet('general.not-available.short')}}</td>
+        <td class="no-wrap"><span [class]="getEffortColor(block)">{{getBlockEffort(block)}}</span></td>
+        <td class="ellipsis">{{block.winner.name || block.winner.payoutAddress || snippetService.getSnippet('general.unknown')}}</td>
+        <td class="no-wrap">{{block.reward}} {{poolConfig.ticker}}</td>
+        <td class="no-wrap" [style.padding-top]="block.distributed ? '12px' : '2px'" [style.padding-bottom]="block.distributed ? '12px' : '8px'">
+          {{getBlockDistributedLabel(block)}}
+          <span *ngIf="!block.distributed">({{getBlockConfirms(block)}} / {{poolConfig.blockRewardDistributionDelay}})</span>
+          <ngb-progressbar *ngIf="!block.distributed" [striped]="true" [animated]="true" [type]="getBlockProgressType(block)" [value]="getBlockProgress(block)"></ngb-progressbar>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 <ngb-pagination
   *ngIf="!limit && recentlyWonBlocks.length > pageSize"
   class="d-flex justify-content-center"

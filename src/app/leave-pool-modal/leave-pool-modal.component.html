@@ -1,16 +1,14 @@
 <ng-template #leavePoolModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title" style="color: #474747">{{snippetService.getSnippet('leave-pool-modal.title')}}</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
     <div class="row">
       <div class="col-12" *ngIf="haveCollateral">
-        <div class="form-check custom-control custom-checkbox checkbox-lg" style="padding-bottom: 1rem">
-          <input class="form-check-input custom-control-input" type="checkbox" id="leaveForEverCheckbox" [(ngModel)]="leaveForEver">
-          <label class="form-check-label custom-control-label text-color" for="leaveForEverCheckbox">
+        <div class="form-check checkbox-lg" style="padding-bottom: 1rem">
+          <input class="form-check-input" type="checkbox" id="leaveForEverCheckbox" [(ngModel)]="leaveForEver">
+          <label class="form-check-label text-color" for="leaveForEverCheckbox">
             {{ snippetService.getSnippet('leave-pool-modal.leave-forever') }}
           </label>
         </div>

@@ -1,25 +1,21 @@
 <ng-template #authenticationModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title" style="color: #474747">{{snippetService.getSnippet('authentication-modal.title')}}</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
     <div class="row">
       <div class="col-12">
-        <label for="messageToSign" style="color: #474747">{{snippetService.getSnippet('authentication-modal.message-to-sign')}}:</label>
+        <label for="messageToSign" class="form-label" style="color: #474747">{{snippetService.getSnippet('authentication-modal.message-to-sign')}}:</label>
         <div id="messageToSign" class="input-group">
-          <input type="text" class="form-control" [value]="message" readonly>
-          <div class="input-group-append">
-            <div class="input-group-text"
-                 ngbTooltip="{{snippetService.getSnippet('general.copy')}}"
-                 ngxClipboard
-                 [cbContent]="message"
-                 (cbOnSuccess)="copied()"
-                 style="cursor: pointer">
-              <fa-icon [icon]="copyIcon" [ngStyle]="copyIconStyle"></fa-icon>
-            </div>
+          <input type="text" class="form-control" [value]="message" disabled>
+          <div class="input-group-text"
+               ngbTooltip="{{snippetService.getSnippet('general.copy')}}"
+               ngxClipboard
+               [cbContent]="message"
+               (cbOnSuccess)="copied()"
+               style="cursor: pointer">
+            <fa-icon [icon]="copyIcon" [ngStyle]="copyIconStyle"></fa-icon>
           </div>
         </div>
       </div>
