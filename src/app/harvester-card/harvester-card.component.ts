@@ -82,7 +82,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         },
       },
       grid: {
-        left: 30,
+        left: 45,
         top: this.shareChartTopMargin,
         right: 30,
         bottom: 20,
