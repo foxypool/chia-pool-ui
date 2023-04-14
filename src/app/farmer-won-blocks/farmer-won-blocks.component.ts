@@ -135,8 +135,8 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
       wonBlock.height,
       wonBlock.hash,
       wonBlock.effort,
-      wonBlock.remarks.join(', '),
-    ])));
+      wonBlock.remarks.map(remark => remark.type).join(', '),
+    ])))
   }
 }
 
