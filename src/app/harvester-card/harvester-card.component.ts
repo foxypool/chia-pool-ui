@@ -12,6 +12,7 @@ import {BigNumber} from 'bignumber.js'
 import Capacity from '../capacity'
 import {EChartsOption} from 'echarts'
 import {Moment} from 'moment'
+import {stripHexPrefix} from '../util'
 
 const sharesPerDayPerK32 = 10
 const k32SizeInGb = 108.837
@@ -149,7 +150,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   public get peerIdSlug(): string {
-    return this.harvester.peerId.slice(2, 12)
+    return stripHexPrefix(this.harvester.peerId).slice(0, 10)
   }
 
   public get hasName(): boolean {
