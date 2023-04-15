@@ -133,7 +133,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
 
   public async ngOnInit(): Promise<void> {
     this.nameControl = new UntypedFormControl(this.harvester.name)
-    this.statsUpdateInterval = setInterval(this.updateStats.bind(this), 5 * 60 * 1000)
+    this.statsUpdateInterval = setInterval(this.updateStats.bind(this), 10 * 60 * 1000)
     await this.updateStats()
   }
 
