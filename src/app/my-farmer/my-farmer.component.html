@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-12" *ngIf="!accountService.havePoolPublicKey">
-    <div class="row justify-content-center">
+    <div class="d-flex justify-content-center">
       <input type="text" class="form-control" placeholder="{{snippetService.getSnippet('my-farmer-component.pool-pk-input.placeholder')}}" [(ngModel)]="poolPublicKeyInput" style="width: 32em;margin-right: 0.5rem;">
       <button class="btn btn-success" style="margin-left: 0.5rem;" (click)="login()">
         <fa-icon *ngIf="accountService.isLoading" [icon]="faCircleNotch" [spin]="true"></fa-icon>
@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="col-12" *ngIf="accountService.havePoolPublicKey && !accountService.haveAccount && accountService.isLoading">
-    <div class="row justify-content-center">
+    <div class="d-flex justify-content-center">
       <app-loading-state></app-loading-state>
     </div>
   </div>
@@ -176,7 +176,7 @@
                 <h5>{{snippetService.getSnippet('my-farmer-component.manage-account-card.title')}}</h5>
               </div>
               <div class="card-body">
-                <div style="display: flex" class="justify-content-center" *ngIf="!accountService.haveAuthToken">
+                <div class="d-flex justify-content-center" *ngIf="!accountService.haveAuthToken">
                   <button class="btn btn-success" (click)="authenticate()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.authenticate')}}</button>
                   &nbsp;&nbsp;<fa-icon style="font-size: 1.5rem" [icon]="faInfoCircle" placement="bottom" [ngbTooltip]="snippetService.getSnippet('my-farmer-component.manage-account-card.auth-info')"></fa-icon>
                 </div>
