@@ -12,46 +12,46 @@
     <div *ngIf="hasName">{{peerIdSlug}}</div>
   </div>
   <div class="card-body harvester-card">
-    <div class="row">
-      <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 p-1">
+    <div class="row" [ngClass]="xlRowColumnClass">
+      <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl p-1">
         <div class="p-2 border border-primary rounded text-center">
           <div class="mb-1">Average EC</div>
           <app-loading-state *ngIf="isLoading | async" [height]="2" [width]="2" fontSize="14px"></app-loading-state>
           <h5 *ngIf="(isLoading | async) === false">{{averageEc | async}}</h5>
         </div>
       </div>
-      <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 p-1">
+      <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl p-1">
         <div class="p-2 border border-primary rounded text-center">
           <div class="mb-1">24h Shares</div>
           <app-loading-state *ngIf="isLoading | async" [height]="2" [width]="2" fontSize="14px"></app-loading-state>
           <h5 *ngIf="(isLoading | async) === false">{{totalShares | async}}</h5>
         </div>
       </div>
-      <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 p-1">
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl p-1">
         <div class="p-2 border border-primary rounded text-center">
           <div class="mb-1">Last Partial accepted</div>
           <h5>{{lastAcceptedPartialAt}}</h5>
         </div>
       </div>
-      <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 p-1">
+      <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl p-1">
         <div class="p-2 border border-primary rounded text-center">
           <div class="mb-1">Chia Version</div>
           <h5>{{chiaVersion}}</h5>
         </div>
       </div>
-      <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 p-1" *ngIf="hasOgVersion">
+      <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl p-1" *ngIf="hasOgVersion">
         <div class="p-2 border border-primary rounded text-center">
           <div class="mb-1">OG Version</div>
           <h5>{{ogVersion}}</h5>
         </div>
       </div>
-      <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 p-1" *ngIf="hasGigahorseVersion">
+      <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl p-1" *ngIf="hasGigahorseVersion">
         <div class="p-2 border border-primary rounded text-center">
           <div class="mb-1">Gigahorse Version</div>
           <h5>{{gigahorseVersion}}</h5>
         </div>
       </div>
-      <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 p-1" *ngIf="hasFoxyFarmerVersion">
+      <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl p-1" *ngIf="hasFoxyFarmerVersion">
         <div class="p-2 border border-primary rounded text-center">
           <div class="mb-1">Foxy-Farmer Version</div>
           <h5>{{foxyFarmerVersion}}</h5>

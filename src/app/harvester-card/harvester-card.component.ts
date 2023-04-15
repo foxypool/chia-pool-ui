@@ -209,6 +209,27 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     return this.gigahorseVersion !== undefined
   }
 
+  public get xlRowColumnClass(): string {
+    const cardCount = this.cardCount
+
+    return `row-col-xl-${Math.min(6, cardCount)}`
+  }
+
+  private get cardCount(): number {
+    let count = 4
+    if (this.hasOgVersion) {
+      count += 1
+    }
+    if (this.hasGigahorseVersion) {
+      count += 1
+    }
+    if (this.hasFoxyFarmerVersion) {
+      count += 1
+    }
+
+    return count
+  }
+
   private get shareChartTopMargin(): number {
     if (window.innerWidth >= 716) {
       return 50
