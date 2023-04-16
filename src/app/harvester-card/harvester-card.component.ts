@@ -151,9 +151,9 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         shareReplay(),
       )
     this.totalValidShares = sharesStream.pipe(map(stream => stream.totalValidShares.toNumber().toLocaleString('en')), shareReplay())
-    this.totalValidSharesPercentage = sharesStream.pipe(map(stream => stream.totalValidShares.dividedBy(stream.totalShares).multipliedBy(100).toFixed(2)), shareReplay())
+    this.totalValidSharesPercentage = sharesStream.pipe(map(stream => stream.totalValidShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100).toFixed(2)), shareReplay())
     this.totalStaleShares = sharesStream.pipe(map(stream => stream.totalStaleShares.toNumber().toLocaleString('en')), shareReplay())
-    this.totalStaleSharesPercentage = sharesStream.pipe(map(stream => stream.totalStaleShares.dividedBy(stream.totalShares).multipliedBy(100).toFixed(2)), shareReplay())
+    this.totalStaleSharesPercentage = sharesStream.pipe(map(stream => stream.totalStaleShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100).toFixed(2)), shareReplay())
   }
 
   public async ngOnInit(): Promise<void> {
