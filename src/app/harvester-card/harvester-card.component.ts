@@ -29,7 +29,10 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   public nameControl: UntypedFormControl
   public readonly isLoading: Observable<boolean>
   public readonly averageEc: Observable<string>
-  public readonly totalShares: Observable<string>
+  public readonly totalValidShares: Observable<string>
+  public readonly totalStaleShares: Observable<string>
+  public readonly totalValidSharesPercentage: Observable<string>
+  public readonly totalStaleSharesPercentage: Observable<string>
   public readonly sharesChartOptions: EChartsOption
   public sharesChartUpdateOptions: EChartsOption
   private readonly stats: Observable<HarvesterStats>
@@ -44,12 +47,9 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   ) {
     this.stats = this.statsSubject.asObservable().pipe(filter(stats => stats !== undefined), shareReplay())
     this.isLoading = this.statsSubject.asObservable().pipe(map(stats => stats === undefined), distinctUntilChanged(), shareReplay())
-    const totalShares = this.stats.pipe(
-      map(stats => stats.submissionStats.reduce((acc, submissionStat) => acc.plus(submissionStat.shares), new BigNumber(0))),
-      shareReplay(),
-    )
-    this.averageEc = totalShares.pipe(
-      map(totalShares => {
+    this.averageEc = this.stats.pipe(
+      map(stats => {
+        const totalShares = stats.submissionStats.reduce((acc, submissionStat) => acc.plus(submissionStat.shares), new BigNumber(0))
         const ecInGib = totalShares
           .dividedBy(sharesPerDayPerK32)
           .multipliedBy(k32SizeInGib)
@@ -57,7 +57,6 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         return new Capacity(ecInGib.toNumber()).toString()
       }),
     )
-    this.totalShares = totalShares.pipe(map(totalShares => totalShares.toNumber().toLocaleString()))
     this.sharesChartOptions = {
       title: {
         text: 'Shares',
@@ -130,6 +129,31 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.stats.subscribe(stats => {
       this.sharesChartUpdateOptions = this.makeSharesChartUpdateOptions(stats)
     }))
+    const sharesStream = this.stats
+      .pipe(
+        map(harvesterStats => {
+          const totalValidShares = harvesterStats.submissionStats.reduce((acc, curr) => acc.plus(curr.shares), new BigNumber(0))
+          const totalInvalidShares = harvesterStats.rejectedSubmissionStats
+            .filter(stat => stat.type === RejectedSubmissionType.invalid)
+            .reduce((acc, curr) => acc.plus(curr.shares), new BigNumber(0))
+          const totalStaleShares = harvesterStats.rejectedSubmissionStats
+            .filter(stat => stat.type === RejectedSubmissionType.stale)
+            .reduce((acc, curr) => acc.plus(curr.shares), new BigNumber(0))
+          const totalShares = totalValidShares.plus(totalInvalidShares).plus(totalStaleShares)
+
+          return {
+            totalValidShares,
+            totalInvalidShares,
+            totalStaleShares,
+            totalShares,
+          }
+        }),
+        shareReplay(),
+      )
+    this.totalValidShares = sharesStream.pipe(map(stream => stream.totalValidShares.toNumber().toLocaleString('en')), shareReplay())
+    this.totalValidSharesPercentage = sharesStream.pipe(map(stream => stream.totalValidShares.dividedBy(stream.totalShares).multipliedBy(100).toFixed(2)), shareReplay())
+    this.totalStaleShares = sharesStream.pipe(map(stream => stream.totalStaleShares.toNumber().toLocaleString('en')), shareReplay())
+    this.totalStaleSharesPercentage = sharesStream.pipe(map(stream => stream.totalStaleShares.dividedBy(stream.totalShares).multipliedBy(100).toFixed(2)), shareReplay())
   }
 
   public async ngOnInit(): Promise<void> {
@@ -210,14 +234,17 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     return this.gigahorseVersion !== undefined
   }
 
-  public get xlRowColumnClass(): string {
+  public get rowColumnClasses(): string[] {
     const cardCount = this.cardCount
 
-    return `row-col-xl-${Math.min(6, cardCount)}`
+    return [
+      `row-cols-xl-${Math.min(6, cardCount)}`,
+      `row-cols-xxl-${Math.min(7, cardCount)}`,
+    ]
   }
 
   private get cardCount(): number {
-    let count = 4
+    let count = 5
     if (this.hasOgVersion) {
       count += 1
     }

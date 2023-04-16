@@ -232,6 +232,29 @@
               <div class="p-1 col-md-12">
                 <div echarts [options]="ecChartOptions" [merge]="ecChartUpdateOptions" theme="default" class="ec-chart"></div>
               </div>
+              <div class="row mt-2 text-align-center">
+                <h5 style="font-weight: bold">Shares</h5>
+              </div>
+              <div class="row ps-5 pe-3">
+                <div class="col-4">
+                  <div class="p-2 border border-primary rounded">
+                    <h5 class="mb-1 fw-lighter">Valid Shares</h5>
+                    <h4>{{totalValidShares | async}} <span class="shares-box-percentage">({{totalValidSharesPercentage | async}}%)</span></h4>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="p-2 border border-primary rounded">
+                    <h5 class="mb-1 fw-lighter">Stale Shares</h5>
+                    <h4>{{totalStaleShares | async}} <span class="shares-box-percentage">({{totalStaleSharesPercentage | async}}%)</span></h4>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="p-2 border border-primary rounded">
+                    <h5 class="mb-1 fw-lighter">Invalid Shares</h5>
+                    <h4>{{totalInvalidShares | async}} <span class="shares-box-percentage">({{totalInvalidSharesPercentage | async}}%)</span></h4>
+                  </div>
+                </div>
+              </div>
               <div class="p-1 col-md-12">
                 <div echarts [options]="sharesChartOptions" [merge]="sharesChartUpdateOptions" (chartLegendSelectChanged)="onSharesChartLegendSelectChanged($event)" theme="default" class="shares-chart"></div>
               </div>

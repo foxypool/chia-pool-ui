@@ -25,6 +25,7 @@ import {
   UpdateNotificationSettingsModalComponent
 } from '../update-notification-settings-modal/update-notification-settings-modal.component'
 import {PoolsProvider} from '../pools.provider'
+import {AccountHistoricalStat} from '../api.service'
 
 @Component({
   selector: 'app-my-farmer',
@@ -50,6 +51,13 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
   public sharesChartOptions: EChartsOption;
   public sharesChartUpdateOptions: EChartsOption;
+
+  public readonly totalValidShares: Observable<string>
+  public readonly totalInvalidShares: Observable<string>
+  public readonly totalStaleShares: Observable<string>
+  public readonly totalValidSharesPercentage: Observable<string>
+  public readonly totalInvalidSharesPercentage: Observable<string>
+  public readonly totalStaleSharesPercentage: Observable<string>
 
   public isAccountLoading: Observable<boolean> = this.accountService.accountSubject
     .asObservable()
@@ -212,14 +220,6 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       }],
     };
     this.sharesChartOptions = {
-      title: {
-        text: this.snippetService.getSnippet('my-farmer-component.shares-chart.title'),
-        left: 'center',
-        top: 0,
-        textStyle: {
-          color: '#cfd0d1'
-        }
-      },
       legend: {
         data: [
           this.snippetService.getSnippet('my-farmer-component.shares-chart.invalid-shares.name'),
@@ -228,7 +228,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
           this.snippetService.getSnippet('my-farmer-component.shares-chart.difficulty.name'),
           this.snippetService.getSnippet('my-farmer-component.shares-chart.partials.name'),
         ],
-        top: 25,
+        top: 10,
         textStyle: {
           color: '#cfd0d1',
         },
@@ -295,6 +295,31 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     this.payoutDateFormattingObservable = configService.payoutDateFormattingSubject.asObservable()
     this.selectedCurrencyObservable = configService.selectedCurrencySubject.asObservable()
     this.exchangeStatsObservable = this.statsService.exchangeStats.asObservable()
+    const sharesStream = this.accountService.accountHistoricalStats
+      .pipe(
+        skip(1),
+        map(historicalStats => {
+          const totalValidShares = historicalStats.reduce((acc, curr) => acc.plus(curr.shares), new BigNumber(0))
+          const totalInvalidShares = historicalStats.reduce((acc, curr) => acc.plus(curr.invalidShares), new BigNumber(0))
+          const totalStaleShares = historicalStats.reduce((acc, curr) => acc.plus(curr.staleShares), new BigNumber(0))
+          const totalShares = totalValidShares.plus(totalInvalidShares).plus(totalStaleShares)
+
+          return {
+            totalValidShares,
+            totalInvalidShares,
+            totalStaleShares,
+            totalShares,
+          }
+        }),
+        shareReplay(),
+      )
+    this.totalValidShares = sharesStream.pipe(map(stream => stream.totalValidShares.toNumber().toLocaleString('en')), shareReplay())
+    this.totalValidSharesPercentage = sharesStream.pipe(map(stream => stream.totalValidShares.dividedBy(stream.totalShares).multipliedBy(100).toFixed(2)), shareReplay())
+    this.totalInvalidShares = sharesStream.pipe(map(stream => stream.totalInvalidShares.toNumber().toLocaleString('en')), shareReplay())
+    this.totalInvalidSharesPercentage = sharesStream.pipe(map(stream => stream.totalInvalidShares.dividedBy(stream.totalShares).multipliedBy(100).toFixed(2)), shareReplay())
+    this.totalStaleShares = sharesStream.pipe(map(stream => stream.totalStaleShares.toNumber().toLocaleString('en')), shareReplay())
+    this.totalStaleSharesPercentage = sharesStream.pipe(map(stream => stream.totalStaleShares.dividedBy(stream.totalShares).multipliedBy(100).toFixed(2)), shareReplay())
+
   }
 
   public ngOnDestroy(): void {
@@ -491,7 +516,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     return Math.min(progress, 100);
   }
 
-  private makeEcChartUpdateOptions(historicalStats): EChartsOption {
+  private makeEcChartUpdateOptions(historicalStats: AccountHistoricalStat[]): EChartsOption {
     const biggestEc = historicalStats.reduce((acc, curr) => {
       const currBiggestEc = (curr.ecLastHour || 0) > curr.ec ? curr.ecLastHour : curr.ec
 
@@ -547,7 +572,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     };
   }
 
-  private makeSharesChartUpdateOptions(historicalStats): EChartsOption {
+  private makeSharesChartUpdateOptions(historicalStats: AccountHistoricalStat[]): EChartsOption {
     const historicalSharesSeries = historicalStats.map(stats => [stats.createdAt, stats.shares]);
     const historicalStaleSharesSeries = historicalStats.map(stats => [stats.createdAt, stats.staleShares || 0]);
     const historicalInvalidSharesSeries = historicalStats.map(stats => [stats.createdAt, stats.invalidShares || 0]);

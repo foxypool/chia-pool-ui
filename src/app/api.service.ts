@@ -73,10 +73,10 @@ export class ApiService {
     return data
   }
 
-  async getAccountHistoricalStats({ poolIdentifier, poolPublicKey }) {
-    const { data } = await this.client.get(`${poolIdentifier}/account/${poolPublicKey}/historical`);
+  async getAccountHistoricalStats({ poolIdentifier, poolPublicKey }): Promise<AccountHistoricalStat[]> {
+    const { data } = await this.client.get<AccountHistoricalStat[]>(`${poolIdentifier}/account/${poolPublicKey}/historical`);
 
-    return data;
+    return data
   }
 
   async getAccountWonBlocks({ poolIdentifier, poolPublicKey }) {
@@ -209,4 +209,15 @@ interface RejectedSubmissionStat extends SubmissionStat {
 export enum RejectedSubmissionType {
   stale = 'STALE',
   invalid = 'INVALID',
+}
+
+export interface AccountHistoricalStat {
+  createdAt: string
+  shares: number
+  staleShares: number
+  invalidShares: number
+  shareCount: number
+  ec: number
+  ecLastHour: number
+  difficulty: number
 }

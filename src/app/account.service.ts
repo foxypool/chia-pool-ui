@@ -11,6 +11,7 @@ import {BehaviorSubject, Observable} from 'rxjs'
 import {WonBlock} from './farmer-won-blocks/farmer-won-blocks.component';
 import {AccountPayout} from './farmer-payout-history/farmer-payout-history.component'
 import {distinctUntilChanged, filter, map, shareReplay} from 'rxjs/operators'
+import {AccountHistoricalStat} from './api.service'
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,7 @@ export class AccountService {
 
   public currentAccountIdentifier: Observable<string>
   public accountSubject = new BehaviorSubject<any>(null);
-  public accountHistoricalStats = new BehaviorSubject<any[]>([]);
+  public accountHistoricalStats = new BehaviorSubject<AccountHistoricalStat[]>([]);
   public accountWonBlocks = new BehaviorSubject<WonBlock[]>([]);
   public accountPayouts = new BehaviorSubject<AccountPayout[]>([])
   public isLoading = false;
@@ -226,7 +227,7 @@ export class AccountService {
     return accountHarvesters;
   }
 
-  async getAccountHistoricalStats({ poolPublicKey }) {
+  async getAccountHistoricalStats({ poolPublicKey }): Promise<AccountHistoricalStat[]> {
     this.isLoading = true;
     let accountHistoricalStats = [];
     try {
