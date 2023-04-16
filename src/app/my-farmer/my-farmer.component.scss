@@ -67,3 +67,8 @@
 .shares-box-percentage {
   font-size: 16px;
 }
+@media (max-width: 575px) {
+  .shares-box {
+    margin-bottom: .5rem;
+  }
+}
