@@ -1,30 +1,28 @@
-import {Component, ViewChild} from '@angular/core'
+import {Component} from '@angular/core'
 import {faCircleNotch} from '@fortawesome/free-solid-svg-icons'
-import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap'
 import {AccountService} from '../account.service'
 import {SnippetService} from '../snippet.service'
 import {ToastService} from '../toast.service'
 
 @Component({
-  selector: 'app-update-difficulty-modal',
-  templateUrl: './update-difficulty-modal.component.html',
-  styleUrls: ['./update-difficulty-modal.component.scss'],
+  selector: 'app-update-difficulty',
+  templateUrl: './update-difficulty.component.html',
+  styleUrls: ['./update-difficulty.component.scss'],
 })
-export class UpdateDifficultyModalComponent  {
-  @ViewChild('updateDifficultyModal') modal
+export class UpdateDifficultyComponent {
 
   public faCircleNotch = faCircleNotch
   public newDifficulty: number | undefined
   public isFixedDifficulty = false
 
-  private modalRef: NgbModalRef = null
-
   constructor(
     public accountService: AccountService,
     public snippetService: SnippetService,
-    private modalService: NgbModal,
     private toastService: ToastService,
-  ) {}
+  ) {
+    this.newDifficulty = this.currentDifficulty
+    this.isFixedDifficulty = this.currentIsFixedDifficulty
+  }
 
   public get currentDifficulty(): number {
     return this.accountService.account.difficulty
@@ -35,7 +33,7 @@ export class UpdateDifficultyModalComponent  {
   }
 
   public get canUpdateDifficulty(): boolean {
-    return !this.accountService.isUpdatingAccount && this.isValidDifficulty
+    return !this.accountService.isUpdatingAccount && this.isValidDifficulty && this.areValuesChanged
   }
 
   public async updateDifficulty(): Promise<void> {
@@ -45,19 +43,20 @@ export class UpdateDifficultyModalComponent  {
     try {
       await this.accountService.updateDifficulty({ difficulty: this.newDifficulty, isFixedDifficulty: this.isFixedDifficulty })
       this.toastService.showSuccessToast('Successfully updated the difficulty')
-      this.modalRef.close(true)
     } catch (err) {
       this.toastService.showErrorToast(err.message)
     }
   }
 
-  public openModal(): void {
-    this.newDifficulty = this.currentDifficulty
-    this.isFixedDifficulty = this.currentIsFixedDifficulty
-    this.modalRef = this.modalService.open(this.modal)
-  }
-
   private get currentIsFixedDifficulty(): boolean {
     return this.accountService.account.isFixedDifficulty
+  }
+
+  private get areValuesChanged(): boolean {
+    if (this.isFixedDifficulty !== this.currentIsFixedDifficulty) {
+      return true
+    }
+
+    return this.newDifficulty !== this.currentDifficulty
   }
 }

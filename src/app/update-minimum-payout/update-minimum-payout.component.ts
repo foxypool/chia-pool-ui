@@ -1,6 +1,5 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
-import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import BigNumber from 'bignumber.js';
 import {AccountService} from '../account.service';
 import {SnippetService} from '../snippet.service';
@@ -8,26 +7,22 @@ import {ToastService} from '../toast.service';
 import {StatsService} from '../stats.service';
 
 @Component({
-  selector: 'app-update-minimum-payout-modal',
-  templateUrl: './update-minimum-payout-modal.component.html',
-  styleUrls: ['./update-minimum-payout-modal.component.scss']
+  selector: 'app-update-minimum-payout',
+  templateUrl: './update-minimum-payout.component.html',
+  styleUrls: ['./update-minimum-payout.component.scss']
 })
-export class UpdateMinimumPayoutModalComponent  {
-  @ViewChild('updateMinimumPayoutModal') modal;
-
-  private _newMinimumPayout = undefined;
-
-  public faCircleNotch = faCircleNotch;
-
-  private modalRef: NgbModalRef = null;
+export class UpdateMinimumPayoutComponent {
+  public faCircleNotch = faCircleNotch
+  private _newMinimumPayout = undefined
 
   constructor(
     public accountService: AccountService,
     public snippetService: SnippetService,
-    private modalService: NgbModal,
     private toastService: ToastService,
     private statsService: StatsService,
-  ) {}
+  ) {
+    this.newMinimumPayout = this.accountService.account.minimumPayout
+  }
 
   get poolConfig() {
     return this.statsService.poolConfig.getValue() || {};
@@ -53,24 +48,9 @@ export class UpdateMinimumPayoutModalComponent  {
       } else {
         this.toastService.showSuccessToast(this.snippetService.getSnippet('update-minimum-payout-modal.remove-success'));
       }
-      this.modalRef.close(true);
     } catch (err) {
       this.toastService.showErrorToast(err.message);
     }
-  }
-
-  onModalClose() {
-    this.newMinimumPayout = undefined;
-  }
-
-  openModal() {
-    this.newMinimumPayout = this.accountService.account.minimumPayout;
-    this.modalRef = this.modalService.open(this.modal);
-    this.modalRef.result.then(() => {
-      this.onModalClose();
-    }, () => {
-      this.onModalClose();
-    });
   }
 
   get isValidMinimumPayout() {

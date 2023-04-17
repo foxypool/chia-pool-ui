@@ -1,38 +1,31 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
-import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {AccountService} from '../account.service';
 import {SnippetService} from '../snippet.service';
 import {ToastService} from '../toast.service';
 import {PoolsProvider} from '../pools.provider';
 
 @Component({
-  selector: 'app-leave-pool-modal',
-  templateUrl: './leave-pool-modal.component.html',
-  styleUrls: ['./leave-pool-modal.component.scss']
+  selector: 'app-leave-pool',
+  templateUrl: './leave-pool.component.html',
+  styleUrls: ['./leave-pool.component.scss']
 })
-export class LeavePoolModalComponent  {
-  @ViewChild('leavePoolModal') modal;
-
+export class LeavePoolComponent {
   public leaveForEver = false;
-
   public faCircleNotch = faCircleNotch;
 
-  private modalRef: NgbModalRef = null;
-
-  constructor(
+  public constructor(
     public accountService: AccountService,
     public snippetService: SnippetService,
-    private modalService: NgbModal,
     private toastService: ToastService,
     private poolsProvider: PoolsProvider
   ) {}
 
-  get haveCollateral() {
+  public get haveCollateral() {
     return this.accountService.account && this.accountService.account.collateral !== undefined;
   }
 
-  async leaveThePool() {
+  public async leaveThePool() {
     if (this.accountService.isAuthenticating) {
       return;
     }
@@ -51,25 +44,10 @@ export class LeavePoolModalComponent  {
     } catch (err) {
       errorOccurred = true;
       this.toastService.showErrorToast(err.message);
-    } finally {
-      this.modalRef.close(true);
     }
   }
 
-  onModalClose() {
-    this.leaveForEver = false;
-  }
-
-  openModal() {
-    this.modalRef = this.modalService.open(this.modal);
-    this.modalRef.result.then(() => {
-      this.onModalClose();
-    }, () => {
-      this.onModalClose();
-    });
-  }
-
-  get leavePoolGuideUrl() {
+  public get leavePoolGuideUrl() {
     return `https://docs.foxypool.io/proof-of-spacetime/foxy-pool/pools/${this.poolsProvider.poolIdentifier}/getting-started/#leaving-the-pool`;
   }
 }

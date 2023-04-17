@@ -1,0 +1,47 @@
+<ng-template #settingsModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" style="color: #474747">Settings</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-12 col-sm-3 settings-nav">
+        <ul ngbNav #nav="ngbNav" class="nav-pills">
+          <li ngbNavItem="update-name" [destroyOnHide]="true">
+            <a class="text-decoration-none" ngbNavLink>Update name</a>
+            <ng-template ngbNavContent>
+              <app-update-name></app-update-name>
+            </ng-template>
+          </li>
+          <li ngbNavItem="minimum-payout" [destroyOnHide]="true">
+            <a class="text-decoration-none" ngbNavLink>Set min payout</a>
+            <ng-template ngbNavContent>
+              <app-update-minimum-payout></app-update-minimum-payout>
+            </ng-template>
+          </li>
+          <li ngbNavItem="difficulty" [destroyOnHide]="true">
+            <a class="text-decoration-none" ngbNavLink>Difficulty</a>
+            <ng-template ngbNavContent>
+              <app-update-difficulty></app-update-difficulty>
+            </ng-template>
+          </li>
+          <li ngbNavItem="notifications" [destroyOnHide]="true">
+            <a class="text-decoration-none" ngbNavLink>Notifications</a>
+            <ng-template ngbNavContent>
+              <app-update-notification-settings></app-update-notification-settings>
+            </ng-template>
+          </li>
+          <li ngbNavItem="leave-pool" [destroyOnHide]="true" *ngIf="canLeavePool">
+            <a class="text-decoration-none" ngbNavLink>Leave Pool</a>
+            <ng-template ngbNavContent>
+              <app-leave-pool></app-leave-pool>
+            </ng-template>
+          </li>
+        </ul>
+      </div>
+      <div class="col-12 col-sm-9">
+        <div [ngbNavOutlet]="nav"></div>
+      </div>
+    </div>
+  </div>
+</ng-template>

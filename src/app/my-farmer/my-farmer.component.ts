@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {faCircleNotch, faInfoCircle, faUserCheck} from '@fortawesome/free-solid-svg-icons';
+import {faCircleNotch, faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
 import BigNumber from 'bignumber.js';
 import {EChartsOption} from 'echarts';
@@ -14,18 +14,12 @@ import {SnippetService} from '../snippet.service';
 import Capacity from '../capacity';
 import {AccountService} from '../account.service';
 import {AuthenticationModalComponent} from '../authentication-modal/authentication-modal.component';
-import {UpdateNameModalComponent} from '../update-name-modal/update-name-modal.component';
-import {LeavePoolModalComponent} from '../leave-pool-modal/leave-pool-modal.component';
-import {UpdateMinimumPayoutModalComponent} from '../update-minimum-payout-modal/update-minimum-payout-modal.component';
 import {RatesService} from '../rates.service';
 import {ConfigService, DateFormatting} from '../config.service'
 import { getEffortColor } from '../util';
-import {UpdateDifficultyModalComponent} from '../update-difficulty-modal/update-difficulty-modal.component'
-import {
-  UpdateNotificationSettingsModalComponent
-} from '../update-notification-settings-modal/update-notification-settings-modal.component'
 import {PoolsProvider} from '../pools.provider'
 import {AccountHistoricalStat} from '../api.service'
+import {SettingsModalComponent} from '../settings-modal/settings-modal.component'
 
 @Component({
   selector: 'app-my-farmer',
@@ -34,16 +28,11 @@ import {AccountHistoricalStat} from '../api.service'
 })
 export class MyFarmerComponent implements OnInit, OnDestroy {
   @ViewChild(AuthenticationModalComponent) authenticationModal;
-  @ViewChild(UpdateNameModalComponent) updateNameModal;
-  @ViewChild(LeavePoolModalComponent) leavePoolModal;
-  @ViewChild(UpdateMinimumPayoutModalComponent) updateMinimumPayoutModal;
-  @ViewChild(UpdateDifficultyModalComponent) updateDifficultyModal
-  @ViewChild(UpdateNotificationSettingsModalComponent) updateNotificationSettingsModal
+  @ViewChild(SettingsModalComponent) settingsModal;
 
   public poolConfig:any = {};
   public poolPublicKeyInput = null;
   public faCircleNotch = faCircleNotch;
-  public faUserCheck = faUserCheck;
   public faInfoCircle = faInfoCircle;
 
   public ecChartOptions: EChartsOption;
@@ -685,19 +674,6 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     return ecInPib.multipliedBy(this.dailyRewardPerPib).toFixed(4);
   }
 
-  get supportsNotifications(): boolean {
-    return this.poolsProvider.coin === 'CHIA'
-  }
-
-  get canLeavePool() {
-    if (!this.accountService.account) {
-      return false;
-    }
-    const account = this.accountService.account;
-
-    return !account.hasLeftThePool && !account.isCheating
-  }
-
   get canRejoinPool() {
     if (!this.accountService.account) {
       return false;
@@ -714,24 +690,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     this.authenticationModal.openModal();
   }
 
-  async updateName() {
-    this.updateNameModal.openModal();
-  }
-
-  async leavePool() {
-    this.leavePoolModal.openModal();
-  }
-
-  async updateMinimumPayout() {
-    this.updateMinimumPayoutModal.openModal();
-  }
-
-  public updateDifficulty(): void {
-    this.updateDifficultyModal.openModal()
-  }
-
-  public updateNotificationSettings(): void {
-    this.updateNotificationSettingsModal.openModal()
+  async openSettingsModal() {
+    this.settingsModal.openModal();
   }
 
   async rejoinPool() {

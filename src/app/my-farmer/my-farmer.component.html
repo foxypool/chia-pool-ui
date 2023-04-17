@@ -181,39 +181,12 @@
                   &nbsp;&nbsp;<fa-icon style="font-size: 1.5rem" [icon]="faInfoCircle" placement="bottom" [ngbTooltip]="snippetService.getSnippet('my-farmer-component.manage-account-card.auth-info')"></fa-icon>
                 </div>
                 <div class="text-align-center" *ngIf="accountService.haveAuthToken">
-                  <div class="p-1 row">
-                    <div class="col-12 card-font-size">
-                      <fa-icon [icon]="faUserCheck"></fa-icon>&nbsp;{{snippetService.getSnippet('my-farmer-component.manage-account-card.authenticated')}}
-                    </div>
-                  </div>
-                  <div class="p-1 row">
+                  <div class="row p-1">
                     <div class="col-12">
-                      <button class="btn btn-outline-light" (click)="updateName()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.action.update-name')}}</button>
+                      <button class="btn btn-outline-light manage-account-button" (click)="openSettingsModal()">Settings</button>
                     </div>
-                  </div>
-                  <div class="p-1 row">
-                    <div class="col-12">
-                      <button class="btn btn-outline-light" (click)="updateMinimumPayout()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.action.update-minimum-payout')}}</button>
-                    </div>
-                  </div>
-                  <div class="p-1 row">
-                    <div class="col-12">
-                      <button class="btn btn-outline-light" (click)="updateDifficulty()">Update difficulty</button>
-                    </div>
-                  </div>
-                  <div class="p-1 row" *ngIf="supportsNotifications">
-                    <div class="col-12">
-                      <button class="btn btn-outline-light" (click)="updateNotificationSettings()">Notifications</button>
-                    </div>
-                  </div>
-                  <div class="p-1 row" *ngIf="canLeavePool">
-                    <div class="col-12">
-                      <button class="btn btn-outline-light" (click)="leavePool()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.action.leave-pool')}}</button>
-                    </div>
-                  </div>
-                  <div class="p-1 row" *ngIf="canRejoinPool">
-                    <div class="col-12">
-                      <button class="btn btn-outline-light" (click)="rejoinPool()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.action.rejoin-pool')}}</button>
+                    <div class="col-12" *ngIf="canRejoinPool">
+                      <button class="btn btn-outline-light manage-account-button" (click)="rejoinPool()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.action.rejoin-pool')}}</button>
                     </div>
                   </div>
                 </div>
@@ -302,9 +275,5 @@
     </div>
   </div>
 </div>
+<app-settings-modal></app-settings-modal>
 <app-authentication-modal></app-authentication-modal>
-<app-update-name-modal></app-update-name-modal>
-<app-leave-pool-modal></app-leave-pool-modal>
-<app-update-minimum-payout-modal></app-update-minimum-payout-modal>
-<app-update-difficulty-modal></app-update-difficulty-modal>
-<app-update-notification-settings-modal></app-update-notification-settings-modal>

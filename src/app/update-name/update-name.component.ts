@@ -1,30 +1,25 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
-import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {AccountService} from '../account.service';
 import {ToastService} from '../toast.service';
 import {SnippetService} from '../snippet.service';
 
 @Component({
-  selector: 'app-update-name-modal',
-  templateUrl: './update-name-modal.component.html',
-  styleUrls: ['./update-name-modal.component.scss']
+  selector: 'app-update-name',
+  templateUrl: './update-name.component.html',
+  styleUrls: ['./update-name.component.scss']
 })
-export class UpdateNameModalComponent  {
-  @ViewChild('updateNameModal') modal;
-
+export class UpdateNameComponent {
   public newName = null;
-
   public faCircleNotch = faCircleNotch;
-
-  private modalRef: NgbModalRef = null;
 
   constructor(
     public accountService: AccountService,
     public snippetService: SnippetService,
-    private modalService: NgbModal,
     private toastService: ToastService,
-  ) {}
+  ) {
+    this.newName = this.accountService.account.name
+  }
 
   get isNewNameValid(): boolean {
     return !this.newNameOrUndefined || this.newNameOrUndefined.length <= 64;
@@ -61,23 +56,8 @@ export class UpdateNameModalComponent  {
       } else {
         this.toastService.showSuccessToast(this.snippetService.getSnippet('update-name-modal.remove-success'));
       }
-      this.modalRef.close(true);
     } catch (err) {
       this.toastService.showErrorToast(err.message);
     }
-  }
-
-  onModalClose() {
-    this.newName = null;
-  }
-
-  openModal() {
-    this.newName = this.accountService.account.name;
-    this.modalRef = this.modalService.open(this.modal);
-    this.modalRef.result.then(() => {
-      this.onModalClose();
-    }, () => {
-      this.onModalClose();
-    });
   }
 }

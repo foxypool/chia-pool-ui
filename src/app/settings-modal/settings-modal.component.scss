@@ -1,0 +1,12 @@
+@media (min-width: 575px) {
+  .settings-nav {
+    border-right:var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important
+  }
+}
+@media (max-width: 574px) {
+  .settings-nav {
+    border-bottom:var(--bs-border-width) var(--bs-border-style) var(--bs-border-color)!important;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+  }
+}

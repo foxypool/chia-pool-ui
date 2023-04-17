@@ -26,21 +26,22 @@ import { LoadingStateComponent } from './loading-state/loading-state.component';
 import { MyFarmerComponent } from './my-farmer/my-farmer.component';
 import { AuthenticationModalComponent } from './authentication-modal/authentication-modal.component';
 import {ClipboardModule} from 'ngx-clipboard';
-import { UpdateNameModalComponent } from './update-name-modal/update-name-modal.component';
-import { LeavePoolModalComponent } from './leave-pool-modal/leave-pool-modal.component';
-import { UpdateMinimumPayoutModalComponent } from './update-minimum-payout-modal/update-minimum-payout-modal.component';
+import { UpdateNameComponent } from './update-name/update-name.component';
+import { LeavePoolComponent } from './leave-pool-modal/leave-pool.component';
+import { UpdateMinimumPayoutComponent } from './update-minimum-payout/update-minimum-payout.component';
 import {NgxEchartsModule} from 'ngx-echarts';
 import { PoolHistoryComponent } from './pool-history/pool-history.component';
 import { FarmerPayoutHistoryComponent } from './farmer-payout-history/farmer-payout-history.component';
 import { FarmerWonBlocksComponent } from './farmer-won-blocks/farmer-won-blocks.component';
 import { CurrencySelectorComponent } from './currency-selector/currency-selector.component';
-import {UpdateDifficultyModalComponent} from './update-difficulty-modal/update-difficulty-modal.component'
+import {UpdateDifficultyComponent} from './update-difficulty/update-difficulty.component'
 import {
-  UpdateNotificationSettingsModalComponent
-} from './update-notification-settings-modal/update-notification-settings-modal.component';
+  UpdateNotificationSettingsComponent
+} from './update-notification-settings/update-notification-settings.component';
 import { FarmerHarvestersComponent } from './farmer-harvesters/farmer-harvesters.component';
 import { HarvesterCardComponent } from './harvester-card/harvester-card.component';
-import { EditableModule } from '@ngneat/edit-in-place'
+import { EditableModule } from '@ngneat/edit-in-place';
+import { SettingsModalComponent } from './settings-modal/settings-modal.component'
 
 @NgModule({
   declarations: [
@@ -56,17 +57,18 @@ import { EditableModule } from '@ngneat/edit-in-place'
     LoadingStateComponent,
     MyFarmerComponent,
     AuthenticationModalComponent,
-    UpdateNameModalComponent,
-    LeavePoolModalComponent,
-    UpdateMinimumPayoutModalComponent,
-    UpdateDifficultyModalComponent,
-    UpdateNotificationSettingsModalComponent,
+    UpdateNameComponent,
+    LeavePoolComponent,
+    UpdateMinimumPayoutComponent,
+    UpdateDifficultyComponent,
+    UpdateNotificationSettingsComponent,
     PoolHistoryComponent,
     FarmerPayoutHistoryComponent,
     FarmerWonBlocksComponent,
     CurrencySelectorComponent,
     FarmerHarvestersComponent,
     HarvesterCardComponent,
+    SettingsModalComponent,
   ],
   imports: [
     BrowserModule,

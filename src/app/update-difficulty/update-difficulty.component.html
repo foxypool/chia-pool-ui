@@ -1,0 +1,42 @@
+<h5 style="color: #474747">Update your Farmer difficulty</h5>
+<div class="row">
+  <div class="col-12">
+    <div class="form-check form-switch" style="padding-bottom: 0.5rem">
+      <input type="checkbox" class="form-check-input" role="switch" id="isFixedDifficultyCheckbox" [(ngModel)]="isFixedDifficulty">
+      <label class="form-check-label text-color-and-size" for="isFixedDifficultyCheckbox" style="display: inline">Fixed difficulty</label>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <input
+      type="number"
+      class="form-control"
+      id="difficulty"
+      aria-describedby="difficultyFeedback"
+      [placeholder]="currentDifficulty"
+      [min]="1"
+      [class.is-invalid]="!isValidDifficulty"
+      [(ngModel)]="newDifficulty"
+    >
+    <div id="difficultyFeedback" class="invalid-feedback">
+      The difficulty must be an integer number greater or equal to 1.
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <div *ngIf="isFixedDifficulty" class="alert alert-info" role="alert" style="margin-bottom: 0; margin-top: 1rem">
+      <a href="https://xchdata.io/diffcalc" target="_blank">xchdata.io/diffcalc</a> can be used to calculate the optimal fixed difficulty
+    </div>
+  </div>
+</div>
+<div class="row mt-2">
+  <div class="col-12">
+    <button type="button" class="btn btn-success w-100" (click)="updateDifficulty()" [disabled]="!canUpdateDifficulty">
+      <span *ngIf="accountService.isUpdatingAccount">Updating</span>
+      <span *ngIf="!accountService.isUpdatingAccount">Update difficulty</span>
+      <fa-icon [icon]="faCircleNotch" [spin]="true" *ngIf="accountService.isUpdatingAccount" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
+    </button>
+  </div>
+</div>

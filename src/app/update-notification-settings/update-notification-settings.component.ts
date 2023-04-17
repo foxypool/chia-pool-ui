@@ -1,19 +1,16 @@
-import {Component, ViewChild} from '@angular/core'
+import {Component} from '@angular/core'
 import {faCircleNotch} from '@fortawesome/free-solid-svg-icons'
-import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap'
 import {AccountService} from '../account.service'
 import {SnippetService} from '../snippet.service'
 import {ToastService} from '../toast.service'
 import {BigNumber} from 'bignumber.js'
 
 @Component({
-  selector: 'app-update-notification-settings-modal',
-  templateUrl: './update-notification-settings-modal.component.html',
-  styleUrls: ['./update-notification-settings-modal.component.scss'],
+  selector: 'app-update-notification-settings',
+  templateUrl: './update-notification-settings.component.html',
+  styleUrls: ['./update-notification-settings.component.scss'],
 })
-export class UpdateNotificationSettingsModalComponent {
-  @ViewChild('updateNotificationSettingsModal') modal
-
+export class UpdateNotificationSettingsComponent {
   public possibleCapacityDenominators: string[] = ['GiB', 'TiB', 'PiB']
   public selectedCapacityDenominator = 'TiB'
   public faCircleNotch = faCircleNotch
@@ -22,14 +19,16 @@ export class UpdateNotificationSettingsModalComponent {
   public areBlockWonNotificationsEnabled = false
   public arePayoutAddressChangeNotificationsEnabled = false
 
-  private modalRef: NgbModalRef = null
-
   constructor(
     public accountService: AccountService,
     public snippetService: SnippetService,
-    private modalService: NgbModal,
     private toastService: ToastService,
-  ) {}
+  ) {
+    this.newEcLastHourThresholdInGib = this.currentEcLastHourThresholdInGib
+    this.areEcChangeNotificationsEnabled = this.currentAreEcChangeNotificationsEnabled
+    this.areBlockWonNotificationsEnabled = this.currentAreBlockWonNotificationsEnabled
+    this.arePayoutAddressChangeNotificationsEnabled = this.currentArePayoutAddressChangeNotificationsEnabled
+  }
 
   public get newEcLastHourThreshold(): number {
     switch (this.selectedCapacityDenominator) {
@@ -66,7 +65,7 @@ export class UpdateNotificationSettingsModalComponent {
   }
 
   public get canUpdateNotificationSettings(): boolean {
-    return !this.accountService.isUpdatingAccount && this.isValidEcLastHourThreshold
+    return !this.accountService.isUpdatingAccount && this.isValidEcLastHourThreshold && this.areValuesChanged
   }
 
   public async updateNotificationSettings(): Promise<void> {
@@ -81,18 +80,9 @@ export class UpdateNotificationSettingsModalComponent {
         arePayoutAddressChangeNotificationsEnabled: this.arePayoutAddressChangeNotificationsEnabled,
       })
       this.toastService.showSuccessToast('Successfully saved the notification settings')
-      this.modalRef.close(true)
     } catch (err) {
       this.toastService.showErrorToast(err.message)
     }
-  }
-
-  public openModal(): void {
-    this.newEcLastHourThresholdInGib = this.currentEcLastHourThresholdInGib
-    this.areEcChangeNotificationsEnabled = this.currentAreEcChangeNotificationsEnabled
-    this.areBlockWonNotificationsEnabled = this.currentAreBlockWonNotificationsEnabled
-    this.arePayoutAddressChangeNotificationsEnabled = this.currentArePayoutAddressChangeNotificationsEnabled
-    this.modalRef = this.modalService.open(this.modal)
   }
 
   private get currentAreEcChangeNotificationsEnabled(): boolean {
@@ -109,5 +99,19 @@ export class UpdateNotificationSettingsModalComponent {
 
   private get currentEcLastHourThresholdInGib(): number {
     return this.accountService.account.notificationSettings?.ecLastHourThreshold ?? 0
+  }
+
+  private get areValuesChanged(): boolean {
+    if (this.newEcLastHourThresholdInGib !== this.currentEcLastHourThresholdInGib) {
+      return true
+    }
+    if (this.areEcChangeNotificationsEnabled !== this.currentAreEcChangeNotificationsEnabled) {
+      return true
+    }
+    if (this.areBlockWonNotificationsEnabled !== this.currentAreBlockWonNotificationsEnabled) {
+      return true
+    }
+
+    return this.arePayoutAddressChangeNotificationsEnabled !== this.currentArePayoutAddressChangeNotificationsEnabled
   }
 }
