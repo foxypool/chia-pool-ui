@@ -3,6 +3,7 @@ import {StatsService} from './stats.service';
 import {ConfigService} from './config.service';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
+import {BigNumber} from 'bignumber.js'
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +30,7 @@ export class RatesService implements OnDestroy {
     this.subscriptions.map(subscription => subscription.unsubscribe());
   }
 
-  _getCoinValueAsFiat(value) {
+  _getCoinValueAsFiat(value: string|number|null): number {
     if (!this.rates) {
       return 0;
     }
@@ -44,10 +45,10 @@ export class RatesService implements OnDestroy {
       return 0;
     }
 
-    return value * rate;
+    return (new BigNumber(value)).multipliedBy(rate).toNumber()
   }
 
-  public getValuesInFiatFormatted(value: number|null): string {
+  public getValuesInFiatFormatted(value: string|number|null): string {
     const fiatAmount = this._getCoinValueAsFiat(value);
     const decimalPlaces = this._getDecimalPlaces(fiatAmount);
 

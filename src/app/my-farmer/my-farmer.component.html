@@ -26,14 +26,19 @@
               <div class="card-body text-align-center card-font-size card-body-with-progress-bar">
                 <span placement="bottom" ngbTooltip="{{ratesService.getValuesInFiatFormatted(accountService.account.pendingRounded)}}">{{accountService.account.pendingRounded}} {{poolConfig.ticker}}</span>
               </div>
+              <ng-template #pendingProgressTooltipContent>
+                <span class="color-green">{{pendingProgressRaw.toFixed(2)}}%</span> of the minimum payout reached.
+                <span *ngIf="pendingProgress < 100 && isCollateralFilledOrNonExistent">The minimum payout will be reached <span class="color-green">{{timeTillMinimumPayoutReached}}</span>.</span>
+                <span *ngIf="pendingProgress === 100">Your pending balance will be paid out in the next payout <span class="color-green">{{timeTillNextPayout}}</span></span>
+              </ng-template>
               <ngb-progressbar
                 class="card-progress-bar"
-                type="primary"
+                [type]="pendingProgress < 100 ? 'primary' : 'success'"
                 [striped]="false"
                 [animated]="false"
                 [value]="pendingProgress"
                 placement="bottom"
-                [ngbTooltip]="snippetService.getSnippet('my-farmer-component.pending-balance-card.progress.help', pendingProgressRaw.toFixed(2))"
+                [ngbTooltip]="pendingProgressTooltipContent"
               ></ngb-progressbar>
             </div>
           </div>
@@ -117,14 +122,18 @@
               <div class="card-body text-align-center card-font-size card-body-with-progress-bar">
                 <span placement="bottom" ngbTooltip="{{ratesService.getValuesInFiatFormatted(accountService.account.collateralRounded)}}">{{accountService.account.collateralRounded}} {{poolConfig.ticker}}</span>
               </div>
+              <ng-template #collateralProgressTooltipContent>
+                <span class="color-green">{{collateralProgressRaw.toFixed(2)}}%</span> of your collateral reached.
+                <span *ngIf="collateralProgress < 100">The collateral will be reached <span class="color-green">{{timeTillCollateralReached}}</span>.</span>
+              </ng-template>
               <ngb-progressbar
                 class="card-progress-bar"
-                type="primary"
+                [type]="collateralProgress < 100 ? 'primary' : 'success'"
                 [striped]="false"
                 [animated]="false"
                 [value]="collateralProgress"
                 placement="bottom"
-                [ngbTooltip]="snippetService.getSnippet('my-farmer-component.collateral-balance-card.progress.help', collateralProgress.toFixed(2))"
+                [ngbTooltip]="collateralProgressTooltipContent"
               ></ngb-progressbar>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {faCircleNotch, faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import * as moment from 'moment';
-import BigNumber from 'bignumber.js';
+import {BigNumber} from 'bignumber.js';
 import {EChartsOption} from 'echarts';
 import {YAXisOption} from 'echarts/types/dist/shared'
 import {ActivatedRoute, Router} from '@angular/router';
@@ -485,7 +485,26 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   public get pendingProgress(): number {
     const progress = this.pendingProgressRaw;
 
-    return Math.min(progress, 100);
+    return Math.min(progress, 100)
+  }
+
+  public get timeTillMinimumPayoutReached(): string {
+    const remainingAmount = (new BigNumber(this.minimumPayout)).minus(this.accountService.account.pendingBN)
+    if (remainingAmount.isLessThanOrEqualTo(0)) {
+      return 'now'
+    }
+    const remainingHours = remainingAmount.dividedBy(this.estimatedDailyRewardBN).multipliedBy(24)
+
+    return moment.duration(remainingHours.toNumber(), 'hours').humanize(true)
+  }
+
+  public get timeTillNextPayout(): string {
+    let payoutDate = moment().utc().set({ hours: 12, minutes: 0, seconds: 0, milliseconds: 0 })
+    if (moment().isAfter(payoutDate)) {
+      payoutDate = payoutDate.add(1, 'day')
+    }
+
+    return payoutDate.fromNow()
   }
 
   public get collateralProgressRaw(): number {
@@ -503,6 +522,27 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     const progress = this.collateralProgressRaw;
 
     return Math.min(progress, 100);
+  }
+
+  public get timeTillCollateralReached(): string {
+    if (this.poolConfig.poolRewardPortion === undefined || this.accountService.account === null) {
+      return 'N/A'
+    }
+    const remainingAmount = (new BigNumber(this.poolConfig.poolRewardPortion)).minus(this.accountService.account.collateralBN)
+    if (remainingAmount.isLessThanOrEqualTo(0)) {
+      return 'now'
+    }
+    const remainingHours = remainingAmount.dividedBy(this.estimatedDailyRewardBN).multipliedBy(24)
+
+    return moment.duration(remainingHours.toNumber(), 'hours').humanize(true)
+  }
+
+  public get isCollateralFilledOrNonExistent(): boolean {
+    if (this.accountService.account === null || this.accountService.account.collateral === undefined) {
+      return true
+    }
+
+    return this.collateralProgress === 100
   }
 
   private makeEcChartUpdateOptions(historicalStats: AccountHistoricalStat[]): EChartsOption {
@@ -665,13 +705,17 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     return ((this.accountService.account.ec / this.poolEc) * 100).toFixed(2);
   }
 
-  get estimatedDailyReward() {
-    if (!this.accountService.account || !this.dailyRewardPerPib) {
-      return 0;
-    }
-    const ecInPib = (new BigNumber(this.accountService.account.ec)).dividedBy((new BigNumber(1024).exponentiatedBy(2)));
+  public get estimatedDailyReward(): string {
+    return this.estimatedDailyRewardBN.toFixed(4)
+  }
 
-    return ecInPib.multipliedBy(this.dailyRewardPerPib).toFixed(4);
+  private get estimatedDailyRewardBN(): BigNumber {
+    if (!this.accountService.account || !this.dailyRewardPerPib) {
+      return new BigNumber(0)
+    }
+    const ecInPib = (new BigNumber(this.accountService.account.ec)).dividedBy((new BigNumber(1024).exponentiatedBy(2)))
+
+    return ecInPib.multipliedBy(this.dailyRewardPerPib)
   }
 
   get canRejoinPool() {
