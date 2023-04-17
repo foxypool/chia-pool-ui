@@ -181,12 +181,12 @@
                   &nbsp;&nbsp;<fa-icon style="font-size: 1.5rem" [icon]="faInfoCircle" placement="bottom" [ngbTooltip]="snippetService.getSnippet('my-farmer-component.manage-account-card.auth-info')"></fa-icon>
                 </div>
                 <div class="text-align-center" *ngIf="accountService.haveAuthToken">
-                  <div class="row p-1">
-                    <div class="col-12">
+                  <div class="row">
+                    <div class="col-12 p-1">
                       <button class="btn btn-outline-light manage-account-button" (click)="openSettingsModal()">Settings</button>
                     </div>
-                    <div class="col-12" *ngIf="canRejoinPool">
-                      <button class="btn btn-outline-light manage-account-button" (click)="rejoinPool()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.action.rejoin-pool')}}</button>
+                    <div class="col-12 p-1" *ngIf="canRejoinPool">
+                      <button class="btn btn-outline-success manage-account-button" (click)="rejoinPool()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.action.rejoin-pool')}}</button>
                     </div>
                   </div>
                 </div>
