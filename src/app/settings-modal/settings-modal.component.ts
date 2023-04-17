@@ -17,10 +17,6 @@ export class SettingsModalComponent {
     private modalService: NgbModal,
   ) {}
 
-  public get navOrientation(): 'horizontal' | 'vertical' {
-    return window.innerWidth < 575 ? 'horizontal' : 'vertical'
-  }
-
   public openModal(): void {
     this.modalRef = this.modalService.open(this.modal, { windowClass: 'settings-modal' })
   }
