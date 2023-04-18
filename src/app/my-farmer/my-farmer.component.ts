@@ -308,7 +308,6 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     this.totalInvalidSharesPercentage = sharesStream.pipe(map(stream => stream.totalInvalidShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100).toFixed(2)), shareReplay())
     this.totalStaleShares = sharesStream.pipe(map(stream => stream.totalStaleShares.toNumber().toLocaleString('en')), shareReplay())
     this.totalStaleSharesPercentage = sharesStream.pipe(map(stream => stream.totalStaleShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100).toFixed(2)), shareReplay())
-
   }
 
   public ngOnDestroy(): void {
@@ -493,6 +492,9 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     if (remainingAmount.isLessThanOrEqualTo(0)) {
       return 'now'
     }
+    if (this.estimatedDailyRewardBN.isZero()) {
+      return 'in unknown time'
+    }
     const remainingHours = remainingAmount.dividedBy(this.estimatedDailyRewardBN).multipliedBy(24)
 
     return moment.duration(remainingHours.toNumber(), 'hours').humanize(true)
@@ -531,6 +533,9 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     const remainingAmount = (new BigNumber(this.poolConfig.poolRewardPortion)).minus(this.accountService.account.collateralBN)
     if (remainingAmount.isLessThanOrEqualTo(0)) {
       return 'now'
+    }
+    if (this.estimatedDailyRewardBN.isZero()) {
+      return 'in unknown time'
     }
     const remainingHours = remainingAmount.dividedBy(this.estimatedDailyRewardBN).multipliedBy(24)
 
