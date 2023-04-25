@@ -20,6 +20,7 @@ import { getEffortColor } from '../util';
 import {PoolsProvider} from '../pools.provider'
 import {AccountHistoricalStat} from '../api.service'
 import {SettingsModalComponent} from '../settings-modal/settings-modal.component'
+import {RankInfo} from '../types'
 
 @Component({
   selector: 'app-my-farmer',
@@ -435,6 +436,130 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
   public getEffortColor(effort: BigNumber | null): string {
     return getEffortColor(effort)
+  }
+
+  public get tenureRankInfo(): RankInfo|undefined {
+    if (this.accountService.account === null) {
+      return
+    }
+    const farmingSince = this.accountService.account.rejoinedAt || this.accountService.account.createdAt
+    if (moment().diff(farmingSince, 'years') >= 3) {
+      return {
+        imageFileName: '3-years.png',
+        imageAlt: '3+ years farming',
+      }
+    }
+    if (moment().diff(farmingSince, 'years') >= 2) {
+      return {
+        imageFileName: '2-years.png',
+        imageAlt: '2+ years farming',
+      }
+    }
+    if (moment().diff(farmingSince, 'years') >= 1) {
+      return {
+        imageFileName: '1-year.png',
+        imageAlt: '1+ years farming',
+      }
+    }
+    if (moment().diff(farmingSince, 'months') >= 6) {
+      return {
+        imageFileName: '6-months.png',
+        imageAlt: '6+ months farming',
+      }
+    }
+    if (moment().diff(farmingSince, 'months') >= 3) {
+      return {
+        imageFileName: '3-months.png',
+        imageAlt: '3+ months farming',
+      }
+    }
+    if (moment().diff(farmingSince, 'months') >= 2) {
+      return {
+        imageFileName: '2-months.png',
+        imageAlt: '2+ months farming',
+      }
+    }
+    if (moment().diff(farmingSince, 'months') >= 1) {
+      return {
+        imageFileName: '1-month.png',
+        imageAlt: '1+ months farming',
+      }
+    }
+
+    return {
+      imageFileName: 'less-than-a-month.png',
+      imageAlt: 'farming for less than a month',
+    }
+  }
+
+  public get capacityRankInfo(): RankInfo|undefined {
+    if (this.accountService.account === null) {
+      return
+    }
+    const capacityInTib = new BigNumber(this.accountService.account.ec).dividedBy(1024)
+    const capacityInPib = capacityInTib.dividedBy(1024)
+    if (capacityInPib.isGreaterThanOrEqualTo(10)) {
+      return {
+        imageFileName: '10-pib.png',
+        imageAlt: '10+ PiB',
+      }
+    }
+    if (capacityInPib.isGreaterThanOrEqualTo(5)) {
+      return {
+        imageFileName: '5-pib.png',
+        imageAlt: '5+ PiB',
+      }
+    }
+    if (capacityInPib.isGreaterThanOrEqualTo(1)) {
+      return {
+        imageFileName: '1-pib.png',
+        imageAlt: '1+ PiB',
+      }
+    }
+    if (capacityInTib.isGreaterThanOrEqualTo(500)) {
+      return {
+        imageFileName: '500-tib.png',
+        imageAlt: '500+ TiB',
+      }
+    }
+    if (capacityInTib.isGreaterThanOrEqualTo(250)) {
+      return {
+        imageFileName: '250-tib.png',
+        imageAlt: '250+ TiB',
+      }
+    }
+    if (capacityInTib.isGreaterThanOrEqualTo(100)) {
+      return {
+        imageFileName: '100-tib.png',
+        imageAlt: '100+ TiB',
+      }
+    }
+    if (capacityInTib.isGreaterThanOrEqualTo(50)) {
+      return {
+        imageFileName: '50-tib.png',
+        imageAlt: '50+ TiB',
+      }
+    }
+    if (capacityInTib.isGreaterThanOrEqualTo(10)) {
+      return {
+        imageFileName: '10-tib.png',
+        imageAlt: '10+ TiB',
+      }
+    }
+    if (capacityInTib.isGreaterThan(0)) {
+      return {
+        imageFileName: 'less-than-10-tib.png',
+        imageAlt: 'less than 10 TiB',
+      }
+    }
+  }
+
+  public get joinedFirstYear(): boolean {
+    if (this.accountService.account === null) {
+      return false
+    }
+
+    return moment(this.accountService.account.createdAt).isBefore('2022-06-13T00:00:00.000Z')
   }
 
   private get shareChartTopMargin(): number {

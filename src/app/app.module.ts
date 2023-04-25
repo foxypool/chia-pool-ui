@@ -42,6 +42,7 @@ import { FarmerHarvestersComponent } from './farmer-harvesters/farmer-harvesters
 import { HarvesterCardComponent } from './harvester-card/harvester-card.component';
 import { EditableModule } from '@ngneat/edit-in-place';
 import { SettingsModalComponent } from './settings-modal/settings-modal.component'
+import {NgOptimizedImage} from '@angular/common'
 
 @NgModule({
   declarations: [
@@ -93,6 +94,7 @@ import { SettingsModalComponent } from './settings-modal/settings-modal.componen
       registrationStrategy: 'registerWhenStable:30000'
     }),
     EditableModule,
+    NgOptimizedImage,
   ],
   providers: [
     WINDOW_PROVIDERS,

@@ -14,3 +14,8 @@ interface VersionInfo {
   localName2: string|null
   localVersion2: string|null
 }
+
+export interface RankInfo {
+  imageFileName: string
+  imageAlt: string
+}
