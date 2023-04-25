@@ -33,8 +33,8 @@
         <button class="btn btn-outline-light" (click)="openSettingsModal()">Settings</button>
       </div>
     </div>
-    <div class="row row-cols-xxl-5">
-      <div class="p-1 col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl col-xxxl-4">
+    <div class="row row-cols-xxl-5" [ngClass]="rowClasses">
+      <div class="p-1 col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl col-xxxl-4 col-xxxxl col-xxxxxl">
         <div class="card">
           <div class="card-header text-align-center">
             <h5>{{snippetService.getSnippet('my-farmer-component.pending-balance-card.title')}}</h5>
@@ -57,7 +57,7 @@
           ></ngb-progressbar>
         </div>
       </div>
-      <div class="p-1 col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl col-xxxl-4">
+      <div class="p-1 col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl col-xxxl-4 col-xxxxl col-xxxxxl">
         <div class="card">
           <div class="card-header text-align-center">
             <h5>{{snippetService.getSnippet('my-farmer-component.estimated-daily-reward-card.title')}}</h5>
@@ -72,7 +72,7 @@
           </div>
         </div>
       </div>
-      <div class="p-1 col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl col-xxxl-4">
+      <div class="p-1 col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl col-xxxl-4 col-xxxxl col-xxxxxl">
         <div class="card">
           <div class="card-header text-align-center">
             <h5>Effective Capacity</h5>
@@ -87,7 +87,7 @@
           </div>
         </div>
       </div>
-      <div class="p-1 col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl col-xxxl-4">
+      <div class="p-1 col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl col-xxxl-4 col-xxxxl col-xxxxxl">
         <div class="card">
           <div class="card-header text-align-center">
             <h5>{{snippetService.getSnippet('my-farmer-component.last-partial-accepted-card.title')}}</h5>
@@ -97,7 +97,7 @@
           </div>
         </div>
       </div>
-      <div class="p-1 col-12 col-sm-6 col-md-8 col-lg-6 col-xl-6 col-xxl-5 order-xxl-last col-xxxl-12">
+      <div class="p-1 col-12 col-sm-6 col-md-8 col-lg-6 col-xl-6 col-xxl-6 order-xxl-last col-xxxl-12 col-xxxxl-8 col-xxxxxl-6">
         <div class="card">
           <div class="card-header text-align-center">
             <h5>{{snippetService.getSnippet('my-farmer-component.payout-address-card.title')}}</h5>
@@ -107,7 +107,7 @@
           </div>
         </div>
       </div>
-      <div class="p-1 col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl col-xxxl-4">
+      <div class="p-1 col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl col-xxxl-4 col-xxxxl col-xxxxxl">
         <div class="card">
           <div class="card-header text-align-center">
             <h5>Current Effort</h5>
@@ -122,7 +122,7 @@
           </div>
         </div>
       </div>
-      <div class="p-1 col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl col-xxxl-4">
+      <div class="p-1 col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl-2 col-xxxl-4 col-xxxxl col-xxxxxl">
         <div class="card">
           <div class="card-header text-align-center">
             <h5>Average Effort</h5>
@@ -137,7 +137,7 @@
           </div>
         </div>
       </div>
-      <div class="p-1 col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl col-xxxl-4" *ngIf="accountService.account.collateral">
+      <div class="p-1 col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl-2 col-xxxl-4 col-xxxxl col-xxxxxl" *ngIf="accountService.account.collateral">
         <div class="card">
           <div class="card-header text-align-center">
             <h5>{{snippetService.getSnippet('my-farmer-component.collateral-balance-card.title')}}</h5>
@@ -164,7 +164,7 @@
           ></ngb-progressbar>
         </div>
       </div>
-      <div class="p-1 col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl col-xxxl-4">
+      <div class="p-1 col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl-2 col-xxxl-4 col-xxxxl col-xxxxxl">
         <div class="card">
           <div class="card-header text-align-center">
             <h5>{{snippetService.getSnippet('my-farmer-component.difficulty-card.title')}}</h5>

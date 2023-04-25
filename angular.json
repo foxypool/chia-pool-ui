@@ -30,7 +30,8 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.scss",
               "src/bootstrap-xxxl.css",
-              "src/bootstrap-xxxxl.css"
+              "src/bootstrap-xxxxl.css",
+              "src/bootstrap-xxxxxl.css"
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [],

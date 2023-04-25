@@ -443,6 +443,14 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     ]);
   }
 
+  public get rowClasses(): string[] {
+    const xxxxlColumns = this.accountService.account?.collateral !== undefined ? 8 : 7
+
+    return [
+      `row-cols-xxxxl-${xxxxlColumns}`,
+    ]
+  }
+
   public get currentEffort(): BigNumber | null {
     if (this.accountService.accountWonBlocks.value.length === 0 || !this.accountService.account.ec || !this.currentHeight || !this.networkSpaceInTiB) {
       return null

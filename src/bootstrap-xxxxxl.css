@@ -1,229 +1,229 @@
-@media (min-width: 2100px) {
-  .col-xxxxl-24 {
+@media (min-width: 3000px) {
+  .col-xxxxxl-24 {
     flex: 0 0 auto;
     width: 100% !important;
   }
 
-  .col-xxxxl-23 {
+  .col-xxxxxl-23 {
     flex: 0 0 auto;
     width: 95.83333333% !important;
   }
 
-  .col-xxxxl-22 {
+  .col-xxxxxl-22 {
     flex: 0 0 auto;
     width: 91.66666667% !important;
   }
 
-  .col-xxxxl-21 {
+  .col-xxxxxl-21 {
     flex: 0 0 auto;
     width: 87.5% !important;
   }
 
-  .col-xxxxl-20 {
+  .col-xxxxxl-20 {
     flex: 0 0 auto;
     width: 83.33333333% !important;
   }
 
-  .col-xxxxl-19 {
+  .col-xxxxxl-19 {
     flex: 0 0 auto;
     width: 79.16666666% !important;
   }
 
-  .col-xxxxl-18 {
+  .col-xxxxxl-18 {
     flex: 0 0 auto;
     width: 75% !important;
   }
 
-  .col-xxxxl-17 {
+  .col-xxxxxl-17 {
     flex: 0 0 auto;
     width: 70.83333333% !important;
   }
 
-  .col-xxxxl-16 {
+  .col-xxxxxl-16 {
     flex: 0 0 auto;
     width: 66.66666667% !important;
   }
 
-  .col-xxxxl-15 {
+  .col-xxxxxl-15 {
     flex: 0 0 auto;
     width: 62.5% !important;
   }
 
-  .col-xxxxl-14 {
+  .col-xxxxxl-14 {
     flex: 0 0 auto;
     width: 58.33333333% !important;
   }
 
-  .col-xxxxl-13 {
+  .col-xxxxxl-13 {
     flex: 0 0 auto;
     width: 54.16666666% !important;
   }
 
-  .col-xxxxl-12 {
+  .col-xxxxxl-12 {
     flex: 0 0 auto;
     width: 50% !important;
   }
 
-  .col-xxxxl-11 {
+  .col-xxxxxl-11 {
     flex: 0 0 auto;
     width: 45.83333333% !important;
   }
 
-  .col-xxxxl-10 {
+  .col-xxxxxl-10 {
     flex: 0 0 auto;
     width: 41.66666667% !important;
   }
 
-  .col-xxxxl-9 {
+  .col-xxxxxl-9 {
     flex: 0 0 auto;
     width: 37.5% !important;
   }
 
-  .col-xxxxl-8 {
+  .col-xxxxxl-8 {
     flex: 0 0 auto;
     width: 33.33333333% !important;
   }
 
-  .col-xxxxl-7 {
+  .col-xxxxxl-7 {
     flex: 0 0 auto;
     width: 29.16666666% !important;
   }
 
-  .col-xxxxl-6 {
+  .col-xxxxxl-6 {
     flex: 0 0 auto;
     width: 25% !important;
   }
 
-  .col-xxxxl-5 {
+  .col-xxxxxl-5 {
     flex: 0 0 auto;
     width: 20.83333333% !important;
   }
 
-  .col-xxxxl-4 {
+  .col-xxxxxl-4 {
     flex: 0 0 auto;
     width: 16.66666667% !important;
   }
 
-  .col-xxxxl-3 {
+  .col-xxxxxl-3 {
     flex: 0 0 auto;
     width: 12.5% !important;
   }
 
-  .col-xxxxl-2 {
+  .col-xxxxxl-2 {
     flex: 0 0 auto;
     width: 8.33333333% !important;
   }
 
-  .col-xxxxl-1 {
+  .col-xxxxxl-1 {
     flex: 0 0 auto;
     width: 4.16666666% !important;
   }
 
-  .order-xxxxl-first {
+  .order-xxxxxl-first {
     order: -1
   }
 
-  .order-xxxxl-last {
+  .order-xxxxxl-last {
     order: 13
   }
 
-  .order-xxxxl-0 {
+  .order-xxxxxl-0 {
     order: 0
   }
 
-  .order-xxxxl-1 {
+  .order-xxxxxl-1 {
     order: 1
   }
 
-  .order-xxxxl-2 {
+  .order-xxxxxl-2 {
     order: 2
   }
 
-  .order-xxxxl-3 {
+  .order-xxxxxl-3 {
     order: 3
   }
 
-  .order-xxxxl-4 {
+  .order-xxxxxl-4 {
     order: 4
   }
 
-  .order-xxxxl-5 {
+  .order-xxxxxl-5 {
     order: 5
   }
 
-  .order-xxxxl-6 {
+  .order-xxxxxl-6 {
     order: 6
   }
 
-  .order-xxxxl-7 {
+  .order-xxxxxl-7 {
     order: 7
   }
 
-  .order-xxxxl-8 {
+  .order-xxxxxl-8 {
     order: 8
   }
 
-  .order-xxxxl-9 {
+  .order-xxxxxl-9 {
     order: 9
   }
 
-  .order-xxxxl-10 {
+  .order-xxxxxl-10 {
     order: 10
   }
 
-  .order-xxxxl-11 {
+  .order-xxxxxl-11 {
     order: 11
   }
 
-  .order-xxxxl-12 {
+  .order-xxxxxl-12 {
     order: 12
   }
 
-  .col-xxxxl{
+  .col-xxxxxl{
     flex:1 0 0%;
   }
 
-  .row-cols-xxxxl-auto > * {
+  .row-cols-xxxxxl-auto > * {
     flex: 0 0 auto;
     width: auto
   }
 
-  .row-cols-xxxxl-1 > * {
+  .row-cols-xxxxxl-1 > * {
     flex: 0 0 auto;
     width: 100%
   }
 
-  .row-cols-xxxxl-2 > * {
+  .row-cols-xxxxxl-2 > * {
     flex: 0 0 auto;
     width: 50%
   }
 
-  .row-cols-xxxxl-3 > * {
+  .row-cols-xxxxxl-3 > * {
     flex: 0 0 auto;
     width: 33.3333333333%
   }
 
-  .row-cols-xxxxl-4 > * {
+  .row-cols-xxxxxl-4 > * {
     flex: 0 0 auto;
     width: 25%
   }
 
-  .row-cols-xxxxl-5 > * {
+  .row-cols-xxxxxl-5 > * {
     flex: 0 0 auto;
     width: 20%
   }
 
-  .row-cols-xxxxl-6 > * {
+  .row-cols-xxxxxl-6 > * {
     flex: 0 0 auto;
     width: 16.6666666667%
   }
 
-  .row-cols-xxxxl-7 > * {
+  .row-cols-xxxxxl-7 > * {
     flex: 0 0 auto;
     width: 14.2857142857%
   }
 
-  .row-cols-xxxxl-8 > * {
+  .row-cols-xxxxxl-8 > * {
     flex: 0 0 auto;
     width: 12.5%
   }
