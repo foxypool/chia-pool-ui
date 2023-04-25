@@ -19,8 +19,8 @@
       <div class="col-12 col-md">
         <div>
           <span *ngIf="accountService.account.name !== undefined" class="mb-0 fw-light fs-2">{{accountService.account.name}}</span>
-          <img *ngIf="tenureRankInfo" ngSrc="assets/tenure-ranks/{{tenureRankInfo.imageFileName}}" height="32" width="32" [alt]="tenureRankInfo.imageAlt" [ngbTooltip]="tenureRankInfo.imageAlt" class="ms-2" style="margin-top: -0.8em">
-          <img *ngIf="capacityRankInfo" ngSrc="assets/capacity-ranks/{{capacityRankInfo.imageFileName}}" height="32" width="32" [alt]="capacityRankInfo.imageAlt" [ngbTooltip]="capacityRankInfo.imageAlt" class="ms-2" style="margin-top: -0.8em">
+          <img *ngIf="tenureRankInfo" src="assets/tenure-ranks/{{tenureRankInfo.imageFileName}}" loading="lazy" height="32" width="32" [alt]="tenureRankInfo.imageAlt" [ngbTooltip]="tenureRankInfo.imageAlt" class="ms-2" style="margin-top: -0.8em">
+          <img *ngIf="capacityRankInfo" src="assets/capacity-ranks/{{capacityRankInfo.imageFileName}}" loading="lazy" height="32" width="32" [alt]="capacityRankInfo.imageAlt" [ngbTooltip]="capacityRankInfo.imageAlt" class="ms-2" style="margin-top: -0.8em">
           <img *ngIf="joinedFirstYear" ngSrc="assets/joined-first-year.png" height="32" width="32" alt="Year 1 member" ngbTooltip="Year 1 member" class="ms-2" style="margin-top: -0.8em">
         </div>
         <div class="fw-light fs-5 text-break">{{accountService.account.poolPublicKey}}</div>
