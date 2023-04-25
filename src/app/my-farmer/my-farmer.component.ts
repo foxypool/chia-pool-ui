@@ -478,7 +478,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   public get tenureRankInfo(): RankInfo|undefined {
-    if (this.accountService.account === null) {
+    if (this.accountService.account === null || this.accountService.account.hasLeftThePool || this.accountService.account.isCheating) {
       return
     }
     const farmingSince = this.accountService.account.rejoinedAt || this.accountService.account.createdAt
@@ -527,7 +527,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
     return {
       imageFileName: 'less-than-a-month.png',
-      imageAlt: 'farming for less than a month',
+      imageAlt: 'Farming for less than a month',
     }
   }
 
