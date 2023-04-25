@@ -122,6 +122,21 @@
           </div>
         </div>
       </div>
+      <div class="p-1 col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl col-xxxl-4">
+        <div class="card">
+          <div class="card-header text-align-center">
+            <h5>Average Effort</h5>
+            <fa-icon
+              [icon]="faInfoCircle"
+              ngbTooltip="The average effort is aggregated over your last 20 block win efforts"
+              class="header-info-icon"
+            ></fa-icon>
+          </div>
+          <div class="card-body text-align-center card-font-size">
+            <span [class]="averageEffortColorClass | async">{{averageEffortFormatted | async}}</span>
+          </div>
+        </div>
+      </div>
       <div class="p-1 col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl col-xxxl-4" *ngIf="accountService.account.collateral">
         <div class="card">
           <div class="card-header text-align-center">

@@ -59,6 +59,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   public payoutDateFormattingObservable: Observable<DateFormatting>
   public selectedCurrencyObservable: Observable<string>
   public exchangeStatsObservable: Observable<unknown>
+  public averageEffortFormatted: Observable<string>
+  public averageEffortColorClass: Observable<string>
 
   private poolEc = 0;
   private dailyRewardPerPib = 0;
@@ -309,6 +311,35 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     this.totalInvalidSharesPercentage = sharesStream.pipe(map(stream => stream.totalInvalidShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100).toFixed(2)), shareReplay())
     this.totalStaleShares = sharesStream.pipe(map(stream => stream.totalStaleShares.toNumber().toLocaleString('en')), shareReplay())
     this.totalStaleSharesPercentage = sharesStream.pipe(map(stream => stream.totalStaleShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100).toFixed(2)), shareReplay())
+    const averageEffort: Observable<BigNumber|undefined> = this.accountService
+      .accountWonBlocks
+      .pipe(
+        map(accountWonBlocks => {
+          if (accountWonBlocks.length === 0) {
+            return
+          }
+          const blocksWithEffort = accountWonBlocks.filter(block => block.effort !== null)
+
+          return blocksWithEffort
+            .reduce((acc, curr) => acc.plus(curr.effort), new BigNumber(0))
+            .dividedBy(blocksWithEffort.length)
+        }),
+        shareReplay(),
+      )
+    this.averageEffortFormatted = averageEffort.pipe(
+      map(averageEffort => {
+        if (averageEffort === undefined) {
+          return 'N/A'
+        }
+
+        return `${averageEffort.multipliedBy(100).toFixed(2)} %`
+      }),
+      shareReplay(),
+    )
+    this.averageEffortColorClass = averageEffort.pipe(
+      map(averageEffort => getEffortColor(averageEffort)),
+      shareReplay(),
+    )
   }
 
   public ngOnDestroy(): void {
