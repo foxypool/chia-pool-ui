@@ -15,192 +15,142 @@
     </div>
   </div>
   <div class="col-12" *ngIf="accountService.havePoolPublicKey && accountService.haveAccount">
-    <div class="row">
-      <div class="p-1 col-md-12 col-lg-9 col-xxxl-20">
-        <div class="row row-without-margin">
-          <div class="p-1 col-md-6 col-lg-6 col-xxxl-6">
-            <div class="card">
-              <div class="card-header text-align-center">
-                <h5>{{snippetService.getSnippet('my-farmer-component.pending-balance-card.title')}}</h5>
-              </div>
-              <div class="card-body text-align-center card-font-size card-body-with-progress-bar">
-                <span placement="bottom" ngbTooltip="{{ratesService.getValuesInFiatFormatted(accountService.account.pendingRounded)}}">{{accountService.account.pendingRounded}} {{poolConfig.ticker}}</span>
-              </div>
-              <ng-template #pendingProgressTooltipContent>
-                <span class="color-green">{{pendingProgressRaw.toFixed(2)}}%</span> of the minimum payout reached.
-                <span *ngIf="pendingProgress < 100 && isCollateralFilledOrNonExistent">The minimum payout will be reached <span class="color-green">{{timeTillMinimumPayoutReached}}</span>.</span>
-                <span *ngIf="pendingProgress === 100">Your pending balance will be paid out in the next payout <span class="color-green">{{timeTillNextPayout}}</span></span>
-              </ng-template>
-              <ngb-progressbar
-                class="card-progress-bar"
-                [type]="pendingProgress < 100 ? 'primary' : 'success'"
-                [striped]="false"
-                [animated]="false"
-                [value]="pendingProgress"
-                placement="bottom"
-                [ngbTooltip]="pendingProgressTooltipContent"
-              ></ngb-progressbar>
-            </div>
+    <div class="row mb-1">
+      <div class="col-12 col-md">
+        <h4 *ngIf="accountService.account.name !== undefined" class="mb-0 fw-light fs-2">{{accountService.account.name}}</h4>
+        <span class="fw-light fs-5 text-break">{{accountService.account.poolPublicKey}}</span>
+      </div>
+      <div class="col-12 col-md-auto my-auto action-box" *ngIf="!accountService.haveAuthToken">
+        <button class="btn btn-success" (click)="authenticate()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.authenticate')}}</button>
+      </div>
+      <div class="col-12 col-md-auto my-auto action-box" *ngIf="accountService.haveAuthToken">
+        <button *ngIf="canRejoinPool" class="btn btn-success me-2" (click)="rejoinPool()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.action.rejoin-pool')}}</button>
+        <button class="btn btn-outline-light" (click)="openSettingsModal()">Settings</button>
+      </div>
+    </div>
+    <div class="row row-cols-xxl-5">
+      <div class="p-1 col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl col-xxxl-4">
+        <div class="card">
+          <div class="card-header text-align-center">
+            <h5>{{snippetService.getSnippet('my-farmer-component.pending-balance-card.title')}}</h5>
           </div>
-          <div class="p-1 col-md-6 col-lg-6 col-xxxl-6">
-            <div class="card">
-              <div class="card-header text-align-center">
-                <h5>{{snippetService.getSnippet('my-farmer-component.estimated-daily-reward-card.title')}}</h5>
-                <fa-icon
-                  [icon]="faInfoCircle"
-                  [ngbTooltip]="snippetService.getSnippet('my-farmer-component.estimated-daily-reward-card.help')"
-                  placement="bottom"
-                  class="header-info-icon"
-                ></fa-icon>
-              </div>
-              <div class="card-body text-align-center card-font-size">
-                <span placement="bottom" ngbTooltip="{{ratesService.getValuesInFiatFormatted(estimatedDailyReward)}}">{{estimatedDailyReward}} {{poolConfig.ticker}}</span>
-              </div>
-            </div>
+          <div class="card-body text-align-center card-font-size card-body-with-progress-bar">
+            <span ngbTooltip="{{ratesService.getValuesInFiatFormatted(accountService.account.pendingRounded)}}">{{accountService.account.pendingRounded}} {{poolConfig.ticker}}</span>
           </div>
-          <div class="p-1 col-md-6 col-lg-6 col-xxxl-6">
-            <div class="card">
-              <div class="card-header text-align-center">
-                <h5>Average Effective Capacity</h5>
-                <fa-icon
-                  [icon]="faInfoCircle"
-                  [ngbTooltip]="snippetService.getSnippet('my-farmer-component.ec-card.help')"
-                  placement="bottom"
-                  class="header-info-icon"
-                ></fa-icon>
-              </div>
-              <div class="card-body text-align-center card-font-size">
-                {{getFormattedCapacity(accountService.account.ec)}} <span style="font-size: 14.4px">({{ecShare}} %)</span>
-              </div>
-            </div>
-          </div>
-          <div class="p-1 col-md-6 col-lg-6 col-xxxl-6">
-            <div class="card">
-              <div class="card-header text-align-center">
-                <h5>{{snippetService.getSnippet('my-farmer-component.last-partial-accepted-card.title')}}</h5>
-              </div>
-              <div class="card-body text-align-center card-font-size">
-                {{getLastAcceptedPartialAtDuration(accountService.account.lastAcceptedPartialAt)}}
-              </div>
-            </div>
-          </div>
+          <ng-template #pendingProgressTooltipContent>
+            <span class="color-green">{{pendingProgressRaw.toFixed(2)}}%</span> of the minimum payout reached.
+            <span *ngIf="pendingProgress < 100 && isCollateralFilledOrNonExistent">The minimum payout will be reached <span class="color-green">{{timeTillMinimumPayoutReached}}</span>.</span>
+            <span *ngIf="pendingProgress === 100">Your pending balance will be paid out in the next payout <span class="color-green">{{timeTillNextPayout}}</span></span>
+          </ng-template>
+          <ngb-progressbar
+            class="card-progress-bar"
+            [type]="pendingProgress < 100 ? 'primary' : 'success'"
+            [striped]="false"
+            [animated]="false"
+            [value]="pendingProgress"
+            [ngbTooltip]="pendingProgressTooltipContent"
+          ></ngb-progressbar>
         </div>
-        <div class="row row-without-margin">
-          <div class="p-1 col-md-12 col-lg-6 col-xxxl-12">
-            <div class="card">
-              <div class="card-header text-align-center">
-                <h5>{{snippetService.getSnippet('my-farmer-component.payout-address-card.title')}}</h5>
-              </div>
-              <div class="card-body text-align-center card-font-size ellipsis">
-                <a href="{{getBlockExplorerAddressLink(accountService.account.payoutAddress)}}" target="_blank" style="color: #b45bff;">{{accountService.account.payoutAddress}}</a>
-              </div>
-            </div>
+      </div>
+      <div class="p-1 col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl col-xxxl-4">
+        <div class="card">
+          <div class="card-header text-align-center">
+            <h5>{{snippetService.getSnippet('my-farmer-component.estimated-daily-reward-card.title')}}</h5>
+            <fa-icon
+              [icon]="faInfoCircle"
+              [ngbTooltip]="snippetService.getSnippet('my-farmer-component.estimated-daily-reward-card.help')"
+              class="header-info-icon"
+            ></fa-icon>
           </div>
-          <div class="p-1 col-md-12 col-lg-6 col-xxxl-12">
-            <div class="card">
-              <div class="card-header text-align-center">
-                <h5> {{snippetService.getSnippet('my-farmer-component.pool-public-key-card.title')}}</h5>
-              </div>
-              <div class="card-body text-align-center card-font-size ellipsis">
-                {{accountService.account.poolPublicKey}}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row row-without-margin">
-          <div class="p-1 col-md-4 col-lg-4 col-xxxl-6" *ngIf="accountService.account.collateral">
-            <div class="card">
-              <div class="card-header text-align-center">
-                <h5>{{snippetService.getSnippet('my-farmer-component.collateral-balance-card.title')}}</h5>
-                <fa-icon
-                  [icon]="faInfoCircle"
-                  [ngbTooltip]="snippetService.getSnippet('my-farmer-component.collateral-balance-card.help')"
-                  placement="bottom"
-                  class="header-info-icon"
-                ></fa-icon>
-              </div>
-              <div class="card-body text-align-center card-font-size card-body-with-progress-bar">
-                <span placement="bottom" ngbTooltip="{{ratesService.getValuesInFiatFormatted(accountService.account.collateralRounded)}}">{{accountService.account.collateralRounded}} {{poolConfig.ticker}}</span>
-              </div>
-              <ng-template #collateralProgressTooltipContent>
-                <span class="color-green">{{collateralProgressRaw.toFixed(2)}}%</span> of your collateral reached.
-                <span *ngIf="collateralProgress < 100">The collateral will be reached <span class="color-green">{{timeTillCollateralReached}}</span>.</span>
-              </ng-template>
-              <ngb-progressbar
-                class="card-progress-bar"
-                [type]="collateralProgress < 100 ? 'primary' : 'success'"
-                [striped]="false"
-                [animated]="false"
-                [value]="collateralProgress"
-                placement="bottom"
-                [ngbTooltip]="collateralProgressTooltipContent"
-              ></ngb-progressbar>
-            </div>
-          </div>
-          <div class="p-1 col-md-3 col-lg-3 col-xxxl-6">
-            <div class="card">
-              <div class="card-header text-align-center">
-                <h5>{{snippetService.getSnippet('my-farmer-component.difficulty-card.title')}}</h5>
-              </div>
-              <div class="card-body text-align-center card-font-size">
-                {{accountService.account.difficulty}}
-              </div>
-            </div>
-          </div>
-          <div class="p-1 col-md-3 col-lg-3 col-xxxl-6">
-            <div class="card">
-              <div class="card-header text-align-center">
-                <h5>Current Effort</h5>
-                <fa-icon
-                  [icon]="faInfoCircle"
-                  ngbTooltip="The current effort shows the effort since the last won block based on your average effective capacity. The effort is given in percent, where 100% equals your estimated time to win."
-                  placement="bottom"
-                  class="header-info-icon"
-                ></fa-icon>
-              </div>
-              <div class="card-body text-align-center card-font-size">
-                <span [class]="getEffortColor(currentEffort)">{{currentEffortFormatted}}</span>
-              </div>
-            </div>
+          <div class="card-body text-align-center card-font-size">
+            <span ngbTooltip="{{ratesService.getValuesInFiatFormatted(estimatedDailyReward)}}">{{estimatedDailyReward}} {{poolConfig.ticker}}</span>
           </div>
         </div>
       </div>
-      <div class="p-1 col-md-12 col-lg-3 col-xxxl-4">
-        <div class="row row-without-margin">
-          <div class="p-1 col-12">
-            <div class="card">
-              <div class="card-header text-align-center">
-                <h5>{{snippetService.getSnippet('my-farmer-component.name-card.title')}}</h5>
-              </div>
-              <div class="card-body text-align-center card-font-size">
-                {{accountService.account.name || 'N/A'}}
-              </div>
-            </div>
+      <div class="p-1 col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl col-xxxl-4">
+        <div class="card">
+          <div class="card-header text-align-center">
+            <h5>Effective Capacity</h5>
+            <fa-icon
+              [icon]="faInfoCircle"
+              [ngbTooltip]="snippetService.getSnippet('my-farmer-component.ec-card.help')"
+              class="header-info-icon"
+            ></fa-icon>
+          </div>
+          <div class="card-body text-align-center card-font-size">
+            {{getFormattedCapacity(accountService.account.ec)}} <span style="font-size: 14.4px">({{ecShare}} %)</span>
           </div>
         </div>
-        <div class="row row-without-margin">
-          <div class="p-1 col-12">
-            <div class="card">
-              <div class="card-header text-align-center">
-                <h5>{{snippetService.getSnippet('my-farmer-component.manage-account-card.title')}}</h5>
-              </div>
-              <div class="card-body">
-                <div class="d-flex justify-content-center" *ngIf="!accountService.haveAuthToken">
-                  <button class="btn btn-success" (click)="authenticate()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.authenticate')}}</button>
-                  &nbsp;&nbsp;<fa-icon style="font-size: 1.5rem" [icon]="faInfoCircle" placement="bottom" [ngbTooltip]="snippetService.getSnippet('my-farmer-component.manage-account-card.auth-info')"></fa-icon>
-                </div>
-                <div class="text-align-center" *ngIf="accountService.haveAuthToken">
-                  <div class="row">
-                    <div class="col-12 p-1">
-                      <button class="btn btn-outline-light manage-account-button" (click)="openSettingsModal()">Settings</button>
-                    </div>
-                    <div class="col-12 p-1" *ngIf="canRejoinPool">
-                      <button class="btn btn-outline-success manage-account-button" (click)="rejoinPool()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.action.rejoin-pool')}}</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+      </div>
+      <div class="p-1 col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl col-xxxl-4">
+        <div class="card">
+          <div class="card-header text-align-center">
+            <h5>{{snippetService.getSnippet('my-farmer-component.last-partial-accepted-card.title')}}</h5>
+          </div>
+          <div class="card-body text-align-center card-font-size">
+            {{getLastAcceptedPartialAtDuration(accountService.account.lastAcceptedPartialAt)}}
+          </div>
+        </div>
+      </div>
+      <div class="p-1 col-12 col-sm-6 col-md-8 col-lg-6 col-xl-6 col-xxl-5 order-xxl-last col-xxxl-12">
+        <div class="card">
+          <div class="card-header text-align-center">
+            <h5>{{snippetService.getSnippet('my-farmer-component.payout-address-card.title')}}</h5>
+          </div>
+          <div class="card-body text-align-center card-font-size ellipsis">
+            <a href="{{getBlockExplorerAddressLink(accountService.account.payoutAddress)}}" target="_blank" style="color: #b45bff;">{{accountService.account.payoutAddress}}</a>
+          </div>
+        </div>
+      </div>
+      <div class="p-1 col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl col-xxxl-4">
+        <div class="card">
+          <div class="card-header text-align-center">
+            <h5>Current Effort</h5>
+            <fa-icon
+              [icon]="faInfoCircle"
+              ngbTooltip="The current effort shows the effort since the last won block based on your average effective capacity. The effort is given in percent, where 100% equals your estimated time to win."
+              class="header-info-icon"
+            ></fa-icon>
+          </div>
+          <div class="card-body text-align-center card-font-size">
+            <span [class]="getEffortColor(currentEffort)">{{currentEffortFormatted}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="p-1 col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl col-xxxl-4" *ngIf="accountService.account.collateral">
+        <div class="card">
+          <div class="card-header text-align-center">
+            <h5>{{snippetService.getSnippet('my-farmer-component.collateral-balance-card.title')}}</h5>
+            <fa-icon
+              [icon]="faInfoCircle"
+              [ngbTooltip]="snippetService.getSnippet('my-farmer-component.collateral-balance-card.help')"
+              class="header-info-icon"
+            ></fa-icon>
+          </div>
+          <div class="card-body text-align-center card-font-size card-body-with-progress-bar">
+            <span ngbTooltip="{{ratesService.getValuesInFiatFormatted(accountService.account.collateralRounded)}}">{{accountService.account.collateralRounded}} {{poolConfig.ticker}}</span>
+          </div>
+          <ng-template #collateralProgressTooltipContent>
+            <span class="color-green">{{collateralProgressRaw.toFixed(2)}}%</span> of your collateral reached.
+            <span *ngIf="collateralProgress < 100">The collateral will be reached <span class="color-green">{{timeTillCollateralReached}}</span>.</span>
+          </ng-template>
+          <ngb-progressbar
+            class="card-progress-bar"
+            [type]="collateralProgress < 100 ? 'primary' : 'success'"
+            [striped]="false"
+            [animated]="false"
+            [value]="collateralProgress"
+            [ngbTooltip]="collateralProgressTooltipContent"
+          ></ngb-progressbar>
+        </div>
+      </div>
+      <div class="p-1 col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl col-xxxl-4">
+        <div class="card">
+          <div class="card-header text-align-center">
+            <h5>{{snippetService.getSnippet('my-farmer-component.difficulty-card.title')}}</h5>
+          </div>
+          <div class="card-body text-align-center card-font-size">
+            {{accountService.account.difficulty}}
           </div>
         </div>
       </div>

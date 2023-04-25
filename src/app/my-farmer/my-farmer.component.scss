@@ -75,3 +75,10 @@
 .manage-account-button {
   width: 100%;
 }
+@media (max-width:767px) {
+  .action-box {
+    padding-top: 0.5em;
+    padding-bottom: 0.25em;
+    text-align: center;
+  }
+}
