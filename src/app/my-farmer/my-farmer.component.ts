@@ -315,10 +315,10 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       .accountWonBlocks
       .pipe(
         map(accountWonBlocks => {
-          if (accountWonBlocks.length === 0) {
+          const blocksWithEffort = accountWonBlocks.filter(block => block.effort !== null)
+          if (blocksWithEffort.length === 0) {
             return
           }
-          const blocksWithEffort = accountWonBlocks.filter(block => block.effort !== null)
 
           return blocksWithEffort
             .reduce((acc, curr) => acc.plus(curr.effort), new BigNumber(0))
