@@ -48,6 +48,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   public readonly totalValidSharesPercentage: Observable<string>
   public readonly totalInvalidSharesPercentage: Observable<string>
   public readonly totalStaleSharesPercentage: Observable<string>
+  public readonly staleSharesColorClasses: Observable<string[]>
+  public readonly invalidSharesColorClasses: Observable<string[]>
 
   public isAccountLoading: Observable<boolean> = this.accountService.accountSubject
     .asObservable()
@@ -309,8 +311,23 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     this.totalValidSharesPercentage = sharesStream.pipe(map(stream => stream.totalValidShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100).toFixed(2)), shareReplay())
     this.totalInvalidShares = sharesStream.pipe(map(stream => stream.totalInvalidShares.toNumber().toLocaleString('en')), shareReplay())
     this.totalInvalidSharesPercentage = sharesStream.pipe(map(stream => stream.totalInvalidShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100).toFixed(2)), shareReplay())
+    this.invalidSharesColorClasses = sharesStream.pipe(map(stream => stream.totalInvalidShares.isZero() ? [] : ['color-red']), shareReplay())
     this.totalStaleShares = sharesStream.pipe(map(stream => stream.totalStaleShares.toNumber().toLocaleString('en')), shareReplay())
-    this.totalStaleSharesPercentage = sharesStream.pipe(map(stream => stream.totalStaleShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100).toFixed(2)), shareReplay())
+    const staleSharesPercentage = sharesStream.pipe(map(stream => stream.totalStaleShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100)), shareReplay())
+    this.totalStaleSharesPercentage = staleSharesPercentage.pipe(map(percentage => percentage.toFixed(2)), shareReplay())
+    this.staleSharesColorClasses = staleSharesPercentage.pipe(
+      map(percentage => {
+        if (percentage.isGreaterThanOrEqualTo(5)) {
+          return ['color-red']
+        }
+        if (percentage.isGreaterThanOrEqualTo(2)) {
+          return ['color-orange']
+        }
+
+        return []
+      }),
+      shareReplay(),
+    )
     const averageEffort: Observable<BigNumber|undefined> = this.accountService
       .accountWonBlocks
       .pipe(

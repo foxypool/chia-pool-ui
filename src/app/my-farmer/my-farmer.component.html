@@ -197,13 +197,13 @@
                 <div class="col-12 col-sm-4 col-xxxxl-6 shares-box">
                   <div class="p-2 border border-primary rounded">
                     <h5 class="mb-1 fw-lighter">Stale Shares</h5>
-                    <h4>{{totalStaleShares | async}} <span class="shares-box-percentage">({{totalStaleSharesPercentage | async}}%)</span></h4>
+                    <h4 [ngClass]="staleSharesColorClasses | async">{{totalStaleShares | async}} <span class="shares-box-percentage">({{totalStaleSharesPercentage | async}}%)</span></h4>
                   </div>
                 </div>
                 <div class="col-12 col-sm-4 col-xxxxl-6 shares-box">
                   <div class="p-2 border border-primary rounded">
                     <h5 class="mb-1 fw-lighter">Invalid Shares</h5>
-                    <h4>{{totalInvalidShares | async}} <span class="shares-box-percentage">({{totalInvalidSharesPercentage | async}}%)</span></h4>
+                    <h4 [ngClass]="invalidSharesColorClasses | async">{{totalInvalidShares | async}} <span class="shares-box-percentage">({{totalInvalidSharesPercentage | async}}%)</span></h4>
                   </div>
                 </div>
               </div>

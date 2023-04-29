@@ -13,6 +13,7 @@ import Capacity from '../capacity'
 import {EChartsOption} from 'echarts'
 import {Moment} from 'moment'
 import {stripHexPrefix} from '../util'
+import {compare} from 'compare-versions'
 
 const sharesPerDayPerK32 = 10
 const k32SizeInGb = 108.837
@@ -33,6 +34,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   public readonly totalStaleShares: Observable<string>
   public readonly totalValidSharesPercentage: Observable<string>
   public readonly totalStaleSharesPercentage: Observable<string>
+  public readonly staleSharesColorClasses: Observable<string[]>
   public readonly sharesChartOptions: EChartsOption
   public sharesChartUpdateOptions: EChartsOption
   private readonly stats: Observable<HarvesterStats>
@@ -153,7 +155,21 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     this.totalValidShares = sharesStream.pipe(map(stream => stream.totalValidShares.toNumber().toLocaleString('en')), shareReplay())
     this.totalValidSharesPercentage = sharesStream.pipe(map(stream => stream.totalValidShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100).toFixed(2)), shareReplay())
     this.totalStaleShares = sharesStream.pipe(map(stream => stream.totalStaleShares.toNumber().toLocaleString('en')), shareReplay())
-    this.totalStaleSharesPercentage = sharesStream.pipe(map(stream => stream.totalStaleShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100).toFixed(2)), shareReplay())
+    const staleSharesPercentage = sharesStream.pipe(map(stream => stream.totalStaleShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100)), shareReplay())
+    this.totalStaleSharesPercentage = staleSharesPercentage.pipe(map(percentage => percentage.toFixed(2)), shareReplay())
+    this.staleSharesColorClasses = staleSharesPercentage.pipe(
+      map(percentage => {
+        if (percentage.isGreaterThanOrEqualTo(5)) {
+          return ['color-red']
+        }
+        if (percentage.isGreaterThanOrEqualTo(2)) {
+          return ['color-orange']
+        }
+
+        return []
+      }),
+      shareReplay(),
+    )
   }
 
   public async ngOnInit(): Promise<void> {
@@ -193,12 +209,42 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     return moment(this.harvester.lastAcceptedPartialAt).fromNow()
   }
 
+  public get chiaVersionColorClasses(): string[] {
+    const chiaVersion = this.chiaVersion
+    if (chiaVersion === 'Unknown') {
+      return []
+    }
+    if (compare(chiaVersion, '1.7.1', '>=')) {
+      return []
+    }
+    if (compare(chiaVersion, '1.7.0', '>=')) {
+      return ['color-orange']
+    }
+
+    return ['color-red']
+  }
+
   public get chiaVersion(): string {
     if (this.harvester.versionInfo.clientName === null || this.harvester.versionInfo.clientName.indexOf('Chia') === -1) {
       return 'Unknown'
     }
 
     return this.harvester.versionInfo.clientVersion
+  }
+
+  public get ogVersionColorClasses(): string[] {
+    const ogVersion = this.ogVersion
+    if (ogVersion === undefined) {
+      return []
+    }
+    if (compare(ogVersion, '1.3.0', '>=')) {
+      return []
+    }
+    if (compare(ogVersion, '1.2.0', '>=')) {
+      return ['color-orange']
+    }
+
+    return ['color-red']
   }
 
   public get ogVersion(): string|undefined {
@@ -209,6 +255,21 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
 
   public get hasOgVersion(): boolean {
     return this.ogVersion !== undefined
+  }
+
+  public get foxyFarmerVersionColorClasses(): string[] {
+    const foxyFarmerVersion = this.foxyFarmerVersion
+    if (foxyFarmerVersion === undefined) {
+      return []
+    }
+    if (compare(foxyFarmerVersion, '1.3.0', '>=')) {
+      return []
+    }
+    if (compare(foxyFarmerVersion, '1.2.0', '>=')) {
+      return ['color-orange']
+    }
+
+    return ['color-red']
   }
 
   public get foxyFarmerVersion(): string|undefined {
@@ -222,6 +283,22 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
 
   public get hasFoxyFarmerVersion(): boolean {
     return this.foxyFarmerVersion !== undefined
+  }
+
+  public get gigahorseVersionColorClasses(): string[] {
+    const gigahorseVersion = this.gigahorseVersion
+    if (gigahorseVersion === undefined) {
+      return []
+    }
+    const gigahorseVersionNumber = parseInt(gigahorseVersion, 10)
+    if (isNaN(gigahorseVersionNumber)) {
+      return []
+    }
+    if (gigahorseVersionNumber >= 9) {
+      return []
+    }
+
+    return ['color-red']
   }
 
   public get gigahorseVersion(): string|undefined {
