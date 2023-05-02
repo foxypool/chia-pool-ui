@@ -548,6 +548,25 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     }
   }
 
+  public get topNRankInfo(): RankInfo|undefined {
+    if (this.accountService.account === null || this.accountService.account.rank === undefined) {
+      return
+    }
+    const rank = this.accountService.account.rank
+    if (rank <= 10) {
+      return {
+        imageFileName: 'top-10.png',
+        imageAlt: 'Top 10',
+      }
+    }
+    if (rank <= 100) {
+      return {
+        imageFileName: 'top-100.png',
+        imageAlt: 'Top 100',
+      }
+    }
+  }
+
   public get capacityRankInfo(): RankInfo|undefined {
     if (this.accountService.account === null) {
       return
@@ -889,6 +908,10 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     }
 
     return ((this.accountService.account.ec / this.poolEc) * 100).toFixed(2)
+  }
+
+  public get rank(): number|undefined {
+    return this.accountService.account?.rank
   }
 
   public get estimatedDailyReward(): string {

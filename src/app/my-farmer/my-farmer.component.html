@@ -19,9 +19,35 @@
       <div class="col-12 col-md">
         <div>
           <span *ngIf="accountService.account.name !== undefined" class="mb-0 fw-light fs-2">{{accountService.account.name}}</span>
-          <img *ngIf="tenureRankInfo" src="assets/tenure-ranks/{{tenureRankInfo.imageFileName}}" loading="lazy" height="32" width="32" [alt]="tenureRankInfo.imageAlt" [ngbTooltip]="tenureRankInfo.imageAlt" class="ms-2" style="margin-top: -0.8em">
-          <img *ngIf="capacityRankInfo" src="assets/capacity-ranks/{{capacityRankInfo.imageFileName}}" loading="lazy" height="32" width="32" [alt]="capacityRankInfo.imageAlt" [ngbTooltip]="capacityRankInfo.imageAlt" class="ms-2" style="margin-top: -0.8em">
-          <img *ngIf="joinedFirstYear" ngSrc="assets/joined-first-year.png" height="32" width="32" alt="Year 1 member" ngbTooltip="Year 1 member" class="ms-2" style="margin-top: -0.8em">
+          <ng-template #badgeContent>
+            <div *ngIf="topNRankInfo" class="mt-2">
+              <img src="assets/top-n-ranks/{{topNRankInfo.imageFileName}}" loading="lazy" height="64" width="64" [alt]="topNRankInfo.imageAlt">
+              <span class="ms-3">{{topNRankInfo.imageAlt}}</span>
+            </div>
+            <div *ngIf="tenureRankInfo" class="mt-2">
+              <img src="assets/tenure-ranks/{{tenureRankInfo.imageFileName}}" loading="lazy" height="64" width="64" [alt]="tenureRankInfo.imageAlt">
+              <span class="ms-3">{{tenureRankInfo.imageAlt}}</span>
+            </div>
+            <div *ngIf="capacityRankInfo" class="mt-2">
+              <img src="assets/capacity-ranks/{{capacityRankInfo.imageFileName}}" loading="lazy" height="64" width="64" [alt]="capacityRankInfo.imageAlt">
+              <span class="ms-3">{{capacityRankInfo.imageAlt}}</span>
+            </div>
+            <div *ngIf="joinedFirstYear" class="mt-2">
+              <img ngSrc="assets/joined-first-year.png" height="64" width="64" alt="Year 1 member">
+              <span class="ms-3">Year 1 member</span>
+            </div>
+          </ng-template>
+          <div
+            class="d-inline"
+            style="cursor: pointer"
+            [ngbPopover]="badgeContent"
+            [autoClose]="'outside'"
+          >
+            <img *ngIf="topNRankInfo" src="assets/top-n-ranks/{{topNRankInfo.imageFileName}}" loading="lazy" height="32" width="32" [alt]="topNRankInfo.imageAlt" [ngbTooltip]="topNRankInfo.imageAlt" class="ms-2" style="margin-top: -0.8em">
+            <img *ngIf="tenureRankInfo" src="assets/tenure-ranks/{{tenureRankInfo.imageFileName}}" loading="lazy" height="32" width="32" [alt]="tenureRankInfo.imageAlt" [ngbTooltip]="tenureRankInfo.imageAlt" class="ms-2" style="margin-top: -0.8em">
+            <img *ngIf="capacityRankInfo" src="assets/capacity-ranks/{{capacityRankInfo.imageFileName}}" loading="lazy" height="32" width="32" [alt]="capacityRankInfo.imageAlt" [ngbTooltip]="capacityRankInfo.imageAlt" class="ms-2" style="margin-top: -0.8em">
+            <img *ngIf="joinedFirstYear" ngSrc="assets/joined-first-year.png" height="32" width="32" alt="Year 1 member" ngbTooltip="Year 1 member" class="ms-2" style="margin-top: -0.8em">
+          </div>
         </div>
         <div class="fw-light fs-5 text-break">{{accountService.account.poolPublicKey}}</div>
       </div>
@@ -83,7 +109,7 @@
             ></fa-icon>
           </div>
           <div class="card-body text-align-center card-font-size">
-            {{getFormattedCapacity(accountService.account.ec)}} <span style="font-size: 14.4px">({{ecShare}} %)</span>
+            {{getFormattedCapacity(accountService.account.ec)}} <span style="font-size: 14.4px">(<span ngbTooltip="You hold {{ecShare}}% of the pools capacity">{{ecShare}}%</span><span *ngIf="rank">, <span ngbTooltip="You are ranked #{{rank}} in the pool">#{{rank}}</span></span>)</span>
           </div>
         </div>
       </div>
