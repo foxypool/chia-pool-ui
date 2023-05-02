@@ -109,7 +109,8 @@
             ></fa-icon>
           </div>
           <div class="card-body text-align-center card-font-size">
-            {{getFormattedCapacity(accountService.account.ec)}} <span style="font-size: 14.4px">(<span ngbTooltip="You hold {{ecShare}}% of the pools capacity">{{ecShare}}%</span><span *ngIf="rank">, <span ngbTooltip="You are ranked #{{rank}} in the pool">#{{rank}}</span></span>)</span>
+            {{getFormattedCapacity(accountService.account.ec)}}
+            <div class="d-inline-block" style="font-size: 14.4px">(<div class="d-inline-block" ngbTooltip="You hold {{ecShare}}% of the pools capacity">{{ecShare}}%</div><div class="d-inline-block" *ngIf="rank">, <div class="d-inline-block" ngbTooltip="You are ranked #{{rank}} in the pool">#{{rank}}</div></div>)</div>
           </div>
         </div>
       </div>
