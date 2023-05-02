@@ -294,7 +294,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     if (isNaN(gigahorseVersionNumber)) {
       return []
     }
-    if (gigahorseVersionNumber >= 9) {
+    if (gigahorseVersionNumber >= 10) {
       return []
     }
 
