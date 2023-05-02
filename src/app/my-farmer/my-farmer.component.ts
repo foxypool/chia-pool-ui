@@ -245,8 +245,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         data: [],
         type: 'bar',
         stack: 'shares',
-        name: this.snippetService.getSnippet('my-farmer-component.shares-chart.valid-shares.name'),
-        color: '#037ffc',
+        name: this.snippetService.getSnippet('my-farmer-component.shares-chart.invalid-shares.name'),
+        color: '#dc3545',
         large: true,
         barWidth: 6,
       }, {
@@ -261,8 +261,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         data: [],
         type: 'bar',
         stack: 'shares',
-        name: this.snippetService.getSnippet('my-farmer-component.shares-chart.invalid-shares.name'),
-        color: '#dc3545',
+        name: this.snippetService.getSnippet('my-farmer-component.shares-chart.valid-shares.name'),
+        color: '#037ffc',
         large: true,
         barWidth: 6,
       }, {
@@ -841,11 +841,11 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
     return {
       series: [{
-        data: missingSharesDataLeading.concat(historicalSharesSeries, missingSharesDataTrailing),
+        data: missingSharesDataLeading.concat(historicalInvalidSharesSeries, missingSharesDataTrailing),
       }, {
         data: missingSharesDataLeading.concat(historicalStaleSharesSeries, missingSharesDataTrailing),
       }, {
-        data: missingSharesDataLeading.concat(historicalInvalidSharesSeries, missingSharesDataTrailing),
+        data: missingSharesDataLeading.concat(historicalSharesSeries, missingSharesDataTrailing),
       }, {
         data: missingDifficultyDataLeading.concat(historicalDifficultySeries, missingDifficultyDataTrailing),
       }, {
