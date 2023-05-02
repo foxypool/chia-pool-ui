@@ -1,5 +1,5 @@
-import {Inject, Injectable} from '@angular/core';
-import {WINDOW} from './window.provider';
+import {Inject, Injectable} from '@angular/core'
+import {WINDOW} from './window.provider'
 
 @Injectable({
   providedIn: 'root'
@@ -36,33 +36,33 @@ export class PoolsProvider {
       url:  'https://signa.foxypool.io',
       algorithm: 'Proof of Capacity',
     },
-  ];
+  ]
 
-  public readonly pool = null;
-  public readonly apiUrl = null;
-  private readonly _poolIdentifier = null;
-  private readonly _coin = null;
+  public readonly pool = null
+  public readonly apiUrl = null
+  private readonly _poolIdentifier = null
+  private readonly _coin = null
 
   constructor(
-    @Inject(WINDOW) private window: Window,
+    @Inject(WINDOW) private readonly window: Window,
   ) {
-    const hostname = this.window.location.hostname;
+    const hostname = this.window.location.hostname
     const pool = this.pools
       .filter(pool => pool.hostnames)
-      .find(pool => pool.hostnames.some(curr => curr === hostname));
+      .find(pool => pool.hostnames.some(curr => curr === hostname))
     if (pool) {
-      this.pool = pool;
-      this._poolIdentifier = pool.poolIdentifier;
-      this._coin = pool.group;
-      this.apiUrl = pool.apiUrl;
+      this.pool = pool
+      this._poolIdentifier = pool.poolIdentifier
+      this._coin = pool.group
+      this.apiUrl = pool.apiUrl
     }
   }
 
   get poolIdentifier() : string {
-    return this._poolIdentifier;
+    return this._poolIdentifier
   }
 
   get coin() : string {
-    return this._coin;
+    return this._coin
   }
 }

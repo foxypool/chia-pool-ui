@@ -1,7 +1,7 @@
-import {Component} from '@angular/core';
-import {ConfigService} from '../config.service';
-import {RatesService} from '../rates.service';
-import {StatsService} from '../stats.service';
+import {Component} from '@angular/core'
+import {ConfigService} from '../config.service'
+import {RatesService} from '../rates.service'
+import {StatsService} from '../stats.service'
 
 @Component({
   selector: 'app-currency-selector',
@@ -9,7 +9,7 @@ import {StatsService} from '../stats.service';
   styleUrls: ['./currency-selector.component.scss']
 })
 export class CurrencySelectorComponent {
-  public rateForCurrencyFormatted = this.ratesService.makeObservableForFormattedFiatValue(1);
+  public rateForCurrencyFormatted = this.ratesService.makeObservableForFormattedFiatValue(1)
 
   constructor(
     public configService: ConfigService,

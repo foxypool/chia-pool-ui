@@ -13,8 +13,8 @@ export class SettingsModalComponent {
   private modalRef: NgbModalRef = null
 
   public constructor(
-    private accountService: AccountService,
-    private modalService: NgbModal,
+    private readonly accountService: AccountService,
+    private readonly modalService: NgbModal,
   ) {}
 
   public openModal(): void {
@@ -23,9 +23,9 @@ export class SettingsModalComponent {
 
   public get canLeavePool() {
     if (!this.accountService.account) {
-      return false;
+      return false
     }
-    const account = this.accountService.account;
+    const account = this.accountService.account
 
     return !account.hasLeftThePool && !account.isCheating
   }

@@ -1,5 +1,5 @@
-import {Component, Input} from '@angular/core';
-import {IconDefinition} from '@fortawesome/fontawesome-common-types';
+import {Component, Input} from '@angular/core'
+import {IconDefinition} from '@fortawesome/fontawesome-common-types'
 
 @Component({
   selector: 'app-empty-state',
@@ -7,6 +7,6 @@ import {IconDefinition} from '@fortawesome/fontawesome-common-types';
   styleUrls: ['./empty-state.component.scss']
 })
 export class EmptyStateComponent {
-  @Input() text;
-  @Input() icon: IconDefinition;
+  @Input() text
+  @Input() icon: IconDefinition
 }

@@ -22,7 +22,7 @@ export class UpdateNotificationSettingsComponent {
   constructor(
     public accountService: AccountService,
     public snippetService: SnippetService,
-    private toastService: ToastService,
+    private readonly toastService: ToastService,
   ) {
     this.newEcLastHourThresholdInGib = this.currentEcLastHourThresholdInGib
     this.areEcChangeNotificationsEnabled = this.currentAreEcChangeNotificationsEnabled

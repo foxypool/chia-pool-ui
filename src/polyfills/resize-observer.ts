@@ -1,5 +1,5 @@
-import { ResizeObserver } from '@juggle/resize-observer';
+import { ResizeObserver } from '@juggle/resize-observer'
 
 if (!('ResizeObserver' in window)) {
-  (window as any).ResizeObserver = ResizeObserver;
+  (window as any).ResizeObserver = ResizeObserver
 }

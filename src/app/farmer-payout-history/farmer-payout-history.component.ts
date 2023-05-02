@@ -1,13 +1,13 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core'
-import {faMoneyCheckAlt, faExchangeAlt} from '@fortawesome/free-solid-svg-icons';
-import * as moment from 'moment';
-import {EChartsOption} from 'echarts';
-import BigNumber from 'bignumber.js';
+import {faMoneyCheckAlt, faExchangeAlt} from '@fortawesome/free-solid-svg-icons'
+import * as moment from 'moment'
+import {EChartsOption} from 'echarts'
+import BigNumber from 'bignumber.js'
 
-import {SnippetService} from '../snippet.service';
-import {ensureHexPrefix} from '../util';
-import {ConfigService, DateFormatting} from '../config.service';
-import {CsvExporter} from '../csv-exporter';
+import {SnippetService} from '../snippet.service'
+import {ensureHexPrefix} from '../util'
+import {ConfigService, DateFormatting} from '../config.service'
+import {CsvExporter} from '../csv-exporter'
 import {BehaviorSubject, combineLatest, from, Observable, Subscription} from 'rxjs'
 import {map} from 'rxjs/operators'
 import {CoinConfig} from '../coin-config'
@@ -29,8 +29,8 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
   @Input() exchangeStatsObservable: Observable<unknown>
 
   public payoutsObservable: Observable<FormattedAccountPayout[]>
-  public faMoneyCheck = faMoneyCheckAlt;
-  public faExchangeAlt = faExchangeAlt;
+  public faMoneyCheck = faMoneyCheckAlt
+  public faExchangeAlt = faExchangeAlt
   public chartOptions: EChartsOption = {
     grid: {
       left: 45,
@@ -45,10 +45,10 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
         label: {
           formatter: params => {
             if (params.axisDimension === 'x') {
-              return moment(params.value).format('YYYY-MM-DD');
+              return moment(params.value).format('YYYY-MM-DD')
             }
 
-            return (params.value as number).toFixed(2);
+            return (params.value as number).toFixed(2)
           },
         },
       },
@@ -72,15 +72,15 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
       color: '#037ffc',
       name: this.snippetService.getSnippet('farmer-payout-history-component.chart.amount.name'),
     }],
-  };
-  public chartUpdateOptions: EChartsOption;
-  private subscriptions: Subscription[] = []
+  }
+  public chartUpdateOptions: EChartsOption
+  private readonly subscriptions: Subscription[] = []
 
   constructor(
     public snippetService: SnippetService,
-    private configService: ConfigService,
-    private csvExporter: CsvExporter,
-    private ratesService: RatesService,
+    private readonly configService: ConfigService,
+    private readonly csvExporter: CsvExporter,
+    private readonly ratesService: RatesService,
   ) {}
 
   public exportCsv(): void {
@@ -94,7 +94,7 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
       payout.coinId,
       payout.amount,
       payout.state,
-    ])));
+    ])))
   }
 
   public ngOnInit(): void {
@@ -124,11 +124,11 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    this.subscriptions.map(subscription => subscription.unsubscribe());
+    this.subscriptions.map(subscription => subscription.unsubscribe())
   }
 
   public trackPayoutById(index: number, payout: FormattedAccountPayout): string {
-    return payout.coinId;
+    return payout.coinId
   }
 
   private formatDate(date: Moment, dateFormatting: DateFormatting): string {
@@ -145,7 +145,7 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
       return
     }
 
-    return this.poolConfig.blockExplorerCoinUrlTemplate.replace('#COIN#', ensureHexPrefix(coinId));
+    return this.poolConfig.blockExplorerCoinUrlTemplate.replace('#COIN#', ensureHexPrefix(coinId))
   }
 
   private getFormattedPaymentState(payoutState: AccountPayoutState): string {
@@ -159,9 +159,9 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
 
   public toggleDateFormatting(): void {
     if (this.configService.payoutDateFormatting === DateFormatting.fixed) {
-      this.configService.payoutDateFormatting = DateFormatting.relative;
+      this.configService.payoutDateFormatting = DateFormatting.relative
     } else {
-      this.configService.payoutDateFormatting = DateFormatting.fixed;
+      this.configService.payoutDateFormatting = DateFormatting.fixed
     }
   }
 
@@ -175,7 +175,7 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
           value: [payout.createdAt, (new BigNumber(payout.amount)).toNumber()],
         })),
       }],
-    };
+    }
   }
 }
 

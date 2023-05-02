@@ -1,7 +1,7 @@
-import BigNumber from 'bignumber.js';
+import BigNumber from 'bignumber.js'
 
 export function ensureHexPrefix(string: string) {
-  return string.startsWith('0x') ? string : `0x${string}`;
+  return string.startsWith('0x') ? string : `0x${string}`
 }
 
 export function stripHexPrefix(string: string) {
@@ -10,29 +10,29 @@ export function stripHexPrefix(string: string) {
 
 export function getEffortColor(effort: BigNumber | null | undefined): string {
   if (effort === null || effort === undefined) {
-    return '';
+    return ''
   }
   if (effort.isLessThan(0.25)) {
-    return 'color-dark-green';
+    return 'color-dark-green'
   }
   if (effort.isLessThan(0.5)) {
-    return 'color-green';
+    return 'color-green'
   }
   if (effort.isLessThan(0.75)) {
-    return 'color-light-green';
+    return 'color-light-green'
   }
   if (effort.isLessThan(1)) {
-    return 'color-lighter-green';
+    return 'color-lighter-green'
   }
   if (effort.isLessThan(1.5)) {
-    return '';
+    return ''
   }
   if (effort.isLessThan(2.5)) {
-    return 'color-grey';
+    return 'color-grey'
   }
   if (effort.isLessThan(4)) {
-    return 'color-dark-orange';
+    return 'color-dark-orange'
   }
 
-  return 'color-red';
+  return 'color-red'
 }

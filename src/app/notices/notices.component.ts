@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import {StatsService} from '../stats.service';
-import {SnippetService} from '../snippet.service';
-import * as moment from 'moment';
+import { Component } from '@angular/core'
+import {StatsService} from '../stats.service'
+import {SnippetService} from '../snippet.service'
+import * as moment from 'moment'
 
 @Component({
   selector: 'app-notices',
@@ -10,28 +10,28 @@ import * as moment from 'moment';
 })
 export class NoticesComponent  {
   constructor(
-    private statsService: StatsService,
-    private _snippetService: SnippetService,
+    private readonly statsService: StatsService,
+    private readonly _snippetService: SnippetService,
   ) {}
 
   get snippetService() {
-    return this._snippetService;
+    return this._snippetService
   }
 
   get notices() {
-    const poolConfig = this.statsService.poolConfig.getValue();
+    const poolConfig = this.statsService.poolConfig.getValue()
     if (!poolConfig || !poolConfig.notices) {
-      return [];
+      return []
     }
 
-    return poolConfig.notices.slice(0, 10);
+    return poolConfig.notices.slice(0, 10)
   }
 
   getTranslatedNoticeText(notice) {
-    return notice.text.en;
+    return notice.text.en
   }
 
   getFormattedDate(date) {
-    return moment(date).format('YYYY-MM-DD');
+    return moment(date).format('YYYY-MM-DD')
   }
 }

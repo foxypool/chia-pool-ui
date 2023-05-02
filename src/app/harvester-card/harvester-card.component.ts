@@ -40,12 +40,12 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   private readonly stats: Observable<HarvesterStats>
   private readonly statsSubject: BehaviorSubject<HarvesterStats|undefined> = new BehaviorSubject<HarvesterStats>(undefined)
   private statsUpdateInterval?: number
-  private subscriptions: Subscription[] = []
+  private readonly subscriptions: Subscription[] = []
 
   constructor(
-    private accountService: AccountService,
-    private statsService: StatsService,
-    private toastService: ToastService,
+    private readonly accountService: AccountService,
+    private readonly statsService: StatsService,
+    private readonly toastService: ToastService,
   ) {
     this.stats = this.statsSubject.asObservable().pipe(filter(stats => stats !== undefined), shareReplay())
     this.isLoading = this.statsSubject.asObservable().pipe(map(stats => stats === undefined), distinctUntilChanged(), shareReplay())
@@ -411,6 +411,6 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       }, {
         data: validSharesSeries,
       }],
-    };
+    }
   }
 }

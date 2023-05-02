@@ -1,1 +1,1 @@
-export const gitCommitHash = null;
+export const gitCommitHash = null

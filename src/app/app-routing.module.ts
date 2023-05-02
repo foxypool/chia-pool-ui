@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import {BlocksWonComponent} from './blocks-won/blocks-won.component';
-import {PayoutsComponent} from './payouts/payouts.component';
-import {TopAccountsComponent} from './top-accounts/top-accounts.component';
-import {DashboardComponent} from './dashboard/dashboard.component';
-import {MyFarmerComponent} from './my-farmer/my-farmer.component';
+import { NgModule } from '@angular/core'
+import { Routes, RouterModule } from '@angular/router'
+import {BlocksWonComponent} from './blocks-won/blocks-won.component'
+import {PayoutsComponent} from './payouts/payouts.component'
+import {TopAccountsComponent} from './top-accounts/top-accounts.component'
+import {DashboardComponent} from './dashboard/dashboard.component'
+import {MyFarmerComponent} from './my-farmer/my-farmer.component'
 
 const routes: Routes = [
   { path: '', component: DashboardComponent, pathMatch: 'full' },
@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'notices', loadChildren: () => import('./notices/notices.module').then(m => m.NoticesModule) },
   { path: 'events', loadChildren: () => import('./events/events.module').then(m => m.EventsModule) },
   { path: '**', redirectTo: '' }
-];
+]
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, {

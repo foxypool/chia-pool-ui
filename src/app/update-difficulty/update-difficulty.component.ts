@@ -18,7 +18,7 @@ export class UpdateDifficultyComponent {
   constructor(
     public accountService: AccountService,
     public snippetService: SnippetService,
-    private toastService: ToastService,
+    private readonly toastService: ToastService,
   ) {
     this.newDifficulty = this.currentDifficulty
     this.isFixedDifficulty = this.currentIsFixedDifficulty

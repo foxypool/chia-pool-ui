@@ -1,54 +1,54 @@
-import axios, {AxiosInstance} from 'axios';
+import axios, {AxiosInstance} from 'axios'
 
 export class ApiService {
-  private client: AxiosInstance;
+  private readonly client: AxiosInstance
 
   constructor(url: string) {
     this.client = axios.create({
       baseURL: `${url}/api/v2`,
-    });
+    })
   }
 
   async getPoolConfig({ poolIdentifier }) {
-    const { data } = await this.client.get(`${poolIdentifier}/config`);
+    const { data } = await this.client.get(`${poolIdentifier}/config`)
 
-    return data;
+    return data
   }
 
   async getPoolStats({ poolIdentifier }) {
-    const { data } = await this.client.get(`${poolIdentifier}/pool`);
+    const { data } = await this.client.get(`${poolIdentifier}/pool`)
 
-    return data;
+    return data
   }
 
   async getPoolHistoricalStats({ poolIdentifier }) {
-    const { data } = await this.client.get(`${poolIdentifier}/pool/historical`);
+    const { data } = await this.client.get(`${poolIdentifier}/pool/historical`)
 
-    return data;
+    return data
   }
 
   async getAccountsStats({ poolIdentifier }) {
-    const { data } = await this.client.get(`${poolIdentifier}/accounts`);
+    const { data } = await this.client.get(`${poolIdentifier}/accounts`)
 
-    return data;
+    return data
   }
 
   async getRewardStats({ poolIdentifier }) {
-    const { data } = await this.client.get(`${poolIdentifier}/rewards`);
+    const { data } = await this.client.get(`${poolIdentifier}/rewards`)
 
-    return data;
+    return data
   }
 
   async getLastPayouts({ poolIdentifier }) {
-    const { data } = await this.client.get(`${poolIdentifier}/payouts`);
+    const { data } = await this.client.get(`${poolIdentifier}/payouts`)
 
-    return data;
+    return data
   }
 
   async getExchangeStats({ poolIdentifier }) {
-    const { data } = await this.client.get(`${poolIdentifier}/rates`);
+    const { data } = await this.client.get(`${poolIdentifier}/rates`)
 
-    return data;
+    return data
   }
 
   async getAccount({ poolIdentifier, poolPublicKey, bustCache = false }) {
@@ -56,15 +56,15 @@ export class ApiService {
     if (bustCache) {
       params.cacheBuster = Math.random()
     }
-    const { data } = await this.client.get(`${poolIdentifier}/account/${poolPublicKey}`, { params });
+    const { data } = await this.client.get(`${poolIdentifier}/account/${poolPublicKey}`, { params })
 
-    return data;
+    return data
   }
 
   async getAccountHarvesters({ poolIdentifier, poolPublicKey }) {
-    const { data } = await this.client.get(`${poolIdentifier}/account/${poolPublicKey}/harvesters`);
+    const { data } = await this.client.get(`${poolIdentifier}/account/${poolPublicKey}/harvesters`)
 
-    return data;
+    return data
   }
 
   public async getHarvesterStats({ poolIdentifier, harvesterId }: { poolIdentifier: string, harvesterId: string }): Promise<HarvesterStats> {
@@ -74,15 +74,15 @@ export class ApiService {
   }
 
   async getAccountHistoricalStats({ poolIdentifier, poolPublicKey }): Promise<AccountHistoricalStat[]> {
-    const { data } = await this.client.get<AccountHistoricalStat[]>(`${poolIdentifier}/account/${poolPublicKey}/historical`);
+    const { data } = await this.client.get<AccountHistoricalStat[]>(`${poolIdentifier}/account/${poolPublicKey}/historical`)
 
     return data
   }
 
   async getAccountWonBlocks({ poolIdentifier, poolPublicKey }) {
-    const { data } = await this.client.get(`${poolIdentifier}/account/${poolPublicKey}/won-blocks`);
+    const { data } = await this.client.get(`${poolIdentifier}/account/${poolPublicKey}/won-blocks`)
 
-    return data;
+    return data
   }
 
   async getAccountPayouts({ poolIdentifier, poolPublicKey }) {
@@ -95,9 +95,9 @@ export class ApiService {
     const { data } = await this.client.post(`${poolIdentifier}/account/${poolPublicKey}/authenticate`, {
       message,
       signature,
-    });
+    })
 
-    return data;
+    return data
   }
 
   async updateAccountName({ poolIdentifier, poolPublicKey, authToken, newName }) {
@@ -105,9 +105,9 @@ export class ApiService {
       newName,
     }, {
       headers: { Authorization: `Bearer ${authToken}` },
-    });
+    })
 
-    return data;
+    return data
   }
 
   public async updateHarvesterName({ poolIdentifier, poolPublicKey, authToken, harvesterPeerId, newName }): Promise<unknown> {
@@ -125,9 +125,9 @@ export class ApiService {
       newDistributionRatio,
     }, {
       headers: { Authorization: `Bearer ${authToken}` },
-    });
+    })
 
-    return data;
+    return data
   }
 
   async updateAccountMinimumPayout({ poolIdentifier, poolPublicKey, authToken, minimumPayout }) {
@@ -135,9 +135,9 @@ export class ApiService {
       minimumPayout,
     }, {
       headers: { Authorization: `Bearer ${authToken}` },
-    });
+    })
 
-    return data;
+    return data
   }
 
   public async updateAccountDifficulty({ poolIdentifier, poolPublicKey, authToken, difficulty, isFixedDifficulty }): Promise<unknown> {
@@ -177,17 +177,17 @@ export class ApiService {
       leaveForEver,
     }, {
       headers: { Authorization: `Bearer ${authToken}` },
-    });
+    })
 
-    return data;
+    return data
   }
 
   async rejoinPool({ poolIdentifier, poolPublicKey, authToken }) {
     const { data } = await this.client.post(`${poolIdentifier}/account/${poolPublicKey}/rejoin-pool`, undefined, {
       headers: { Authorization: `Bearer ${authToken}` },
-    });
+    })
 
-    return data;
+    return data
   }
 }
 

@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import {SnippetService} from '../snippet.service';
-import {faDiscord, faGithub, faTwitter} from '@fortawesome/free-brands-svg-icons';
-import * as moment from 'moment';
-import {PoolsProvider} from '../pools.provider';
+import { Component } from '@angular/core'
+import {SnippetService} from '../snippet.service'
+import {faDiscord, faGithub, faTwitter} from '@fortawesome/free-brands-svg-icons'
+import * as moment from 'moment'
+import {PoolsProvider} from '../pools.provider'
 
 @Component({
   selector: 'app-footer',
@@ -11,26 +11,26 @@ import {PoolsProvider} from '../pools.provider';
 })
 export class FooterComponent  {
 
-  public faDiscord = faDiscord;
-  public faGithub = faGithub;
-  public faTwitter = faTwitter;
+  public faDiscord = faDiscord
+  public faGithub = faGithub
+  public faTwitter = faTwitter
 
-  public currentYear: string = moment().format('YYYY');
+  public currentYear: string = moment().format('YYYY')
 
   constructor(
-    private _snippetService: SnippetService,
-    private poolsProvider: PoolsProvider,
+    private readonly _snippetService: SnippetService,
+    private readonly poolsProvider: PoolsProvider,
   ) {}
 
   get snippetService(): SnippetService {
-    return this._snippetService;
+    return this._snippetService
   }
 
   get downloadUrl(): string {
-    return this.poolsProvider.pool?.downloadUrl;
+    return this.poolsProvider.pool?.downloadUrl
   }
 
   get gettingStartedUrl(): string {
-    return `https://docs.foxypool.io/proof-of-spacetime/foxy-pool/pools/${this.poolsProvider.poolIdentifier}/getting-started/`;
+    return `https://docs.foxypool.io/proof-of-spacetime/foxy-pool/pools/${this.poolsProvider.poolIdentifier}/getting-started/`
   }
 }

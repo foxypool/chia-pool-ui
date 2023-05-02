@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core'
 import {AccountService} from '../account.service'
 import {Harvester} from '../types'
 import {BehaviorSubject, Observable, Subscription} from 'rxjs'
-import {faTractor} from '@fortawesome/free-solid-svg-icons';
+import {faTractor} from '@fortawesome/free-solid-svg-icons'
 import {skip} from 'rxjs/operators'
 
 @Component({
@@ -19,7 +19,7 @@ export class FarmerHarvestersComponent implements OnInit, OnDestroy {
   private readonly isLoadingSubject: BehaviorSubject<boolean> = new BehaviorSubject(true)
   private readonly harvestersSubject: BehaviorSubject<Harvester[]> = new BehaviorSubject<Harvester[]>([])
   private harvestersUpdateInterval?: number
-  private subscriptions: Subscription[] = [
+  private readonly subscriptions: Subscription[] = [
     this.accountService.currentAccountIdentifier.pipe(skip(1)).subscribe(async () => {
       this.page = 1
       await this.updateHarvesters()
@@ -45,7 +45,7 @@ export class FarmerHarvestersComponent implements OnInit, OnDestroy {
   }
 
   public trackBy(index: number, harvester: Harvester): string {
-    return harvester._id;
+    return harvester._id
   }
 
   private async updateHarvesters(): Promise<void> {

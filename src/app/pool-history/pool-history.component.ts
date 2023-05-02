@@ -1,10 +1,10 @@
-import {Component, OnDestroy} from '@angular/core';
-import {EChartsOption} from 'echarts';
-import {StatsService} from '../stats.service';
-import {SnippetService} from '../snippet.service';
-import * as moment from 'moment';
-import BigNumber from 'bignumber.js';
-import {Subscription} from 'rxjs';
+import {Component, OnDestroy} from '@angular/core'
+import {EChartsOption} from 'echarts'
+import {StatsService} from '../stats.service'
+import {SnippetService} from '../snippet.service'
+import * as moment from 'moment'
+import BigNumber from 'bignumber.js'
+import {Subscription} from 'rxjs'
 
 @Component({
   selector: 'app-pool-history',
@@ -12,16 +12,16 @@ import {Subscription} from 'rxjs';
   styleUrls: ['./pool-history.component.scss']
 })
 export class PoolHistoryComponent implements OnDestroy {
-  public chartOptions: EChartsOption;
-  public chartUpdateOptions: EChartsOption;
+  public chartOptions: EChartsOption
+  public chartUpdateOptions: EChartsOption
 
-  private subscriptions: Subscription[] = [
+  private readonly subscriptions: Subscription[] = [
     this.statsService.poolHistoricalStats.subscribe(historicalStats => this.chartUpdateOptions = this.makeChartUpdateOptions(historicalStats)),
-  ];
+  ]
 
   constructor(
-    private snippetService: SnippetService,
-    private statsService: StatsService,
+    private readonly snippetService: SnippetService,
+    private readonly statsService: StatsService,
   ) {
     this.chartOptions = {
       title: {
@@ -55,13 +55,13 @@ export class PoolHistoryComponent implements OnDestroy {
           label: {
             formatter: params => {
               if (params.axisDimension === 'x') {
-                return moment(params.value).format('YYYY-MM-DD');
+                return moment(params.value).format('YYYY-MM-DD')
               }
               if (params.axisIndex === 0) {
-                return (params.value as number).toFixed(0);
+                return (params.value as number).toFixed(0)
               }
 
-              return (params.value as number).toFixed(2);
+              return (params.value as number).toFixed(2)
             },
           },
         },
@@ -100,16 +100,16 @@ export class PoolHistoryComponent implements OnDestroy {
         smooth: true,
         yAxisIndex: 1,
       }],
-    };
+    }
   }
 
   public ngOnDestroy(): void {
-    this.subscriptions.map(subscription => subscription.unsubscribe());
+    this.subscriptions.map(subscription => subscription.unsubscribe())
   }
 
   private makeChartUpdateOptions(historicalStats): EChartsOption {
-    const biggestEc = historicalStats.reduce((acc, curr) => acc.isGreaterThan(curr.poolEcInTib) ? acc : new BigNumber(curr.poolEcInTib), new BigNumber(0));
-    const { unit, unitIndex } = this.getUnitForCapacity(biggestEc);
+    const biggestEc = historicalStats.reduce((acc, curr) => acc.isGreaterThan(curr.poolEcInTib) ? acc : new BigNumber(curr.poolEcInTib), new BigNumber(0))
+    const { unit, unitIndex } = this.getUnitForCapacity(biggestEc)
 
     return {
       tooltip: {
@@ -130,7 +130,7 @@ export class PoolHistoryComponent implements OnDestroy {
       }, {
         data: historicalStats.map(historicalStat => [historicalStat.timestamp, (new BigNumber(historicalStat.poolEcInTib)).dividedBy((new BigNumber(1024)).exponentiatedBy(unitIndex)).decimalPlaces(2).toNumber()]),
       }],
-    };
+    }
   }
 
   private tooltipFormatter(unit, params) {
@@ -138,62 +138,62 @@ export class PoolHistoryComponent implements OnDestroy {
       switch (series.seriesIndex) {
         case 0:
           return `<span style="display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:#037ffc;"></span>${series.seriesName} <span style="padding-left: 10px; float: right"><strong>${series.value[1]}</strong></span><br/>`
-            +`${series.marker}${this.snippetService.getSnippet('pool-history-component.chart.effort.name')} <span style="padding-left: 10px; float: right"><strong>${this.getEffortString(series.value[2])}</strong></span>`;
+            +`${series.marker}${this.snippetService.getSnippet('pool-history-component.chart.effort.name')} <span style="padding-left: 10px; float: right"><strong>${this.getEffortString(series.value[2])}</strong></span>`
         case 1:
-          return `${series.marker}${series.seriesName} <span style="padding-left: 10px; float: right"><strong>${series.value[1]} ${unit}</strong></span>`;
+          return `${series.marker}${series.seriesName} <span style="padding-left: 10px; float: right"><strong>${series.value[1]} ${unit}</strong></span>`
       }
 
-    }).join('<br/>');
+    }).join('<br/>')
   }
 
   private getUnitForCapacity(capacityInTibBN) {
-    let unitIndex = 0;
-    const units = ['TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+    let unitIndex = 0
+    const units = ['TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
     while (capacityInTibBN.isGreaterThanOrEqualTo(1024)) {
-      capacityInTibBN = capacityInTibBN.dividedBy(1024);
-      unitIndex += 1;
+      capacityInTibBN = capacityInTibBN.dividedBy(1024)
+      unitIndex += 1
     }
 
     return {
       unitIndex,
       unit: units[unitIndex],
-    };
+    }
   }
 
   private getEffortString(effort) {
     if (effort === null) {
-      return 'N/A';
+      return 'N/A'
     }
 
-    return `${(new BigNumber(effort)).multipliedBy(100).toFixed(2)}%`;
+    return `${(new BigNumber(effort)).multipliedBy(100).toFixed(2)}%`
   }
 
   private getEffortColor(effort) {
     if (effort === null || effort === undefined) {
-      return '#bbb';
+      return '#bbb'
     }
     if (effort < 0.25) {
-      return '#53b332';
+      return '#53b332'
     }
     if (effort < 0.5) {
-      return '#46cf76';
+      return '#46cf76'
     }
     if (effort < 0.75) {
-      return '#4bd28f';
+      return '#4bd28f'
     }
     if (effort < 1) {
-      return '#87d3b5';
+      return '#87d3b5'
     }
     if (effort < 1.5) {
-      return '#cfd0d1';
+      return '#cfd0d1'
     }
     if (effort < 2.5) {
-      return '#8c8c8c';
+      return '#8c8c8c'
     }
     if (effort < 4) {
-      return '#cc9321';
+      return '#cc9321'
     }
 
-    return '#ff4d4d';
+    return '#ff4d4d'
   }
 }

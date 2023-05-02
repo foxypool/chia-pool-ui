@@ -1,62 +1,62 @@
-import {ApplicationRef, Injectable, OnDestroy} from '@angular/core';
+import {ApplicationRef, Injectable, OnDestroy} from '@angular/core'
 import {SwUpdate, VersionReadyEvent} from '@angular/service-worker'
-import {ToastService} from './toast.service';
-import {SnippetService} from './snippet.service';
+import {ToastService} from './toast.service'
+import {SnippetService} from './snippet.service'
 import {filter, first} from 'rxjs/operators'
-import {concat, interval, Subscription} from 'rxjs';
+import {concat, interval, Subscription} from 'rxjs'
 
 @Injectable({
   providedIn: 'root',
 })
 export class UpdateService implements OnDestroy {
-  private subscriptions: Subscription[] = [
+  private readonly subscriptions: Subscription[] = [
     this.swUpdate.versionUpdates
       .pipe(filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'))
       .subscribe(async () => {
-        this.toastService.showInfoToast(this.snippetService.getSnippet('update-service.updating'), '', { timeOut: 2 * 1000 });
-        await new Promise(resolve => setTimeout(resolve, 2 * 1000));
-        await this.swUpdate.activateUpdate();
-        document.location.reload();
+        this.toastService.showInfoToast(this.snippetService.getSnippet('update-service.updating'), '', { timeOut: 2 * 1000 })
+        await new Promise(resolve => setTimeout(resolve, 2 * 1000))
+        await this.swUpdate.activateUpdate()
+        document.location.reload()
       }),
     this.swUpdate.unrecoverable.subscribe(async () => {
-      console.error('SW reached unrecoverable state, clearing cache and reloading ..');
-      await this.clearCacheStorage();
-      document.location.reload();
+      console.error('SW reached unrecoverable state, clearing cache and reloading ..')
+      await this.clearCacheStorage()
+      document.location.reload()
     }),
-  ];
+  ]
 
   constructor(
-    private swUpdate: SwUpdate,
-    private toastService: ToastService,
-    private snippetService: SnippetService,
+    private readonly swUpdate: SwUpdate,
+    private readonly toastService: ToastService,
+    private readonly snippetService: SnippetService,
     appRef: ApplicationRef
   ) {
     if (!swUpdate.isEnabled) {
-      return;
+      return
     }
-    const appIsStable$ = appRef.isStable.pipe(first(isStable => isStable === true));
-    const everySixHours$ = interval(6 * 60 * 60 * 1000);
-    const everySixHoursOnceAppIsStable$ = concat(appIsStable$, everySixHours$);
+    const appIsStable$ = appRef.isStable.pipe(first(isStable => isStable === true))
+    const everySixHours$ = interval(6 * 60 * 60 * 1000)
+    const everySixHoursOnceAppIsStable$ = concat(appIsStable$, everySixHours$)
 
-    this.subscriptions.push(everySixHoursOnceAppIsStable$.subscribe(() => swUpdate.checkForUpdate()));
+    this.subscriptions.push(everySixHoursOnceAppIsStable$.subscribe(() => swUpdate.checkForUpdate()))
   }
 
   public ngOnDestroy(): void {
-    this.subscriptions.map(subscription => subscription.unsubscribe());
+    this.subscriptions.map(subscription => subscription.unsubscribe())
   }
 
   async clearCacheStorage(): Promise<boolean[][]> {
-    const cacheKeys = await caches.keys();
+    const cacheKeys = await caches.keys()
 
     return Promise.all(
       cacheKeys
         .filter(cacheKey => /^(ngsw).*/.test(cacheKey))
         .map(async cacheKey => {
-          const cache = await caches.open(cacheKey);
-          const requests = await cache.keys();
+          const cache = await caches.open(cacheKey)
+          const requests = await cache.keys()
 
-          return Promise.all(requests.map(req => cache.delete(req)));
+          return Promise.all(requests.map(req => cache.delete(req)))
         })
-    );
+    )
   }
 }

@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core'
 
-import {StatsService} from './stats.service';
-import {PoolsProvider} from './pools.provider';
-import {LocalStorageService} from './local-storage.service';
-import {ToastService} from './toast.service';
-import {BigNumber} from 'bignumber.js';
-import {SnippetService} from './snippet.service';
-import * as Sentry from '@sentry/angular';
+import {StatsService} from './stats.service'
+import {PoolsProvider} from './pools.provider'
+import {LocalStorageService} from './local-storage.service'
+import {ToastService} from './toast.service'
+import {BigNumber} from 'bignumber.js'
+import {SnippetService} from './snippet.service'
+import * as Sentry from '@sentry/angular'
 import {BehaviorSubject, Observable} from 'rxjs'
-import {WonBlock} from './farmer-won-blocks/farmer-won-blocks.component';
+import {WonBlock} from './farmer-won-blocks/farmer-won-blocks.component'
 import {AccountPayout} from './farmer-payout-history/farmer-payout-history.component'
 import {distinctUntilChanged, filter, map, shareReplay} from 'rxjs/operators'
 import {AccountHistoricalStat} from './api.service'
@@ -17,31 +17,31 @@ import {AccountHistoricalStat} from './api.service'
   providedIn: 'root'
 })
 export class AccountService {
-  public static poolPublicKeyStorageKey = 'poolPublicKey';
-  public static authTokenStorageKey = (poolPublicKey: string): string => `authToken:${poolPublicKey}`;
+  public static poolPublicKeyStorageKey = 'poolPublicKey'
+  public static authTokenStorageKey = (poolPublicKey: string): string => `authToken:${poolPublicKey}`
 
   public currentAccountIdentifier: Observable<string>
-  public accountSubject = new BehaviorSubject<any>(null);
-  public accountHistoricalStats = new BehaviorSubject<AccountHistoricalStat[]>([]);
-  public accountWonBlocks = new BehaviorSubject<WonBlock[]>([]);
+  public accountSubject = new BehaviorSubject<any>(null)
+  public accountHistoricalStats = new BehaviorSubject<AccountHistoricalStat[]>([])
+  public accountWonBlocks = new BehaviorSubject<WonBlock[]>([])
   public accountPayouts = new BehaviorSubject<AccountPayout[]>([])
-  public isLoading = false;
-  public isAuthenticating = false;
-  public isUpdatingAccount = false;
-  public isLeavingPool = false;
-  public isMyFarmerPage = true;
+  public isLoading = false
+  public isAuthenticating = false
+  public isUpdatingAccount = false
+  public isLeavingPool = false
+  public isMyFarmerPage = true
 
-  private _poolPublicKey: string = null;
+  private _poolPublicKey: string = null
 
   constructor(
-    private statsService: StatsService,
-    private poolsProvider: PoolsProvider,
-    private localStorageService: LocalStorageService,
-    private toastService: ToastService,
-    private snippetService: SnippetService,
+    private readonly statsService: StatsService,
+    private readonly poolsProvider: PoolsProvider,
+    private readonly localStorageService: LocalStorageService,
+    private readonly toastService: ToastService,
+    private readonly snippetService: SnippetService,
   ) {
-    this.migrateLegacyConfig();
-    this.poolPublicKey = this.poolPublicKeyFromLocalStorage;
+    this.migrateLegacyConfig()
+    this.poolPublicKey = this.poolPublicKeyFromLocalStorage
     this.currentAccountIdentifier = this.accountSubject
       .asObservable()
       .pipe(
@@ -53,202 +53,202 @@ export class AccountService {
   }
 
   get account(): any {
-    return this.accountSubject.getValue();
+    return this.accountSubject.getValue()
   }
 
   set account(account: any) {
-    this.accountSubject.next(account);
+    this.accountSubject.next(account)
   }
 
   get poolPublicKey(): string {
-    return this._poolPublicKey;
+    return this._poolPublicKey
   }
 
   set poolPublicKey(value: string) {
-    this._poolPublicKey = value;
+    this._poolPublicKey = value
     if (value) {
-      Sentry.setUser({ id: value });
+      Sentry.setUser({ id: value })
     } else {
-      Sentry.setUser(null);
+      Sentry.setUser(null)
     }
   }
 
   get poolPublicKeyFromLocalStorage(): string {
-    return this.localStorageService.getItem(AccountService.poolPublicKeyStorageKey);
+    return this.localStorageService.getItem(AccountService.poolPublicKeyStorageKey)
   }
 
   get authToken(): string {
-    return this.localStorageService.getItem(AccountService.authTokenStorageKey(this.poolPublicKey));
+    return this.localStorageService.getItem(AccountService.authTokenStorageKey(this.poolPublicKey))
   }
 
   async login({ poolPublicKey }): Promise<boolean> {
-    poolPublicKey = poolPublicKey.trim();
+    poolPublicKey = poolPublicKey.trim()
     if (!poolPublicKey.startsWith('0x')) {
-      poolPublicKey = `0x${poolPublicKey}`;
+      poolPublicKey = `0x${poolPublicKey}`
     }
-    const account = await this.getAccount({ poolPublicKey });
+    const account = await this.getAccount({ poolPublicKey })
     if (account === null) {
-      this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', poolPublicKey));
-      return false;
+      this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', poolPublicKey))
+      return false
     }
-    this.setPoolPublicKeyInLocalStorage(poolPublicKey);
-    this.poolPublicKey = poolPublicKey;
-    await this.updateAccount();
+    this.setPoolPublicKeyInLocalStorage(poolPublicKey)
+    this.poolPublicKey = poolPublicKey
+    await this.updateAccount()
     await Promise.all([
       this.updateAccountHistoricalStats(),
       this.updateAccountWonBlocks(),
       this.updateAccountPayouts(),
-    ]);
-    this.toastService.showSuccessToast(this.snippetService.getSnippet('account-service.login.success'));
+    ])
+    this.toastService.showSuccessToast(this.snippetService.getSnippet('account-service.login.success'))
 
-    return true;
+    return true
   }
 
   async doesAccountExist({ poolPublicKey }) {
-    const account = await this.getAccount({ poolPublicKey });
+    const account = await this.getAccount({ poolPublicKey })
     if (account === null) {
-      this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', poolPublicKey));
+      this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', poolPublicKey))
 
-      return false;
+      return false
     }
 
-    return true;
+    return true
   }
 
   logout(): void {
-    this.removeAuthTokenFromLocalStorage();
+    this.removeAuthTokenFromLocalStorage()
     if (!this.isExternalPoolPublicKey) {
-      this.removePoolPublicKeyFromLocalStorage();
-      this.clearStats();
+      this.removePoolPublicKeyFromLocalStorage()
+      this.clearStats()
     }
-    this.toastService.showSuccessToast(this.snippetService.getSnippet('account-service.logout.success'));
+    this.toastService.showSuccessToast(this.snippetService.getSnippet('account-service.logout.success'))
   }
 
   clearStats(): void {
-    this.poolPublicKey = null;
-    this.account = null;
-    this.accountHistoricalStats.next([]);
-    this.accountWonBlocks.next([]);
+    this.poolPublicKey = null
+    this.account = null
+    this.accountHistoricalStats.next([])
+    this.accountWonBlocks.next([])
     this.accountPayouts.next([])
   }
 
   removePoolPublicKeyFromLocalStorage(): void {
-    this.localStorageService.removeItem(AccountService.poolPublicKeyStorageKey);
+    this.localStorageService.removeItem(AccountService.poolPublicKeyStorageKey)
   }
 
   setPoolPublicKeyInLocalStorage(poolPublicKey: string): void {
-    this.localStorageService.setItem(AccountService.poolPublicKeyStorageKey, poolPublicKey);
+    this.localStorageService.setItem(AccountService.poolPublicKeyStorageKey, poolPublicKey)
   }
 
   setAuthTokenInLocalStorage(authToken: string): void {
-    this.localStorageService.setItem(AccountService.authTokenStorageKey(this.poolPublicKey), authToken);
+    this.localStorageService.setItem(AccountService.authTokenStorageKey(this.poolPublicKey), authToken)
   }
 
   removeAuthTokenFromLocalStorage(): void {
-    this.localStorageService.removeItem(AccountService.authTokenStorageKey(this.poolPublicKey));
+    this.localStorageService.removeItem(AccountService.authTokenStorageKey(this.poolPublicKey))
   }
 
   get havePoolPublicKey(): boolean {
-    return !!this.poolPublicKey;
+    return !!this.poolPublicKey
   }
 
   get haveAccount(): boolean {
-    return this.account !== null;
+    return this.account !== null
   }
 
   get haveAuthToken(): boolean {
-    return !!this.authToken;
+    return !!this.authToken
   }
 
   get isAuthenticated(): boolean {
-    return this.havePoolPublicKey && this.haveAuthToken;
+    return this.havePoolPublicKey && this.haveAuthToken
   }
 
   get isExternalPoolPublicKey(): boolean {
-    return this.poolPublicKey !== this.poolPublicKeyFromLocalStorage;
+    return this.poolPublicKey !== this.poolPublicKeyFromLocalStorage
   }
 
   async updateAccount({ bustCache = false } = {}) {
-    this.account = await this.getAccount({ poolPublicKey: this.poolPublicKey, bustCache });
+    this.account = await this.getAccount({ poolPublicKey: this.poolPublicKey, bustCache })
     if (!this.haveAccount) {
       if (this.isMyFarmerPage) {
-        this.removeAuthTokenFromLocalStorage();
-        this.removePoolPublicKeyFromLocalStorage();
+        this.removeAuthTokenFromLocalStorage()
+        this.removePoolPublicKeyFromLocalStorage()
       }
-      this.accountHistoricalStats.next([]);
-      this.accountWonBlocks.next([]);
+      this.accountHistoricalStats.next([])
+      this.accountWonBlocks.next([])
       this.accountPayouts.next([])
-      this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', this.poolPublicKey));
+      this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', this.poolPublicKey))
     }
   }
 
   async updateAccountHistoricalStats() {
-    this.accountHistoricalStats.next(await this.getAccountHistoricalStats({ poolPublicKey: this.poolPublicKey }));
+    this.accountHistoricalStats.next(await this.getAccountHistoricalStats({ poolPublicKey: this.poolPublicKey }))
   }
 
   async updateAccountWonBlocks() {
-    this.accountWonBlocks.next(await this.getAccountWonBlocks({ poolPublicKey: this.poolPublicKey }));
+    this.accountWonBlocks.next(await this.getAccountWonBlocks({ poolPublicKey: this.poolPublicKey }))
   }
 
   async updateAccountPayouts() {
-    this.accountPayouts.next(await this.getAccountPayouts({ poolPublicKey: this.poolPublicKey }));
+    this.accountPayouts.next(await this.getAccountPayouts({ poolPublicKey: this.poolPublicKey }))
   }
 
   async getAccount({ poolPublicKey, bustCache = false }) {
-    this.isLoading = true;
-    let account = null;
+    this.isLoading = true
+    let account = null
     try {
-      account = await this.statsService.getAccount({ poolPublicKey, bustCache });
+      account = await this.statsService.getAccount({ poolPublicKey, bustCache })
       if (account) {
-        this.patchAccount(account);
+        this.patchAccount(account)
       }
     } catch (err) {
       if (err.response && err.response.data && err.response.data.error) {
-        account = null;
+        account = null
       } else {
-        throw err;
+        throw err
       }
     } finally {
-      this.isLoading = false;
+      this.isLoading = false
     }
 
-    return account;
+    return account
   }
 
   async getAccountHarvesters() {
-    this.isLoading = true;
-    let accountHarvesters = [];
+    this.isLoading = true
+    let accountHarvesters = []
     try {
-      accountHarvesters = await this.statsService.getAccountHarvesters({ poolPublicKey: this.poolPublicKey });
+      accountHarvesters = await this.statsService.getAccountHarvesters({ poolPublicKey: this.poolPublicKey })
     } finally {
-      this.isLoading = false;
+      this.isLoading = false
     }
 
-    return accountHarvesters;
+    return accountHarvesters
   }
 
   async getAccountHistoricalStats({ poolPublicKey }): Promise<AccountHistoricalStat[]> {
-    this.isLoading = true;
-    let accountHistoricalStats = [];
+    this.isLoading = true
+    let accountHistoricalStats = []
     try {
-      accountHistoricalStats = await this.statsService.getAccountHistoricalStats({ poolPublicKey });
+      accountHistoricalStats = await this.statsService.getAccountHistoricalStats({ poolPublicKey })
     } finally {
-      this.isLoading = false;
+      this.isLoading = false
     }
 
-    return accountHistoricalStats;
+    return accountHistoricalStats
   }
 
   private async getAccountWonBlocks({ poolPublicKey }) {
-    this.isLoading = true;
-    let accountWonBlocks = [];
+    this.isLoading = true
+    let accountWonBlocks = []
     try {
-      accountWonBlocks = await this.statsService.getAccountWonBlocks({ poolPublicKey });
+      accountWonBlocks = await this.statsService.getAccountWonBlocks({ poolPublicKey })
     } finally {
-      this.isLoading = false;
+      this.isLoading = false
     }
 
-    return accountWonBlocks;
+    return accountWonBlocks
   }
 
   private async getAccountPayouts({ poolPublicKey }) {
@@ -264,45 +264,45 @@ export class AccountService {
   }
 
   patchAccount(account): void {
-    account.pendingBN = new BigNumber(account.pending);
-    account.pendingRounded = account.pendingBN.decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber();
+    account.pendingBN = new BigNumber(account.pending)
+    account.pendingRounded = account.pendingBN.decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber()
     if (account.collateral) {
-      account.collateralBN = new BigNumber(account.collateral);
-      account.collateralRounded = account.collateralBN.decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber();
+      account.collateralBN = new BigNumber(account.collateral)
+      account.collateralRounded = account.collateralBN.decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber()
     }
   }
 
   async authenticate({ signature, message }) {
     if (!this.havePoolPublicKey) {
-      return;
+      return
     }
-    this.isAuthenticating = true;
+    this.isAuthenticating = true
     try {
       const { accessToken } = await this.statsService.authenticate({
         poolPublicKey: this.poolPublicKey,
         signature,
         message,
-      });
-      this.setAuthTokenInLocalStorage(accessToken);
+      })
+      this.setAuthTokenInLocalStorage(accessToken)
     } finally {
-      this.isAuthenticating = false;
+      this.isAuthenticating = false
     }
   }
 
   async updateName({ newName }) {
     if (!this.isAuthenticated) {
-      return;
+      return
     }
-    this.isUpdatingAccount = true;
+    this.isUpdatingAccount = true
     try {
       await this.statsService.updateAccountName({
         poolPublicKey: this.poolPublicKey,
         authToken: this.authToken,
         newName,
-      });
-      await this.updateAccount({ bustCache: true });
+      })
+      await this.updateAccount({ bustCache: true })
     } finally {
-      this.isUpdatingAccount = false;
+      this.isUpdatingAccount = false
     }
   }
 
@@ -320,55 +320,55 @@ export class AccountService {
 
   async leavePool({ leaveForEver }) {
     if (!this.isAuthenticated) {
-      return;
+      return
     }
-    this.isUpdatingAccount = true;
-    this.isLeavingPool = true;
+    this.isUpdatingAccount = true
+    this.isLeavingPool = true
     try {
       await this.statsService.leavePool({
         poolPublicKey: this.poolPublicKey,
         authToken: this.authToken,
         leaveForEver,
-      });
-      await this.updateAccount({ bustCache: true });
+      })
+      await this.updateAccount({ bustCache: true })
     } finally {
-      this.isUpdatingAccount = false;
-      this.isLeavingPool = false;
+      this.isUpdatingAccount = false
+      this.isLeavingPool = false
     }
   }
 
   async rejoinPool() {
     if (!this.isAuthenticated) {
-      return;
+      return
     }
-    this.isUpdatingAccount = true;
+    this.isUpdatingAccount = true
     try {
       await this.statsService.rejoinPool({
         poolPublicKey: this.poolPublicKey,
         authToken: this.authToken,
-      });
-      await this.updateAccount({ bustCache: true });
+      })
+      await this.updateAccount({ bustCache: true })
     } catch (err) {
-      this.toastService.showErrorToast(err.message);
+      this.toastService.showErrorToast(err.message)
     } finally {
-      this.isUpdatingAccount = false;
+      this.isUpdatingAccount = false
     }
   }
 
   async updateMinimumPayout({ newMinimumPayout }) {
     if (!this.isAuthenticated) {
-      return;
+      return
     }
-    this.isUpdatingAccount = true;
+    this.isUpdatingAccount = true
     try {
       await this.statsService.updateAccountMinimumPayout({
         poolPublicKey: this.poolPublicKey,
         authToken: this.authToken,
         minimumPayout: newMinimumPayout,
-      });
-      await this.updateAccount({ bustCache: true });
+      })
+      await this.updateAccount({ bustCache: true })
     } finally {
-      this.isUpdatingAccount = false;
+      this.isUpdatingAccount = false
     }
   }
 
@@ -416,10 +416,10 @@ export class AccountService {
   }
 
   private migrateLegacyConfig() {
-    const legacyAuthToken = this.localStorageService.getItem('authToken');
+    const legacyAuthToken = this.localStorageService.getItem('authToken')
     if (legacyAuthToken) {
-      this.localStorageService.setItem(AccountService.authTokenStorageKey(this.poolPublicKeyFromLocalStorage), legacyAuthToken);
-      this.localStorageService.removeItem('authToken');
+      this.localStorageService.setItem(AccountService.authTokenStorageKey(this.poolPublicKeyFromLocalStorage), legacyAuthToken)
+      this.localStorageService.removeItem('authToken')
     }
   }
 }
