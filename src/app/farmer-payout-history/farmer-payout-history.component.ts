@@ -28,6 +28,8 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
   @Input() selectedCurrencyObservable: Observable<string>
   @Input() exchangeStatsObservable: Observable<unknown>
 
+  public page = 1
+  public pageSize = 7
   public payoutsObservable: Observable<FormattedAccountPayout[]>
   public faMoneyCheck = faMoneyCheckAlt
   public faExchangeAlt = faExchangeAlt

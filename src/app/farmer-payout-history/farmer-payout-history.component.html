@@ -27,24 +27,24 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngIf="isLoading && payouts.getValue().length === 0">
+          <tr *ngIf="isLoading && (payouts | async).length === 0">
             <td colspan="5" style="text-align: center">
               <app-loading-state></app-loading-state>
             </td>
           </tr>
-          <tr *ngIf="!isLoading && payouts.getValue().length === 0">
+          <tr *ngIf="!isLoading && (payouts | async).length === 0">
             <td colspan="5" style="text-align: center; padding-top: 1rem">
               <app-empty-state [text]="snippetService.getSnippet('payouts-component.no-payouts-sent-yet')" [icon]="faMoneyCheck"></app-empty-state>
             </td>
           </tr>
-          <tr *ngFor="let payout of (payoutsObservable | async); trackBy: trackPayoutById">
-            <td>{{payout.formattedPayoutDate}}</td>
+          <tr *ngFor="let payout of payoutsObservable | async | slice: (page - 1) * pageSize : page * pageSize; trackBy: trackPayoutById">
+            <td style="white-space: nowrap">{{payout.formattedPayoutDate}}</td>
             <td>
               <a *ngIf="payout.blockExplorerUrl !== undefined" href="{{payout.blockExplorerUrl}}" target="_blank" style="color: #b45bff">{{payout.coinId}}</a>
               <span *ngIf="payout.blockExplorerUrl === undefined">{{payout.coinId}}</span>
             </td>
-            <td>{{payout.amountFormatted}} {{poolConfig.ticker}}</td>
-            <td>{{payout.fiatAmountFormatted}}</td>
+            <td style="white-space: nowrap">{{payout.amountFormatted}} {{poolConfig.ticker}}</td>
+            <td style="white-space: nowrap">{{payout.fiatAmountFormatted}}</td>
             <td>{{payout.state}}</td>
           </tr>
         </tbody>
@@ -52,3 +52,13 @@
     </div>
   </div>
 </div>
+<ngb-pagination
+  *ngIf="(payouts | async).length > pageSize"
+  class="d-flex justify-content-center"
+  [(page)]="page"
+  [pageSize]="pageSize"
+  [collectionSize]="(payouts | async).length"
+  [maxSize]="5"
+  [rotate]="true"
+  [boundaryLinks]="true">
+</ngb-pagination>
