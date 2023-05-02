@@ -499,6 +499,12 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       return
     }
     const farmingSince = this.accountService.account.rejoinedAt || this.accountService.account.createdAt
+    if (moment().diff(farmingSince, 'years') >= 5) {
+      return {
+        imageFileName: '5-years.png',
+        imageAlt: '5+ years farming',
+      }
+    }
     if (moment().diff(farmingSince, 'years') >= 3) {
       return {
         imageFileName: '3-years.png',
