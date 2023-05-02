@@ -159,10 +159,10 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     this.totalStaleSharesPercentage = staleSharesPercentage.pipe(map(percentage => percentage.toFixed(2)), shareReplay())
     this.staleSharesColorClasses = staleSharesPercentage.pipe(
       map(percentage => {
-        if (percentage.isGreaterThanOrEqualTo(5)) {
+        if (percentage.isGreaterThanOrEqualTo(2)) {
           return ['color-red']
         }
-        if (percentage.isGreaterThanOrEqualTo(2)) {
+        if (percentage.isGreaterThanOrEqualTo(1)) {
           return ['color-orange']
         }
 
