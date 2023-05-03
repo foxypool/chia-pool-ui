@@ -20,21 +20,21 @@
         <div>
           <span *ngIf="accountService.account.name !== undefined" class="mb-0 fw-light fs-2">{{accountService.account.name}}</span>
           <ng-template #badgeContent>
-            <div *ngIf="topNRankInfo" class="mt-2">
+            <div *ngIf="topNRankInfo" class="pt-1 pb-1 d-flex align-items-center">
               <img src="assets/top-n-ranks/{{topNRankInfo.imageFileName}}" loading="lazy" height="64" width="64" [alt]="topNRankInfo.imageAlt">
-              <span class="ms-3">{{topNRankInfo.imageAlt}}</span>
+              <div class="ms-3 d-inline-block">{{topNRankInfo.imageAlt}}</div>
             </div>
-            <div *ngIf="tenureRankInfo" class="mt-2">
+            <div *ngIf="tenureRankInfo" class="pt-1 pb-1 d-flex align-items-center">
               <img src="assets/tenure-ranks/{{tenureRankInfo.imageFileName}}" loading="lazy" height="64" width="64" [alt]="tenureRankInfo.imageAlt">
-              <span class="ms-3">{{tenureRankInfo.imageAlt}}</span>
+              <div class="ms-3 d-inline-block">{{tenureRankInfo.imageAlt}}</div>
             </div>
-            <div *ngIf="capacityRankInfo" class="mt-2">
+            <div *ngIf="capacityRankInfo" class="pt-1 pb-1 d-flex align-items-center">
               <img src="assets/capacity-ranks/{{capacityRankInfo.imageFileName}}" loading="lazy" height="64" width="64" [alt]="capacityRankInfo.imageAlt">
-              <span class="ms-3">{{capacityRankInfo.imageAlt}}</span>
+              <div class="ms-3 d-inline-block">{{capacityRankInfo.imageAlt}}</div>
             </div>
-            <div *ngIf="joinedFirstYear" class="mt-2">
+            <div *ngIf="joinedFirstYear" class="pt-1 pb-1 d-flex align-items-center">
               <img ngSrc="assets/joined-first-year.png" height="64" width="64" alt="Year 1 member">
-              <span class="ms-3">Year 1 member</span>
+              <div class="ms-3 d-inline-block">Year 1 member</div>
             </div>
           </ng-template>
           <div
