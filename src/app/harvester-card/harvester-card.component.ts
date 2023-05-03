@@ -14,6 +14,7 @@ import {EChartsOption} from 'echarts'
 import {Moment} from 'moment'
 import {stripHexPrefix} from '../util'
 import {compare} from 'compare-versions'
+import {clientVersions} from '../client-versions'
 
 const sharesPerDayPerK32 = 10
 const k32SizeInGb = 108.837
@@ -214,10 +215,10 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     if (chiaVersion === 'Unknown') {
       return []
     }
-    if (compare(chiaVersion, '1.7.1', '>=')) {
+    if (compare(chiaVersion, clientVersions.chia.recommendedMinimum, '>=')) {
       return []
     }
-    if (compare(chiaVersion, '1.7.0', '>=')) {
+    if (compare(chiaVersion, clientVersions.chia.minimum, '>=')) {
       return ['color-orange']
     }
 
@@ -237,10 +238,10 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     if (ogVersion === undefined) {
       return []
     }
-    if (compare(ogVersion, '1.3.0', '>=')) {
+    if (compare(ogVersion, clientVersions.og.recommendedMinimum, '>=')) {
       return []
     }
-    if (compare(ogVersion, '1.2.0', '>=')) {
+    if (compare(ogVersion, clientVersions.og.minimum, '>=')) {
       return ['color-orange']
     }
 
@@ -262,10 +263,10 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     if (foxyFarmerVersion === undefined) {
       return []
     }
-    if (compare(foxyFarmerVersion, '1.3.0', '>=')) {
+    if (compare(foxyFarmerVersion, clientVersions.foxyFarmer.recommendedMinimum, '>=')) {
       return []
     }
-    if (compare(foxyFarmerVersion, '1.2.0', '>=')) {
+    if (compare(foxyFarmerVersion, clientVersions.foxyFarmer.minimum, '>=')) {
       return ['color-orange']
     }
 
@@ -294,8 +295,11 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     if (isNaN(gigahorseVersionNumber)) {
       return []
     }
-    if (gigahorseVersionNumber >= 10) {
+    if (gigahorseVersionNumber >= clientVersions.gigahorse.recommendedMinimum) {
       return []
+    }
+    if (gigahorseVersionNumber >= clientVersions.gigahorse.minimum) {
+      return ['color-orange']
     }
 
     return ['color-red']
