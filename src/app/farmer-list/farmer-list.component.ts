@@ -1,5 +1,5 @@
 import {Component, OnDestroy} from '@angular/core'
-import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs'
+import {BehaviorSubject, combineLatest, Observable, Subscription, takeWhile} from 'rxjs'
 import {faHdd} from '@fortawesome/free-regular-svg-icons'
 import {distinctUntilChanged, filter, map, shareReplay} from 'rxjs/operators'
 import {StatsService} from '../stats.service'
@@ -15,8 +15,9 @@ import {ActivatedRoute, Router} from '@angular/router'
 })
 export class FarmerListComponent implements OnDestroy {
   public readonly faHdd = faHdd
-  public readonly limit = 25
+  public readonly limit = 15
   public isLoading: Observable<boolean>
+  public isLoadingInitial: Observable<boolean>
   public accounts: Observable<Account[]>
   public page = 1
   public total = 0
@@ -57,6 +58,7 @@ export class FarmerListComponent implements OnDestroy {
         shareReplay(),
       )
     this.isLoading = this.isLoadingSubject.pipe(shareReplay())
+    this.isLoadingInitial = this.isLoadingSubject.pipe(takeWhile(isLoading => isLoading, true), shareReplay())
   }
 
   public ngOnDestroy() {

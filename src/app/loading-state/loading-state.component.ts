@@ -9,4 +9,5 @@ export class LoadingStateComponent {
   @Input() width = 3
   @Input() height = 3
   @Input() fontSize = 'inherit'
+  @Input() colorClass = 'text-primary'
 }

@@ -9,12 +9,12 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngIf="isLoading | async">
+      <tr *ngIf="isLoadingInitial | async">
         <td colspan="4" style="text-align: center">
           <app-loading-state></app-loading-state>
         </td>
       </tr>
-      <tr *ngIf="(isLoading | async) === false && (accounts | async).length === 0">
+      <tr *ngIf="(isLoadingInitial | async) === false && (accounts | async).length === 0">
         <td colspan="4" style="text-align: center; padding-top: 1rem">
           <app-empty-state text="No accounts found!" [icon]="faHdd"></app-empty-state>
         </td>
@@ -38,4 +38,7 @@
   [rotate]="true"
   [boundaryLinks]="true"
   (pageChange)="onPageChange()">
+  <ng-template ngbPaginationNumber let-p>
+    {{ p }} <app-loading-state *ngIf="p === page && (isLoading | async)" width="1" height="1" colorClass="text-light"></app-loading-state>
+  </ng-template>
 </ngb-pagination>
