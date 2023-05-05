@@ -5,6 +5,7 @@ import {PayoutsComponent} from './payouts/payouts.component'
 import {TopAccountsComponent} from './top-accounts/top-accounts.component'
 import {DashboardComponent} from './dashboard/dashboard.component'
 import {MyFarmerComponent} from './my-farmer/my-farmer.component'
+import {FarmerListComponent} from './farmer-list/farmer-list.component'
 
 const routes: Routes = [
   { path: '', component: DashboardComponent, pathMatch: 'full' },
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'payouts', component: PayoutsComponent, pathMatch: 'full', data: { titlePrefixSnippet: 'payouts' } },
   { path: 'top-accounts', component: TopAccountsComponent, pathMatch: 'full', data: { titlePrefixSnippet: 'top-accounts' } },
   { path: 'my-farmer', component: MyFarmerComponent, pathMatch: 'full', data: { titlePrefixSnippet: 'my-farmer' } },
+  { path: 'farmers', component: FarmerListComponent, pathMatch: 'full', data: { titlePrefixSnippet: 'farmers' } },
   { path: 'farmer/:poolPublicKey', component: MyFarmerComponent, pathMatch: 'full', data: { titlePrefixSnippet: 'farmer' } },
   { path: 'notices', loadChildren: () => import('./notices/notices.module').then(m => m.NoticesModule) },
   { path: 'events', loadChildren: () => import('./events/events.module').then(m => m.EventsModule) },

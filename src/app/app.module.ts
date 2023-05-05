@@ -42,7 +42,8 @@ import { FarmerHarvestersComponent } from './farmer-harvesters/farmer-harvesters
 import { HarvesterCardComponent } from './harvester-card/harvester-card.component'
 import { EditableModule } from '@ngneat/edit-in-place'
 import { SettingsModalComponent } from './settings-modal/settings-modal.component'
-import {NgOptimizedImage} from '@angular/common'
+import {NgOptimizedImage} from '@angular/common';
+import { FarmerListComponent } from './farmer-list/farmer-list.component'
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import {NgOptimizedImage} from '@angular/common'
     FarmerHarvestersComponent,
     HarvesterCardComponent,
     SettingsModalComponent,
+    FarmerListComponent,
   ],
   imports: [
     BrowserModule,

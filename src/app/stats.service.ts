@@ -6,7 +6,7 @@ import * as moment from 'moment'
 import {PoolsProvider} from './pools.provider'
 import {SnippetService} from './snippet.service'
 import {configForCoin} from './coin-config'
-import {AccountHistoricalStat, ApiService, HarvesterStats} from './api.service'
+import {AccountHistoricalStat, AccountListResponse, ApiService, HarvesterStats} from './api.service'
 
 @Injectable({
   providedIn: 'root'
@@ -134,6 +134,10 @@ export class StatsService {
 
   onNewExchangeStats(exchangeStats) {
     this.exchangeStats.next(exchangeStats)
+  }
+
+  public async getAccounts({ page, limit}: { page: number, limit: number}): Promise<AccountListResponse> {
+    return this.apiService.getAccounts({ poolIdentifier: this.poolIdentifier, page, limit })
   }
 
   getAccount({ poolPublicKey, bustCache = false }) {

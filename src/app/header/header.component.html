@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-xl navbar-dark sticky-navbar">
   <a class="navbar-brand text-decoration-none">
     <img src="https://static.foxypool.io/assets/icon/fox.svg" width="34" height="34" alt="">
-    <span style="font-weight: 300; font-size: 1.1em;margin-left: 8px;vertical-align: top">{{poolTitle}}</span>
+    <span class="pool-title">{{poolTitle}}</span>
   </a>
   <button class="navbar-toggler" type="button" (click)="toggleMenuCollapse()">
     <span class="navbar-toggler-icon"></span>
@@ -19,6 +19,13 @@
         <a class="nav-link">
           <button type="button" class="btn btn-outline-primary no-wrap" routerLink="/my-farmer" routerLinkActive="active" (click)="onTabButtonClick()">
             {{snippetService.getSnippet('header-component.button.my-farmer')}}
+          </button>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link">
+          <button type="button" class="btn btn-outline-primary no-wrap" routerLink="/farmers" [queryParams]="{ page: '1' }" [class.active]="isLinkActive('/farmers')" (click)="onTabButtonClick()">
+            Farmers
           </button>
         </a>
       </li>

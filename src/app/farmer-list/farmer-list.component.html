@@ -1,0 +1,41 @@
+<div class="table-responsive-lg">
+  <table class="table dark-theme">
+    <thead>
+      <tr>
+        <th scope="col">Rank</th>
+        <th scope="col">Account</th>
+        <th scope="col">Effective Capacity</th>
+        <th scope="col">Joined</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="isLoading | async">
+        <td colspan="4" style="text-align: center">
+          <app-loading-state></app-loading-state>
+        </td>
+      </tr>
+      <tr *ngIf="(isLoading | async) === false && (accounts | async).length === 0">
+        <td colspan="4" style="text-align: center; padding-top: 1rem">
+          <app-empty-state text="No accounts found!" [icon]="faHdd"></app-empty-state>
+        </td>
+      </tr>
+      <tr *ngFor="let account of accounts | async; trackBy: trackBy">
+        <td>{{account.rank}}</td>
+        <td class="ellipsis"><a class="farmer-page-link" routerLink="/farmer/{{account.poolPublicKey}}">{{account.name ? account.name : account.payoutAddress}}</a></td>
+        <td class="no-wrap">{{account.ecFormatted}} <span style="font-size: 12.8px">({{account.ecShare}}%)</span></td>
+        <td class="no-wrap">{{account.joinedAtDuration}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<ngb-pagination
+  *ngIf="total > limit"
+  class="d-flex justify-content-center"
+  [(page)]="page"
+  [pageSize]="limit"
+  [collectionSize]="total"
+  [maxSize]="5"
+  [rotate]="true"
+  [boundaryLinks]="true"
+  (pageChange)="onPageChange()">
+</ngb-pagination>

@@ -74,6 +74,6 @@ export class TopAccountsComponent implements OnDestroy {
   }
 
   trackBy(index, account) {
-    return account.payoutAddress
+    return account.poolPublicKey
   }
 }

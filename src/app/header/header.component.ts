@@ -40,6 +40,13 @@ export class HeaderComponent implements OnDestroy {
     this.subscriptions.map(subscription => subscription.unsubscribe())
   }
 
+  public isLinkActive(url: string): boolean {
+    const queryParamsIndex = this.router.url.indexOf('?')
+    const baseUrl = queryParamsIndex === -1 ? this.router.url : this.router.url.slice(0, queryParamsIndex)
+
+    return baseUrl === url
+  }
+
   get showLogoutButton(): boolean {
     if (!this.accountService.isMyFarmerPage) {
       return this.accountService.isAuthenticated

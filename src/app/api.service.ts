@@ -51,6 +51,12 @@ export class ApiService {
     return data
   }
 
+  public async getAccounts({ poolIdentifier, page, limit }: { poolIdentifier: string, page: number, limit: number }): Promise<AccountListResponse> {
+    const { data } = await this.client.get<AccountListResponse>(`${poolIdentifier}/accounts/list`, { params: { page, limit } })
+
+    return data
+  }
+
   async getAccount({ poolIdentifier, poolPublicKey, bustCache = false }) {
     const params: any = {}
     if (bustCache) {
@@ -189,6 +195,21 @@ export class ApiService {
 
     return data
   }
+}
+
+export interface AccountListResponse {
+  accounts: AccountModel[]
+  total: number
+}
+
+export interface AccountModel {
+  rank?: number
+  name?: string
+  payoutAddress: string
+  poolPublicKey: string
+  ec: number
+  createdAt: string
+  rejoinedAt?: string
 }
 
 export interface HarvesterStats {

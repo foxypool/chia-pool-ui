@@ -72,3 +72,14 @@
     padding-bottom: 4px;
   }
 }
+.pool-title {
+  font-weight: 300;
+  font-size: 1.1em;
+  margin-left: 8px;
+  vertical-align: top;
+}
+@media (max-width: 1620px) and (min-width: 1200px) {
+  .pool-title {
+    display: none;
+  }
+}
