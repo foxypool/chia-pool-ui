@@ -39,7 +39,12 @@
         <td *ngIf="!poolConfig.blockExplorerBlockUrlTemplate">{{block.height}}</td>
         <td class="no-wrap">{{block.networkSpaceInTib ? getFormattedCapacityFromTiB(block.networkSpaceInTib) : snippetService.getSnippet('general.not-available.short')}}</td>
         <td class="no-wrap"><span [class]="getEffortColor(block)">{{getBlockEffort(block)}}</span></td>
-        <td class="ellipsis">{{block.winner.name || block.winner.payoutAddress || snippetService.getSnippet('general.unknown')}}</td>
+        <td class="ellipsis" *ngIf="block.winner.accountReference">
+          <a class="farmer-page-link" routerLink="/farmer/{{block.winner.accountReference}}">{{block.winner.name || block.winner.payoutAddress || snippetService.getSnippet('general.unknown')}}</a>
+        </td>
+        <td class="ellipsis" *ngIf="!block.winner.accountReference">
+          {{block.winner.name || block.winner.payoutAddress || snippetService.getSnippet('general.unknown')}}
+        </td>
         <td class="no-wrap">{{block.reward}} {{poolConfig.ticker}}</td>
         <td class="no-wrap" [style.padding-top]="block.distributed ? '12px' : '2px'" [style.padding-bottom]="block.distributed ? '12px' : '8px'">
           {{getBlockDistributedLabel(block)}}
