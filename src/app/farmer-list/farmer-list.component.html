@@ -14,7 +14,7 @@
           <app-loading-state></app-loading-state>
         </td>
       </tr>
-      <tr *ngIf="(isLoadingInitial | async) === false && (accounts | async).length === 0">
+      <tr *ngIf="(isLoadingInitial | async) === false && hasNoAccounts | async">
         <td colspan="4" style="text-align: center; padding-top: 1rem">
           <app-empty-state text="No accounts found!" [icon]="faHdd"></app-empty-state>
         </td>

@@ -18,6 +18,7 @@ export class FarmerListComponent implements OnDestroy {
   public readonly limit = 15
   public isLoading: Observable<boolean>
   public isLoadingInitial: Observable<boolean>
+  public hasNoAccounts: Observable<boolean>
   public accounts: Observable<Account[]>
   public page = 1
   public total = 0
@@ -39,7 +40,7 @@ export class FarmerListComponent implements OnDestroy {
   ) {
     this.accounts = combineLatest([
       this.accountsSubject,
-      this.statsService.accountStats.pipe(map(stats => stats.ecSum), filter(ecSum => ecSum !== undefined), distinctUntilChanged())
+      this.statsService.accountStats.pipe(map(stats => stats.ecSum), filter(ecSum => ecSum !== undefined), distinctUntilChanged()),
     ])
       .pipe(
         map(([accounts, ecSum]) => {
@@ -58,6 +59,7 @@ export class FarmerListComponent implements OnDestroy {
         shareReplay(),
       )
     this.isLoading = this.isLoadingSubject.pipe(shareReplay())
+    this.hasNoAccounts = this.accountsSubject.pipe(map(accounts => accounts.length === 0), shareReplay())
     this.isLoadingInitial = this.isLoadingSubject.pipe(takeWhile(isLoading => isLoading, true), shareReplay())
   }
 
