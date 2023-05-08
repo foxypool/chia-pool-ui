@@ -6,9 +6,10 @@ import {BehaviorSubject, Observable, Subscription} from 'rxjs'
 
 import {SnippetService} from '../snippet.service'
 import {ConfigService, DateFormatting} from '../config.service'
-import {getEffortColor} from '../util'
+import {getEffortColor, getEffortColorForChart} from '../util'
 import {CsvExporter} from '../csv-exporter'
 import {map} from 'rxjs/operators'
+import {EChartsOption} from 'echarts'
 
 @Component({
   selector: 'app-farmer-won-blocks',
@@ -23,9 +24,63 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
     ticker: '',
   }
 
+  public page = 1
+  public pageSize = 10
   public faCubes = faCubes
   public faExchangeAlt = faExchangeAlt
   public hasWonBlocksObservable: Observable<boolean>
+  public hasWonBlocksWithEffort: Observable<boolean>
+  public chartOptions: EChartsOption = {
+    title: {
+      text: 'Block Wins',
+      left: 'center',
+      top: 0,
+      textStyle: {
+        color: '#cfd0d1'
+      }
+    },
+    grid: {
+      left: 45,
+      top: 30,
+      right: 10,
+      bottom: 20,
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
+        label: {
+          formatter: params => {
+            if (params.axisDimension === 'x') {
+              return moment(params.value).format('YYYY-MM-DD')
+            }
+
+            return `${(params.value as number).toFixed(2)}%`
+          },
+        },
+      },
+    },
+    xAxis: {
+      type: 'time',
+    },
+    yAxis: [{
+      type: 'value',
+      name: 'Effort',
+      splitLine: {
+        show: false,
+      },
+      axisLabel: {
+        formatter: '{value}%',
+      },
+    }],
+    series: [{
+      data: [],
+      type: 'scatter',
+      color: '#037ffc',
+      name: 'Effort',
+    }],
+  }
+  public chartUpdateOptions: EChartsOption
 
   private readonly wonBlocksSubject: BehaviorSubject<WonBlock[]> = new BehaviorSubject<WonBlock[]>([])
   private readonly subscriptions: Subscription[] = []
@@ -38,7 +93,11 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.hasWonBlocksObservable = this.wonBlocksObservable.pipe(map(wonBlocks => wonBlocks.length > 0))
+    this.hasWonBlocksWithEffort = this.wonBlocksObservable.pipe(map(wonBlocks => wonBlocks.filter(wonBlock => wonBlock.effort !== null).length > 0))
     this.subscriptions.push(this.wonBlocksObservable.subscribe(this.wonBlocksSubject))
+    this.subscriptions.push(
+      this.wonBlocksObservable.subscribe(wonBlocks => this.chartUpdateOptions = this.makeChartUpdateOptions(wonBlocks)),
+    )
   }
 
   public ngOnDestroy(): void {
@@ -137,6 +196,30 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
       wonBlock.effort,
       wonBlock.remarks.map(remark => remark.type).join(', '),
     ])))
+  }
+
+  private makeChartUpdateOptions(wonBlocks: WonBlock[]): EChartsOption {
+    const wonBlocksWithEffort = wonBlocks.filter(wonBlock => wonBlock.effort !== null)
+
+    return {
+      tooltip: {
+        formatter: this.tooltipFormatter.bind(this),
+      },
+      series: [{
+        data: wonBlocksWithEffort.map(wonBlock => ({
+          value: [wonBlock.createdAt, (new BigNumber(wonBlock.effort)).multipliedBy(100).toNumber()],
+          itemStyle: {
+            color: getEffortColorForChart(wonBlock.effort),
+          },
+        })),
+      }],
+    }
+  }
+
+  private tooltipFormatter(params): string {
+    return params.map(series => {
+      return `${series.marker}${series.seriesName} <span style="padding-left: 10px; float: right"><strong>${series.value[1].toFixed(2)}%</strong></span>`
+    }).join('<br/>')
   }
 }
 

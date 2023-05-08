@@ -5,6 +5,7 @@ import {SnippetService} from '../snippet.service'
 import * as moment from 'moment'
 import BigNumber from 'bignumber.js'
 import {Subscription} from 'rxjs'
+import {getEffortColorForChart} from '../util'
 
 @Component({
   selector: 'app-pool-history',
@@ -124,7 +125,7 @@ export class PoolHistoryComponent implements OnDestroy {
         data: historicalStats.map(historicalStat => ({
           value: [historicalStat.timestamp, historicalStat.blocks, historicalStat.effort],
           itemStyle: {
-            color: this.getEffortColor(historicalStat.effort),
+            color: getEffortColorForChart(historicalStat.effort),
           },
         })),
       }, {
@@ -166,34 +167,5 @@ export class PoolHistoryComponent implements OnDestroy {
     }
 
     return `${(new BigNumber(effort)).multipliedBy(100).toFixed(2)}%`
-  }
-
-  private getEffortColor(effort) {
-    if (effort === null || effort === undefined) {
-      return '#bbb'
-    }
-    if (effort < 0.25) {
-      return '#53b332'
-    }
-    if (effort < 0.5) {
-      return '#46cf76'
-    }
-    if (effort < 0.75) {
-      return '#4bd28f'
-    }
-    if (effort < 1) {
-      return '#87d3b5'
-    }
-    if (effort < 1.5) {
-      return '#cfd0d1'
-    }
-    if (effort < 2.5) {
-      return '#8c8c8c'
-    }
-    if (effort < 4) {
-      return '#cc9321'
-    }
-
-    return '#ff4d4d'
   }
 }

@@ -1,3 +1,8 @@
+<div class="row mb-2" *ngIf="hasWonBlocksWithEffort | async">
+  <div class="col-md-12">
+    <div echarts [options]="chartOptions" [merge]="chartUpdateOptions" theme="default" class="farmer-won-blocks-chart"></div>
+  </div>
+</div>
 <div class="row justify-content-end">
   <div class="col-auto">
     <button *ngIf="hasWonBlocksObservable | async" type="button" class="btn btn-outline-info btn-sm" style="float: right" (click)="exportCsv()">{{snippetService.getSnippet('download-csv-button.title')}}</button>
@@ -31,7 +36,7 @@
               <app-empty-state [text]="snippetService.getSnippet('blocks-won-component.no-blocks-won-yet')" [icon]="faCubes"></app-empty-state>
             </td>
           </tr>
-          <tr *ngFor="let block of (wonBlocksObservable | async); trackBy: trackBlockByHash">
+          <tr *ngFor="let block of wonBlocksObservable | async | slice: (page - 1) * pageSize : page * pageSize; trackBy: trackBlockByHash">
             <td>{{getBlockDate(block)}}</td>
             <td *ngIf="poolConfig.blockExplorerBlockUrlTemplate"><a href="{{getBlockExplorerBlockLink(block)}}" target="_blank" style="color: #b45bff">{{block.height}}</a></td>
             <td *ngIf="!poolConfig.blockExplorerBlockUrlTemplate">{{block.height}}</td>
@@ -54,3 +59,13 @@
     </div>
   </div>
 </div>
+<ngb-pagination
+  *ngIf="(wonBlocksObservable | async).length > pageSize"
+  class="d-flex justify-content-center"
+  [(page)]="page"
+  [pageSize]="pageSize"
+  [collectionSize]="(wonBlocksObservable | async).length"
+  [maxSize]="5"
+  [rotate]="true"
+  [boundaryLinks]="true">
+</ngb-pagination>
