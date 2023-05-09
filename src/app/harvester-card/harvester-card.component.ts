@@ -31,6 +31,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   public nameControl: UntypedFormControl
   public readonly isLoading: Observable<boolean>
   public readonly averageEc: Observable<string>
+  public readonly averageProofTimeInSeconds: Observable<string>
   public readonly totalValidShares: Observable<string>
   public readonly totalStaleShares: Observable<string>
   public readonly totalValidSharesPercentage: Observable<string>
@@ -60,6 +61,25 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         return new Capacity(ecInGib.toNumber()).toString()
       }),
     )
+    this.averageProofTimeInSeconds = this.stats.pipe(
+      map(stats => {
+        const averageProofTimes = stats.submissionStats
+          .map(stat => ({ partials: stat.partials, proofTimeSumInSeconds: stat.proofTimeSumInSeconds }))
+          .concat(stats.rejectedSubmissionStats.map(stat => ({ partials: stat.partials, proofTimeSumInSeconds: stat.proofTimeSumInSeconds })))
+          .filter(stat => stat.proofTimeSumInSeconds !== null && stat.partials > 0 && stat.proofTimeSumInSeconds > 0)
+
+        const totalPartials = averageProofTimes.reduce((acc, curr) => acc.plus(curr.partials), new BigNumber(0))
+        if (totalPartials.isZero()) {
+          return 'N/A'
+        }
+
+        const averageProofTime = averageProofTimes
+          .reduce((acc, curr) => acc.plus(curr.proofTimeSumInSeconds), new BigNumber(0))
+          .dividedBy(totalPartials)
+
+        return `${averageProofTime.toFixed(3)} s`
+      }),
+    )
     this.sharesChartOptions = {
       title: {
         text: 'Shares',
@@ -74,6 +94,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
           'Valid Shares',
           'Stale Shares',
           'Invalid Shares',
+          'Proof times',
         ],
         top: 25,
         textStyle: {
@@ -83,11 +104,12 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       grid: {
         left: 45,
         top: this.shareChartTopMargin,
-        right: 30,
+        right: 40,
         bottom: 20,
       },
       tooltip: {
         trigger: 'axis',
+        formatter: this.tooltipFormatter.bind(this),
       },
       xAxis: {
         type: 'time',
@@ -101,6 +123,15 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
             type: 'solid',
             color: 'grey',
           },
+        },
+      }, {
+        type: 'value',
+        name: 'Proof time',
+        splitLine: {
+          show: false,
+        },
+        axisLabel: {
+          formatter: '{value} s',
         },
       }],
       series: [{
@@ -127,6 +158,18 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         color: '#037ffc',
         large: true,
         barWidth: 6,
+      }, {
+        data: [],
+        type: 'line',
+        name: 'Proof times',
+        color: '#426b69',
+        showSymbol: false,
+        lineStyle: {
+          width: 4,
+          cap: 'round',
+        },
+        smooth: true,
+        yAxisIndex: 1,
       }],
     }
     this.subscriptions.push(this.stats.subscribe(stats => {
@@ -325,7 +368,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   private get cardCount(): number {
-    let count = 5
+    let count = 6
     if (this.hasOgVersion) {
       count += 1
     }
@@ -377,6 +420,27 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       .filter(stat => stat.type === RejectedSubmissionType.invalid)
       .map(stats => [stats.date, stats.shares])
 
+    const proofTimeSumsByDate = new Map<string, ProofTimeSum[]>()
+    stats.submissionStats.forEach(stat => {
+      if (stat.proofTimeSumInSeconds !== null && stat.partials > 0 && stat.proofTimeSumInSeconds > 0) {
+        const proofTimeSumsForDate = proofTimeSumsByDate.get(stat.date) ?? []
+        proofTimeSumsForDate.push({ partials: stat.partials, proofTimeSumInSeconds: stat.proofTimeSumInSeconds })
+        proofTimeSumsByDate.set(stat.date, proofTimeSumsForDate)
+      }
+    })
+    stats.rejectedSubmissionStats.forEach(stat => {
+      if (stat.proofTimeSumInSeconds !== null && stat.partials > 0 && stat.proofTimeSumInSeconds > 0) {
+        const proofTimeSumsForDate = proofTimeSumsByDate.get(stat.date) ?? []
+        proofTimeSumsForDate.push({ partials: stat.partials, proofTimeSumInSeconds: stat.proofTimeSumInSeconds })
+        proofTimeSumsByDate.set(stat.date, proofTimeSumsForDate)
+      }
+    })
+    const averageProofTimes = Array
+      .from(proofTimeSumsByDate)
+      .map(([date, proofTimeSums]) => ({ date, averageProofTime: proofTimeSums.reduce((acc, curr) => acc + curr.proofTimeSumInSeconds, 0) / proofTimeSums.reduce((acc, curr) => acc + curr.partials, 0) }))
+    averageProofTimes.sort((lhs, rhs) => (new Date(lhs.date)).getTime() - (new Date(rhs.date)).getTime())
+    const averageProofTimesSeries = averageProofTimes.map(stat => [stat.date, stat.averageProofTime])
+
     const roundToNextLower15Min = (date: Moment): Moment => {
       const minutesRoundedDown = Math.floor(date.minutes() / 15) * 15
 
@@ -414,7 +478,35 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         data: staleSharesSeries,
       }, {
         data: validSharesSeries,
+      }, {
+        data: averageProofTimesSeries,
       }],
     }
   }
+
+  private tooltipFormatter(params): string {
+    const seriesTooltip = params.map(series => {
+      switch (series.seriesIndex) {
+        case 0:
+        case 1:
+        case 2:
+          return `${series.marker}${series.seriesName} <span style="padding-left: 10px; float: right"><strong>${series.value[1]}</strong></span>`
+        case 3:
+          return `${series.marker}Proof time <span style="padding-left: 10px; float: right"><strong>${series.value[1].toFixed(3)} s</strong></span>`
+      }
+
+    }).join('<br/>')
+
+    const date: string | undefined = params.at(0)?.value.at(0)
+    if (date === undefined) {
+      return seriesTooltip
+    }
+
+    return `${moment(date).format('YYYY-MM-DD HH:mm:ss')}<br/>${seriesTooltip}`
+  }
+}
+
+interface ProofTimeSum {
+  proofTimeSumInSeconds: number
+  partials: number
 }

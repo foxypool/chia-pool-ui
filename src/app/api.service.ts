@@ -220,6 +220,7 @@ export interface HarvesterStats {
 interface SubmissionStat {
   shares: number
   partials: number
+  proofTimeSumInSeconds: number|null
   date: string
 }
 
