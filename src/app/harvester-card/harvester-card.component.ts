@@ -626,8 +626,11 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     if (proofTimeInSeconds < 5) {
       return '#46cf76'
     }
+    if (proofTimeInSeconds < 10) {
+      return '#b9a44c'
+    }
     if (proofTimeInSeconds < 25) {
-      return '#cc9321'
+      return '#ffaa00'
     }
 
     return '#ff4d4d'
