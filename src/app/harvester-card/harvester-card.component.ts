@@ -189,6 +189,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         },
         smooth: true,
         yAxisIndex: 1,
+        z: -1,
       }],
     }
     this.proofTimesChartOptions = {
