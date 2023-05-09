@@ -40,6 +40,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   public readonly isLoadingProofTimes: Observable<boolean>
   public readonly averageEc: Observable<string>
   public readonly averageProofTimeInSeconds: Observable<string>
+  public readonly averageProofTimeInSecondsColorClass: Observable<string>
   public readonly totalValidShares: Observable<string>
   public readonly totalStaleShares: Observable<string>
   public readonly totalValidSharesPercentage: Observable<string>
@@ -83,7 +84,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         return new Capacity(ecInGib.toNumber()).toString()
       }),
     )
-    this.averageProofTimeInSeconds = this.stats.pipe(
+    const averageProofTimeInSeconds = this.stats.pipe(
       map(stats => {
         const averageProofTimes = stats.submissionStats
           .map(stat => ({ partials: stat.partials, proofTimeSumInSeconds: stat.proofTimeSumInSeconds }))
@@ -92,15 +93,29 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
 
         const totalPartials = averageProofTimes.reduce((acc, curr) => acc.plus(curr.partials), new BigNumber(0))
         if (totalPartials.isZero()) {
+          return undefined
+        }
+
+        return averageProofTimes
+          .reduce((acc, curr) => acc.plus(curr.proofTimeSumInSeconds), new BigNumber(0))
+          .dividedBy(totalPartials)
+      }),
+      shareReplay(),
+    )
+    this.averageProofTimeInSeconds = averageProofTimeInSeconds.pipe(
+      map(averageProofTime => {
+        if (averageProofTime === undefined) {
           return 'N/A'
         }
 
-        const averageProofTime = averageProofTimes
-          .reduce((acc, curr) => acc.plus(curr.proofTimeSumInSeconds), new BigNumber(0))
-          .dividedBy(totalPartials)
-
         return `${averageProofTime.toFixed(3)} s`
       }),
+      shareReplay(),
+    )
+    this.averageProofTimeInSecondsColorClass = averageProofTimeInSeconds.pipe(
+      filter(averageProofTimeInSeconds => averageProofTimeInSeconds !== undefined),
+      map(averageProofTimeInSeconds => this.getProofTimeColorClass(averageProofTimeInSeconds)),
+      shareReplay(),
     )
     this.sharesChartOptions = {
       title: {
@@ -634,6 +649,20 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     }
 
     return '#ff4d4d'
+  }
+
+  private getProofTimeColorClass(proofTimeInSeconds: BigNumber): string {
+    if (proofTimeInSeconds.isGreaterThanOrEqualTo(25)) {
+      return 'color-red'
+    }
+    if (proofTimeInSeconds.isGreaterThanOrEqualTo(15)) {
+      return 'color-orange'
+    }
+    if (proofTimeInSeconds.isGreaterThanOrEqualTo(10)) {
+      return 'color-green-orange'
+    }
+
+    return ''
   }
 }
 

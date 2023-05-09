@@ -46,7 +46,7 @@
         <div class="p-2 border border-primary rounded text-center">
           <div class="mb-1">Average proof time</div>
           <app-loading-state *ngIf="isLoading | async" [height]="2" [width]="2" fontSize="14px"></app-loading-state>
-          <h5 *ngIf="(isLoading | async) === false">{{averageProofTimeInSeconds | async}}</h5>
+          <h5 *ngIf="(isLoading | async) === false" [ngClass]="averageProofTimeInSecondsColorClass | async">{{averageProofTimeInSeconds | async}}</h5>
         </div>
       </div>
       <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl col-xxl p-1">
