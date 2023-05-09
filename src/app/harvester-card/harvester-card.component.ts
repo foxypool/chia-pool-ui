@@ -37,6 +37,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   public readonly hasProofTimes: Observable<boolean>
   public readonly chartMode: Observable<ChartMode>
   public readonly isLoading: Observable<boolean>
+  public readonly isLoadingProofTimes: Observable<boolean>
   public readonly averageEc: Observable<string>
   public readonly averageProofTimeInSeconds: Observable<string>
   public readonly totalValidShares: Observable<string>
@@ -54,6 +55,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   private proofTimesUpdateInterval?: number
   private readonly chartModeSubject: BehaviorSubject<ChartMode> = new BehaviorSubject<ChartMode>(ChartMode.shares)
   private readonly proofTimes: BehaviorSubject<ProofTime[]> = new BehaviorSubject<ProofTime[]>([])
+  private readonly isLoadingProofTimesSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
   private readonly subscriptions: Subscription[] = []
 
   constructor(
@@ -61,6 +63,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     private readonly statsService: StatsService,
     private readonly toastService: ToastService,
   ) {
+    this.isLoadingProofTimes = this.isLoadingProofTimesSubject.pipe(shareReplay())
     this.showSharesChart = this.chartModeSubject.pipe(map(mode => mode === ChartMode.shares), shareReplay())
     this.showProofTimesChart = this.chartModeSubject.pipe(map(mode => mode === ChartMode.proofTimes), shareReplay())
     this.chartMode = this.chartModeSubject.pipe(shareReplay())
@@ -281,9 +284,14 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.chartModeSubject
         .pipe(distinctUntilChanged(), filter(chartMode => chartMode === ChartMode.proofTimes), take(1))
-        .subscribe(() => {
+        .subscribe(async () => {
           this.proofTimesUpdateInterval = setInterval(this.updateProofTimes.bind(this), 10 * 60 * 1000)
-          void this.updateProofTimes()
+          this.isLoadingProofTimesSubject.next(true)
+          try {
+            await this.updateProofTimes()
+          } finally {
+            this.isLoadingProofTimesSubject.next(false)
+          }
         })
     )
   }
