@@ -1,15 +1,23 @@
 <div class="card">
-  <div class="card-header">
-    <h5>
-      <editable [enabled]="canEditName" (save)="updateName()" (cancel)="cancelNameUpdate()">
-        <ng-template viewMode>{{nameOrPeerIdSlug}}</ng-template>
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <div>
+      <h5>
+        <editable [enabled]="canEditName" (save)="updateName()" (cancel)="cancelNameUpdate()">
+          <ng-template viewMode>{{nameOrPeerIdSlug}}</ng-template>
 
-        <ng-template editMode>
-          <input editableOnEnter editableOnEscape class="form-control harvester-name-input" type="text" [formControl]="nameControl"/>
-        </ng-template>
-      </editable>
-    </h5>
-    <div *ngIf="hasName">{{peerIdSlug}}</div>
+          <ng-template editMode>
+            <input editableOnEnter editableOnEscape class="form-control harvester-name-input" type="text" [formControl]="nameControl"/>
+          </ng-template>
+        </editable>
+      </h5>
+      <div *ngIf="hasName">{{peerIdSlug}}</div>
+    </div>
+    <div>
+      <select class="form-select dark-background" [ngModel]="chartMode | async" (ngModelChange)="setChartMode($event)">
+        <option [value]="ChartMode.shares">Shares</option>
+        <option [value]="ChartMode.proofTimes">Proof times</option>
+      </select>
+    </div>
   </div>
   <div class="card-body harvester-card">
     <div class="row" [ngClass]="rowColumnClasses">
@@ -72,9 +80,17 @@
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="showSharesChart | async">
       <div class="col-12">
         <div echarts [options]="sharesChartOptions" [merge]="sharesChartUpdateOptions" theme="default" class="shares-chart"></div>
+      </div>
+    </div>
+    <div class="row" *ngIf="showProofTimesChart | async">
+      <div class="col-12" *ngIf="hasProofTimes | async">
+        <div echarts [options]="proofTimesChartOptions" [merge]="proofTimesChartUpdateOptions" theme="default" class="shares-chart"></div>
+      </div>
+      <div class="col-12 text-center mt-3" *ngIf="(hasProofTimes | async) === false">
+        <app-empty-state text="No proof times recorded in the last 24h" [icon]="faReceipt"></app-empty-state>
       </div>
     </div>
   </div>

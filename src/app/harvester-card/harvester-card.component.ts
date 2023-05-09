@@ -4,9 +4,9 @@ import {UntypedFormControl} from '@angular/forms'
 import {ToastService} from '../toast.service'
 import {AccountService} from '../account.service'
 import * as moment from 'moment/moment'
-import {BehaviorSubject, Observable, Subscription} from 'rxjs'
+import {BehaviorSubject, Observable, Subscription, take} from 'rxjs'
 import {StatsService} from '../stats.service'
-import {HarvesterStats, RejectedSubmissionType} from '../api.service'
+import {HarvesterStats, ProofTime, RejectedSubmissionType} from '../api.service'
 import {distinctUntilChanged, filter, map, shareReplay} from 'rxjs/operators'
 import {BigNumber} from 'bignumber.js'
 import Capacity from '../capacity'
@@ -15,6 +15,7 @@ import {Moment} from 'moment'
 import {stripHexPrefix} from '../util'
 import {compare} from 'compare-versions'
 import {clientVersions} from '../client-versions'
+import {faReceipt} from '@fortawesome/free-solid-svg-icons'
 
 const sharesPerDayPerK32 = 10
 const k32SizeInGb = 108.837
@@ -29,6 +30,12 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   @Input() harvester: Harvester
 
   public nameControl: UntypedFormControl
+  public readonly faReceipt = faReceipt
+  public readonly ChartMode = ChartMode
+  public readonly showSharesChart: Observable<boolean>
+  public readonly showProofTimesChart: Observable<boolean>
+  public readonly hasProofTimes: Observable<boolean>
+  public readonly chartMode: Observable<ChartMode>
   public readonly isLoading: Observable<boolean>
   public readonly averageEc: Observable<string>
   public readonly averageProofTimeInSeconds: Observable<string>
@@ -39,9 +46,14 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   public readonly staleSharesColorClasses: Observable<string[]>
   public readonly sharesChartOptions: EChartsOption
   public sharesChartUpdateOptions: EChartsOption
+  public readonly proofTimesChartOptions: EChartsOption
+  public proofTimesChartUpdateOptions: EChartsOption
   private readonly stats: Observable<HarvesterStats>
   private readonly statsSubject: BehaviorSubject<HarvesterStats|undefined> = new BehaviorSubject<HarvesterStats>(undefined)
   private statsUpdateInterval?: number
+  private proofTimesUpdateInterval?: number
+  private readonly chartModeSubject: BehaviorSubject<ChartMode> = new BehaviorSubject<ChartMode>(ChartMode.shares)
+  private readonly proofTimes: BehaviorSubject<ProofTime[]> = new BehaviorSubject<ProofTime[]>([])
   private readonly subscriptions: Subscription[] = []
 
   constructor(
@@ -49,6 +61,13 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     private readonly statsService: StatsService,
     private readonly toastService: ToastService,
   ) {
+    this.showSharesChart = this.chartModeSubject.pipe(map(mode => mode === ChartMode.shares), shareReplay())
+    this.showProofTimesChart = this.chartModeSubject.pipe(map(mode => mode === ChartMode.proofTimes), shareReplay())
+    this.chartMode = this.chartModeSubject.pipe(shareReplay())
+    this.hasProofTimes = this.proofTimes.pipe(
+      map(proofTimes => proofTimes.reduce((acc, curr) => acc + (curr.proofTimeInSeconds !== undefined ? 1 : 0), 0) > 0),
+      shareReplay(),
+    )
     this.stats = this.statsSubject.asObservable().pipe(filter(stats => stats !== undefined), shareReplay())
     this.isLoading = this.statsSubject.asObservable().pipe(map(stats => stats === undefined), distinctUntilChanged(), shareReplay())
     this.averageEc = this.stats.pipe(
@@ -109,7 +128,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       },
       tooltip: {
         trigger: 'axis',
-        formatter: this.tooltipFormatter.bind(this),
+        formatter: this.sharesChartTooltipFormatter.bind(this),
       },
       xAxis: {
         type: 'time',
@@ -162,7 +181,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         data: [],
         type: 'line',
         name: 'Proof times',
-        color: '#426b69',
+        color: '#28736f',
         showSymbol: false,
         lineStyle: {
           width: 4,
@@ -172,8 +191,53 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         yAxisIndex: 1,
       }],
     }
+    this.proofTimesChartOptions = {
+      title: {
+        text: 'Proof times',
+        left: 'center',
+        top: 0,
+        textStyle: {
+          color: '#cfd0d1'
+        }
+      },
+      grid: {
+        left: 45,
+        top: 50,
+        right: 40,
+        bottom: 20,
+      },
+      tooltip: {
+        trigger: 'axis',
+        formatter: this.proofTimesChartTooltipFormatter.bind(this),
+      },
+      xAxis: {
+        type: 'time',
+      },
+      yAxis: [{
+        type: 'value',
+        name: 'Proof time',
+        splitLine: {
+          lineStyle: {
+            type: 'solid',
+            color: 'grey',
+          },
+        },
+        axisLabel: {
+          formatter: '{value} s',
+        },
+      }],
+      series: [{
+        data: [],
+        type: 'scatter',
+        name: 'Proof times',
+        color: '#426b69',
+      }],
+    }
     this.subscriptions.push(this.stats.subscribe(stats => {
       this.sharesChartUpdateOptions = this.makeSharesChartUpdateOptions(stats)
+    }))
+    this.subscriptions.push(this.proofTimes.subscribe(proofTimes => {
+      this.proofTimesChartUpdateOptions = this.makeProofTimesChartUpdateOptions(proofTimes)
     }))
     const sharesStream = this.stats
       .pipe(
@@ -214,6 +278,14 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       }),
       shareReplay(),
     )
+    this.subscriptions.push(
+      this.chartModeSubject
+        .pipe(distinctUntilChanged(), filter(chartMode => chartMode === ChartMode.proofTimes), take(1))
+        .subscribe(() => {
+          this.proofTimesUpdateInterval = setInterval(this.updateProofTimes.bind(this), 10 * 60 * 1000)
+          void this.updateProofTimes()
+        })
+    )
   }
 
   public async ngOnInit(): Promise<void> {
@@ -226,6 +298,9 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     this.subscriptions.map(subscription => subscription.unsubscribe())
     if (this.statsUpdateInterval !== undefined) {
       clearInterval(this.statsUpdateInterval)
+    }
+    if (this.proofTimesUpdateInterval !== undefined) {
+      clearInterval(this.proofTimesUpdateInterval)
     }
   }
 
@@ -393,6 +468,10 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     return 99
   }
 
+  public setChartMode(chartMode: ChartMode) {
+    this.chartModeSubject.next(chartMode)
+  }
+
   public async updateName(): Promise<void> {
     const newName = this.nameControl.value?.trim() || undefined
     if (newName === this.harvester.name) {
@@ -409,6 +488,10 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
 
   private async updateStats(): Promise<void> {
     this.statsSubject.next(await this.statsService.getHarvesterStats(this.harvester._id))
+  }
+
+  private async updateProofTimes(): Promise<void> {
+    this.proofTimes.next(await this.statsService.getHarvesterProofTimes(this.harvester._id))
   }
 
   private makeSharesChartUpdateOptions(stats: HarvesterStats): EChartsOption {
@@ -484,7 +567,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     }
   }
 
-  private tooltipFormatter(params): string {
+  private sharesChartTooltipFormatter(params): string {
     const seriesTooltip = params.map(series => {
       switch (series.seriesIndex) {
         case 0:
@@ -504,9 +587,51 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
 
     return `${moment(date).format('YYYY-MM-DD HH:mm:ss')}<br/>${seriesTooltip}`
   }
+
+  private makeProofTimesChartUpdateOptions(proofTimes: ProofTime[]): EChartsOption {
+    return {
+      series: [{
+        data: proofTimes.map(proofTime => ({
+          value: [proofTime.receivedAt, proofTime.proofTimeInSeconds],
+          itemStyle: {
+            color: this.getProofTimeColorForChart(proofTime.proofTimeInSeconds),
+          },
+        })),
+      }],
+    }
+  }
+
+  private proofTimesChartTooltipFormatter(params): string {
+    const date: string | undefined = params.at(0)?.value.at(0)
+    const proofTime: number | undefined = params.at(0)?.value.at(1)
+    if (date === undefined || proofTime === undefined) {
+      return ''
+    }
+    const seriesTooltip = params.map(series => {
+      return `${series.marker}Proof time <span style="padding-left: 10px; float: right"><strong>${series.value[1].toFixed(3)} s</strong></span>`
+    }).join('<br/>')
+
+    return `${moment(date).format('YYYY-MM-DD HH:mm:ss')}<br/>${seriesTooltip}`
+  }
+
+  private getProofTimeColorForChart(proofTimeInSeconds: number): string {
+    if (proofTimeInSeconds < 5) {
+      return '#46cf76'
+    }
+    if (proofTimeInSeconds < 25) {
+      return '#cc9321'
+    }
+
+    return '#ff4d4d'
+  }
 }
 
 interface ProofTimeSum {
   proofTimeSumInSeconds: number
   partials: number
+}
+
+enum ChartMode {
+  shares = 'shares',
+  proofTimes = 'proofTimes',
 }

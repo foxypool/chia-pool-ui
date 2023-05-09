@@ -79,6 +79,12 @@ export class ApiService {
     return data
   }
 
+  public async getHarvesterProofTimes({ poolIdentifier, harvesterId }: { poolIdentifier: string, harvesterId: string }): Promise<ProofTime[]> {
+    const { data } = await this.client.get<ProofTime[]>(`${poolIdentifier}/harvester/${harvesterId}/proof-times`)
+
+    return data
+  }
+
   async getAccountHistoricalStats({ poolIdentifier, poolPublicKey }): Promise<AccountHistoricalStat[]> {
     const { data } = await this.client.get<AccountHistoricalStat[]>(`${poolIdentifier}/account/${poolPublicKey}/historical`)
 
@@ -242,4 +248,9 @@ export interface AccountHistoricalStat {
   ec: number
   ecLastHour: number
   difficulty: number
+}
+
+export interface ProofTime {
+  receivedAt: string
+  proofTimeInSeconds: number
 }
