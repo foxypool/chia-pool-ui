@@ -15,7 +15,7 @@ import Capacity from '../capacity'
 import {AccountService} from '../account.service'
 import {AuthenticationModalComponent} from '../authentication-modal/authentication-modal.component'
 import {RatesService} from '../rates.service'
-import {ConfigService, DateFormatting} from '../config.service'
+import {ConfigService, DateFormatting, TimeInterval} from '../config.service'
 import { getEffortColor } from '../util'
 import {PoolsProvider} from '../pools.provider'
 import {AccountHistoricalStat} from '../api.service'
@@ -114,7 +114,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly poolsProvider: PoolsProvider,
-    configService: ConfigService,
+    private readonly configService: ConfigService,
   ) {
     this.ecChartOptions = {
       title: {
@@ -286,8 +286,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         },
       }],
     }
-    this.payoutDateFormattingObservable = configService.payoutDateFormattingSubject.asObservable()
-    this.selectedCurrencyObservable = configService.selectedCurrencySubject.asObservable()
+    this.payoutDateFormattingObservable = this.configService.payoutDateFormattingSubject.asObservable()
+    this.selectedCurrencyObservable = this.configService.selectedCurrencySubject.asObservable()
     this.exchangeStatsObservable = this.statsService.exchangeStats.asObservable()
     const sharesStream = this.accountService.accountHistoricalStats
       .pipe(
@@ -920,8 +920,30 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     return this.accountService.account?.rank
   }
 
-  public get estimatedDailyReward(): string {
-    return this.estimatedDailyRewardBN.toFixed(4)
+  public get estimatedScaledReward(): string {
+    switch (this.configService.rewardTimeInterval) {
+      case TimeInterval.daily: return this.estimatedDailyRewardBN.toFixed(4)
+      case TimeInterval.weekly: return this.estimatedDailyRewardBN.multipliedBy(7).toFixed(4)
+      case TimeInterval.monthly: return this.estimatedDailyRewardBN.multipliedBy(31).toFixed(4)
+    }
+  }
+
+  public get estimatedRewardIntervalLabel(): string {
+    return this.configService.rewardTimeInterval
+  }
+
+  public cycleRewardInterval() {
+    switch (this.configService.rewardTimeInterval) {
+      case TimeInterval.daily:
+        this.configService.rewardTimeInterval = TimeInterval.weekly
+        break
+      case TimeInterval.weekly:
+        this.configService.rewardTimeInterval = TimeInterval.monthly
+        break
+      case TimeInterval.monthly:
+        this.configService.rewardTimeInterval = TimeInterval.daily
+        break
+    }
   }
 
   private get estimatedDailyRewardBN(): BigNumber {

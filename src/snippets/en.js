@@ -104,8 +104,6 @@ export default {
   'my-farmer-component.collateral-balance-card.help': 'The collateral balance is a anti-cheater measure which will hold the first pool block reward portion amount of your rewards as a collateral on the pool. The collateral can get paid out when permanently leaving the pool or after two years, whichever comes first.',
   'my-farmer-component.difficulty-card.title': 'Difficulty',
   'my-farmer-component.ec-card.help': 'The average effective capacity (EC) is calculated based on the last 24h of partials submitted to the pool.',
-  'my-farmer-component.estimated-daily-reward-card.title': 'Estimated daily reward',
-  'my-farmer-component.estimated-daily-reward-card.help': 'The estimated daily reward is calculated based on your average effective capacity and the pools average daily reward per PiB over the past 7 days, which is shown on the dashboard.',
   'my-farmer-component.last-partial-accepted-card.title': 'Last Partial accepted',
   'my-farmer-component.login-button.label': 'Login',
   'my-farmer-component.login-button.label-logging-in': 'Logging in',

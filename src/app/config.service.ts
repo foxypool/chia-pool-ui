@@ -11,6 +11,7 @@ export class ConfigService implements OnDestroy {
   private static readonly selectedCurrencyStorageKey = 'selectedCurrency'
   private static readonly wonBlockDateFormattingStorageKey = 'config:dateFormatting:wonBlock'
   private static readonly payoutDateFormattingStorageKey = 'config:dateFormatting:payout'
+  private static readonly rewardTimeIntervalStorageKey = 'config:rewardTimeInterval'
 
   public selectedCurrencySubject = new BehaviorSubject<string>(
     this.localStorageService.getItem(ConfigService.selectedCurrencyStorageKey) || 'usd'
@@ -20,6 +21,10 @@ export class ConfigService implements OnDestroy {
   )
   public payoutDateFormattingSubject = new BehaviorSubject<DateFormatting>(
     DateFormatting[this.localStorageService.getItem(ConfigService.payoutDateFormattingStorageKey) || DateFormatting.fixed]
+  )
+
+  private readonly rewardTimeIntervalSubject: BehaviorSubject<TimeInterval> = new BehaviorSubject<TimeInterval>(
+    TimeInterval[this.localStorageService.getItem(ConfigService.rewardTimeIntervalStorageKey)] ?? TimeInterval.daily
   )
 
   private readonly subscriptions: Subscription[] = [
@@ -37,6 +42,11 @@ export class ConfigService implements OnDestroy {
       .pipe(skip(1), distinctUntilChanged())
       .subscribe(payoutDateFormatting =>
         this.localStorageService.setItem(ConfigService.payoutDateFormattingStorageKey, payoutDateFormatting)
+      ),
+    this.rewardTimeIntervalSubject
+      .pipe(skip(1), distinctUntilChanged())
+      .subscribe(rewardTimeInterval =>
+        this.localStorageService.setItem(ConfigService.rewardTimeIntervalStorageKey, rewardTimeInterval)
       ),
   ]
 
@@ -66,6 +76,14 @@ export class ConfigService implements OnDestroy {
     this.payoutDateFormattingSubject.next(dateFormatting)
   }
 
+  public get rewardTimeInterval(): TimeInterval {
+    return this.rewardTimeIntervalSubject.getValue()
+  }
+
+  public set rewardTimeInterval(timeInterval: TimeInterval) {
+    this.rewardTimeIntervalSubject.next(timeInterval)
+  }
+
   public ngOnDestroy(): void {
     this.subscriptions.map(subscription => subscription.unsubscribe())
   }
@@ -74,4 +92,10 @@ export class ConfigService implements OnDestroy {
 export enum DateFormatting {
   fixed = 'fixed',
   relative = 'relative',
+}
+
+export enum TimeInterval {
+  daily = 'daily',
+  weekly = 'weekly',
+  monthly = 'monthly',
 }

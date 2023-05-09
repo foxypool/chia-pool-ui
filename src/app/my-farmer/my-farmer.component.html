@@ -86,15 +86,16 @@
       <div class="p-1 col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl col-xxxl-4 col-xxxxl col-xxxxxl">
         <div class="card">
           <div class="card-header text-align-center">
-            <h5>{{snippetService.getSnippet('my-farmer-component.estimated-daily-reward-card.title')}}</h5>
+            <h5>Estimated reward</h5>
             <fa-icon
               [icon]="faInfoCircle"
-              [ngbTooltip]="snippetService.getSnippet('my-farmer-component.estimated-daily-reward-card.help')"
+              ngbTooltip="The estimated {{estimatedRewardIntervalLabel}} reward is calculated based on your average effective capacity and the pools average daily reward per PiB over the past 7 days, which is shown on the dashboard."
               class="header-info-icon"
             ></fa-icon>
           </div>
           <div class="card-body text-align-center card-font-size">
-            <span ngbTooltip="{{ratesService.getValuesInFiatFormatted(estimatedDailyReward)}}">{{estimatedDailyReward}} {{poolConfig.ticker}}</span>
+            <span ngbTooltip="{{ratesService.getValuesInFiatFormatted(estimatedScaledReward)}}">{{estimatedScaledReward}} {{poolConfig.ticker}}</span>
+            <span class="reward-interval ms-1" (click)="cycleRewardInterval()" ngbTooltip="Click to toggle between daily, weekly or monthly estimates">({{estimatedRewardIntervalLabel}})</span>
           </div>
         </div>
       </div>
