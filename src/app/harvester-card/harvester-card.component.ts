@@ -85,7 +85,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         const averageProofTimes = stats.submissionStats
           .map(stat => ({ partials: stat.partials, proofTimeSumInSeconds: stat.proofTimeSumInSeconds }))
           .concat(stats.rejectedSubmissionStats.map(stat => ({ partials: stat.partials, proofTimeSumInSeconds: stat.proofTimeSumInSeconds })))
-          .filter(stat => stat.proofTimeSumInSeconds !== null && stat.partials > 0 && stat.proofTimeSumInSeconds > 0)
+          .filter(stat => stat.proofTimeSumInSeconds !== null && stat.partials > 0)
 
         const totalPartials = averageProofTimes.reduce((acc, curr) => acc.plus(curr.partials), new BigNumber(0))
         if (totalPartials.isZero()) {
@@ -181,11 +181,10 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         data: [],
         type: 'line',
         name: 'Proof times',
-        color: '#28736f',
+        color: '#c6d8d3',
         showSymbol: false,
         lineStyle: {
-          width: 4,
-          cap: 'round',
+          type: 'dotted',
         },
         smooth: true,
         yAxisIndex: 1,
@@ -506,14 +505,14 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
 
     const proofTimeSumsByDate = new Map<string, ProofTimeSum[]>()
     stats.submissionStats.forEach(stat => {
-      if (stat.proofTimeSumInSeconds !== null && stat.partials > 0 && stat.proofTimeSumInSeconds > 0) {
+      if (stat.proofTimeSumInSeconds !== null && stat.partials > 0) {
         const proofTimeSumsForDate = proofTimeSumsByDate.get(stat.date) ?? []
         proofTimeSumsForDate.push({ partials: stat.partials, proofTimeSumInSeconds: stat.proofTimeSumInSeconds })
         proofTimeSumsByDate.set(stat.date, proofTimeSumsForDate)
       }
     })
     stats.rejectedSubmissionStats.forEach(stat => {
-      if (stat.proofTimeSumInSeconds !== null && stat.partials > 0 && stat.proofTimeSumInSeconds > 0) {
+      if (stat.proofTimeSumInSeconds !== null && stat.partials > 0) {
         const proofTimeSumsForDate = proofTimeSumsByDate.get(stat.date) ?? []
         proofTimeSumsForDate.push({ partials: stat.partials, proofTimeSumInSeconds: stat.proofTimeSumInSeconds })
         proofTimeSumsByDate.set(stat.date, proofTimeSumsForDate)
