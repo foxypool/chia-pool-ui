@@ -85,6 +85,12 @@ export class ApiService {
     return data
   }
 
+  public async getClientVersions({ poolIdentifier }: { poolIdentifier: string }): Promise<ClientVersion[]> {
+    const { data } = await this.client.get<ClientVersion[]>(`${poolIdentifier}/client/versions`)
+
+    return data
+  }
+
   async getAccountHistoricalStats({ poolIdentifier, poolPublicKey }): Promise<AccountHistoricalStat[]> {
     const { data } = await this.client.get<AccountHistoricalStat[]>(`${poolIdentifier}/account/${poolPublicKey}/historical`)
 
@@ -253,4 +259,14 @@ export interface AccountHistoricalStat {
 export interface ProofTime {
   receivedAt: string
   proofTimeInSeconds: number
+}
+
+export interface ClientVersion {
+  clientName: string
+  clientVersion: string
+  localName1: string|null
+  localVersion1: string|null
+  localName2: string|null
+  localVersion2: string|null
+  count: number
 }

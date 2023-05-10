@@ -6,7 +6,14 @@ import * as moment from 'moment'
 import {PoolsProvider} from './pools.provider'
 import {SnippetService} from './snippet.service'
 import {configForCoin} from './coin-config'
-import {AccountHistoricalStat, AccountListResponse, ApiService, HarvesterStats, ProofTime} from './api.service'
+import {
+  AccountHistoricalStat,
+  AccountListResponse,
+  ApiService,
+  ClientVersion,
+  HarvesterStats,
+  ProofTime
+} from './api.service'
 
 @Injectable({
   providedIn: 'root'
@@ -166,6 +173,10 @@ export class StatsService {
 
   public async getHarvesterProofTimes(harvesterId: string): Promise<ProofTime[]> {
     return this.apiService.getHarvesterProofTimes({ poolIdentifier: this.poolIdentifier, harvesterId })
+  }
+
+  public async getClientVersions(): Promise<ClientVersion[]> {
+    return this.apiService.getClientVersions({ poolIdentifier: this.poolIdentifier })
   }
 
   authenticate({ poolPublicKey, message, signature }): any {

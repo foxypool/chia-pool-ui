@@ -2,6 +2,9 @@ export const clientVersions = {
   chia: {
     minimum: '1.8.0',
     recommendedMinimum: '1.8.0',
+    current: '1.8.0',
+    recent: '1.7.0',
+    outdated: '1.5.0',
   },
   og: {
     minimum: '1.2.0',

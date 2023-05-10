@@ -1,43 +1,71 @@
-<h4>
-  {{snippetService.getSnippet('info-component.using-this-pool.title')}}:
-</h4>
-<div>
-  <ul>
-    <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.docs', docsGettingStartedUrl)"></li>
-  </ul>
-</div>
-<h4>
-  {{snippetService.getSnippet('info-component.pool-info.title')}}:
-</h4>
-<div>
-  <ul>
-    <li>
-      {{snippetService.getSnippet('info-component.pool-info.block-split-info')}}
-    </li>
-    <li>
-      {{snippetService.getSnippet('info-component.pool-info.pplns-info', historicalTimeInHours)}}
-    </li>
-    <li>
-      {{snippetService.getSnippet('info-component.pool-info.payout.fee-info', poolConfig.poolFee)}}
-    </li>
-    <li>
-      {{snippetService.getSnippet('info-component.pool-info.payout.interval-info')}}
-    </li>
-    <li>
-      {{snippetService.getSnippet('info-component.pool-info.payout.minimum-info', poolConfig.minimumPayout, poolConfig.ticker)}}
-    </li>
-    <li>
-      {{snippetService.getSnippet('info-component.pool-info.distribution-delay-info', poolConfig.blockRewardDistributionDelay)}}
-    </li>
-  </ul>
-</div>
-<h4>
-  {{snippetService.getSnippet('info-component.contact.title')}}:
-</h4>
-<div>
-  <ul>
-    <li>
-      <span [innerHTML]="snippetService.getSnippet('info-component.contact.join-discord')"></span>
-    </li>
-  </ul>
+<div class="row">
+  <div class="col-12 col-lg">
+    <h4>
+      {{snippetService.getSnippet('info-component.using-this-pool.title')}}:
+    </h4>
+    <div>
+      <ul>
+        <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.docs', docsGettingStartedUrl)"></li>
+      </ul>
+    </div>
+    <h4>
+      {{snippetService.getSnippet('info-component.pool-info.title')}}:
+    </h4>
+    <div>
+      <ul>
+        <li>
+          {{snippetService.getSnippet('info-component.pool-info.block-split-info')}}
+        </li>
+        <li>
+          {{snippetService.getSnippet('info-component.pool-info.pplns-info', historicalTimeInHours)}}
+        </li>
+        <li>
+          {{snippetService.getSnippet('info-component.pool-info.payout.fee-info', poolConfig.poolFee)}}
+        </li>
+        <li>
+          {{snippetService.getSnippet('info-component.pool-info.payout.interval-info')}}
+        </li>
+        <li>
+          {{snippetService.getSnippet('info-component.pool-info.payout.minimum-info', poolConfig.minimumPayout, poolConfig.ticker)}}
+        </li>
+        <li>
+          {{snippetService.getSnippet('info-component.pool-info.distribution-delay-info', poolConfig.blockRewardDistributionDelay)}}
+        </li>
+      </ul>
+    </div>
+    <h4>
+      {{snippetService.getSnippet('info-component.contact.title')}}:
+    </h4>
+    <div>
+      <ul>
+        <li>
+          <span [innerHTML]="snippetService.getSnippet('info-component.contact.join-discord')"></span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-auto">
+    <div echarts [options]="clientVersionsChartOptions" [merge]="clientVersionsChartUpdateOptions" theme="default" class="client-version-chart"></div>
+  </div>
+  <div class="col-auto">
+    <h5>Chart Mode</h5>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="clientVersionChartMode" id="clientVersionChartModeRegular" [value]="ClientVersionsChartMode.regular" [(ngModel)]="clientVersionsChartMode">
+      <label class="form-check-label" for="clientVersionChartModeRegular">
+        Regular
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="clientVersionChartMode" id="clientVersionChartModeSimplified" [value]="ClientVersionsChartMode.simplified" [(ngModel)]="clientVersionsChartMode">
+      <label class="form-check-label" for="clientVersionChartModeSimplified">
+        Simplified
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="clientVersionChartMode" id="clientVersionChartModeThirdParty" [value]="ClientVersionsChartMode.thirdPartyVersions" [(ngModel)]="clientVersionsChartMode">
+      <label class="form-check-label" for="clientVersionChartModeThirdParty">
+        Clients
+      </label>
+    </div>
+  </div>
 </div>
