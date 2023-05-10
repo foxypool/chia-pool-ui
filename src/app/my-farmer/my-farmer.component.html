@@ -125,10 +125,13 @@
           </div>
         </div>
       </div>
-      <div class="p-1 col-12 col-sm-6 col-md-8 col-lg-6 col-xl-6 col-xxl-6 order-xxl-last col-xxxl-12 col-xxxxl-8 col-xxxxxl-6">
+      <div class="p-1 col-12 col-sm-12 col-md-8 col-lg-6 col-xl-6 col-xxl-6 order-xxl-last col-xxxl-12 col-xxxxl-8 col-xxxxxl-6">
         <div class="card">
-          <div class="card-header text-align-center">
+          <div class="card-header text-align-center d-flex justify-content-between">
+            <span></span> <!-- Dummy element for justify-content-between -->
             <h5>{{snippetService.getSnippet('my-farmer-component.payout-address-card.title')}}</h5>
+            <app-loading-state *ngIf="isLoadingPayoutAddressBalance | async" width="1" height="1" colorClass="text-light"></app-loading-state>
+            <div class="d-inline-block" *ngIf="(isLoadingPayoutAddressBalance | async) === false" [ngbTooltip]="ratesService.getValuesInFiatFormatted(payoutAddressBalance | async)">{{payoutAddressBalance | async}} {{poolConfig.ticker}}</div>
           </div>
           <div class="card-body text-align-center card-font-size ellipsis">
             <a href="{{getBlockExplorerAddressLink(accountService.account.payoutAddress)}}" target="_blank" style="color: #b45bff;">{{accountService.account.payoutAddress}}</a>

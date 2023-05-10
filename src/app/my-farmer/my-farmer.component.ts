@@ -5,8 +5,8 @@ import {BigNumber} from 'bignumber.js'
 import {EChartsOption} from 'echarts'
 import {YAXisOption} from 'echarts/types/dist/shared'
 import {ActivatedRoute, Router} from '@angular/router'
-import {distinctUntilChanged, map, shareReplay, skip} from 'rxjs/operators'
-import {Observable, Subscription} from 'rxjs'
+import {distinctUntilChanged, filter, map, mergeMap, shareReplay, skip, tap} from 'rxjs/operators'
+import {BehaviorSubject, combineLatest, Observable, Subscription, takeWhile, timer} from 'rxjs'
 
 import {StatsService} from '../stats.service'
 import {ToastService} from '../toast.service'
@@ -21,6 +21,8 @@ import {PoolsProvider} from '../pools.provider'
 import {AccountHistoricalStat} from '../api.service'
 import {SettingsModalComponent} from '../settings-modal/settings-modal.component'
 import {RankInfo} from '../types'
+import {BalanceProvider} from '../balance-provider'
+import {fromPromise} from 'rxjs/internal/observable/innerFrom'
 
 @Component({
   selector: 'app-my-farmer',
@@ -50,6 +52,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   public readonly totalStaleSharesPercentage: Observable<string>
   public readonly staleSharesColorClasses: Observable<string[]>
   public readonly invalidSharesColorClasses: Observable<string[]>
+  public readonly payoutAddressBalance: Observable<number>
+  public readonly isLoadingPayoutAddressBalance: Observable<boolean>
 
   public isAccountLoading: Observable<boolean> = this.accountService.accountSubject
     .asObservable()
@@ -72,6 +76,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   private readonly historicalIntervalInMinutes = 15
   private readonly currentEcSeriesName = 'Current Effective Capacity'
   private readonly averageEcSeriesName = 'Average Effective Capacity'
+  private readonly isUpdatingPayoutAddressBalance: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true)
 
   private readonly subscriptions: Subscription[] = [
     this.route.params.subscribe(async params => {
@@ -115,6 +120,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly poolsProvider: PoolsProvider,
     private readonly configService: ConfigService,
+    private readonly balanceProvider: BalanceProvider,
   ) {
     this.ecChartOptions = {
       title: {
@@ -357,6 +363,30 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       map(averageEffort => getEffortColor(averageEffort)),
       shareReplay(),
     )
+    this.isLoadingPayoutAddressBalance = this.isUpdatingPayoutAddressBalance.pipe(
+      distinctUntilChanged(),
+      takeWhile(isLoading => isLoading, true),
+      shareReplay(),
+    )
+    this.payoutAddressBalance = combineLatest([
+      this.accountService.accountSubject
+        .pipe(
+          filter(account => account !== null),
+          map(account => account.payoutAddress),
+          distinctUntilChanged(),
+        ),
+      timer(0, 30 * 60 * 1000),
+    ])
+      .pipe(
+        map(([payoutAddress]) => payoutAddress),
+        tap(() => this.isUpdatingPayoutAddressBalance.next(true)),
+        mergeMap(payoutAddress => fromPromise(this.balanceProvider.getBalance(payoutAddress))),
+        tap(() => this.isUpdatingPayoutAddressBalance.next(false)),
+        map(balance => balance.toNumber()),
+        shareReplay({ refCount: true }),
+      )
+    // Add dummy subscribe to trigger stream
+    this.subscriptions.push(this.payoutAddressBalance.subscribe(() => {}))
   }
 
   public ngOnDestroy(): void {
@@ -372,10 +402,6 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     }
     if (this.accountPayoutsUpdateInterval) {
       clearInterval(this.accountPayoutsUpdateInterval)
-    }
-
-    if (this.accountService.isMyFarmerPage) {
-      return
     }
 
     this.accountService.clearStats()
