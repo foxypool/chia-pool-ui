@@ -34,7 +34,9 @@
               "src/bootstrap-xxxxxl.css"
             ],
             "scripts": [],
-            "allowedCommonJsDependencies": [],
+            "allowedCommonJsDependencies": [
+              "moment"
+            ],
             "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,
