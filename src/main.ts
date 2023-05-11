@@ -19,6 +19,7 @@ const ignoreErrors = [
   'Cannot redefine property: googletag',
   '.flat is not a function',
   'UCShellJava.sdkEventFire is not a function',
+  'ChunkLoadError: Loading chunk',
 ]
 
 Sentry.init({
