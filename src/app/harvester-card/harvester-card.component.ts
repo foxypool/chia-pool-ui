@@ -625,6 +625,9 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   private proofTimesChartTooltipFormatter(params): string {
+    if (params === undefined) {
+      return ''
+    }
     const date: string | undefined = params.at(0)?.value.at(0)
     const proofTime: number | undefined = params.at(0)?.value.at(1)
     if (date === undefined || proofTime === undefined) {
