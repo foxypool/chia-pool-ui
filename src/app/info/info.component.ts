@@ -123,10 +123,12 @@ export class InfoComponent implements OnInit, OnDestroy {
 
       return acc
     }, new Map<string, number>())
+    const clientVersionSeries = Array.from(clientVersionWithCount).map(([key, value]) => ({ name: key, value }))
+    clientVersionSeries.sort((lhs, rhs) => rhs.value - lhs.value)
 
     return {
       series: [{
-        data: Array.from(clientVersionWithCount).map(([key, value]) => ({ name: key, value })),
+        data: clientVersionSeries,
       }],
     }
   }
@@ -151,10 +153,12 @@ export class InfoComponent implements OnInit, OnDestroy {
 
       return acc
     }, new Map<string, number>())
+    const clientVersionSeries = Array.from(clientVersionWithCount).map(([key, value]) => ({ name: key, value }))
+    clientVersionSeries.sort((lhs, rhs) => rhs.value - lhs.value)
 
     return {
       series: [{
-        data: Array.from(clientVersionWithCount).map(([key, value]) => ({ name: key, value })),
+        data: clientVersionSeries,
       }],
     }
   }
@@ -173,10 +177,12 @@ export class InfoComponent implements OnInit, OnDestroy {
 
       return acc
     }, new Map<string, number>())
+    const clientVersionSeries = Array.from(clientVersionWithCount).map(([key, value]) => ({ name: key, value }))
+    clientVersionSeries.sort((lhs, rhs) => rhs.value - lhs.value)
 
     return {
       series: [{
-        data: Array.from(clientVersionWithCount).map(([key, value]) => ({ name: key, value })),
+        data: clientVersionSeries,
       }],
     }
   }
