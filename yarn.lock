@@ -1741,15 +1741,15 @@
     "@sentry/utils" "7.51.2"
     tslib "^1.9.3"
 
-"@sentry/angular@^7.51.2":
+"@sentry/angular-ivy@^7.51.2":
   version "7.51.2"
-  resolved "https://registry.yarnpkg.com/@sentry/angular/-/angular-7.51.2.tgz#2fbf2c04a93c1465d3b10364c460c982830ec1da"
-  integrity sha512-FPSDjMFramYGjkQWNNj9YyaYN7mjF4XHAIx4WlYKsQwDsfWUUBDDCDCh03VsiOWrsrfuNWOTO5W3b1dQyXeRHg==
+  resolved "https://registry.yarnpkg.com/@sentry/angular-ivy/-/angular-ivy-7.51.2.tgz#20b360b5ecd69e8ea725597686d3cedea64a51d5"
+  integrity sha512-kjnNBGOm79bT7PCK8//Ml2H8gJBpqc/DJNCPbpTm9Jy7JnZbJcGmpGOMbtOvc130106dJnOpHEu+XvUwDKGW2w==
   dependencies:
     "@sentry/browser" "7.51.2"
     "@sentry/types" "7.51.2"
     "@sentry/utils" "7.51.2"
-    tslib "^2.0.0"
+    tslib "^2.3.0"
 
 "@sentry/browser@7.51.2":
   version "7.51.2"
@@ -1780,13 +1780,6 @@
     "@sentry/core" "7.51.2"
     "@sentry/types" "7.51.2"
     "@sentry/utils" "7.51.2"
-
-"@sentry/tracing@^7.51.2":
-  version "7.51.2"
-  resolved "https://registry.yarnpkg.com/@sentry/tracing/-/tracing-7.51.2.tgz#3f1cce990f48a5b96e885a42463da484e29e5007"
-  integrity sha512-qYl8TtwdEAtLBFSSTtHX6OpSGI73sgoPZhc3ZtF7+cLe29FRM5M6uyV7HhgIrxCstAx/5lZRlCWJabkIewGfFA==
-  dependencies:
-    "@sentry-internal/tracing" "7.51.2"
 
 "@sentry/types@7.51.2":
   version "7.51.2"

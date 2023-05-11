@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser'
 import { NgModule, ErrorHandler, APP_INITIALIZER } from '@angular/core'
 import {Router} from '@angular/router'
-import * as Sentry from '@sentry/angular'
+import * as Sentry from '@sentry/angular-ivy'
 
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
@@ -110,7 +110,7 @@ import { FarmerListComponent } from './farmer-list/farmer-list.component'
     },
     {
       provide: APP_INITIALIZER,
-      useFactory: () => () => {},  
+      useFactory: () => () => {},
       deps: [Sentry.TraceService],
       multi: true,
     },
