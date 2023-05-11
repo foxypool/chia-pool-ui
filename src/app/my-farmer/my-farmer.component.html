@@ -20,21 +20,14 @@
         <div>
           <span *ngIf="accountService.account.name !== undefined" class="mb-0 fw-light fs-2">{{accountService.account.name}}</span>
           <ng-template #badgeContent>
-            <div *ngIf="topNRankInfo" class="pt-1 pb-1 d-flex align-items-center">
-              <img src="assets/top-n-ranks/{{topNRankInfo.imageFileName}}" loading="lazy" height="64" width="64" [alt]="topNRankInfo.imageAlt">
-              <div class="ms-3 d-inline-block">{{topNRankInfo.imageAlt}}</div>
-            </div>
-            <div *ngIf="tenureRankInfo" class="pt-1 pb-1 d-flex align-items-center">
-              <img src="assets/tenure-ranks/{{tenureRankInfo.imageFileName}}" loading="lazy" height="64" width="64" [alt]="tenureRankInfo.imageAlt">
-              <div class="ms-3 d-inline-block">{{tenureRankInfo.imageAlt}}</div>
-            </div>
-            <div *ngIf="capacityRankInfo" class="pt-1 pb-1 d-flex align-items-center">
-              <img src="assets/capacity-ranks/{{capacityRankInfo.imageFileName}}" loading="lazy" height="64" width="64" [alt]="capacityRankInfo.imageAlt">
-              <div class="ms-3 d-inline-block">{{capacityRankInfo.imageAlt}}</div>
-            </div>
-            <div *ngIf="joinedFirstYear" class="pt-1 pb-1 d-flex align-items-center">
-              <img ngSrc="assets/joined-first-year.png" height="64" width="64" alt="Year 1 member">
-              <div class="ms-3 d-inline-block">Year 1 member</div>
+            <div *ngFor="let badge of badges; trackBy: trackBadgesBySrc" class="pt-1 pb-1 d-flex align-items-center">
+              <img [ngSrc]="badge.imgSrcPath"
+                   [alt]="badge.description"
+                   loading="lazy"
+                   height="64"
+                   width="64"
+              >
+              <div class="ms-3 d-inline-block">{{badge.description}}</div>
             </div>
           </ng-template>
           <div
@@ -43,10 +36,16 @@
             [ngbPopover]="badgeContent"
             [autoClose]="'outside'"
           >
-            <img *ngIf="topNRankInfo" src="assets/top-n-ranks/{{topNRankInfo.imageFileName}}" loading="lazy" height="32" width="32" [alt]="topNRankInfo.imageAlt" [ngbTooltip]="topNRankInfo.imageAlt" class="ms-2" style="margin-top: -0.8em">
-            <img *ngIf="tenureRankInfo" src="assets/tenure-ranks/{{tenureRankInfo.imageFileName}}" loading="lazy" height="32" width="32" [alt]="tenureRankInfo.imageAlt" [ngbTooltip]="tenureRankInfo.imageAlt" class="ms-2" style="margin-top: -0.8em">
-            <img *ngIf="capacityRankInfo" src="assets/capacity-ranks/{{capacityRankInfo.imageFileName}}" loading="lazy" height="32" width="32" [alt]="capacityRankInfo.imageAlt" [ngbTooltip]="capacityRankInfo.imageAlt" class="ms-2" style="margin-top: -0.8em">
-            <img *ngIf="joinedFirstYear" ngSrc="assets/joined-first-year.png" height="32" width="32" alt="Year 1 member" ngbTooltip="Year 1 member" class="ms-2" style="margin-top: -0.8em">
+            <img *ngFor="let badge of badges; let isFirst = first; trackBy: trackBadgesBySrc"
+                 [ngSrc]="badge.imgSrcPath"
+                 [alt]="badge.description"
+                 [ngbTooltip]="badge.description"
+                 [ngClass]="(!isFirst || hasName) ? 'ms-2' : ''"
+                 loading="lazy"
+                 height="32"
+                 width="32"
+                 style="margin-top: -0.8em"
+            >
           </div>
         </div>
         <div class="fw-light fs-5 text-break">{{accountService.account.poolPublicKey}}</div>

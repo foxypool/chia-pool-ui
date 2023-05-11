@@ -20,7 +20,6 @@ import { getEffortColor } from '../util'
 import {PoolsProvider} from '../pools.provider'
 import {AccountHistoricalStat} from '../api.service'
 import {SettingsModalComponent} from '../settings-modal/settings-modal.component'
-import {RankInfo} from '../types'
 import {BalanceProvider} from '../balance-provider'
 import {fromPromise} from 'rxjs/internal/observable/innerFrom'
 
@@ -434,6 +433,10 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     }, 11 * 60 * 1000)
   }
 
+  public trackBadgesBySrc(index: number, badge: Badge): string {
+    return badge.imgSrcPath
+  }
+
   public onSharesChartLegendSelectChanged(event): void {
     const isShowingDifficultySeries = event.selected.Difficulty
     const yAxis = this.makeShareChartYAxis({ isShowingDifficultySeries })
@@ -520,86 +523,105 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     return getEffortColor(effort)
   }
 
-  public get tenureRankInfo(): RankInfo|undefined {
-    if (this.accountService.account === null || this.accountService.account.hasLeftThePool || this.accountService.account.isCheating) {
-      return
-    }
-    const farmingSince = this.accountService.account.rejoinedAt || this.accountService.account.createdAt
-    if (moment().diff(farmingSince, 'years') >= 5) {
-      return {
-        imageFileName: '5-years.png',
-        imageAlt: '5+ years farming',
-      }
-    }
-    if (moment().diff(farmingSince, 'years') >= 3) {
-      return {
-        imageFileName: '3-years.png',
-        imageAlt: '3+ years farming',
-      }
-    }
-    if (moment().diff(farmingSince, 'years') >= 2) {
-      return {
-        imageFileName: '2-years.png',
-        imageAlt: '2+ years farming',
-      }
-    }
-    if (moment().diff(farmingSince, 'years') >= 1) {
-      return {
-        imageFileName: '1-year.png',
-        imageAlt: '1+ years farming',
-      }
-    }
-    if (moment().diff(farmingSince, 'months') >= 6) {
-      return {
-        imageFileName: '6-months.png',
-        imageAlt: '6+ months farming',
-      }
-    }
-    if (moment().diff(farmingSince, 'months') >= 3) {
-      return {
-        imageFileName: '3-months.png',
-        imageAlt: '3+ months farming',
-      }
-    }
-    if (moment().diff(farmingSince, 'months') >= 2) {
-      return {
-        imageFileName: '2-months.png',
-        imageAlt: '2+ months farming',
-      }
-    }
-    if (moment().diff(farmingSince, 'months') >= 1) {
-      return {
-        imageFileName: '1-month.png',
-        imageAlt: '1+ months farming',
-      }
+  public get hasName(): boolean {
+    if (this.accountService.account === null) {
+      return false
     }
 
-    return {
-      imageFileName: 'less-than-a-month.png',
-      imageAlt: 'Farming for less than a month',
-    }
+    return this.accountService.account.name !== undefined
   }
 
-  public get topNRankInfo(): RankInfo|undefined {
+  public get badges(): Badge[] {
+    const badges = [
+      this.topNBadge,
+      this.tenureBadge,
+      this.capacityBadge,
+      this.firstYearBadge,
+    ]
+
+    return badges.filter(badge => badge !== undefined)
+  }
+
+  private get topNBadge(): Badge|undefined {
     if (this.accountService.account === null || this.accountService.account.rank === undefined) {
       return
     }
     const rank = this.accountService.account.rank
     if (rank <= 10) {
       return {
-        imageFileName: 'top-10.png',
-        imageAlt: 'Top 10',
+        imgSrcPath: 'assets/top-n-ranks/top-10.png',
+        description: 'Top 10',
       }
     }
     if (rank <= 100) {
       return {
-        imageFileName: 'top-100.png',
-        imageAlt: 'Top 100',
+        imgSrcPath: 'assets/top-n-ranks/top-100.png',
+        description: 'Top 100',
       }
     }
   }
 
-  public get capacityRankInfo(): RankInfo|undefined {
+  private get tenureBadge(): Badge|undefined {
+    if (this.accountService.account === null || this.accountService.account.hasLeftThePool || this.accountService.account.isCheating) {
+      return
+    }
+    const farmingSince = this.accountService.account.rejoinedAt || this.accountService.account.createdAt
+    if (moment().diff(farmingSince, 'years') >= 5) {
+      return {
+        imgSrcPath: 'assets/tenure-ranks/5-years.png',
+        description: '5+ years farming',
+      }
+    }
+    if (moment().diff(farmingSince, 'years') >= 3) {
+      return {
+        imgSrcPath: 'assets/tenure-ranks/3-years.png',
+        description: '3+ years farming',
+      }
+    }
+    if (moment().diff(farmingSince, 'years') >= 2) {
+      return {
+        imgSrcPath: 'assets/tenure-ranks/2-years.png',
+        description: '2+ years farming',
+      }
+    }
+    if (moment().diff(farmingSince, 'years') >= 1) {
+      return {
+        imgSrcPath: 'assets/tenure-ranks/1-year.png',
+        description: '1+ years farming',
+      }
+    }
+    if (moment().diff(farmingSince, 'months') >= 6) {
+      return {
+        imgSrcPath: 'assets/tenure-ranks/6-months.png',
+        description: '6+ months farming',
+      }
+    }
+    if (moment().diff(farmingSince, 'months') >= 3) {
+      return {
+        imgSrcPath: 'assets/tenure-ranks/3-months.png',
+        description: '3+ months farming',
+      }
+    }
+    if (moment().diff(farmingSince, 'months') >= 2) {
+      return {
+        imgSrcPath: 'assets/tenure-ranks/2-months.png',
+        description: '2+ months farming',
+      }
+    }
+    if (moment().diff(farmingSince, 'months') >= 1) {
+      return {
+        imgSrcPath: 'assets/tenure-ranks/1-month.png',
+        description: '1+ months farming',
+      }
+    }
+
+    return {
+      imgSrcPath: 'assets/tenure-ranks/less-than-a-month.png',
+      description: 'Farming for less than a month',
+    }
+  }
+
+  private get capacityBadge(): Badge|undefined {
     if (this.accountService.account === null) {
       return
     }
@@ -607,66 +629,69 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     const capacityInPib = capacityInTib.dividedBy(1024)
     if (capacityInPib.isGreaterThanOrEqualTo(10)) {
       return {
-        imageFileName: '10-pib.png',
-        imageAlt: '10+ PiB',
+        imgSrcPath: 'assets/capacity-ranks/10-pib.png',
+        description: '10+ PiB',
       }
     }
     if (capacityInPib.isGreaterThanOrEqualTo(5)) {
       return {
-        imageFileName: '5-pib.png',
-        imageAlt: '5+ PiB',
+        imgSrcPath: 'assets/capacity-ranks/5-pib.png',
+        description: '5+ PiB',
       }
     }
     if (capacityInPib.isGreaterThanOrEqualTo(1)) {
       return {
-        imageFileName: '1-pib.png',
-        imageAlt: '1+ PiB',
+        imgSrcPath: 'assets/capacity-ranks/1-pib.png',
+        description: '1+ PiB',
       }
     }
     if (capacityInTib.isGreaterThanOrEqualTo(500)) {
       return {
-        imageFileName: '500-tib.png',
-        imageAlt: '500+ TiB',
+        imgSrcPath: 'assets/capacity-ranks/500-tib.png',
+        description: '500+ TiB',
       }
     }
     if (capacityInTib.isGreaterThanOrEqualTo(250)) {
       return {
-        imageFileName: '250-tib.png',
-        imageAlt: '250+ TiB',
+        imgSrcPath: 'assets/capacity-ranks/250-tib.png',
+        description: '250+ TiB',
       }
     }
     if (capacityInTib.isGreaterThanOrEqualTo(100)) {
       return {
-        imageFileName: '100-tib.png',
-        imageAlt: '100+ TiB',
+        imgSrcPath: 'assets/capacity-ranks/100-tib.png',
+        description: '100+ TiB',
       }
     }
     if (capacityInTib.isGreaterThanOrEqualTo(50)) {
       return {
-        imageFileName: '50-tib.png',
-        imageAlt: '50+ TiB',
+        imgSrcPath: 'assets/capacity-ranks/50-tib.png',
+        description: '50+ TiB',
       }
     }
     if (capacityInTib.isGreaterThanOrEqualTo(10)) {
       return {
-        imageFileName: '10-tib.png',
-        imageAlt: '10+ TiB',
+        imgSrcPath: 'assets/capacity-ranks/10-tib.png',
+        description: '10+ TiB',
       }
     }
     if (capacityInTib.isGreaterThan(0)) {
       return {
-        imageFileName: 'less-than-10-tib.png',
-        imageAlt: 'less than 10 TiB',
+        imgSrcPath: 'assets/capacity-ranks/less-than-10-tib.png',
+        description: 'less than 10 TiB',
       }
     }
   }
 
-  public get joinedFirstYear(): boolean {
-    if (this.accountService.account === null) {
-      return false
+  private get firstYearBadge(): Badge|undefined {
+    if (this.accountService.account === null || moment(this.accountService.account.createdAt).isAfter('2022-06-13T00:00:00.000Z')) {
+      return
     }
 
-    return moment(this.accountService.account.createdAt).isBefore('2022-06-13T00:00:00.000Z')
+    return {
+      imgSrcPath: 'assets/joined-first-year.png',
+      description: 'Year 1 member',
+    }
   }
 
   private get shareChartTopMargin(): number {
@@ -1017,4 +1042,9 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
     return this.poolConfig.blockExplorerAddressUrlTemplate.replace('#ADDRESS#', address)
   }
+}
+
+interface Badge {
+  imgSrcPath: string
+  description: string
 }
