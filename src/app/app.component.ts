@@ -7,6 +7,7 @@ import {StatsService} from './stats.service'
 import {SnippetService} from './snippet.service'
 import {PoolsProvider} from './pools.provider'
 import {Subscription} from 'rxjs'
+import {gitCommitHash} from '../environments/config'
 
 @Component({
   selector: 'app-root',
@@ -32,6 +33,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.updateTitle()
     this.seoService.updateMeta({ name: 'description', content: `${this.poolName}, a fair ${this.poolsProvider.coin} PoSt (Proof of space time) pool with low fees hosted in Europe. No registration required and easy to use.` })
     this.seoService.updateMeta({ name: 'keywords', content: `${this.poolsProvider.coin}, Pool, Foxy-Pool, PoSt, Proof of space time, Mining` })
+    console.log(
+      `Using %ccommit %c${gitCommitHash}`,
+      'color: #44bba4',
+      'color: #e7bb41',
+    )
   }
 
   public ngOnInit(): void {
