@@ -355,16 +355,17 @@ export class AccountService {
     }
   }
 
-  async updateMinimumPayout({ newMinimumPayout }) {
+  public async updatePayoutOptions({ newMinimumPayout, newPayoutMultiplesOf }) {
     if (!this.isAuthenticated) {
       return
     }
     this.isUpdatingAccount = true
     try {
-      await this.statsService.updateAccountMinimumPayout({
+      await this.statsService.updatePayoutOptions({
         poolPublicKey: this.poolPublicKey,
         authToken: this.authToken,
         minimumPayout: newMinimumPayout,
+        payoutMultiplesOf: newPayoutMultiplesOf,
       })
       await this.updateAccount({ bustCache: true })
     } finally {

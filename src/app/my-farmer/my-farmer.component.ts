@@ -716,9 +716,19 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     return 99
   }
 
-  private get minimumPayout() {
-    if (this.accountService.account && this.accountService.account.minimumPayout) {
-      return this.accountService.account.minimumPayout
+  private get minimumPayout(): string|number {
+    if (this.accountService.account) {
+      const minimumPayout = this.accountService.account.minimumPayout
+      const payoutMultiplesOf = this.accountService.account.payoutMultiplesOf
+      if (minimumPayout !== undefined && payoutMultiplesOf !== undefined) {
+        return BigNumber.max(minimumPayout, payoutMultiplesOf).toString()
+      }
+      if (minimumPayout !== undefined) {
+        return minimumPayout
+      }
+      if (payoutMultiplesOf !== undefined) {
+        return payoutMultiplesOf
+      }
     }
     if (this.poolConfig.minimumPayout) {
       return this.poolConfig.minimumPayout

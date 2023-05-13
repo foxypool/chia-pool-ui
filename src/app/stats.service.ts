@@ -195,8 +195,8 @@ export class StatsService {
     return this.requestWithError(this.apiService.updateAccountDistributionRatio({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, newDistributionRatio }))
   }
 
-  updateAccountMinimumPayout({ poolPublicKey, authToken, minimumPayout }) {
-    return this.requestWithError(this.apiService.updateAccountMinimumPayout({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, minimumPayout }))
+  public updatePayoutOptions({ poolPublicKey, authToken, minimumPayout, payoutMultiplesOf }) {
+    return this.requestWithError(this.apiService.updatePayoutOptions({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, minimumPayout, payoutMultiplesOf }))
   }
 
   public updateAccountDifficulty({ poolPublicKey, authToken, difficulty, isFixedDifficulty }): Promise<unknown> {

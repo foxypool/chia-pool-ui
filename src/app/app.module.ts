@@ -28,7 +28,7 @@ import { AuthenticationModalComponent } from './authentication-modal/authenticat
 import {ClipboardModule} from 'ngx-clipboard'
 import { UpdateNameComponent } from './update-name/update-name.component'
 import { LeavePoolComponent } from './leave-pool-modal/leave-pool.component'
-import { UpdateMinimumPayoutComponent } from './update-minimum-payout/update-minimum-payout.component'
+import { UpdatePayoutOptionsComponent } from './update-minimum-payout/update-payout-options.component'
 import {NgxEchartsModule} from 'ngx-echarts'
 import { PoolHistoryComponent } from './pool-history/pool-history.component'
 import { FarmerPayoutHistoryComponent } from './farmer-payout-history/farmer-payout-history.component'
@@ -61,7 +61,7 @@ import { FarmerListComponent } from './farmer-list/farmer-list.component'
     AuthenticationModalComponent,
     UpdateNameComponent,
     LeavePoolComponent,
-    UpdateMinimumPayoutComponent,
+    UpdatePayoutOptionsComponent,
     UpdateDifficultyComponent,
     UpdateNotificationSettingsComponent,
     PoolHistoryComponent,

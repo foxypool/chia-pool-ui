@@ -148,9 +148,10 @@ export class ApiService {
     return data
   }
 
-  async updateAccountMinimumPayout({ poolIdentifier, poolPublicKey, authToken, minimumPayout }) {
-    const { data } = await this.client.post(`${poolIdentifier}/account/${poolPublicKey}/minimum-payout`, {
+  public async updatePayoutOptions({ poolIdentifier, poolPublicKey, authToken, minimumPayout, payoutMultiplesOf }) {
+    const { data } = await this.client.put(`${poolIdentifier}/account/${poolPublicKey}/payout-options`, {
       minimumPayout,
+      payoutMultiplesOf,
     }, {
       headers: { Authorization: `Bearer ${authToken}` },
     })
