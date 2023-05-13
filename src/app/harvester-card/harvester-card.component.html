@@ -87,7 +87,7 @@
     </div>
     <div class="row" *ngIf="showProofTimesChart | async">
       <div class="col-12" *ngIf="hasProofTimes | async">
-        <div echarts [options]="proofTimesChartOptions" [merge]="proofTimesChartUpdateOptions" theme="default" class="shares-chart"></div>
+        <div echarts [options]="proofTimesChartOptions" [merge]="proofTimesChartUpdateOptions" theme="default" class="proof-times-chart"></div>
       </div>
       <div class="col-12 text-center mt-3" *ngIf="(hasProofTimes | async) === false && (isLoadingProofTimes | async) === false">
         <app-empty-state text="No proof times recorded in the last 24h" [icon]="faReceipt"></app-empty-state>

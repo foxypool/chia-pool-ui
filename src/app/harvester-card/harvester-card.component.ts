@@ -244,6 +244,9 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
           formatter: '{value} s',
         },
       }],
+      dataZoom: [
+        { type: 'inside' },
+      ],
       series: [{
         data: [],
         type: 'scatter',
