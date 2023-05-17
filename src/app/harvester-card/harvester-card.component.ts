@@ -64,7 +64,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   private readonly subscriptions: Subscription[] = []
 
   constructor(
-    private readonly accountService: AccountService,
+    public readonly accountService: AccountService,
     private readonly statsService: StatsService,
     private readonly toastService: ToastService,
   ) {

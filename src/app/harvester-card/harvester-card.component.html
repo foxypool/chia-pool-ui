@@ -18,6 +18,7 @@
         <option [value]="ChartMode.proofTimes">Proof times</option>
       </select>
       <fa-icon
+        *ngIf="accountService.haveAuthToken"
         class="ms-3 highlight"
         [icon]="faEllipsisV"
         size="2xl"
