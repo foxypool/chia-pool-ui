@@ -215,11 +215,11 @@ export class AccountService {
     return account
   }
 
-  async getAccountHarvesters() {
+  async getAccountHarvesters({ bustCache = false }) {
     this.isLoading = true
     let accountHarvesters = []
     try {
-      accountHarvesters = await this.statsService.getAccountHarvesters({ poolPublicKey: this.poolPublicKey })
+      accountHarvesters = await this.statsService.getAccountHarvesters({ poolPublicKey: this.poolPublicKey, bustCache })
     } finally {
       this.isLoading = false
     }
@@ -396,6 +396,8 @@ export class AccountService {
     areEcChangeNotificationsEnabled,
     areBlockWonNotificationsEnabled,
     arePayoutAddressChangeNotificationsEnabled,
+    areHarvesterOfflineNotificationsEnabled,
+    harvesterOfflineDurationInMinutes,
   }): Promise<void> {
     if (!this.isAuthenticated) {
       return
@@ -409,11 +411,25 @@ export class AccountService {
         areEcChangeNotificationsEnabled,
         areBlockWonNotificationsEnabled,
         arePayoutAddressChangeNotificationsEnabled,
+        areHarvesterOfflineNotificationsEnabled,
+        harvesterOfflineDurationInMinutes,
       })
       await this.updateAccount({ bustCache: true })
     } finally {
       this.isUpdatingAccount = false
     }
+  }
+
+  public async updateHarvesterNotificationSettings({ harvesterPeerId, notificationSettings }): Promise<void> {
+    if (!this.isAuthenticated) {
+      return
+    }
+    await this.statsService.updateHarvesterNotificationSettings({
+      poolPublicKey: this.poolPublicKey,
+      authToken: this.authToken,
+      harvesterPeerId,
+      notificationSettings,
+    })
   }
 
   private migrateLegacyConfig() {

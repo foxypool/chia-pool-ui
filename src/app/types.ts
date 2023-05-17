@@ -4,6 +4,12 @@ export interface Harvester {
   name?: string
   lastAcceptedPartialAt?: string
   versionInfo: VersionInfo
+  notifications?: {
+    settings?: {
+      areOfflineNotificationsEnabled?: boolean,
+      offlineDurationInMinutes?: number,
+    },
+  },
 }
 
 interface VersionInfo {

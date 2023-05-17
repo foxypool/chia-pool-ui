@@ -16,3 +16,11 @@
   outline: none;
   box-shadow: none;
 }
+.highlight {
+  -webkit-transition: color 0.3s;
+  transition: color 0.3s;
+  color: rgba(255, 255, 255, 0.6);
+}
+.highlight:hover{
+  color: rgba(255, 255, 255, 0.9);
+}

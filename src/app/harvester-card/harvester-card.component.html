@@ -12,11 +12,18 @@
       </h5>
       <div *ngIf="hasName">{{peerIdSlug}}</div>
     </div>
-    <div>
+    <div class="d-flex justify-content-between">
       <select class="form-select dark-background" [ngModel]="chartMode | async" (ngModelChange)="setChartMode($event)">
         <option [value]="ChartMode.shares">Shares</option>
         <option [value]="ChartMode.proofTimes">Proof times</option>
       </select>
+      <fa-icon
+        class="ms-3 highlight"
+        [icon]="faEllipsisV"
+        size="2xl"
+        style="cursor: pointer; margin-top: 0.2rem;"
+        (click)="openSettingsModal()"
+      ></fa-icon>
     </div>
   </div>
   <div class="card-body harvester-card">
@@ -98,3 +105,4 @@
     </div>
   </div>
 </div>
+<app-harvester-settings-modal [harvester]="harvester" (updatedHarvester)="harvesterWasUpdated()"></app-harvester-settings-modal>

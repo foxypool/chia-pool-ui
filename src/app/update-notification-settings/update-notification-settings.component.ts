@@ -4,6 +4,8 @@ import {AccountService} from '../account.service'
 import {SnippetService} from '../snippet.service'
 import {ToastService} from '../toast.service'
 import {BigNumber} from 'bignumber.js'
+import {Options} from '@angular-slider/ngx-slider'
+import {stepsArray} from '../harvester-offline-duration-options'
 
 @Component({
   selector: 'app-update-notification-settings',
@@ -18,6 +20,8 @@ export class UpdateNotificationSettingsComponent {
   public areEcChangeNotificationsEnabled = false
   public areBlockWonNotificationsEnabled = false
   public arePayoutAddressChangeNotificationsEnabled = false
+  public areHarvesterOfflineNotificationsEnabled = false
+  public newHarvesterOfflineDurationInMinutes: number
 
   constructor(
     public accountService: AccountService,
@@ -28,6 +32,19 @@ export class UpdateNotificationSettingsComponent {
     this.areEcChangeNotificationsEnabled = this.currentAreEcChangeNotificationsEnabled
     this.areBlockWonNotificationsEnabled = this.currentAreBlockWonNotificationsEnabled
     this.arePayoutAddressChangeNotificationsEnabled = this.currentArePayoutAddressChangeNotificationsEnabled
+    this.areHarvesterOfflineNotificationsEnabled = this.currentAreHarvesterOfflineNotificationsEnabled
+    this.newHarvesterOfflineDurationInMinutes = this.currentHarvesterOfflineDurationInMinutes
+  }
+
+  public get harvesterOfflineDurationOptions(): Options {
+    return {
+      showTicks: true,
+      showTicksValues: false,
+      hidePointerLabels: true,
+      showSelectionBar: true,
+      disabled: !this.areHarvesterOfflineNotificationsEnabled,
+      stepsArray,
+    }
   }
 
   public get newEcLastHourThreshold(): number {
@@ -78,6 +95,8 @@ export class UpdateNotificationSettingsComponent {
         areEcChangeNotificationsEnabled: this.areEcChangeNotificationsEnabled,
         areBlockWonNotificationsEnabled: this.areBlockWonNotificationsEnabled,
         arePayoutAddressChangeNotificationsEnabled: this.arePayoutAddressChangeNotificationsEnabled,
+        areHarvesterOfflineNotificationsEnabled: this.areHarvesterOfflineNotificationsEnabled,
+        harvesterOfflineDurationInMinutes: this.newHarvesterOfflineDurationInMinutes,
       })
       this.toastService.showSuccessToast('Successfully saved the notification settings')
     } catch (err) {
@@ -97,8 +116,16 @@ export class UpdateNotificationSettingsComponent {
     return this.accountService.account.notificationSettings?.arePayoutAddressChangeNotificationsEnabled ?? false
   }
 
+  private get currentAreHarvesterOfflineNotificationsEnabled(): boolean {
+    return this.accountService.account.notificationSettings?.areHarvesterOfflineNotificationsEnabled ?? false
+  }
+
   private get currentEcLastHourThresholdInGib(): number {
     return this.accountService.account.notificationSettings?.ecLastHourThreshold ?? 0
+  }
+
+  private get currentHarvesterOfflineDurationInMinutes(): number {
+    return this.accountService.account.notificationSettings?.harvesterOfflineDurationInMinutes ?? 20
   }
 
   private get areValuesChanged(): boolean {
@@ -109,6 +136,12 @@ export class UpdateNotificationSettingsComponent {
       return true
     }
     if (this.areBlockWonNotificationsEnabled !== this.currentAreBlockWonNotificationsEnabled) {
+      return true
+    }
+    if (this.areHarvesterOfflineNotificationsEnabled !== this.currentAreHarvesterOfflineNotificationsEnabled) {
+      return true
+    }
+    if (this.newHarvesterOfflineDurationInMinutes !== this.currentHarvesterOfflineDurationInMinutes) {
       return true
     }
 

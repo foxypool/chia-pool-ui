@@ -6,3 +6,33 @@
 .site-content {
   flex: 1;
 }
+::ng-deep {
+  .duration-slider-wrapper .ngx-slider .ngx-slider-limit {
+    display: none;
+  }
+  .duration-slider-wrapper .ngx-slider .ngx-slider-selection {
+    background-color: rgb(13, 110, 253);
+  }
+  .duration-slider-wrapper .ngx-slider[disabled] .ngx-slider-selection {
+    background-color: #8b91a2;;
+  }
+  .duration-slider-wrapper .ngx-slider .ngx-slider-tick {
+    width: 0;
+  }
+  .duration-slider-wrapper .ngx-slider .ngx-slider-pointer {
+    width: 16px;
+    height: 16px;
+    top: -7px;
+    background-color: rgb(13, 110, 253);
+    border-radius: 8px;
+  }
+  .duration-slider-wrapper .ngx-slider[disabled] .ngx-slider-pointer {
+    background-color: #d8e0f3;
+  }
+  .duration-slider-wrapper .ngx-slider .ngx-slider-pointer:after {
+    display: none;
+  }
+  .duration-slider-wrapper .ngx-slider .ngx-slider-tick-legend {
+    color: #474747;
+  }
+}

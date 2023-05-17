@@ -151,8 +151,8 @@ export class StatsService {
     return this.apiService.getAccount({ poolIdentifier: this.poolIdentifier, poolPublicKey, bustCache })
   }
 
-  getAccountHarvesters({ poolPublicKey}) {
-    return this.apiService.getAccountHarvesters({ poolIdentifier: this.poolIdentifier, poolPublicKey })
+  getAccountHarvesters({ poolPublicKey, bustCache }) {
+    return this.apiService.getAccountHarvesters({ poolIdentifier: this.poolIdentifier, poolPublicKey, bustCache })
   }
 
   getAccountHistoricalStats({ poolPublicKey}): Promise<AccountHistoricalStat[]> {
@@ -191,6 +191,10 @@ export class StatsService {
     return this.requestWithError(this.apiService.updateHarvesterName({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, harvesterPeerId, newName }))
   }
 
+  public async updateHarvesterNotificationSettings({ poolPublicKey, authToken, harvesterPeerId, notificationSettings }): Promise<unknown> {
+    return this.requestWithError(this.apiService.updateHarvesterNotificationSettings({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, harvesterPeerId, notificationSettings }))
+  }
+
   updateAccountDistributionRatio({ poolPublicKey, authToken, newDistributionRatio }) {
     return this.requestWithError(this.apiService.updateAccountDistributionRatio({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, newDistributionRatio }))
   }
@@ -210,6 +214,8 @@ export class StatsService {
     areEcChangeNotificationsEnabled,
     areBlockWonNotificationsEnabled,
     arePayoutAddressChangeNotificationsEnabled,
+    areHarvesterOfflineNotificationsEnabled,
+    harvesterOfflineDurationInMinutes,
   }): Promise<unknown> {
     return this.requestWithError(this.apiService.updateNotificationSettings({
       poolIdentifier: this.poolIdentifier,
@@ -219,6 +225,8 @@ export class StatsService {
       areEcChangeNotificationsEnabled,
       areBlockWonNotificationsEnabled,
       arePayoutAddressChangeNotificationsEnabled,
+      areHarvesterOfflineNotificationsEnabled,
+      harvesterOfflineDurationInMinutes,
     }))
   }
 

@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core'
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core'
 import {Harvester} from '../types'
 import {UntypedFormControl} from '@angular/forms'
 import {ToastService} from '../toast.service'
@@ -15,7 +15,8 @@ import {Moment} from 'moment'
 import {stripHexPrefix} from '../util'
 import {compare} from 'compare-versions'
 import {clientVersions} from '../client-versions'
-import {faReceipt} from '@fortawesome/free-solid-svg-icons'
+import {faEllipsisV, faReceipt} from '@fortawesome/free-solid-svg-icons'
+import {HarvesterSettingsModalComponent} from '../harvester-settings-modal/harvester-settings-modal.component'
 
 const sharesPerDayPerK32 = 10
 const k32SizeInGb = 108.837
@@ -28,8 +29,11 @@ const k32SizeInGib = (new BigNumber(k32SizeInGb)).shiftedBy(9).dividedBy((new Bi
 })
 export class HarvesterCardComponent implements OnInit, OnDestroy {
   @Input() harvester: Harvester
+  @Output() updatedHarvester = new EventEmitter<void>()
+  @ViewChild(HarvesterSettingsModalComponent) settingsModal
 
   public nameControl: UntypedFormControl
+  public readonly faEllipsisV = faEllipsisV
   public readonly faReceipt = faReceipt
   public readonly ChartMode = ChartMode
   public readonly showSharesChart: Observable<boolean>
@@ -510,6 +514,14 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
 
   public cancelNameUpdate(): void {
     this.nameControl.setValue(this.harvester.name)
+  }
+
+  public harvesterWasUpdated() {
+    this.updatedHarvester.emit()
+  }
+
+  public openSettingsModal() {
+    this.settingsModal.openModal()
   }
 
   private async updateStats(): Promise<void> {

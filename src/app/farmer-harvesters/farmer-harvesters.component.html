@@ -10,7 +10,7 @@
 </div>
 <div class="row mb-3" *ngFor="let harvester of harvesters | async | slice: (page - 1) * pageSize : page * pageSize; trackBy: trackBy">
   <div class="col-12">
-    <app-harvester-card [harvester]="harvester"></app-harvester-card>
+    <app-harvester-card [harvester]="harvester" (updatedHarvester)="updateHarvesters({ bustCache: true })"></app-harvester-card>
   </div>
 </div>
 <ngb-pagination

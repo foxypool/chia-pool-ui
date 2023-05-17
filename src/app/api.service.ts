@@ -67,8 +67,13 @@ export class ApiService {
     return data
   }
 
-  async getAccountHarvesters({ poolIdentifier, poolPublicKey }) {
-    const { data } = await this.client.get(`${poolIdentifier}/account/${poolPublicKey}/harvesters`)
+  async getAccountHarvesters({ poolIdentifier, poolPublicKey, bustCache }) {
+    const params: any = {}
+    if (bustCache) {
+      params.cacheBuster = Math.random()
+    }
+
+    const { data } = await this.client.get(`${poolIdentifier}/account/${poolPublicKey}/harvesters`, { params })
 
     return data
   }
@@ -138,6 +143,14 @@ export class ApiService {
     return data
   }
 
+  public async updateHarvesterNotificationSettings({ poolIdentifier, poolPublicKey, authToken, harvesterPeerId, notificationSettings }): Promise<unknown> {
+    const { data } = await this.client.put(`${poolIdentifier}/account/${poolPublicKey}/harvester/${harvesterPeerId}/notification-settings`, notificationSettings, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    })
+
+    return data
+  }
+
   async updateAccountDistributionRatio({ poolIdentifier, poolPublicKey, authToken, newDistributionRatio }) {
     const { data } = await this.client.post(`${poolIdentifier}/account/${poolPublicKey}/distribution-ratio`, {
       newDistributionRatio,
@@ -178,12 +191,16 @@ export class ApiService {
     areEcChangeNotificationsEnabled,
     areBlockWonNotificationsEnabled,
     arePayoutAddressChangeNotificationsEnabled,
+    areHarvesterOfflineNotificationsEnabled,
+    harvesterOfflineDurationInMinutes,
   }): Promise<unknown> {
     const { data } = await this.client.put(`${poolIdentifier}/account/${poolPublicKey}/notification-settings`, {
       ecLastHourThreshold,
       areEcChangeNotificationsEnabled,
       areBlockWonNotificationsEnabled,
       arePayoutAddressChangeNotificationsEnabled,
+      areHarvesterOfflineNotificationsEnabled,
+      harvesterOfflineDurationInMinutes,
     }, {
       headers: { Authorization: `Bearer ${authToken}` },
     })

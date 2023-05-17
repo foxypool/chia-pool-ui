@@ -42,8 +42,13 @@ import { FarmerHarvestersComponent } from './farmer-harvesters/farmer-harvesters
 import { HarvesterCardComponent } from './harvester-card/harvester-card.component'
 import { EditableModule } from '@ngneat/edit-in-place'
 import { SettingsModalComponent } from './settings-modal/settings-modal.component'
-import {NgOptimizedImage} from '@angular/common';
+import {NgOptimizedImage} from '@angular/common'
 import { FarmerListComponent } from './farmer-list/farmer-list.component'
+import {NgxSliderModule} from '@angular-slider/ngx-slider'
+import {HarvesterSettingsModalComponent} from './harvester-settings-modal/harvester-settings-modal.component'
+import {
+  UpdateHarvesterNotificationSettingsComponent
+} from './update-harvester-notification-settings/update-harvester-notification-settings.component'
 
 @NgModule({
   declarations: [
@@ -72,6 +77,8 @@ import { FarmerListComponent } from './farmer-list/farmer-list.component'
     HarvesterCardComponent,
     SettingsModalComponent,
     FarmerListComponent,
+    HarvesterSettingsModalComponent,
+    UpdateHarvesterNotificationSettingsComponent,
   ],
   imports: [
     BrowserModule,
@@ -97,6 +104,7 @@ import { FarmerListComponent } from './farmer-list/farmer-list.component'
     }),
     EditableModule,
     NgOptimizedImage,
+    NgxSliderModule,
   ],
   providers: [
     WINDOW_PROVIDERS,

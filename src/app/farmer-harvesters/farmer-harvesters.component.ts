@@ -48,7 +48,7 @@ export class FarmerHarvestersComponent implements OnInit, OnDestroy {
     return harvester._id
   }
 
-  private async updateHarvesters(): Promise<void> {
-    this.harvestersSubject.next(await this.accountService.getAccountHarvesters())
+  public async updateHarvesters({ bustCache = false } = {}): Promise<void> {
+    this.harvestersSubject.next(await this.accountService.getAccountHarvesters({ bustCache }))
   }
 }

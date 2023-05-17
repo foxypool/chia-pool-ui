@@ -1,0 +1,32 @@
+.text-color-and-size {
+  color: #474747;
+  font-size: 1.1rem;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.form-control {
+  border: 1px solid black;
+}
+
+.duration-slider {
+  margin-top: 0.5rem;
+}
+.duration-slider-wrapper {
+  margin-right: 12px;
+  margin-bottom: 1rem;
+}
+.inherited-switch {
+  background-color: #5bc0eb;
+  border-color: #5bc0eb;
+}
+::ng-deep {
+  .duration-slider-wrapper.inherited .ngx-slider .ngx-slider-selection {
+    background-color: #5bc0eb;
+  }
+  .duration-slider-wrapper.inherited .ngx-slider .ngx-slider-pointer {
+    background-color: #5bc0eb;
+  }
+}
