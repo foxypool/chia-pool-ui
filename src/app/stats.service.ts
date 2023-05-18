@@ -11,7 +11,7 @@ import {
   AccountListResponse,
   ApiService,
   ClientVersion,
-  HarvesterStats,
+  HarvesterStats, LoginTokenResponse,
   ProofTime
 } from './api.service'
 
@@ -181,6 +181,14 @@ export class StatsService {
 
   authenticate({ poolPublicKey, message, signature }): any {
     return this.requestWithError(this.apiService.authenticateAccount({ poolIdentifier: this.poolIdentifier, poolPublicKey, message, signature }))
+  }
+
+  authenticateWithToken({ accountIdentifier, token }): any {
+    return this.requestWithError(this.apiService.authenticateAccountWithToken({ poolIdentifier: this.poolIdentifier, accountIdentifier, token }))
+  }
+
+  async generateLoginToken({ accountIdentifier, authToken }): Promise<LoginTokenResponse> {
+    return this.requestWithError(this.apiService.generateLoginToken({ poolIdentifier: this.poolIdentifier, accountIdentifier, authToken }))
   }
 
   async updateAccountName({ poolPublicKey, authToken, newName }) {

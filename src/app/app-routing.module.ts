@@ -18,6 +18,7 @@ const routes: Routes = [
   { path: 'farmer/:poolPublicKey', component: MyFarmerComponent, pathMatch: 'full', data: { titlePrefixSnippet: 'farmer' } },
   { path: 'notices', loadChildren: () => import('./notices/notices.module').then(m => m.NoticesModule) },
   { path: 'events', loadChildren: () => import('./events/events.module').then(m => m.EventsModule) },
+  { path: 'login', redirectTo: 'my-farmer' },
   { path: '**', redirectTo: '' }
 ]
 

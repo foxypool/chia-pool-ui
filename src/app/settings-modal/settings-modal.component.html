@@ -31,6 +31,12 @@
               <app-update-notification-settings></app-update-notification-settings>
             </ng-template>
           </li>
+          <li ngbNavItem="login-link" [destroyOnHide]="true">
+            <a class="text-decoration-none" ngbNavLink>Login Link</a>
+            <ng-template ngbNavContent>
+              <app-generate-login-link></app-generate-login-link>
+            </ng-template>
+          </li>
           <li ngbNavItem="leave-pool" [destroyOnHide]="true" *ngIf="canLeavePool">
             <a class="text-decoration-none" ngbNavLink>Leave Pool</a>
             <ng-template ngbNavContent>

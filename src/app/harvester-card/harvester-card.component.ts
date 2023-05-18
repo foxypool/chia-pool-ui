@@ -56,8 +56,8 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   public proofTimesChartUpdateOptions: EChartsOption
   private readonly stats: Observable<HarvesterStats>
   private readonly statsSubject: BehaviorSubject<HarvesterStats|undefined> = new BehaviorSubject<HarvesterStats>(undefined)
-  private statsUpdateInterval?: number
-  private proofTimesUpdateInterval?: number
+  private statsUpdateInterval?: ReturnType<typeof setInterval>
+  private proofTimesUpdateInterval?: ReturnType<typeof setInterval>
   private readonly chartModeSubject: BehaviorSubject<ChartMode> = new BehaviorSubject<ChartMode>(ChartMode.shares)
   private readonly proofTimes: BehaviorSubject<ProofTime[]> = new BehaviorSubject<ProofTime[]>([])
   private readonly isLoadingProofTimesSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)

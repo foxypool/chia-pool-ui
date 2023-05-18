@@ -16,6 +16,7 @@ export default {
   'api.error.invalid_notification_settings': 'The provided notification settings are invalid!',
   'api.error.invalid_signature': 'The signature is invalid!',
   'api.error.invalid_payout_multiples_of': 'The payout multiples of amount is invalid!',
+  'api.error.invalid_token': 'The login link is invalid, already used or expired!',
   'authentication-modal.authenticate': 'Authenticate',
   'authentication-modal.authenticating': 'Authenticating',
   'authentication-modal.authentication-guide': 'For a list of detailed steps please follow <a href="{1}" target="_blank">the guide</a> on how to authenticate yourself.',

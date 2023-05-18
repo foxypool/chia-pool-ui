@@ -123,6 +123,22 @@ export class ApiService {
     return data
   }
 
+  async authenticateAccountWithToken({ poolIdentifier, accountIdentifier, token }) {
+    const { data } = await this.client.post(`${poolIdentifier}/account/${accountIdentifier}/authenticate-with-token`, {
+      token,
+    })
+
+    return data
+  }
+
+  public async generateLoginToken({ poolIdentifier, accountIdentifier, authToken }): Promise<LoginTokenResponse> {
+    const { data } = await this.client.post<LoginTokenResponse>(`${poolIdentifier}/account/${accountIdentifier}/login-token/generate`, undefined, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    })
+
+    return data
+  }
+
   async updateAccountName({ poolIdentifier, poolPublicKey, authToken, newName }) {
     const { data } = await this.client.post(`${poolIdentifier}/account/${poolPublicKey}/name`, {
       newName,
@@ -287,4 +303,8 @@ export interface ClientVersion {
   localName2: string|null
   localVersion2: string|null
   count: number
+}
+
+export interface LoginTokenResponse {
+  token: string
 }

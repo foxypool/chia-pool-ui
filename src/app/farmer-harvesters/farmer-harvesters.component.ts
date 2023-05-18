@@ -18,7 +18,7 @@ export class FarmerHarvestersComponent implements OnInit, OnDestroy {
   public readonly harvesters: Observable<Harvester[]>
   private readonly isLoadingSubject: BehaviorSubject<boolean> = new BehaviorSubject(true)
   private readonly harvestersSubject: BehaviorSubject<Harvester[]> = new BehaviorSubject<Harvester[]>([])
-  private harvestersUpdateInterval?: number
+  private harvestersUpdateInterval?: ReturnType<typeof setInterval>
   private readonly subscriptions: Subscription[] = [
     this.accountService.currentAccountIdentifier.pipe(skip(1)).subscribe(async () => {
       this.page = 1

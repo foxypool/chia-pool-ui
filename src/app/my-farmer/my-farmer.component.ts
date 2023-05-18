@@ -78,7 +78,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   private readonly isUpdatingPayoutAddressBalance: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true)
 
   private readonly subscriptions: Subscription[] = [
-    this.route.params.subscribe(async params => {
+    this.activatedRoute.params.subscribe(async params => {
       if (params.poolPublicKey) {
         this.accountService.poolPublicKey = params.poolPublicKey
         this.accountService.isMyFarmerPage = false
@@ -104,20 +104,20 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       this.networkSpaceInTiB = poolStats.networkSpaceInTiB
     })),
   ]
-  private accountUpdateInterval: number = null
-  private accountHistoricalUpdateInterval: number = null
-  private accountWonBlocksUpdateInterval: number = null
-  private accountPayoutsUpdateInterval: number = null
+  private accountUpdateInterval: ReturnType<typeof setInterval> = null
+  private accountHistoricalUpdateInterval: ReturnType<typeof setInterval> = null
+  private accountWonBlocksUpdateInterval: ReturnType<typeof setInterval> = null
+  private accountPayoutsUpdateInterval: ReturnType<typeof setInterval> = null
 
   constructor(
     public snippetService: SnippetService,
     public accountService: AccountService,
     public statsService: StatsService,
-    private readonly toastService: ToastService,
     public ratesService: RatesService,
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
+    private readonly toastService: ToastService,
     private readonly poolsProvider: PoolsProvider,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly router: Router,
     private readonly configService: ConfigService,
     private readonly balanceProvider: BalanceProvider,
   ) {
@@ -431,6 +431,11 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       }
       await this.accountService.updateAccountPayouts()
     }, 11 * 60 * 1000)
+
+    if (this.isLoginTokenRequest) {
+      await this.authenticateUsingTokenFromQueryParams()
+      await this.router.navigate([])
+    }
   }
 
   public trackBadgesBySrc(index: number, badge: Badge): string {
@@ -692,6 +697,19 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       imgSrcPath: 'assets/joined-first-year.png',
       description: 'Year 1 member',
     }
+  }
+
+  private get isLoginTokenRequest() {
+    const accountIdentifier = this.activatedRoute.snapshot.queryParamMap.get('account_identifier')
+    const token = this.activatedRoute.snapshot.queryParamMap.get('token')
+
+    return accountIdentifier && token
+  }
+
+  private async authenticateUsingTokenFromQueryParams() {
+    const accountIdentifier = this.activatedRoute.snapshot.queryParamMap.get('account_identifier')
+    const token = this.activatedRoute.snapshot.queryParamMap.get('token')
+    await this.accountService.loginUsingToken({ poolPublicKey: accountIdentifier, token })
   }
 
   private get shareChartTopMargin(): number {

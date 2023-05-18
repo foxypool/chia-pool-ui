@@ -11,7 +11,7 @@ import {BehaviorSubject, Observable} from 'rxjs'
 import {WonBlock} from './farmer-won-blocks/farmer-won-blocks.component'
 import {AccountPayout} from './farmer-payout-history/farmer-payout-history.component'
 import {distinctUntilChanged, filter, map, shareReplay} from 'rxjs/operators'
-import {AccountHistoricalStat} from './api.service'
+import {AccountHistoricalStat, LoginTokenResponse} from './api.service'
 
 @Injectable({
   providedIn: 'root'
@@ -102,6 +102,46 @@ export class AccountService {
     this.toastService.showSuccessToast(this.snippetService.getSnippet('account-service.login.success'))
 
     return true
+  }
+
+  async loginUsingToken({ poolPublicKey, token }): Promise<void> {
+    const account = await this.getAccount({ poolPublicKey })
+    if (account === null) {
+      this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', poolPublicKey))
+      return
+    }
+    this.setPoolPublicKeyInLocalStorage(poolPublicKey)
+    this.poolPublicKey = poolPublicKey
+
+    await this.updateAccount()
+    await Promise.all([
+      this.updateAccountHistoricalStats(),
+      this.updateAccountWonBlocks(),
+      this.updateAccountPayouts(),
+    ])
+
+    try {
+      await this.authenticateWithToken({ token })
+      this.toastService.showSuccessToast('Successfully authenticated')
+    } catch (err) {
+      this.toastService.showErrorToast(err.message)
+    }
+  }
+
+  private async authenticateWithToken({ token }) {
+    if (!this.havePoolPublicKey) {
+      return
+    }
+    this.isAuthenticating = true
+    try {
+      const { accessToken } = await this.statsService.authenticateWithToken({
+        accountIdentifier: this.poolPublicKey,
+        token,
+      })
+      this.setAuthTokenInLocalStorage(accessToken)
+    } finally {
+      this.isAuthenticating = false
+    }
   }
 
   async doesAccountExist({ poolPublicKey }) {
@@ -304,6 +344,17 @@ export class AccountService {
     } finally {
       this.isUpdatingAccount = false
     }
+  }
+
+  public async generateLoginToken(): Promise<LoginTokenResponse> {
+    if (!this.isAuthenticated) {
+      throw new Error('Not authenticated')
+    }
+
+    return this.statsService.generateLoginToken({
+      accountIdentifier: this.poolPublicKey,
+      authToken: this.authToken,
+    })
   }
 
   public async updateHarvesterName({ harvesterPeerId, newName }): Promise<void> {

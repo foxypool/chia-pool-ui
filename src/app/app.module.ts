@@ -49,6 +49,8 @@ import {HarvesterSettingsModalComponent} from './harvester-settings-modal/harves
 import {
   UpdateHarvesterNotificationSettingsComponent
 } from './update-harvester-notification-settings/update-harvester-notification-settings.component'
+import { GenerateLoginLinkComponent } from './generate-login-link/generate-login-link.component'
+import {QRCodeModule} from 'angularx-qrcode'
 
 @NgModule({
   declarations: [
@@ -79,6 +81,7 @@ import {
     FarmerListComponent,
     HarvesterSettingsModalComponent,
     UpdateHarvesterNotificationSettingsComponent,
+    GenerateLoginLinkComponent,
   ],
   imports: [
     BrowserModule,
@@ -105,6 +108,7 @@ import {
     EditableModule,
     NgOptimizedImage,
     NgxSliderModule,
+    QRCodeModule,
   ],
   providers: [
     WINDOW_PROVIDERS,

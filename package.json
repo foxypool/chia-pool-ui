@@ -33,6 +33,7 @@
     "@ngneat/edit-in-place": "^1.6.1",
     "@popperjs/core": "^2.11.7",
     "@sentry/angular-ivy": "^7.51.2",
+    "angularx-qrcode": "^15.0.1",
     "axios": "^1.4.0",
     "bignumber.js": "^9.1.1",
     "bootstrap": "^5.2.3",

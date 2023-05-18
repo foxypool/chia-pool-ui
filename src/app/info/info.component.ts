@@ -19,7 +19,7 @@ export class InfoComponent implements OnInit, OnDestroy {
   public clientVersionsChartUpdateOptions: EChartsOption
 
   private _poolConfig:any = {}
-  private clientVersionsUpdateInterval?: number
+  private clientVersionsUpdateInterval?: ReturnType<typeof setInterval>
   private readonly clientVersions: BehaviorSubject<ClientVersion[]> = new BehaviorSubject<ClientVersion[]>([])
   private readonly clientVersionsChartModeSubject: BehaviorSubject<ClientVersionsChartMode> = new BehaviorSubject<ClientVersionsChartMode>(ClientVersionsChartMode.regular)
 
