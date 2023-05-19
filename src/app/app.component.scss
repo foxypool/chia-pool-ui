@@ -7,9 +7,6 @@
   flex: 1;
 }
 ::ng-deep {
-  .duration-slider-wrapper .ngx-slider .ngx-slider-limit {
-    display: none;
-  }
   .duration-slider-wrapper .ngx-slider .ngx-slider-selection {
     background-color: rgb(13, 110, 253);
   }
@@ -18,6 +15,7 @@
   }
   .duration-slider-wrapper .ngx-slider .ngx-slider-tick {
     width: 0;
+    margin-left: 10px;
   }
   .duration-slider-wrapper .ngx-slider .ngx-slider-pointer {
     width: 16px;
@@ -33,6 +31,9 @@
     display: none;
   }
   .duration-slider-wrapper .ngx-slider .ngx-slider-tick-legend {
+    color: #474747;
+  }
+  .duration-slider-wrapper .ngx-slider .ngx-slider-tick-value {
     color: #474747;
   }
 }

@@ -11,12 +11,12 @@
         </div>
       </label>
       <div class="duration-slider-wrapper" [ngClass]="{ inherited: isInheritedOfflineDurationInMinutes }">
-        <ngx-slider class="duration-slider" id="harvesterOfflineDuration" [(value)]="newOfflineDurationInMinutes" [options]="harvesterOfflineDurationOptions"></ngx-slider>
+        <ngx-slider id="harvesterOfflineDuration" [(value)]="newOfflineDurationInMinutes" [options]="harvesterOfflineDurationOptions"></ngx-slider>
       </div>
     </div>
   </div>
 </div>
-<div class="row">
+<div class="row mt-4">
   <div class="col-12" >
     <div class="alert alert-info" role="alert" style="font-size: 1.1rem">
       You can subscribe and unsubscribe to your accounts notification using your discord account by using the corresponding slash command:<br>

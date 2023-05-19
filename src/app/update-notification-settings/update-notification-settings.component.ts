@@ -5,7 +5,7 @@ import {SnippetService} from '../snippet.service'
 import {ToastService} from '../toast.service'
 import {BigNumber} from 'bignumber.js'
 import {Options} from '@angular-slider/ngx-slider'
-import {stepsArray} from '../harvester-offline-duration-options'
+import {options} from '../harvester-offline-duration-options'
 
 @Component({
   selector: 'app-update-notification-settings',
@@ -38,12 +38,8 @@ export class UpdateNotificationSettingsComponent {
 
   public get harvesterOfflineDurationOptions(): Options {
     return {
-      showTicks: true,
-      showTicksValues: false,
-      hidePointerLabels: true,
-      showSelectionBar: true,
+      ...options,
       disabled: !this.areHarvesterOfflineNotificationsEnabled,
-      stepsArray,
     }
   }
 
