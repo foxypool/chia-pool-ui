@@ -607,6 +607,10 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
 
   private sharesChartTooltipFormatter(params): string {
     const seriesTooltip = params.map(series => {
+      if (series.value === undefined) {
+        return ''
+      }
+
       switch (series.seriesIndex) {
         case 0:
         case 1:
