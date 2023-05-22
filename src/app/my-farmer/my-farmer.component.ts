@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core'
-import {faCircleNotch, faInfoCircle} from '@fortawesome/free-solid-svg-icons'
+import {faCircleNotch, faInfoCircle, faTriangleExclamation} from '@fortawesome/free-solid-svg-icons'
 import * as moment from 'moment'
 import {BigNumber} from 'bignumber.js'
 import {EChartsOption} from 'echarts'
@@ -22,6 +22,7 @@ import {AccountHistoricalStat} from '../api.service'
 import {SettingsModalComponent} from '../settings-modal/settings-modal.component'
 import {BalanceProvider} from '../balance-provider'
 import {fromPromise} from 'rxjs/internal/observable/innerFrom'
+import {corePoolAddress, hpoolAddress} from '../known-addresses'
 
 @Component({
   selector: 'app-my-farmer',
@@ -34,8 +35,9 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
   public poolConfig:any = {}
   public poolPublicKeyInput = null
-  public faCircleNotch = faCircleNotch
-  public faInfoCircle = faInfoCircle
+  public readonly faCircleNotch = faCircleNotch
+  public readonly faInfoCircle = faInfoCircle
+  public readonly faTriangleExclamation = faTriangleExclamation
 
   public ecChartOptions: EChartsOption
   public ecChartUpdateOptions: EChartsOption
@@ -1069,6 +1071,17 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     }
 
     return this.poolConfig.blockExplorerAddressUrlTemplate.replace('#ADDRESS#', address)
+  }
+
+  public get payoutAddressWarning(): string|undefined {
+    if (this.accountService.account === null) {
+      return
+    }
+
+    switch (this.accountService.account.payoutAddress) {
+      case corePoolAddress: return 'Your payout address is set to Core-Pools reward address, please change it immediately!'
+      case hpoolAddress: return  'Your payout address is set to HPools reward address, please change it immediately!'
+    }
   }
 }
 

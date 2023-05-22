@@ -1,0 +1,2 @@
+export const corePoolAddress = 'xch1l2xwmhe6vqputljnw8dv8ajfustycfk87yy7ttskuvlfqt42chxstd5tgz'
+export const hpoolAddress = 'xch1f0ryxk6qn096hefcwrdwpuph2hm24w69jnzezhkfswk0z2jar7aq5zzpfj'

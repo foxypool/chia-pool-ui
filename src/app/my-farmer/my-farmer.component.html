@@ -133,6 +133,7 @@
             <div class="d-inline-block" *ngIf="(isLoadingPayoutAddressBalance | async) === false" [ngbTooltip]="ratesService.getValuesInFiatFormatted(payoutAddressBalance | async)">{{payoutAddressBalance | async}} {{poolConfig.ticker}}</div>
           </div>
           <div class="card-body text-align-center card-font-size ellipsis">
+            <fa-icon *ngIf="payoutAddressWarning !== undefined" [ngbTooltip]="payoutAddressWarning" [icon]="faTriangleExclamation" class="text-warning me-2"></fa-icon>
             <a href="{{getBlockExplorerAddressLink(accountService.account.payoutAddress)}}" target="_blank" style="color: #b45bff;">{{accountService.account.payoutAddress}}</a>
           </div>
         </div>
