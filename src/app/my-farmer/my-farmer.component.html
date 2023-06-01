@@ -15,7 +15,7 @@
     </div>
   </div>
   <div class="col-12" *ngIf="accountService.havePoolPublicKey && accountService.haveAccount">
-    <div *ngIf="accountHasNeverSubmittedAPartial || showNewAccountFarmingAlert" class="row ps-2 pe-2">
+    <div *ngIf="accountHasNeverSubmittedAPartial || showNewAccountFarmingAlert" class="row mb-1 ps-2 pe-2">
       <ngb-alert *ngIf="accountHasNeverSubmittedAPartial" type="primary" class="mb-1 text-center" [dismissible]="false">
         {{accountHasNeverSubmittedPartialsAlertMessage}}
       </ngb-alert>
