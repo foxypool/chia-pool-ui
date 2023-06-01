@@ -12,6 +12,7 @@ export class ConfigService implements OnDestroy {
   private static readonly wonBlockDateFormattingStorageKey = 'config:dateFormatting:wonBlock'
   private static readonly payoutDateFormattingStorageKey = 'config:dateFormatting:payout'
   private static readonly rewardTimeIntervalStorageKey = 'config:rewardTimeInterval'
+  private static readonly hideNewAccountInfoAlertStorageKey = 'config:hideNewAccountInfoAlert'
 
   public selectedCurrencySubject = new BehaviorSubject<string>(
     this.localStorageService.getItem(ConfigService.selectedCurrencyStorageKey) || 'usd'
@@ -22,9 +23,11 @@ export class ConfigService implements OnDestroy {
   public payoutDateFormattingSubject = new BehaviorSubject<DateFormatting>(
     DateFormatting[this.localStorageService.getItem(ConfigService.payoutDateFormattingStorageKey) || DateFormatting.fixed]
   )
-
   private readonly rewardTimeIntervalSubject: BehaviorSubject<TimeInterval> = new BehaviorSubject<TimeInterval>(
     TimeInterval[this.localStorageService.getItem(ConfigService.rewardTimeIntervalStorageKey)] ?? TimeInterval.daily
+  )
+  private readonly hideNewAccountInfoAlertSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+    JSON.parse(this.localStorageService.getItem(ConfigService.hideNewAccountInfoAlertStorageKey) ?? 'false')
   )
 
   private readonly subscriptions: Subscription[] = [
@@ -47,6 +50,11 @@ export class ConfigService implements OnDestroy {
       .pipe(skip(1), distinctUntilChanged())
       .subscribe(rewardTimeInterval =>
         this.localStorageService.setItem(ConfigService.rewardTimeIntervalStorageKey, rewardTimeInterval)
+      ),
+    this.hideNewAccountInfoAlertSubject
+      .pipe(skip(1), distinctUntilChanged())
+      .subscribe(hideNewAccountInfoAlert =>
+        this.localStorageService.setItem(ConfigService.hideNewAccountInfoAlertStorageKey, JSON.stringify(hideNewAccountInfoAlert))
       ),
   ]
 
@@ -82,6 +90,14 @@ export class ConfigService implements OnDestroy {
 
   public set rewardTimeInterval(timeInterval: TimeInterval) {
     this.rewardTimeIntervalSubject.next(timeInterval)
+  }
+
+  public get hideNewAccountInfoAlert(): boolean {
+    return this.hideNewAccountInfoAlertSubject.getValue()
+  }
+
+  public set hideNewAccountInfoAlert(hideNewAccountInfoAlert: boolean) {
+    this.hideNewAccountInfoAlertSubject.next(hideNewAccountInfoAlert)
   }
 
   public ngOnDestroy(): void {

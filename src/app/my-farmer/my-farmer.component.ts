@@ -837,6 +837,39 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     return this.collateralProgress === 100
   }
 
+  public hideNewAccountInfoAlert() {
+    this.configService.hideNewAccountInfoAlert = true
+  }
+
+  public get accountHasNeverSubmittedAPartial(): boolean {
+    return this.accountService.account?.lastAcceptedPartialAt === undefined
+  }
+
+  public get accountHasNeverSubmittedPartialsAlertMessage(): string|undefined {
+    if (this.accountService.account === null) {
+      return
+    }
+
+    const createdAt = moment(this.accountService.account.createdAt)
+    if (createdAt.isAfter(moment().subtract(1, 'hour'))) {
+      return 'You just joined the pool, waiting for your farm to start submitting partials to the pool.'
+    }
+    if (createdAt.isAfter(moment().subtract(7, 'days'))) {
+      return 'You recently joined the pool, waiting for your farm to start submitting partials to the pool.'
+    }
+
+    return 'You joined the pool a while ago, waiting for your farm to start submitting partials to the pool.'
+  }
+
+  public get showNewAccountFarmingAlert(): boolean {
+    if (this.configService.hideNewAccountInfoAlert || this.accountService.account === null || this.accountHasNeverSubmittedAPartial) {
+      return false
+    }
+    const farmingSince = this.accountService.account.rejoinedAt || this.accountService.account.createdAt
+
+    return moment(farmingSince).isAfter(moment().subtract(1, 'day'))
+  }
+
   private makeEcChartUpdateOptions(historicalStats: AccountHistoricalStat[]): EChartsOption {
     const biggestEc = historicalStats.reduce((acc, curr) => {
       const currBiggestEc = (curr.ecLastHour || 0) > curr.ec ? curr.ecLastHour : curr.ec
