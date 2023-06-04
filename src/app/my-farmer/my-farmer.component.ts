@@ -841,6 +841,10 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     this.configService.hideNewAccountInfoAlert = true
   }
 
+  public get isPoolMember(): boolean {
+    return this.accountService.account !== null && !this.accountService.account.hasLeftThePool && !this.accountService.account.isCheating
+  }
+
   public get accountHasNeverSubmittedAPartial(): boolean {
     return this.accountService.account?.lastAcceptedPartialAt === undefined
   }
