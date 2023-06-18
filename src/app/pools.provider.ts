@@ -26,11 +26,6 @@ export class PoolsProvider {
       algorithm: 'Proof of Spacetime',
       downloadUrl: 'https://github.com/foxypool/chia-blockchain/releases/latest',
     },{
-      group: 'BHD',
-      name: 'Foxy-Pool BHD',
-      url: 'https://bhd.foxypool.io',
-      algorithm: 'Proof of Capacity',
-    },{
       group: 'SIGNA',
       name: 'Foxy-Pool SIGNA',
       url:  'https://signa.foxypool.io',
