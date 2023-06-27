@@ -20,6 +20,8 @@ const ignoreErrors = [
   '.flat is not a function',
   'UCShellJava.sdkEventFire is not a function',
   'ChunkLoadError: Loading chunk',
+  'undefined is not an object (evaluating \'a.P\')',
+  'undefined is not an object (evaluating \'a.fa\')',
 ]
 
 Sentry.init({
