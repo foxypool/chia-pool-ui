@@ -472,7 +472,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     return this.gigahorseVersion !== undefined
   }
 
-  public get compressionAlphaVersion(): string|undefined {
+  private get chiaCompressionAlphaVersion(): string|undefined {
     if (this.harvester.versionInfo.localName1 === 'compression-alpha') {
       return this.harvester.versionInfo.localVersion1 ?? undefined
     }
@@ -484,23 +484,30 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     }
   }
 
-  public get compressionAlphaVersionColorClasses(): string[] {
-    const compressionAlphaVersion = this.compressionAlphaVersion
-    if (compressionAlphaVersion === undefined) {
-      return []
-    }
-    if (compare(compressionAlphaVersion, clientVersions.compressionAlpha.recommendedMinimum, '>=')) {
-      return []
-    }
-    if (compare(compressionAlphaVersion, clientVersions.compressionAlpha.minimum, '>=')) {
-      return ['color-orange']
+  public get chiaCompressionVersionColorClasses(): string[] {
+    const compressionAlphaVersion = this.chiaCompressionAlphaVersion
+    if (compressionAlphaVersion !== undefined) {
+      if (compare(compressionAlphaVersion, clientVersions.chiaCompressionAlpha.recommendedMinimum, '>=')) {
+        return []
+      }
+      if (compare(compressionAlphaVersion, clientVersions.chiaCompressionAlpha.minimum, '>=')) {
+        return ['color-orange']
+      }
+
+      return ['color-red']
     }
 
-    return ['color-red']
+    return []
   }
 
-  public get hasCompressionAlphaVersion(): boolean {
-    return this.compressionAlphaVersion !== undefined
+  public get chiaCompressionVersion(): string|undefined {
+    if (this.chiaCompressionAlphaVersion !== undefined) {
+      return `Alpha ${this.chiaCompressionAlphaVersion}`
+    }
+  }
+
+  public get hasChiaCompressionVersion(): boolean {
+    return this.chiaCompressionVersion !== undefined
   }
 
   public get rowColumnClasses(): string[] {
@@ -520,7 +527,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     if (this.hasGigahorseVersion) {
       count += 1
     }
-    if (this.hasCompressionAlphaVersion) {
+    if (this.hasChiaCompressionVersion) {
       count += 1
     }
     if (this.hasFoxyFarmerVersion) {
