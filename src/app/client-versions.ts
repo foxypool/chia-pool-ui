@@ -18,4 +18,8 @@ export const clientVersions = {
     minimum: 10,
     recommendedMinimum: 10,
   },
+  compressionAlpha: {
+    minimum: '4.5',
+    recommendedMinimum: '4.5',
+  },
 }

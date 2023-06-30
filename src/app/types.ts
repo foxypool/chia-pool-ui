@@ -19,4 +19,6 @@ interface VersionInfo {
   localVersion1: string|null
   localName2: string|null
   localVersion2: string|null
+  localName3: string|null
+  localVersion3: string|null
 }

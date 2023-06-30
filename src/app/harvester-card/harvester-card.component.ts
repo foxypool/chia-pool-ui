@@ -398,7 +398,13 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
 
   public get ogVersion(): string|undefined {
     if (this.harvester.versionInfo.localName1 === 'og') {
-      return this.harvester.versionInfo.localVersion1 || undefined
+      return this.harvester.versionInfo.localVersion1 ?? undefined
+    }
+    if (this.harvester.versionInfo.localName2 === 'og') {
+      return this.harvester.versionInfo.localVersion2 ?? undefined
+    }
+    if (this.harvester.versionInfo.localName3 === 'og') {
+      return this.harvester.versionInfo.localVersion3 ?? undefined
     }
   }
 
@@ -423,10 +429,13 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
 
   public get foxyFarmerVersion(): string|undefined {
     if (this.harvester.versionInfo.localName1 === 'ff') {
-      return this.harvester.versionInfo.localVersion1 || undefined
+      return this.harvester.versionInfo.localVersion1 ?? undefined
     }
     if (this.harvester.versionInfo.localName2 === 'ff') {
-      return this.harvester.versionInfo.localVersion2 || undefined
+      return this.harvester.versionInfo.localVersion2 ?? undefined
+    }
+    if (this.harvester.versionInfo.localName3 === 'ff') {
+      return this.harvester.versionInfo.localVersion3 ?? undefined
     }
   }
 
@@ -455,12 +464,43 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
 
   public get gigahorseVersion(): string|undefined {
     if (this.harvester.versionInfo.localName1 === 'giga') {
-      return this.harvester.versionInfo.localVersion1 || undefined
+      return this.harvester.versionInfo.localVersion1 ?? undefined
     }
   }
 
   public get hasGigahorseVersion(): boolean {
     return this.gigahorseVersion !== undefined
+  }
+
+  public get compressionAlphaVersion(): string|undefined {
+    if (this.harvester.versionInfo.localName1 === 'compression-alpha') {
+      return this.harvester.versionInfo.localVersion1 ?? undefined
+    }
+    if (this.harvester.versionInfo.localName2 === 'compression-alpha') {
+      return this.harvester.versionInfo.localVersion2 ?? undefined
+    }
+    if (this.harvester.versionInfo.localName3 === 'compression-alpha') {
+      return this.harvester.versionInfo.localVersion3 ?? undefined
+    }
+  }
+
+  public get compressionAlphaVersionColorClasses(): string[] {
+    const compressionAlphaVersion = this.compressionAlphaVersion
+    if (compressionAlphaVersion === undefined) {
+      return []
+    }
+    if (compare(compressionAlphaVersion, clientVersions.compressionAlpha.recommendedMinimum, '>=')) {
+      return []
+    }
+    if (compare(compressionAlphaVersion, clientVersions.compressionAlpha.minimum, '>=')) {
+      return ['color-orange']
+    }
+
+    return ['color-red']
+  }
+
+  public get hasCompressionAlphaVersion(): boolean {
+    return this.compressionAlphaVersion !== undefined
   }
 
   public get rowColumnClasses(): string[] {
@@ -478,6 +518,9 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       count += 1
     }
     if (this.hasGigahorseVersion) {
+      count += 1
+    }
+    if (this.hasCompressionAlphaVersion) {
       count += 1
     }
     if (this.hasFoxyFarmerVersion) {
