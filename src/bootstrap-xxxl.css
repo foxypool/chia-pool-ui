@@ -119,6 +119,10 @@
     width: 4.16666666%;
   }
 
+  .col-xxxl{
+    flex: 1 0 0;
+  }
+
   .order-xxxl-first {
     order: -1
   }
@@ -177,5 +181,55 @@
 
   .order-xxxl-12 {
     order: 12
+  }
+
+  .row-cols-xxxl-reset > * {
+    flex: unset;
+    width: unset;
+  }
+
+  .row-cols-xxxl-auto > * {
+    flex: 0 0 auto;
+    width: auto
+  }
+
+  .row-cols-xxxl-1 > * {
+    flex: 0 0 auto;
+    width: 100%
+  }
+
+  .row-cols-xxxl-2 > * {
+    flex: 0 0 auto;
+    width: 50%
+  }
+
+  .row-cols-xxxl-3 > * {
+    flex: 0 0 auto;
+    width: 33.3333333333%
+  }
+
+  .row-cols-xxxl-4 > * {
+    flex: 0 0 auto;
+    width: 25%
+  }
+
+  .row-cols-xxxl-5 > * {
+    flex: 0 0 auto;
+    width: 20%
+  }
+
+  .row-cols-xxxl-6 > * {
+    flex: 0 0 auto;
+    width: 16.6666666667%
+  }
+
+  .row-cols-xxxl-7 > * {
+    flex: 0 0 auto;
+    width: 14.2857142857%
+  }
+
+  .row-cols-xxxl-8 > * {
+    flex: 0 0 auto;
+    width: 12.5%
   }
 }

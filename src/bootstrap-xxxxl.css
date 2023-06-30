@@ -119,6 +119,10 @@
     width: 4.16666666% !important;
   }
 
+  .col-xxxxl{
+    flex: 1 0 0;
+  }
+
   .order-xxxxl-first {
     order: -1
   }

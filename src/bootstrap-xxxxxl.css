@@ -119,6 +119,10 @@
     width: 4.16666666% !important;
   }
 
+  .col-xxxxxl{
+    flex:1 0 0;
+  }
+
   .order-xxxxxl-first {
     order: -1
   }
@@ -177,10 +181,6 @@
 
   .order-xxxxxl-12 {
     order: 12
-  }
-
-  .col-xxxxxl{
-    flex:1 0 0%;
   }
 
   .row-cols-xxxxxl-auto > * {
