@@ -482,6 +482,24 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     if (this.harvester.versionInfo.localName3 === 'compression-alpha') {
       return this.harvester.versionInfo.localVersion3 ?? undefined
     }
+    if (
+      this.harvester.versionInfo.clientVersion === '1.8.2'
+      && this.harvester.versionInfo.localName1 === 'rc'
+      && this.harvester.versionInfo.localVersion1 === '6'
+      && this.harvester.versionInfo.localName2 === 'dev'
+      && this.harvester.versionInfo.localVersion2 === '115'
+    ) {
+      return '4.5'
+    }
+    if (
+      this.harvester.versionInfo.clientVersion === '2.0.0'
+      && this.harvester.versionInfo.localName1 === 'b'
+      && this.harvester.versionInfo.localVersion1 === '3'
+      && this.harvester.versionInfo.localName2 === 'dev'
+      && this.harvester.versionInfo.localVersion2 === '116'
+    ) {
+      return '4.3'
+    }
   }
 
   public get chiaCompressionVersionColorClasses(): string[] {

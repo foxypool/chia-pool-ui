@@ -19,7 +19,7 @@ export const clientVersions = {
     recommendedMinimum: 10,
   },
   chiaCompressionAlpha: {
-    minimum: '4.5',
-    recommendedMinimum: '4.5',
+    minimum: '4.3',
+    recommendedMinimum: '4.3',
   },
 }
