@@ -68,7 +68,7 @@ export class HeaderComponent implements OnDestroy {
     if (!this.accountSearchInput) {
       return
     }
-    if (await this.accountService.doesAccountExist({ poolPublicKey: this.accountSearchInput })) {
+    if (await this.accountService.doesAccountExist({ accountIdentifier: this.accountSearchInput })) {
       await this.router.navigate([`/farmer/${this.accountSearchInput}`])
       this.accountSearchInput = ''
     }

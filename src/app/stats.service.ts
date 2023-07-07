@@ -6,20 +6,18 @@ import * as moment from 'moment'
 import {PoolsProvider} from './pools.provider'
 import {SnippetService} from './snippet.service'
 import {configForCoin} from './coin-config'
-import {
-  AccountHistoricalStat,
-  AccountListResponse,
-  ApiService,
-  ClientVersion,
-  HarvesterStats, LoginTokenResponse,
-  ProofTime
-} from './api.service'
+import {OgApi} from './api/og-api'
+import {MaybeErrorResponse} from './api/types/maybe-error-response'
+import {PoolConfig} from './api/types/pool/pool-config'
+import {PoolStats} from './api/types/pool/pool-stats'
+import {PoolHistoricalStat} from './api/types/pool/pool-historical-stat'
+import {AccountStats} from './api/types/account/account-stats'
+import {OgTopAccount} from './api/types/account/top-account'
 
 @Injectable({
   providedIn: 'root'
 })
 export class StatsService {
-
   public poolConfig = new BehaviorSubject<any>({})
   public coinConfig = configForCoin('CHIA')
   public poolStats = new BehaviorSubject<any>({})
@@ -28,19 +26,14 @@ export class StatsService {
   public rewardStats = new BehaviorSubject<any>({})
   public lastPayouts = new BehaviorSubject<any>(null)
   public exchangeStats = new BehaviorSubject<any>({})
-
-  private apiService: ApiService
+  private readonly api: OgApi
 
   constructor(
-    private readonly poolsProvider: PoolsProvider,
     private readonly snippetService: SnippetService,
+    poolsProvider: PoolsProvider,
   ) {
-    this.init()
-  }
-
-  init() {
-    this.apiService = new ApiService(this.poolsProvider.apiUrl)
-    this.initStats()
+    this.api = new OgApi(poolsProvider.poolIdentifier)
+    void this.initStats()
     setInterval(this.updatePoolConfig.bind(this), 60 * 60 * 1000)
     setInterval(this.updatePoolStats.bind(this), 31 * 1000)
     setInterval(this.updateAccountsStats.bind(this), 61 * 1000)
@@ -62,10 +55,6 @@ export class StatsService {
     }, timeTillRefreshInMs)
   }
 
-  get poolIdentifier() {
-    return this.poolsProvider.poolIdentifier
-  }
-
   async initStats() {
    await Promise.all([
       this.updatePoolConfig(),
@@ -79,52 +68,52 @@ export class StatsService {
   }
 
   async updatePoolConfig() {
-    this.onNewPoolConfig(await this.apiService.getPoolConfig({ poolIdentifier: this.poolIdentifier }))
+    this.onNewPoolConfig(await this.api.getPoolConfig())
   }
 
   async updatePoolStats() {
-    this.onNewPoolStats(await this.apiService.getPoolStats({ poolIdentifier: this.poolIdentifier }))
+    this.onNewPoolStats(await this.api.getPoolStats())
   }
 
   async updatePoolHistoricalStats() {
-    this.onNewPoolHistoricalStats(await this.apiService.getPoolHistoricalStats({ poolIdentifier: this.poolIdentifier }))
+    this.onNewPoolHistoricalStats(await this.api.getPoolHistoricalStats())
   }
 
   async updateAccountsStats() {
-    this.onNewAccountsStats(await this.apiService.getAccountsStats({ poolIdentifier: this.poolIdentifier }))
+    this.onNewAccountsStats(await this.api.getAccountsStats())
   }
 
   async updateRewardStats() {
-    this.onNewRewardStats(await this.apiService.getRewardStats({ poolIdentifier: this.poolIdentifier }))
+    this.onNewRewardStats(await this.api.getRewardStats())
   }
 
   async updateLastPayouts() {
-    this.onNewLastPayouts(await this.apiService.getLastPayouts({ poolIdentifier: this.poolIdentifier }))
+    this.onNewLastPayouts(await this.api.getRecentPayouts())
   }
 
   async updateExchangeStats() {
-    this.onNewExchangeStats(await this.apiService.getExchangeStats({ poolIdentifier: this.poolIdentifier }))
+    this.onNewExchangeStats(await this.api.getRateStats())
   }
 
-  onNewPoolConfig(poolConfig) {
+  onNewPoolConfig(poolConfig: PoolConfig) {
     this.poolConfig.next(poolConfig)
     this.coinConfig = configForCoin(poolConfig.coin)
   }
 
-  onNewPoolStats(poolStats) {
+  onNewPoolStats(poolStats: PoolStats) {
     this.poolStats.next(poolStats)
   }
 
-  onNewPoolHistoricalStats(poolHistoricalStats) {
+  onNewPoolHistoricalStats(poolHistoricalStats: PoolHistoricalStat[]) {
     this.poolHistoricalStats.next(poolHistoricalStats)
   }
 
-  onNewAccountsStats(accountStats) {
+  onNewAccountsStats(accountStats: AccountStats<OgTopAccount>) {
     if (accountStats.topAccounts) {
       accountStats.topAccounts.forEach(account => {
-        account.pendingRounded = (new BigNumber(account.pending)).decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber()
+        (account as any).pendingRounded = (new BigNumber(account.pending)).decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber()
         if (account.collateral) {
-          account.collateralRounded = (new BigNumber(account.collateral)).decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber()
+          (account as any).collateralRounded = (new BigNumber(account.collateral)).decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber()
         }
       })
     }
@@ -143,111 +132,92 @@ export class StatsService {
     this.exchangeStats.next(exchangeStats)
   }
 
-  public async getAccounts({ page, limit}: { page: number, limit: number}): Promise<AccountListResponse> {
-    return this.apiService.getAccounts({ poolIdentifier: this.poolIdentifier, page, limit })
+  public async getAccounts({ page, limit}: { page: number, limit: number}) {
+    return this.api.getAccountList({ page, limit })
   }
 
-  getAccount({ poolPublicKey, bustCache = false }) {
-    return this.apiService.getAccount({ poolIdentifier: this.poolIdentifier, poolPublicKey, bustCache })
+  getAccount({ accountIdentifier, bustCache = false }) {
+    return this.api.getAccount({ accountIdentifier, bustCache })
   }
 
-  getAccountHarvesters({ poolPublicKey, bustCache }) {
-    return this.apiService.getAccountHarvesters({ poolIdentifier: this.poolIdentifier, poolPublicKey, bustCache })
+  getAccountHarvesters({ accountIdentifier, bustCache }) {
+    return this.api.getAccountHarvesters({ accountIdentifier, bustCache })
   }
 
-  getAccountHistoricalStats({ poolPublicKey}): Promise<AccountHistoricalStat[]> {
-    return this.apiService.getAccountHistoricalStats({ poolIdentifier: this.poolIdentifier, poolPublicKey })
+  getAccountHistoricalStats(accountIdentifier: string) {
+    return this.api.getAccountHistoricalStats(accountIdentifier)
   }
 
-  public getAccountWonBlocks({ poolPublicKey}) {
-    return this.apiService.getAccountWonBlocks({ poolIdentifier: this.poolIdentifier, poolPublicKey })
+  public getAccountWonBlocks(accountIdentifier: string) {
+    return this.api.getAccountWonBlocks(accountIdentifier)
   }
 
-  public getAccountPayouts({ poolPublicKey}) {
-    return this.apiService.getAccountPayouts({ poolIdentifier: this.poolIdentifier, poolPublicKey })
+  public getAccountPayouts(accountIdentifier: string) {
+    return this.api.getAccountPayouts(accountIdentifier)
   }
 
-  public async getHarvesterStats(harvesterId: string): Promise<HarvesterStats> {
-    return this.apiService.getHarvesterStats({ poolIdentifier: this.poolIdentifier, harvesterId })
+  public async getHarvesterStats(harvesterId: string) {
+    return this.api.getHarvesterStats(harvesterId)
   }
 
-  public async getHarvesterProofTimes(harvesterId: string): Promise<ProofTime[]> {
-    return this.apiService.getHarvesterProofTimes({ poolIdentifier: this.poolIdentifier, harvesterId })
+  public async getHarvesterProofTimes(harvesterId: string) {
+    return this.api.getHarvesterProofTimes(harvesterId)
   }
 
-  public async getClientVersions(): Promise<ClientVersion[]> {
-    return this.apiService.getClientVersions({ poolIdentifier: this.poolIdentifier })
+  public async getClientVersions() {
+    return this.api.getClientVersions()
   }
 
-  authenticate({ poolPublicKey, message, signature }): any {
-    return this.requestWithError(this.apiService.authenticateAccount({ poolIdentifier: this.poolIdentifier, poolPublicKey, message, signature }))
+  public async authenticate({ accountIdentifier, message, signature }) {
+    return this.requestWithError(this.api.authenticateAccount({ accountIdentifier, message, signature }))
   }
 
-  authenticateWithToken({ accountIdentifier, token }): any {
-    return this.requestWithError(this.apiService.authenticateAccountWithToken({ poolIdentifier: this.poolIdentifier, accountIdentifier, token }))
+  public async authenticateWithToken({ accountIdentifier, token }) {
+    return this.requestWithError(this.api.authenticateAccountWithToken({ accountIdentifier, token }))
   }
 
-  async generateLoginToken({ accountIdentifier, authToken }): Promise<LoginTokenResponse> {
-    return this.requestWithError(this.apiService.generateLoginToken({ poolIdentifier: this.poolIdentifier, accountIdentifier, authToken }))
+  public async generateLoginToken({ accountIdentifier, authToken }) {
+    return this.requestWithError(this.api.generateLoginToken({ accountIdentifier, authToken }))
   }
 
-  async updateAccountName({ poolPublicKey, authToken, newName }) {
-    return this.requestWithError(this.apiService.updateAccountName({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, newName }))
+  public async updateAccountName({ accountIdentifier, authToken, newName }) {
+    return this.requestWithError(this.api.updateAccountName({ accountIdentifier, authToken, newName }))
   }
 
-  public async updateHarvesterName({ poolPublicKey, authToken, harvesterPeerId, newName }): Promise<unknown> {
-    return this.requestWithError(this.apiService.updateHarvesterName({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, harvesterPeerId, newName }))
+  public async updateHarvesterName({ accountIdentifier, authToken, harvesterPeerId, newName }) {
+    return this.requestWithError(this.api.updateHarvesterName({ accountIdentifier, authToken, harvesterPeerId, newName }))
   }
 
-  public async updateHarvesterNotificationSettings({ poolPublicKey, authToken, harvesterPeerId, notificationSettings }): Promise<unknown> {
-    return this.requestWithError(this.apiService.updateHarvesterNotificationSettings({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, harvesterPeerId, notificationSettings }))
+  public async updateHarvesterNotificationSettings({ accountIdentifier, authToken, harvesterPeerId, notificationSettings }) {
+    return this.requestWithError(this.api.updateHarvesterNotificationSettings({ accountIdentifier, authToken, harvesterPeerId, notificationSettings }))
   }
 
-  updateAccountDistributionRatio({ poolPublicKey, authToken, newDistributionRatio }) {
-    return this.requestWithError(this.apiService.updateAccountDistributionRatio({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, newDistributionRatio }))
+  public updatePayoutOptions({ accountIdentifier, authToken, minimumPayout, payoutMultiplesOf }) {
+    return this.requestWithError(this.api.updatePayoutOptions({ accountIdentifier, authToken, minimumPayout, payoutMultiplesOf }))
   }
 
-  public updatePayoutOptions({ poolPublicKey, authToken, minimumPayout, payoutMultiplesOf }) {
-    return this.requestWithError(this.apiService.updatePayoutOptions({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, minimumPayout, payoutMultiplesOf }))
-  }
-
-  public updateAccountDifficulty({ poolPublicKey, authToken, difficulty, isFixedDifficulty }): Promise<unknown> {
-    return this.requestWithError(this.apiService.updateAccountDifficulty({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, difficulty, isFixedDifficulty }))
+  public updateAccountDifficulty({ accountIdentifier, authToken, difficulty, isFixedDifficulty }) {
+    return this.requestWithError(this.api.updateAccountDifficulty({ accountIdentifier, authToken, difficulty, isFixedDifficulty }))
   }
 
   public updateNotificationSettings({
-    poolPublicKey,
+    accountIdentifier,
     authToken,
-    ecLastHourThreshold,
-    areEcChangeNotificationsEnabled,
-    areBlockWonNotificationsEnabled,
-    arePayoutAddressChangeNotificationsEnabled,
-    areHarvesterOfflineNotificationsEnabled,
-    harvesterOfflineDurationInMinutes,
+    notificationSettings,
   }): Promise<unknown> {
-    return this.requestWithError(this.apiService.updateNotificationSettings({
-      poolIdentifier: this.poolIdentifier,
-      poolPublicKey,
-      authToken,
-      ecLastHourThreshold,
-      areEcChangeNotificationsEnabled,
-      areBlockWonNotificationsEnabled,
-      arePayoutAddressChangeNotificationsEnabled,
-      areHarvesterOfflineNotificationsEnabled,
-      harvesterOfflineDurationInMinutes,
-    }))
+    return this.requestWithError(this.api.updateNotificationSettings({ accountIdentifier, authToken, notificationSettings }))
   }
 
-  leavePool({ poolPublicKey, authToken, leaveForEver }) {
-    return this.requestWithError(this.apiService.leavePool({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken, leaveForEver }))
+  public async leavePool({ accountIdentifier, authToken, leaveForEver }) {
+    return this.requestWithError((this.api as OgApi).leavePool({ accountIdentifier, authToken, leaveForEver }))
   }
 
-  rejoinPool({ poolPublicKey, authToken }) {
-    return this.requestWithError(this.apiService.rejoinPool({ poolIdentifier: this.poolIdentifier, poolPublicKey, authToken }))
+  public async rejoinPool({ accountIdentifier, authToken }) {
+    return this.requestWithError((this.api as OgApi).rejoinPool({ accountIdentifier, authToken }))
   }
 
-  async requestWithError(requestPromise) {
-    const result:any = await requestPromise
+  private async requestWithError<T extends MaybeErrorResponse>(requestPromise: Promise<T>): Promise<Omit<T, 'error'>> {
+    const result = await requestPromise
     if (result && result.error) {
       throw new Error(this.snippetService.getSnippet(`api.error.${result.error}`))
     }

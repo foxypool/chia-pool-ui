@@ -18,11 +18,11 @@ import {RatesService} from '../rates.service'
 import {ConfigService, DateFormatting, TimeInterval} from '../config.service'
 import { getEffortColor } from '../util'
 import {PoolsProvider} from '../pools.provider'
-import {AccountHistoricalStat} from '../api.service'
 import {SettingsModalComponent} from '../settings-modal/settings-modal.component'
 import {BalanceProvider} from '../balance-provider'
 import {fromPromise} from 'rxjs/internal/observable/innerFrom'
 import {corePoolAddress, hpoolAddress} from '../known-addresses'
+import {AccountHistoricalStat} from '../api/types/account/account-historical-stat'
 
 @Component({
   selector: 'app-my-farmer',
@@ -711,7 +711,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   private async authenticateUsingTokenFromQueryParams() {
     const accountIdentifier = this.activatedRoute.snapshot.queryParamMap.get('account_identifier')
     const token = this.activatedRoute.snapshot.queryParamMap.get('token')
-    await this.accountService.loginUsingToken({ poolPublicKey: accountIdentifier, token })
+    await this.accountService.loginUsingToken({ accountIdentifier, token })
   }
 
   private get shareChartTopMargin(): number {

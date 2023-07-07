@@ -6,7 +6,6 @@ import {AccountService} from '../account.service'
 import * as moment from 'moment'
 import {BehaviorSubject, Observable, Subscription, take} from 'rxjs'
 import {StatsService} from '../stats.service'
-import {HarvesterStats, ProofTime, RejectedSubmissionType} from '../api.service'
 import {distinctUntilChanged, filter, map, shareReplay} from 'rxjs/operators'
 import {BigNumber} from 'bignumber.js'
 import Capacity from '../capacity'
@@ -17,6 +16,8 @@ import {compare} from 'compare-versions'
 import {clientVersions} from '../client-versions'
 import {faEllipsisV, faReceipt} from '@fortawesome/free-solid-svg-icons'
 import {HarvesterSettingsModalComponent} from '../harvester-settings-modal/harvester-settings-modal.component'
+import {HarvesterStats, RejectedSubmissionType} from '../api/types/harvester/harvester-stats'
+import {ProofTime} from '../api/types/harvester/proof-time'
 
 const sharesPerDayPerK32 = 10
 const k32SizeInGb = 108.837

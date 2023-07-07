@@ -4,9 +4,9 @@ import {SnippetService} from '../snippet.service'
 import {PoolsProvider} from '../pools.provider'
 import {BehaviorSubject, combineLatest, Subscription} from 'rxjs'
 import {EChartsOption} from 'echarts'
-import {ClientVersion} from '../api.service'
 import {compare} from 'compare-versions'
 import {clientVersions} from '../client-versions'
+import {ClientVersion} from '../api/types/pool/client-version'
 
 @Component({
   selector: 'app-info',

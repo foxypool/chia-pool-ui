@@ -11,7 +11,9 @@ import {BehaviorSubject, Observable} from 'rxjs'
 import {WonBlock} from './farmer-won-blocks/farmer-won-blocks.component'
 import {AccountPayout} from './farmer-payout-history/farmer-payout-history.component'
 import {distinctUntilChanged, filter, map, shareReplay} from 'rxjs/operators'
-import {AccountHistoricalStat, LoginTokenResponse} from './api.service'
+import {AccountHistoricalStat} from './api/types/account/account-historical-stat'
+import {LoginTokenResponse} from './api/types/auth/login-token-response'
+import {AccountNotificationSettings} from './api/types/account/account'
 
 @Injectable({
   providedIn: 'root'
@@ -86,7 +88,7 @@ export class AccountService {
     if (!poolPublicKey.startsWith('0x')) {
       poolPublicKey = `0x${poolPublicKey}`
     }
-    const account = await this.getAccount({ poolPublicKey })
+    const account = await this.getAccount({ accountIdentifier: poolPublicKey })
     if (account === null) {
       this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', poolPublicKey))
       return false
@@ -104,14 +106,14 @@ export class AccountService {
     return true
   }
 
-  async loginUsingToken({ poolPublicKey, token }): Promise<void> {
-    const account = await this.getAccount({ poolPublicKey })
+  async loginUsingToken({ accountIdentifier, token }): Promise<void> {
+    const account = await this.getAccount({ accountIdentifier })
     if (account === null) {
-      this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', poolPublicKey))
+      this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', accountIdentifier))
       return
     }
-    this.setPoolPublicKeyInLocalStorage(poolPublicKey)
-    this.poolPublicKey = poolPublicKey
+    this.setPoolPublicKeyInLocalStorage(accountIdentifier)
+    this.poolPublicKey = accountIdentifier
 
     await this.updateAccount()
     await Promise.all([
@@ -144,10 +146,10 @@ export class AccountService {
     }
   }
 
-  async doesAccountExist({ poolPublicKey }) {
-    const account = await this.getAccount({ poolPublicKey })
+  async doesAccountExist({ accountIdentifier }) {
+    const account = await this.getAccount({ accountIdentifier })
     if (account === null) {
-      this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', poolPublicKey))
+      this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', accountIdentifier))
 
       return false
     }
@@ -209,7 +211,7 @@ export class AccountService {
   }
 
   async updateAccount({ bustCache = false } = {}) {
-    this.account = await this.getAccount({ poolPublicKey: this.poolPublicKey, bustCache })
+    this.account = await this.getAccount({ accountIdentifier: this.poolPublicKey, bustCache })
     if (!this.haveAccount) {
       if (this.isMyFarmerPage) {
         this.removeAuthTokenFromLocalStorage()
@@ -223,22 +225,22 @@ export class AccountService {
   }
 
   async updateAccountHistoricalStats() {
-    this.accountHistoricalStats.next(await this.getAccountHistoricalStats({ poolPublicKey: this.poolPublicKey }))
+    this.accountHistoricalStats.next(await this.getAccountHistoricalStats({ accountIdentifier: this.poolPublicKey }))
   }
 
   async updateAccountWonBlocks() {
-    this.accountWonBlocks.next(await this.getAccountWonBlocks({ poolPublicKey: this.poolPublicKey }))
+    this.accountWonBlocks.next(await this.getAccountWonBlocks({ accountIdentifier: this.poolPublicKey }))
   }
 
   async updateAccountPayouts() {
-    this.accountPayouts.next(await this.getAccountPayouts({ poolPublicKey: this.poolPublicKey }))
+    this.accountPayouts.next(await this.getAccountPayouts({ accountIdentifier: this.poolPublicKey }))
   }
 
-  async getAccount({ poolPublicKey, bustCache = false }) {
+  async getAccount({ accountIdentifier, bustCache = false }) {
     this.isLoading = true
     let account = null
     try {
-      account = await this.statsService.getAccount({ poolPublicKey, bustCache })
+      account = await this.statsService.getAccount({ accountIdentifier, bustCache })
       if (account) {
         this.patchAccount(account)
       }
@@ -259,7 +261,7 @@ export class AccountService {
     this.isLoading = true
     let accountHarvesters = []
     try {
-      accountHarvesters = await this.statsService.getAccountHarvesters({ poolPublicKey: this.poolPublicKey, bustCache })
+      accountHarvesters = await this.statsService.getAccountHarvesters({ accountIdentifier: this.poolPublicKey, bustCache })
     } finally {
       this.isLoading = false
     }
@@ -267,11 +269,11 @@ export class AccountService {
     return accountHarvesters
   }
 
-  async getAccountHistoricalStats({ poolPublicKey }): Promise<AccountHistoricalStat[]> {
+  async getAccountHistoricalStats({ accountIdentifier }): Promise<AccountHistoricalStat[]> {
     this.isLoading = true
     let accountHistoricalStats = []
     try {
-      accountHistoricalStats = await this.statsService.getAccountHistoricalStats({ poolPublicKey })
+      accountHistoricalStats = await this.statsService.getAccountHistoricalStats(accountIdentifier)
     } finally {
       this.isLoading = false
     }
@@ -279,11 +281,11 @@ export class AccountService {
     return accountHistoricalStats
   }
 
-  private async getAccountWonBlocks({ poolPublicKey }) {
+  private async getAccountWonBlocks({ accountIdentifier }) {
     this.isLoading = true
     let accountWonBlocks = []
     try {
-      accountWonBlocks = await this.statsService.getAccountWonBlocks({ poolPublicKey })
+      accountWonBlocks = await this.statsService.getAccountWonBlocks(accountIdentifier)
     } finally {
       this.isLoading = false
     }
@@ -291,11 +293,11 @@ export class AccountService {
     return accountWonBlocks
   }
 
-  private async getAccountPayouts({ poolPublicKey }) {
+  private async getAccountPayouts({ accountIdentifier }) {
     this.isLoading = true
     let accountPayouts = []
     try {
-      accountPayouts = await this.statsService.getAccountPayouts({ poolPublicKey })
+      accountPayouts = await this.statsService.getAccountPayouts(accountIdentifier)
     } finally {
       this.isLoading = false
     }
@@ -319,7 +321,7 @@ export class AccountService {
     this.isAuthenticating = true
     try {
       const { accessToken } = await this.statsService.authenticate({
-        poolPublicKey: this.poolPublicKey,
+        accountIdentifier: this.poolPublicKey,
         signature,
         message,
       })
@@ -336,7 +338,7 @@ export class AccountService {
     this.isUpdatingAccount = true
     try {
       await this.statsService.updateAccountName({
-        poolPublicKey: this.poolPublicKey,
+        accountIdentifier: this.poolPublicKey,
         authToken: this.authToken,
         newName,
       })
@@ -362,7 +364,7 @@ export class AccountService {
       return
     }
     await this.statsService.updateHarvesterName({
-      poolPublicKey: this.poolPublicKey,
+      accountIdentifier: this.poolPublicKey,
       authToken: this.authToken,
       harvesterPeerId,
       newName,
@@ -377,7 +379,7 @@ export class AccountService {
     this.isLeavingPool = true
     try {
       await this.statsService.leavePool({
-        poolPublicKey: this.poolPublicKey,
+        accountIdentifier: this.poolPublicKey,
         authToken: this.authToken,
         leaveForEver,
       })
@@ -395,7 +397,7 @@ export class AccountService {
     this.isUpdatingAccount = true
     try {
       await this.statsService.rejoinPool({
-        poolPublicKey: this.poolPublicKey,
+        accountIdentifier: this.poolPublicKey,
         authToken: this.authToken,
       })
       await this.updateAccount({ bustCache: true })
@@ -413,7 +415,7 @@ export class AccountService {
     this.isUpdatingAccount = true
     try {
       await this.statsService.updatePayoutOptions({
-        poolPublicKey: this.poolPublicKey,
+        accountIdentifier: this.poolPublicKey,
         authToken: this.authToken,
         minimumPayout: newMinimumPayout,
         payoutMultiplesOf: newPayoutMultiplesOf,
@@ -431,7 +433,7 @@ export class AccountService {
     this.isUpdatingAccount = true
     try {
       await this.statsService.updateAccountDifficulty({
-        poolPublicKey: this.poolPublicKey,
+        accountIdentifier: this.poolPublicKey,
         authToken: this.authToken,
         difficulty,
         isFixedDifficulty,
@@ -442,28 +444,16 @@ export class AccountService {
     }
   }
 
-  public async updateNotificationSettings({
-    ecLastHourThreshold,
-    areEcChangeNotificationsEnabled,
-    areBlockWonNotificationsEnabled,
-    arePayoutAddressChangeNotificationsEnabled,
-    areHarvesterOfflineNotificationsEnabled,
-    harvesterOfflineDurationInMinutes,
-  }): Promise<void> {
+  public async updateNotificationSettings(notificationSettings: AccountNotificationSettings): Promise<void> {
     if (!this.isAuthenticated) {
       return
     }
     this.isUpdatingAccount = true
     try {
       await this.statsService.updateNotificationSettings({
-        poolPublicKey: this.poolPublicKey,
+        accountIdentifier: this.poolPublicKey,
         authToken: this.authToken,
-        ecLastHourThreshold,
-        areEcChangeNotificationsEnabled,
-        areBlockWonNotificationsEnabled,
-        arePayoutAddressChangeNotificationsEnabled,
-        areHarvesterOfflineNotificationsEnabled,
-        harvesterOfflineDurationInMinutes,
+        notificationSettings,
       })
       await this.updateAccount({ bustCache: true })
     } finally {
@@ -476,7 +466,7 @@ export class AccountService {
       return
     }
     await this.statsService.updateHarvesterNotificationSettings({
-      poolPublicKey: this.poolPublicKey,
+      accountIdentifier: this.poolPublicKey,
       authToken: this.authToken,
       harvesterPeerId,
       notificationSettings,

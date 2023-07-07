@@ -3,10 +3,10 @@ import {BehaviorSubject, combineLatest, Observable, Subscription, takeWhile} fro
 import {faHdd} from '@fortawesome/free-regular-svg-icons'
 import {distinctUntilChanged, filter, map, shareReplay} from 'rxjs/operators'
 import {StatsService} from '../stats.service'
-import {AccountModel} from '../api.service'
 import Capacity from '../capacity'
 import * as moment from 'moment'
 import {ActivatedRoute, Router} from '@angular/router'
+import {OgTopAccount} from '../api/types/account/top-account'
 
 @Component({
   selector: 'app-farmer-list',
@@ -23,7 +23,7 @@ export class FarmerListComponent implements OnDestroy {
   public page = 1
   public total = 0
 
-  private readonly accountsSubject: BehaviorSubject<AccountModel[]> = new BehaviorSubject<AccountModel[]>([])
+  private readonly accountsSubject: BehaviorSubject<OgTopAccount[]> = new BehaviorSubject<OgTopAccount[]>([])
   private readonly isLoadingSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true)
 
   private readonly subscriptions: Subscription[] = [
