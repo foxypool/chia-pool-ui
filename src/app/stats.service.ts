@@ -209,11 +209,11 @@ export class StatsService {
   }
 
   public async leavePool({ accountIdentifier, authToken, leaveForEver }) {
-    return this.requestWithError((this.api as OgApi).leavePool({ accountIdentifier, authToken, leaveForEver }))
+    return this.requestWithError(this.api.leavePool({ accountIdentifier, authToken, leaveForEver }))
   }
 
   public async rejoinPool({ accountIdentifier, authToken }) {
-    return this.requestWithError((this.api as OgApi).rejoinPool({ accountIdentifier, authToken }))
+    return this.requestWithError(this.api.rejoinPool({ accountIdentifier, authToken }))
   }
 
   private async requestWithError<T extends MaybeErrorResponse>(requestPromise: Promise<T>): Promise<Omit<T, 'error'>> {
