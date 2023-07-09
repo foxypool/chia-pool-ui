@@ -762,7 +762,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       return 0
     }
 
-    return this.accountService.account.pendingBN
+    return (this.accountService.account as any).pendingBN
       .dividedBy(this.minimumPayout)
       .multipliedBy(100)
       .toNumber()
@@ -775,7 +775,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   public get timeTillMinimumPayoutReached(): string {
-    const remainingAmount = (new BigNumber(this.minimumPayout)).minus(this.accountService.account.pendingBN)
+    const remainingAmount = (new BigNumber(this.minimumPayout)).minus((this.accountService.account as any).pendingBN)
     if (remainingAmount.isLessThanOrEqualTo(0)) {
       return 'now'
     }
@@ -797,11 +797,12 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   public get collateralProgressRaw(): number {
-    if (!this.accountService.account || !this.accountService.account.collateralBN || !this.poolConfig.poolRewardPortion) {
+    const account = this.accountService.account as any|null
+    if (!account || !account.collateralBN || !this.poolConfig.poolRewardPortion) {
       return 0
     }
 
-    return this.accountService.account.collateralBN
+    return account.collateralBN
       .dividedBy(this.poolConfig.poolRewardPortion)
       .multipliedBy(100)
       .toNumber()
@@ -817,7 +818,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     if (this.poolConfig.poolRewardPortion === undefined || this.accountService.account === null) {
       return 'N/A'
     }
-    const remainingAmount = (new BigNumber(this.poolConfig.poolRewardPortion)).minus(this.accountService.account.collateralBN)
+    const remainingAmount = (new BigNumber(this.poolConfig.poolRewardPortion)).minus((this.accountService.account as any).collateralBN)
     if (remainingAmount.isLessThanOrEqualTo(0)) {
       return 'now'
     }

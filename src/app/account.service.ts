@@ -13,7 +13,7 @@ import {AccountPayout} from './farmer-payout-history/farmer-payout-history.compo
 import {distinctUntilChanged, filter, map, shareReplay} from 'rxjs/operators'
 import {AccountHistoricalStat} from './api/types/account/account-historical-stat'
 import {LoginTokenResponse} from './api/types/auth/login-token-response'
-import {AccountNotificationSettings} from './api/types/account/account'
+import {AccountNotificationSettings, OgAccount} from './api/types/account/account'
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +54,7 @@ export class AccountService {
       )
   }
 
-  get account(): any {
+  get account(): OgAccount|null {
     return this.accountSubject.getValue()
   }
 

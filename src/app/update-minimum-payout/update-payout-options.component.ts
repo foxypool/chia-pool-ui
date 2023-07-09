@@ -22,8 +22,8 @@ export class UpdatePayoutOptionsComponent {
     private readonly toastService: ToastService,
     private readonly statsService: StatsService,
   ) {
-    this.newMinimumPayout = this.accountService.account.minimumPayout
-    this.newPayoutMultiplesOf = this.accountService.account.payoutMultiplesOf
+    this.newMinimumPayout = this.accountService.account?.minimumPayout
+    this.newPayoutMultiplesOf = this.accountService.account?.payoutMultiplesOf
   }
 
   private get poolConfig() {
@@ -72,7 +72,7 @@ export class UpdatePayoutOptionsComponent {
     return this._newMinimumPayout?.toNumber()
   }
 
-  public set newMinimumPayout(value: number|undefined|null) {
+  public set newMinimumPayout(value: number|string|undefined|null) {
     this._newMinimumPayout = value ? new BigNumber(value) : undefined
   }
 
@@ -80,7 +80,7 @@ export class UpdatePayoutOptionsComponent {
     return this._newPayoutMultiplesOf?.toNumber()
   }
 
-  public set newPayoutMultiplesOf(value: number|undefined|null) {
+  public set newPayoutMultiplesOf(value: number|string|undefined|null) {
     this._newPayoutMultiplesOf = value ? new BigNumber(value) : undefined
   }
 
@@ -93,11 +93,11 @@ export class UpdatePayoutOptionsComponent {
   }
 
   private get isNewMinimumPayout(): boolean {
-    return this.accountService.account.minimumPayout !== this.newMinimumPayoutString
+    return this.accountService.account?.minimumPayout !== this.newMinimumPayoutString
   }
 
   private get isNewPayoutMultiplesOf(): boolean {
-    return this.accountService.account.payoutMultiplesOf !== this.newPayoutMultiplesOfString
+    return this.accountService.account?.payoutMultiplesOf !== this.newPayoutMultiplesOfString
   }
 
   public get canUpdatePayoutOptions(): boolean {
