@@ -484,6 +484,15 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       return this.harvester.versionInfo.localVersion3 ?? undefined
     }
     if (
+      this.harvester.versionInfo.clientVersion === '2.0.0'
+      && this.harvester.versionInfo.localName1 === 'b'
+      && this.harvester.versionInfo.localVersion1 === '5'
+      && this.harvester.versionInfo.localName2 === 'dev'
+      && this.harvester.versionInfo.localVersion2 === '76'
+    ) {
+      return '4.6'
+    }
+    if (
       this.harvester.versionInfo.clientVersion === '1.8.2'
       && this.harvester.versionInfo.localName1 === 'rc'
       && this.harvester.versionInfo.localVersion1 === '6'
