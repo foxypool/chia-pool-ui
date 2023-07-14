@@ -12,7 +12,7 @@ import {WonBlock} from './farmer-won-blocks/farmer-won-blocks.component'
 import {AccountPayout} from './farmer-payout-history/farmer-payout-history.component'
 import {distinctUntilChanged, filter, map, shareReplay} from 'rxjs/operators'
 import {AccountHistoricalStat} from './api/types/account/account-historical-stat'
-import {LoginTokenResponse} from './api/types/auth/login-token-response'
+import {LoginTokenResult} from './api/types/auth/login-token-result'
 import {AccountNotificationSettings, OgAccount} from './api/types/account/account'
 
 @Injectable({
@@ -348,7 +348,7 @@ export class AccountService {
     }
   }
 
-  public async generateLoginToken(): Promise<LoginTokenResponse> {
+  public async generateLoginToken(): Promise<LoginTokenResult> {
     if (!this.isAuthenticated) {
       throw new Error('Not authenticated')
     }

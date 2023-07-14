@@ -15,10 +15,10 @@ import {ClientVersion} from './types/pool/client-version'
 import {AccountHistoricalStat} from './types/account/account-historical-stat'
 import {AccountWonBlock} from './types/account/account-won-block'
 import {AccountPayout} from './types/account/account-payout'
-import {AuthenticationResponse} from './types/auth/authentication-response'
-import {LoginTokenResponse} from './types/auth/login-token-response'
-import {MaybeErrorResponse} from './types/maybe-error-response'
+import {AuthenticationResult} from './types/auth/authentication-result'
+import {LoginTokenResult} from './types/auth/login-token-result'
 import {TopAccount} from './types/account/top-account'
+import {ApiResponse} from './types/api-response'
 
 export abstract class AbstractApi<
   AccountType extends Account,
@@ -136,8 +136,8 @@ export abstract class AbstractApi<
     return data
   }
 
-  public async authenticateAccount({ accountIdentifier, message, signature }: { accountIdentifier: string, message: string, signature: string }): Promise<AuthenticationResponse> {
-    const { data } = await this.client.post<AuthenticationResponse>(`account/${accountIdentifier}/authenticate`, {
+  public async authenticateAccount({ accountIdentifier, message, signature }: { accountIdentifier: string, message: string, signature: string }): Promise<ApiResponse<AuthenticationResult>> {
+    const { data } = await this.client.post<ApiResponse<AuthenticationResult>>(`account/${accountIdentifier}/authenticate`, {
       message,
       signature,
     })
@@ -145,24 +145,24 @@ export abstract class AbstractApi<
     return data
   }
 
-  public async authenticateAccountWithToken({ accountIdentifier, token }: { accountIdentifier: string, token: string }): Promise<AuthenticationResponse> {
-    const { data } = await this.client.post<AuthenticationResponse>(`account/${accountIdentifier}/authenticate-with-token`, {
+  public async authenticateAccountWithToken({ accountIdentifier, token }: { accountIdentifier: string, token: string }): Promise<ApiResponse<AuthenticationResult>> {
+    const { data } = await this.client.post<ApiResponse<AuthenticationResult>>(`account/${accountIdentifier}/authenticate-with-token`, {
       token,
     })
 
     return data
   }
 
-  public async generateLoginToken({ accountIdentifier, authToken }: AuthenticatedAccountRequestOptions): Promise<LoginTokenResponse> {
-    const { data } = await this.client.post<LoginTokenResponse>(`account/${accountIdentifier}/login-token/generate`, undefined, {
+  public async generateLoginToken({ accountIdentifier, authToken }: AuthenticatedAccountRequestOptions): Promise<ApiResponse<LoginTokenResult>> {
+    const { data } = await this.client.post<ApiResponse<LoginTokenResult>>(`account/${accountIdentifier}/login-token/generate`, undefined, {
       headers: { Authorization: `Bearer ${authToken}` },
     })
 
     return data
   }
 
-  public async updateAccountName({ accountIdentifier, authToken, newName }: UpdateAccountNameOptions): Promise<MaybeErrorResponse> {
-    const { data } = await this.client.post<MaybeErrorResponse>(`account/${accountIdentifier}/name`, {
+  public async updateAccountName({ accountIdentifier, authToken, newName }: UpdateAccountNameOptions): Promise<ApiResponse<void>> {
+    const { data } = await this.client.post<ApiResponse<void>>(`account/${accountIdentifier}/name`, {
       newName,
     }, {
       headers: { Authorization: `Bearer ${authToken}` },
@@ -171,8 +171,8 @@ export abstract class AbstractApi<
     return data
   }
 
-  public async updateHarvesterName({ accountIdentifier, authToken, harvesterPeerId, newName }: UpdateHarvesterNameOptions): Promise<MaybeErrorResponse> {
-    const { data } = await this.client.put<MaybeErrorResponse>(`account/${accountIdentifier}/harvester/${harvesterPeerId}/name`, {
+  public async updateHarvesterName({ accountIdentifier, authToken, harvesterPeerId, newName }: UpdateHarvesterNameOptions): Promise<ApiResponse<void>> {
+    const { data } = await this.client.put<ApiResponse<void>>(`account/${accountIdentifier}/harvester/${harvesterPeerId}/name`, {
       newName,
     }, {
       headers: { Authorization: `Bearer ${authToken}` },
@@ -181,16 +181,16 @@ export abstract class AbstractApi<
     return data
   }
 
-  public async updateHarvesterNotificationSettings({ accountIdentifier, authToken, harvesterPeerId, notificationSettings }: UpdateHarvesterNotificationSettingsOptions): Promise<MaybeErrorResponse> {
-    const { data } = await this.client.put<MaybeErrorResponse>(`account/${accountIdentifier}/harvester/${harvesterPeerId}/notification-settings`, notificationSettings, {
+  public async updateHarvesterNotificationSettings({ accountIdentifier, authToken, harvesterPeerId, notificationSettings }: UpdateHarvesterNotificationSettingsOptions): Promise<ApiResponse<void>> {
+    const { data } = await this.client.put<ApiResponse<void>>(`account/${accountIdentifier}/harvester/${harvesterPeerId}/notification-settings`, notificationSettings, {
       headers: { Authorization: `Bearer ${authToken}` },
     })
 
     return data
   }
 
-  public async updatePayoutOptions({ accountIdentifier, authToken, minimumPayout, payoutMultiplesOf }: UpdateAccountPayoutOptions): Promise<MaybeErrorResponse> {
-    const { data } = await this.client.put<MaybeErrorResponse>(`account/${accountIdentifier}/payout-options`, {
+  public async updatePayoutOptions({ accountIdentifier, authToken, minimumPayout, payoutMultiplesOf }: UpdateAccountPayoutOptions): Promise<ApiResponse<void>> {
+    const { data } = await this.client.put<ApiResponse<void>>(`account/${accountIdentifier}/payout-options`, {
       minimumPayout,
       payoutMultiplesOf,
     }, {
@@ -200,8 +200,8 @@ export abstract class AbstractApi<
     return data
   }
 
-  public async updateAccountDifficulty({ accountIdentifier, authToken, difficulty, isFixedDifficulty }: UpdateAccountDifficultyOptions): Promise<MaybeErrorResponse> {
-    const { data } = await this.client.put<MaybeErrorResponse>(`account/${accountIdentifier}/difficulty`, {
+  public async updateAccountDifficulty({ accountIdentifier, authToken, difficulty, isFixedDifficulty }: UpdateAccountDifficultyOptions): Promise<ApiResponse<void>> {
+    const { data } = await this.client.put<ApiResponse<void>>(`account/${accountIdentifier}/difficulty`, {
       difficulty,
       isFixedDifficulty,
     }, {
@@ -211,8 +211,8 @@ export abstract class AbstractApi<
     return data
   }
 
-  public async updateNotificationSettings({accountIdentifier, authToken, notificationSettings }: UpdateAccountNotificationSettingsOptions): Promise<MaybeErrorResponse> {
-    const { data } = await this.client.put<MaybeErrorResponse>(`account/${accountIdentifier}/notification-settings`, notificationSettings, {
+  public async updateNotificationSettings({accountIdentifier, authToken, notificationSettings }: UpdateAccountNotificationSettingsOptions): Promise<ApiResponse<void>> {
+    const { data } = await this.client.put<ApiResponse<void>>(`account/${accountIdentifier}/notification-settings`, notificationSettings, {
       headers: { Authorization: `Bearer ${authToken}` },
     })
 

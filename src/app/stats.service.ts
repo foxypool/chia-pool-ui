@@ -7,12 +7,12 @@ import {PoolsProvider} from './pools.provider'
 import {SnippetService} from './snippet.service'
 import {configForCoin} from './coin-config'
 import {OgApi} from './api/og-api'
-import {MaybeErrorResponse} from './api/types/maybe-error-response'
 import {PoolConfig} from './api/types/pool/pool-config'
 import {PoolStats} from './api/types/pool/pool-stats'
 import {PoolHistoricalStat} from './api/types/pool/pool-historical-stat'
 import {AccountStats} from './api/types/account/account-stats'
 import {OgTopAccount} from './api/types/account/top-account'
+import {ApiResponse, isErrorResponse} from './api/types/api-response'
 
 @Injectable({
   providedIn: 'root'
@@ -216,9 +216,9 @@ export class StatsService {
     return this.requestWithError(this.api.rejoinPool({ accountIdentifier, authToken }))
   }
 
-  private async requestWithError<T extends MaybeErrorResponse>(requestPromise: Promise<T>): Promise<Omit<T, 'error'>> {
+  private async requestWithError<T>(requestPromise: Promise<ApiResponse<T>>): Promise<T> {
     const result = await requestPromise
-    if (result && result.error) {
+    if (isErrorResponse(result)) {
       throw new Error(this.snippetService.getSnippet(`api.error.${result.error}`))
     }
 
