@@ -5,10 +5,9 @@ import {EChartsOption} from 'echarts'
 import BigNumber from 'bignumber.js'
 
 import {SnippetService} from '../snippet.service'
-import {ensureHexPrefix} from '../util'
 import {ConfigService, DateFormatting} from '../config.service'
 import {CsvExporter} from '../csv-exporter'
-import {BehaviorSubject, combineLatest, from, Observable, Subscription} from 'rxjs'
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs'
 import {map} from 'rxjs/operators'
 import {CoinConfig} from '../coin-config'
 import {RatesService} from '../rates.service'
@@ -147,7 +146,7 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
       return
     }
 
-    return this.poolConfig.blockExplorerCoinUrlTemplate.replace('#COIN#', ensureHexPrefix(coinId))
+    return this.poolConfig.blockExplorerCoinUrlTemplate.replace('#COIN#', coinId.ensureHexPrefix())
   }
 
   private getFormattedPaymentState(payoutState: AccountPayoutState): string {

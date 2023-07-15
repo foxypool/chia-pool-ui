@@ -1,11 +1,10 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core'
+import {Component, Input, OnDestroy} from '@angular/core'
 import {StatsService} from '../stats.service'
 import * as moment from 'moment'
 import {SnippetService} from '../snippet.service'
 import {faMoneyCheckAlt, faExchangeAlt} from '@fortawesome/free-solid-svg-icons'
 import {BigNumber} from 'bignumber.js'
 import {PoolsProvider} from '../pools.provider'
-import {ensureHexPrefix} from '../util'
 import {ConfigService, DateFormatting} from '../config.service'
 import {Subscription} from 'rxjs'
 
@@ -124,8 +123,8 @@ export class PayoutsComponent implements OnDestroy {
       }).sort((a, b) => b.amount - a.amount)
   }
 
-  getBlockExplorerCoinLink(coinId) {
-    return this.poolConfig.blockExplorerCoinUrlTemplate.replace('#COIN#', ensureHexPrefix(coinId))
+  public getBlockExplorerCoinLink(coinId: string): string {
+    return this.poolConfig.blockExplorerCoinUrlTemplate.replace('#COIN#', coinId.ensureHexPrefix())
   }
 
   getCoinIdsForPayout(payout) {

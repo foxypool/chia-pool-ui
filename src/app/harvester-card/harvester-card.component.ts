@@ -10,7 +10,6 @@ import {BigNumber} from 'bignumber.js'
 import Capacity from '../capacity'
 import {EChartsOption} from 'echarts'
 import {Moment} from 'moment'
-import {stripHexPrefix} from '../util'
 import {compare} from 'compare-versions'
 import {clientVersions} from '../client-versions'
 import {faEllipsisV, faReceipt} from '@fortawesome/free-solid-svg-icons'
@@ -340,7 +339,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   public get peerIdSlug(): string {
-    return stripHexPrefix(this.harvester.peerId).slice(0, 10)
+    return this.harvester.peerId.stripHexPrefix().slice(0, 10)
   }
 
   public get hasName(): boolean {
