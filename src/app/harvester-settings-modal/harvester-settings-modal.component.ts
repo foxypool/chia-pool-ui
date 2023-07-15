@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core'
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap'
 import {AccountService} from '../account.service'
-import {Harvester} from '../types'
+import {Harvester} from '../api/types/harvester/harvester'
 
 @Component({
   selector: 'app-harvester-settings-modal',

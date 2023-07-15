@@ -5,7 +5,7 @@ import {SnippetService} from '../snippet.service'
 import {ToastService} from '../toast.service'
 import {Options} from '@angular-slider/ngx-slider'
 import {options} from '../harvester-offline-duration-options'
-import {Harvester} from '../types'
+import {Harvester} from '../api/types/harvester/harvester'
 
 @Component({
   selector: 'app-update-harvester-notification-settings',

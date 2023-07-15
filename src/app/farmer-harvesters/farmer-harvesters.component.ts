@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core'
 import {AccountService} from '../account.service'
-import {Harvester} from '../types'
 import {BehaviorSubject, Observable, Subscription} from 'rxjs'
 import {faTractor} from '@fortawesome/free-solid-svg-icons'
 import {skip} from 'rxjs/operators'
+import { Harvester } from '../api/types/harvester/harvester'
 
 @Component({
   selector: 'app-farmer-harvesters',

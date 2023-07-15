@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core'
-import {Harvester} from '../types'
 import {UntypedFormControl} from '@angular/forms'
 import {ToastService} from '../toast.service'
 import {AccountService} from '../account.service'
@@ -18,6 +17,7 @@ import {faEllipsisV, faReceipt} from '@fortawesome/free-solid-svg-icons'
 import {HarvesterSettingsModalComponent} from '../harvester-settings-modal/harvester-settings-modal.component'
 import {HarvesterStats, RejectedSubmissionType} from '../api/types/harvester/harvester-stats'
 import {ProofTime} from '../api/types/harvester/proof-time'
+import { Harvester } from '../api/types/harvester/harvester'
 
 const sharesPerDayPerK32 = 10
 const k32SizeInGb = 108.837

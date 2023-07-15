@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js'
+import {BigNumber} from 'bignumber.js'
 
 export function ensureHexPrefix(string: string) {
   return string.startsWith('0x') ? string : `0x${string}`
