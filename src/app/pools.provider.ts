@@ -25,11 +25,6 @@ export class PoolsProvider {
       apiUrl: 'https://api2.foxypool.io',
       algorithm: 'Proof of Spacetime',
       downloadUrl: 'https://github.com/foxypool/chia-blockchain/releases/latest',
-    },{
-      group: 'SIGNA',
-      name: 'Foxy-Pool SIGNA',
-      url:  'https://signa.foxypool.io',
-      algorithm: 'Proof of Capacity',
     },
   ]
 
