@@ -360,7 +360,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
 
   public get chiaVersionColorClasses(): string[] {
     const chiaVersion = this.chiaVersion
-    if (chiaVersion === 'Unknown') {
+    if (chiaVersion === undefined) {
       return []
     }
     if (compare(chiaVersion, clientVersions.chia.recommendedMinimum, '>=')) {
@@ -373,12 +373,47 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     return ['color-red']
   }
 
-  public get chiaVersion(): string {
+  private get chiaVersion(): string|undefined {
     if (this.harvester.versionInfo.clientName === null || this.harvester.versionInfo.clientName.indexOf('Chia') === -1) {
-      return 'Unknown'
+      return
     }
 
     return this.harvester.versionInfo.clientVersion
+  }
+
+  private get chiaRcVersion(): string|undefined {
+    if (this.harvester.versionInfo.localName1 === 'rc') {
+      return this.harvester.versionInfo.localVersion1 ?? undefined
+    }
+  }
+
+  private get chiaBetaVersion(): string|undefined {
+    if (this.harvester.versionInfo.localName1 === 'b') {
+      return this.harvester.versionInfo.localVersion1 ?? undefined
+    }
+  }
+
+  public get fullChiaVersionString(): string {
+    const chiaVersion = this.chiaVersion
+    if (chiaVersion === undefined) {
+      return 'Unknown'
+    }
+
+    // If we already show explicit compression version ignore rc and beta info
+    if (this.hasChiaCompressionVersion) {
+      return chiaVersion
+    }
+
+    const rcVersion = this.chiaRcVersion
+    if (rcVersion !== undefined) {
+      return `${chiaVersion} RC ${rcVersion}`
+    }
+    const betaVersion = this.chiaBetaVersion
+    if (betaVersion !== undefined) {
+      return `${chiaVersion} Beta ${betaVersion}`
+    }
+
+    return chiaVersion
   }
 
   public get ogVersionColorClasses(): string[] {
