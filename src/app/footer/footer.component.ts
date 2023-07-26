@@ -28,7 +28,7 @@ export class FooterComponent  {
   }
 
   get downloadUrl(): string {
-    return this.poolsProvider.pool?.downloadUrl
+    return this.poolsProvider.pool.downloadUrl
   }
 
   get gettingStartedUrl(): string {

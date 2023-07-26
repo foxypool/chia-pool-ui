@@ -1,5 +1,6 @@
 import {Inject, Injectable} from '@angular/core'
 import {WINDOW} from './window.provider'
+import {DOCUMENT} from '@angular/common'
 
 export enum PoolType {
   og,
@@ -30,7 +31,6 @@ export interface Pool {
   providedIn: 'root'
 })
 export class PoolsProvider {
-
   public pools: Pool[] = [{
     coin: Coin.chia,
     name: 'Foxy-Pool CHIA',
@@ -53,22 +53,26 @@ export class PoolsProvider {
     launchDate: '2021-06-13T00:00:00.000Z',
   }]
 
-  public readonly pool: Pool|undefined
+  public readonly pool: Pool
 
-  public get poolIdentifier(): string|undefined {
-    return this.pool?.poolIdentifier
+  public get poolIdentifier(): string {
+    return this.pool.poolIdentifier
   }
 
-  public get coin(): Coin|undefined {
-    return this.pool?.coin
+  public get coin(): Coin {
+    return this.pool.coin
   }
 
   public constructor(
     @Inject(WINDOW) private readonly window: Window,
+    @Inject(DOCUMENT) private readonly document: Document,
   ) {
     const hostname = this.window.location.hostname
     this.pool = this.pools
       .filter(pool => pool.hostnames)
       .find(pool => pool.hostnames.some(curr => curr === hostname))
+    if (this.pool === undefined) {
+      this.document.location.href = 'https://foxypool.io'
+    }
   }
 }
