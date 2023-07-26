@@ -103,7 +103,7 @@ export class StatsCardComponent {
     private readonly _snippetService: SnippetService,
     public ratesService: RatesService,
   ) {
-    this.heightInfo$ = this.statsService.poolStatsSubject.pipe(map(stats => stats?.height.toString() ?? 'N/A'), shareReplay())
+    this.heightInfo$ = this.statsService.poolStatsSubject.pipe(map(stats => stats?.height.toLocaleString('en') ?? 'N/A'), shareReplay())
   }
 
   public get snippetService(): SnippetService {
