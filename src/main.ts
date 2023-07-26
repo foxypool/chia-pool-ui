@@ -39,7 +39,7 @@ Sentry.init({
   // Performance Monitoring
   tracesSampleRate: 0.05,
   // Session Replay
-  replaysSessionSampleRate: 0.1,
+  replaysSessionSampleRate: 0,
   replaysOnErrorSampleRate: 1.0,
   allowUrls: ['foxypool.io'],
   ignoreErrors,
