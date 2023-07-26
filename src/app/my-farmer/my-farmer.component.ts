@@ -66,6 +66,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   public selectedCurrencyObservable: Observable<string>
   public averageEffortFormatted: Observable<string>
   public averageEffortColorClass: Observable<string>
+  public readonly lastAcceptedPartialAt$: Observable<string>
 
   private poolEc = 0
   private dailyRewardPerPib = 0
@@ -292,6 +293,18 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     }
     this.payoutDateFormattingObservable = this.configService.payoutDateFormattingSubject.asObservable()
     this.selectedCurrencyObservable = this.configService.selectedCurrencySubject.asObservable()
+    this.lastAcceptedPartialAt$ = combineLatest([
+      this.accountService.accountSubject.pipe(
+        map(account => account?.lastAcceptedPartialAt),
+        distinctUntilChanged(),
+      ),
+      timer(0, 10 * 1000),
+    ])
+      .pipe(
+        map(([lastAcceptedPartialAt]) => lastAcceptedPartialAt !== undefined ? moment(lastAcceptedPartialAt).fromNow() : 'Never'),
+        distinctUntilChanged(),
+        shareReplay()
+      )
     const sharesStream = this.accountService.accountHistoricalStats
       .pipe(
         skip(1),
@@ -1048,14 +1061,6 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     }
 
     return (new Capacity(capacityInGiB)).toString()
-  }
-
-  getLastAcceptedPartialAtDuration(lastAcceptedPartialAt) {
-    if (!lastAcceptedPartialAt) {
-      return 'Never'
-    }
-
-    return moment(lastAcceptedPartialAt).fromNow()
   }
 
   get ecShare() {

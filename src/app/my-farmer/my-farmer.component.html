@@ -128,7 +128,7 @@
             <h5>{{snippetService.getSnippet('my-farmer-component.last-partial-accepted-card.title')}}</h5>
           </div>
           <div class="card-body text-align-center card-font-size">
-            {{getLastAcceptedPartialAtDuration(accountService.account.lastAcceptedPartialAt)}}
+            {{lastAcceptedPartialAt$ | async}}
           </div>
         </div>
       </div>
