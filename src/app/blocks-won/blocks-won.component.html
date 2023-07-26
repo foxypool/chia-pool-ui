@@ -45,7 +45,7 @@
         <td class="ellipsis" *ngIf="!block.winner.accountReference">
           {{block.winner.name || block.winner.payoutAddress || snippetService.getSnippet('general.unknown')}}
         </td>
-        <td class="no-wrap">{{block.reward}} {{statsService.ticker$}}</td>
+        <td class="no-wrap">{{block.reward}} {{statsService.ticker$ | async}}</td>
         <td class="no-wrap" [style.padding-top]="block.distributed ? '12px' : '2px'" [style.padding-bottom]="block.distributed ? '12px' : '8px'">
           {{getBlockDistributedLabel(block)}}
           <span *ngIf="!block.distributed">({{getBlockConfirms(block)}} / {{(statsService.poolConfig$ | async)?.blockRewardDistributionDelay}})</span>
