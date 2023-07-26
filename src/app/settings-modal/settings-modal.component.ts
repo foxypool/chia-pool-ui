@@ -1,6 +1,7 @@
 import {Component, ViewChild} from '@angular/core'
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap'
 import {AccountService} from '../account.service'
+import {isCheatingOgAccount, isInactiveOgAccount} from '../api/types/account/account'
 
 @Component({
   selector: 'app-settings-modal',
@@ -21,12 +22,12 @@ export class SettingsModalComponent {
     this.modalRef = this.modalService.open(this.modal, { windowClass: 'settings-modal' })
   }
 
-  public get canLeavePool() {
+  public get canLeavePool(): boolean {
     if (!this.accountService.account) {
       return false
     }
     const account = this.accountService.account
 
-    return !account.hasLeftThePool && !account.isCheating
+    return !isInactiveOgAccount(account) && !isCheatingOgAccount(account)
   }
 }

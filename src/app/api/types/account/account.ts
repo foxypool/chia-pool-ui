@@ -7,7 +7,7 @@ export interface AccountNotificationSettings {
   harvesterOfflineDurationInMinutes: number
 }
 
-export interface Account {
+export interface BaseAccount {
   pending: string
   ec: number
   ecLastHour: number
@@ -26,16 +26,50 @@ export interface Account {
   lastAcceptedPartialAt?: string
 }
 
-export interface NftAccount extends Account {
+export interface OgBaseAccount extends BaseAccount {
+  poolPublicKey: string
+  collateral?: string
+}
+
+export interface CheatingOgAccount extends OgBaseAccount {
+  isCheating: true
+}
+
+export interface InactiveOgAccount extends OgBaseAccount {
+  hasLeftThePool: true
+}
+
+export type OgAccount = OgBaseAccount | CheatingOgAccount | InactiveOgAccount
+
+export interface NftAccount extends BaseAccount {
   singleton: {
     genesis: string
   }
   isPoolMember: boolean
 }
 
-export interface OgAccount extends Account {
-  poolPublicKey: string
-  collateral?: string
-  isCheating?: boolean
-  hasLeftThePool: boolean
+export type Account = OgAccount | NftAccount
+
+export function isOgAccount(account: Account): account is OgAccount {
+  return 'poolPublicKey' in account
+}
+
+export function isCheatingOgAccount(account: Account): account is CheatingOgAccount {
+  return isOgAccount(account) && 'isCheating' in account
+}
+
+export function isInactiveOgAccount(account: Account): account is InactiveOgAccount {
+  return isOgAccount(account) && 'hasLeftThePool' in account
+}
+
+export function isNftAccount(account: Account): account is NftAccount {
+  return 'singleton' in account
+}
+
+export function getAccountIdentifier(account: Account): string {
+  if (isOgAccount(account)) {
+    return account.poolPublicKey
+  }
+
+  return account.singleton.genesis
 }

@@ -23,6 +23,7 @@ import {BalanceProvider} from '../balance-provider'
 import {fromPromise} from 'rxjs/internal/observable/innerFrom'
 import {corePoolAddress, hpoolAddress} from '../known-addresses'
 import {AccountHistoricalStat} from '../api/types/account/account-historical-stat'
+import {isCheatingOgAccount, isInactiveOgAccount} from '../api/types/account/account'
 
 @Component({
   selector: 'app-my-farmer',
@@ -569,7 +570,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   private get tenureBadge(): Badge|undefined {
-    if (this.accountService.account === null || this.accountService.account.hasLeftThePool || this.accountService.account.isCheating) {
+    if (this.accountService.account === null || isInactiveOgAccount(this.accountService.account) || isCheatingOgAccount(this.accountService.account)) {
       return
     }
     const farmingSince = this.accountService.account.rejoinedAt || this.accountService.account.createdAt
@@ -843,7 +844,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   public get isPoolMember(): boolean {
-    return this.accountService.account !== null && !this.accountService.account.hasLeftThePool && !this.accountService.account.isCheating
+    return this.accountService.account !== null && !isInactiveOgAccount(this.accountService.account) && !isCheatingOgAccount(this.accountService.account)
   }
 
   public get accountHasNeverSubmittedAPartial(): boolean {
@@ -1074,12 +1075,12 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     return ecInPib.multipliedBy(this.dailyRewardPerPib)
   }
 
-  get canRejoinPool() {
+  public get canRejoinPool(): boolean {
     if (!this.accountService.account) {
       return false
     }
     const account = this.accountService.account
-    if (!account.hasLeftThePool) {
+    if (!isInactiveOgAccount(account)) {
       return false
     }
 
