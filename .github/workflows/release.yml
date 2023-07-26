@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - master
+      - main
 name: Release
 
 jobs:
@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Node.js 16
+      - name: Set up Node.js 18
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 18.x
       - name: Install
         run: yarn install
       - name: Build with source maps
