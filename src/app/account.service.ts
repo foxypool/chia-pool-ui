@@ -4,16 +4,15 @@ import {StatsService} from './stats.service'
 import {PoolsProvider} from './pools.provider'
 import {LocalStorageService} from './local-storage.service'
 import {ToastService} from './toast.service'
-import {BigNumber} from 'bignumber.js'
 import {SnippetService} from './snippet.service'
 import * as Sentry from '@sentry/angular-ivy'
 import {BehaviorSubject, Observable} from 'rxjs'
-import {WonBlock} from './farmer-won-blocks/farmer-won-blocks.component'
 import {AccountPayout} from './farmer-payout-history/farmer-payout-history.component'
 import {distinctUntilChanged, filter, map, shareReplay} from 'rxjs/operators'
 import {AccountHistoricalStat} from './api/types/account/account-historical-stat'
 import {LoginTokenResult} from './api/types/auth/login-token-result'
-import {AccountNotificationSettings, getAccountIdentifier, OgAccount} from './api/types/account/account'
+import {Account, AccountNotificationSettings, getAccountIdentifier} from './api/types/account/account'
+import {AccountWonBlock} from './api/types/account/account-won-block'
 
 @Injectable({
   providedIn: 'root'
@@ -24,9 +23,9 @@ export class AccountService {
   public static authTokenStorageKey = (accountIdentifier: string): string => `authToken:${accountIdentifier}`
 
   public currentAccountIdentifier: Observable<string>
-  public accountSubject = new BehaviorSubject<OgAccount|null>(null)
+  public accountSubject = new BehaviorSubject<Account|null>(null)
   public accountHistoricalStats = new BehaviorSubject<AccountHistoricalStat[]>([])
-  public accountWonBlocks = new BehaviorSubject<WonBlock[]>([])
+  public accountWonBlocks = new BehaviorSubject<AccountWonBlock[]>([])
   public accountPayouts = new BehaviorSubject<AccountPayout[]>([])
   public isLoading = false
   public isAuthenticating = false
@@ -55,11 +54,11 @@ export class AccountService {
       )
   }
 
-  get account(): OgAccount|null {
+  get account(): Account|null {
     return this.accountSubject.getValue()
   }
 
-  set account(account: any) {
+  set account(account: Account|null) {
     this.accountSubject.next(account)
   }
 
@@ -233,14 +232,11 @@ export class AccountService {
     this.accountPayouts.next(await this.getAccountPayouts({ accountIdentifier: this.accountIdentifier }))
   }
 
-  async getAccount({ accountIdentifier, bustCache = false }) {
+  private async getAccount({ accountIdentifier, bustCache = false }): Promise<Account|null> {
     this.isLoading = true
-    let account = null
+    let account: Account|null = null
     try {
       account = await this.statsService.getAccount({ accountIdentifier, bustCache })
-      if (account) {
-        this.patchAccount(account)
-      }
     } catch (err) {
       if (err.response && err.response.data && err.response.data.error) {
         account = null
@@ -300,15 +296,6 @@ export class AccountService {
     }
 
     return accountPayouts
-  }
-
-  patchAccount(account): void {
-    account.pendingBN = new BigNumber(account.pending)
-    account.pendingRounded = account.pendingBN.decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber()
-    if (account.collateral) {
-      account.collateralBN = new BigNumber(account.collateral)
-      account.collateralRounded = account.collateralBN.decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber()
-    }
   }
 
   async authenticate({ signature, message }) {

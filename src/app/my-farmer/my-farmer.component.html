@@ -73,7 +73,7 @@
             <h5>{{snippetService.getSnippet('my-farmer-component.pending-balance-card.title')}}</h5>
           </div>
           <div class="card-body text-align-center card-font-size card-body-with-progress-bar">
-            <span ngbTooltip="{{ratesService.getValuesInFiatFormatted(accountService.account.pendingRounded)}}">{{accountService.account.pendingRounded}} {{statsService.ticker$ | async}}</span>
+            <span ngbTooltip="{{ratesService.getValuesInFiatFormatted(pendingRounded)}}">{{pendingRounded}} {{statsService.ticker$ | async}}</span>
           </div>
           <ng-template #pendingProgressTooltipContent>
             <span class="color-green">{{pendingProgressRaw.toFixed(2)}}%</span> of the minimum payout reached.
@@ -187,7 +187,7 @@
             ></fa-icon>
           </div>
           <div class="card-body text-align-center card-font-size card-body-with-progress-bar">
-            <span ngbTooltip="{{ratesService.getValuesInFiatFormatted(accountService.account.collateralRounded)}}">{{accountService.account.collateralRounded}} {{statsService.ticker$ | async}}</span>
+            <span ngbTooltip="{{ratesService.getValuesInFiatFormatted(collateralRounded)}}">{{collateralRounded}} {{statsService.ticker$ | async}}</span>
           </div>
           <ng-template #collateralProgressTooltipContent>
             <span class="color-green">{{collateralProgressRaw.toFixed(2)}}%</span> of your collateral reached.

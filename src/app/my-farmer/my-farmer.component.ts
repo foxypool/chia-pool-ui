@@ -23,7 +23,7 @@ import {BalanceProvider} from '../balance-provider'
 import {fromPromise} from 'rxjs/internal/observable/innerFrom'
 import {corePoolAddress, hpoolAddress} from '../known-addresses'
 import {AccountHistoricalStat} from '../api/types/account/account-historical-stat'
-import {isCheatingOgAccount, isInactiveOgAccount} from '../api/types/account/account'
+import {isCheatingOgAccount, isInactiveOgAccount, isOgAccount} from '../api/types/account/account'
 
 @Component({
   selector: 'app-my-farmer',
@@ -31,8 +31,8 @@ import {isCheatingOgAccount, isInactiveOgAccount} from '../api/types/account/acc
   styleUrls: ['./my-farmer.component.scss']
 })
 export class MyFarmerComponent implements OnInit, OnDestroy {
-  @ViewChild(AuthenticationModalComponent) authenticationModal
-  @ViewChild(SettingsModalComponent) settingsModal
+  @ViewChild(AuthenticationModalComponent) authenticationModal: AuthenticationModalComponent
+  @ViewChild(SettingsModalComponent) settingsModal: SettingsModalComponent
 
   public accountIdentifierInput: string|null = null
   public readonly faCircleNotch = faCircleNotch
@@ -493,7 +493,13 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   public get rowClasses(): string[] {
-    const xxxxlColumns = this.accountService.account?.collateral !== undefined ? 8 : 7
+    let xxxxlColumns: number
+    const account = this.accountService.account
+    if (account !== null && isOgAccount(account) && account.collateral !== undefined) {
+      xxxxlColumns = 8
+    } else {
+      xxxxlColumns = 7
+    }
 
     return [
       `row-cols-xxxxl-${xxxxlColumns}`,
@@ -753,12 +759,33 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     return 0
   }
 
+  public get pendingRounded(): number {
+    if (this.accountService.account === null) {
+      return 0
+    }
+
+    return (new BigNumber(this.accountService.account.pending))
+      .decimalPlaces(this.statsService.coinConfig.decimalPlaces, BigNumber.ROUND_FLOOR)
+      .toNumber()
+  }
+
+  public get collateralRounded(): number|undefined {
+    const account = this.accountService.account
+    if (account === null || !isOgAccount(account) || account.collateral === undefined) {
+      return
+    }
+
+    return (new BigNumber(account.collateral))
+      .decimalPlaces(this.statsService.coinConfig.decimalPlaces, BigNumber.ROUND_FLOOR)
+      .toNumber()
+  }
+
   public get pendingProgressRaw(): number {
     if (!this.accountService.account || !this.minimumPayout) {
       return 0
     }
 
-    return (this.accountService.account as any).pendingBN
+    return (new BigNumber(this.accountService.account.pending))
       .dividedBy(this.minimumPayout)
       .multipliedBy(100)
       .toNumber()
@@ -771,7 +798,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   public get timeTillMinimumPayoutReached(): string {
-    const remainingAmount = (new BigNumber(this.minimumPayout)).minus((this.accountService.account as any).pendingBN)
+    const remainingAmount = (new BigNumber(this.minimumPayout)).minus(this.accountService.account.pending)
     if (remainingAmount.isLessThanOrEqualTo(0)) {
       return 'now'
     }
@@ -793,12 +820,12 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   public get collateralProgressRaw(): number {
-    const account = this.accountService.account as any|null
-    if (!account || !account.collateralBN || !this.statsService.poolConfig?.poolRewardPortion) {
+    const account = this.accountService.account
+    if (account === null || !isOgAccount(account) || account.collateral === undefined || !this.statsService.poolConfig?.poolRewardPortion) {
       return 0
     }
 
-    return account.collateralBN
+    return (new BigNumber(account.collateral))
       .dividedBy(this.statsService.poolConfig.poolRewardPortion)
       .multipliedBy(100)
       .toNumber()
@@ -811,10 +838,11 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   public get timeTillCollateralReached(): string {
-    if (this.statsService.poolConfig === undefined || this.accountService.account === null) {
+    const account = this.accountService.account
+    if (this.statsService.poolConfig === undefined || account === null || !isOgAccount(account) || account.collateral === undefined) {
       return 'N/A'
     }
-    const remainingAmount = (new BigNumber(this.statsService.poolConfig.poolRewardPortion)).minus((this.accountService.account as any).collateralBN)
+    const remainingAmount = (new BigNumber(this.statsService.poolConfig.poolRewardPortion)).minus(account.collateral)
     if (remainingAmount.isLessThanOrEqualTo(0)) {
       return 'now'
     }
@@ -827,7 +855,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   public get isCollateralFilledOrNonExistent(): boolean {
-    if (this.accountService.account === null || this.accountService.account.collateral === undefined) {
+    if (this.accountService.account === null || !isOgAccount(this.accountService.account) || this.accountService.account.collateral === undefined) {
       return true
     }
 
@@ -1078,11 +1106,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   public get canRejoinPool(): boolean {
-    if (!this.accountService.account) {
-      return false
-    }
     const account = this.accountService.account
-    if (!isInactiveOgAccount(account)) {
+    if (account === null || !isOgAccount(account) || !isInactiveOgAccount(account)) {
       return false
     }
 

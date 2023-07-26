@@ -5,7 +5,8 @@ import {SnippetService} from '../snippet.service'
 import {faHdd} from '@fortawesome/free-regular-svg-icons'
 import {map, shareReplay} from 'rxjs/operators'
 import {Observable} from 'rxjs'
-import {getAccountIdentifier} from '../api/types/account/top-account'
+import {getAccountIdentifier, isOgTopAccount} from '../api/types/account/top-account'
+import {BigNumber} from 'bignumber.js'
 
 interface TopAccountFormatted {
   accountIdentifier: string
@@ -38,8 +39,14 @@ export class TopAccountsComponent {
         payoutAddress: topAccount.payoutAddress,
         capacity: this.getFormattedCapacity(topAccount.ec),
         capacityShare: this.getEcShare(topAccount),
-        pendingRounded: (topAccount as any).pendingRounded,
-        collateralRounded: (topAccount as any).collateralRounded,
+        pendingRounded: (new BigNumber(topAccount.pending))
+          .decimalPlaces(this.statsService.coinConfig.decimalPlaces, BigNumber.ROUND_FLOOR)
+          .toNumber(),
+        collateralRounded: isOgTopAccount(topAccount) && topAccount.collateral !== undefined
+          ? (new BigNumber(topAccount.collateral))
+            .decimalPlaces(this.statsService.coinConfig.decimalPlaces, BigNumber.ROUND_FLOOR)
+            .toNumber()
+          : undefined,
       }))),
       shareReplay()
     )

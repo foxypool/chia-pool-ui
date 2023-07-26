@@ -2,11 +2,11 @@ import {Component, Input} from '@angular/core'
 import {StatsService} from '../stats.service'
 import * as moment from 'moment'
 import {SnippetService} from '../snippet.service'
-import {faMoneyCheckAlt, faExchangeAlt} from '@fortawesome/free-solid-svg-icons'
+import {faExchangeAlt, faMoneyCheckAlt} from '@fortawesome/free-solid-svg-icons'
 import {BigNumber} from 'bignumber.js'
 import {PoolsProvider} from '../pools.provider'
 import {ConfigService, DateFormatting} from '../config.service'
-import {Payout} from '../api/types/pool/payout'
+import {Payout, PayoutState} from '../api/types/pool/payout'
 
 @Component({
   selector: 'app-payouts',
@@ -107,11 +107,11 @@ export class PayoutsComponent {
     }
   }
 
-  getPaymentState(payout): string {
-    if (!payout.state || payout.state === 'IN_MEMPOOL') {
+  public getPaymentState(payout: Payout): string {
+    if (!payout.state || payout.state === PayoutState.inMempool) {
       return this.snippetService.getSnippet('payouts-component.in-mempool')
     }
-    if (payout.state === 'PARTIALLY_CONFIRMED') {
+    if (payout.state === PayoutState.partiallyConfirmed) {
       return this.snippetService.getSnippet('payouts-component.partially-confirmed')
     }
 

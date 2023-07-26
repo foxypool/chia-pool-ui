@@ -1,6 +1,6 @@
 import {TransactionState} from '../transaction-state'
 
-export interface RecentlyWonBlock {
+export interface BaseRecentlyWonBlock {
   winner: {
     payoutAddress: string
     accountReference: string
@@ -17,14 +17,16 @@ export interface RecentlyWonBlock {
   createdAt: string
 }
 
-export interface NftRecentlyWonBlock extends RecentlyWonBlock {
+export interface NftRecentlyWonBlock extends BaseRecentlyWonBlock {
   rewardClaimTx?: {
     state: TransactionState
     feeCoins?: string[]
   }
 }
 
-export interface RewardStats<RecentlyWonBlockType extends RecentlyWonBlock> {
+export type RecentlyWonBlock = BaseRecentlyWonBlock | NftRecentlyWonBlock
+
+export interface RewardStats<RecentlyWonBlockType extends BaseRecentlyWonBlock = RecentlyWonBlock> {
   recentlyWonBlocks: RecentlyWonBlockType[]
   dailyRewardPerPiB: number
   averageEffort: number|null

@@ -1,44 +1,27 @@
-import {Component, OnDestroy, OnInit} from '@angular/core'
+import {Component} from '@angular/core'
 import {StatsService} from '../stats.service'
 import {SnippetService} from '../snippet.service'
 import * as moment from 'moment'
-import {Subscription} from 'rxjs'
-import {Event} from '../api/types/pool/pool-stats'
+import {Observable} from 'rxjs'
+import {Event, EventState, EventType} from '../api/types/pool/pool-stats'
+import {map, shareReplay} from 'rxjs/operators'
 
 @Component({
   selector: 'app-events',
   templateUrl: './events.component.html',
   styleUrls: ['./events.component.scss']
 })
-export class EventsComponent implements OnInit, OnDestroy {
-  public EVENT_TYPE = {
-    EXTRA_BLOCK_REWARD: 'extra-block-reward',
-  }
-  public EVENT_STATE = {
-    UPCOMING: 'upcoming',
-    ACTIVE: 'active',
-    ENDED: 'ended',
-  }
-  public events: Event[] = []
-  public ticker: string = ''
+export class EventsComponent {
+  public events$: Observable<Event[]>
 
-  private readonly subscriptions: Subscription[] = [
-    this.statsService.poolStats$.subscribe(poolStats => this.events = poolStats.events),
-    this.statsService.poolConfig$.subscribe(poolConfig => this.ticker = poolConfig.ticker),
-  ]
+  protected readonly EventType = EventType
+  protected readonly EventState = EventState
 
   constructor(
-    private readonly statsService: StatsService,
+    public readonly statsService: StatsService,
     private readonly _snippetService: SnippetService,
-  ) {}
-
-  public ngOnInit(): void {
-    this.events = this.statsService.poolStats?.events ?? []
-    this.ticker = this.statsService.poolConfig?.ticker ?? ''
-  }
-
-  public ngOnDestroy(): void {
-    this.subscriptions.map(subscription => subscription.unsubscribe())
+  ) {
+    this.events$ = this.statsService.poolStats$.pipe(map(stats => stats.events), shareReplay())
   }
 
   get snippetService() {

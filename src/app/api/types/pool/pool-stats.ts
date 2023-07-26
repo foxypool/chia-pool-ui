@@ -8,13 +8,24 @@ export enum EventState {
   ended = 'ended',
 }
 
-export interface Event {
+export interface BaseEvent {
   type: EventType
   startedAt?: string
   endedAt?: string
   state: EventState
   payload: any
 }
+
+export interface ExtraBlockRewardEvent extends BaseEvent {
+  type: EventType.extraBlockReward
+  payload: {
+    extraReward: number
+    creditedCount: number
+    totalCount: number
+  }
+}
+
+export type Event = ExtraBlockRewardEvent
 
 export interface PoolStats {
   height: number

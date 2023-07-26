@@ -4,6 +4,7 @@ import {AccountService} from '../account.service'
 import {SnippetService} from '../snippet.service'
 import {ToastService} from '../toast.service'
 import {PoolsProvider} from '../pools.provider'
+import {OgAccount} from '../api/types/account/account'
 
 @Component({
   selector: 'app-leave-pool',
@@ -14,6 +15,10 @@ export class LeavePoolComponent {
   public leaveForEver = false
   public faCircleNotch = faCircleNotch
 
+  private get account(): OgAccount|null {
+    return this.accountService.account as OgAccount|null
+  }
+
   public constructor(
     public accountService: AccountService,
     public snippetService: SnippetService,
@@ -22,7 +27,7 @@ export class LeavePoolComponent {
   ) {}
 
   public get haveCollateral() {
-    return this.accountService.account && this.accountService.account.collateral !== undefined
+    return this.account && this.account.collateral !== undefined
   }
 
   public async leaveThePool() {

@@ -1,6 +1,6 @@
-import {BaseTopAccount} from './top-account'
+import {BaseTopAccount, TopAccount} from './top-account'
 
-export interface AccountList<TopAccountType extends BaseTopAccount> {
+export interface AccountList<TopAccountType extends BaseTopAccount = TopAccount> {
   accounts: TopAccountType[]
   total: number
 }

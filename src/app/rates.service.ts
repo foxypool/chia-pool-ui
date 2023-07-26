@@ -30,7 +30,7 @@ export class RatesService implements OnDestroy {
     this.subscriptions.map(subscription => subscription.unsubscribe())
   }
 
-  _getCoinValueAsFiat(value: string|number|null): number {
+  _getCoinValueAsFiat(value: string|number|null|undefined): number {
     if (!this.rates) {
       return 0
     }
@@ -48,7 +48,7 @@ export class RatesService implements OnDestroy {
     return (new BigNumber(value)).multipliedBy(rate).toNumber()
   }
 
-  public getValuesInFiatFormatted(value: string|number|null): string {
+  public getValuesInFiatFormatted(value: string|number|null|undefined): string {
     const fiatAmount = this._getCoinValueAsFiat(value)
     const decimalPlaces = this._getDecimalPlaces(fiatAmount)
 

@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core'
+import {Injectable} from '@angular/core'
 import {BehaviorSubject, Observable} from 'rxjs'
-import {BigNumber} from 'bignumber.js'
 import * as moment from 'moment'
 
-import {PoolsProvider} from './pools.provider'
+import {PoolsProvider, PoolType} from './pools.provider'
 import {SnippetService} from './snippet.service'
 import {configForCoin} from './coin-config'
 import {OgApi} from './api/og-api'
@@ -11,12 +10,13 @@ import {PoolConfig} from './api/types/pool/pool-config'
 import {PoolStats} from './api/types/pool/pool-stats'
 import {PoolHistoricalStat} from './api/types/pool/pool-historical-stat'
 import {AccountStats} from './api/types/account/account-stats'
-import {OgTopAccount} from './api/types/account/top-account'
 import {ApiResponse, isErrorResponse} from './api/types/api-response'
 import {filter, map, shareReplay} from 'rxjs/operators'
-import { RewardStats, RecentlyWonBlock } from './api/types/pool/reward-stats'
-import { Payout } from './api/types/pool/payout'
-import { RateStats } from './api/types/pool/rate-stats'
+import {RewardStats} from './api/types/pool/reward-stats'
+import {Payout} from './api/types/pool/payout'
+import {RateStats} from './api/types/pool/rate-stats'
+import {NftApi} from './api/nft-api'
+import {Account} from './api/types/account/account'
 
 @Injectable({
   providedIn: 'root'
@@ -42,19 +42,19 @@ export class StatsService {
 
   public readonly poolHistoricalStatsSubject: BehaviorSubject<PoolHistoricalStat[]> = new BehaviorSubject<PoolHistoricalStat[]>([])
 
-  public get accountStats(): AccountStats<OgTopAccount> | undefined {
+  public get accountStats(): AccountStats | undefined {
     return this.accountStatsSubject.getValue()
   }
 
-  public readonly accountStats$: Observable<AccountStats<OgTopAccount>>
-  public readonly accountStatsSubject: BehaviorSubject<AccountStats<OgTopAccount> | undefined> = new BehaviorSubject<AccountStats<OgTopAccount> | undefined>(undefined)
+  public readonly accountStats$: Observable<AccountStats>
+  public readonly accountStatsSubject: BehaviorSubject<AccountStats | undefined> = new BehaviorSubject<AccountStats | undefined>(undefined)
 
-  public get rewardStats(): RewardStats<RecentlyWonBlock> | undefined {
+  public get rewardStats(): RewardStats | undefined {
     return this.rewardStatsSubject.getValue()
   }
 
-  public readonly rewardStats$: Observable<RewardStats<RecentlyWonBlock>>
-  public readonly rewardStatsSubject: BehaviorSubject<RewardStats<RecentlyWonBlock> | undefined> = new BehaviorSubject<RewardStats<RecentlyWonBlock> | undefined>(undefined)
+  public readonly rewardStats$: Observable<RewardStats>
+  public readonly rewardStatsSubject: BehaviorSubject<RewardStats | undefined> = new BehaviorSubject<RewardStats | undefined>(undefined)
 
   public get recentPayouts(): Payout[] | undefined {
     return this.recentPayoutsSubject.getValue()
@@ -65,7 +65,7 @@ export class StatsService {
 
   public readonly exchangeStats$: Observable<RateStats>
   public readonly exchangeStatsSubject: BehaviorSubject<RateStats|undefined> = new BehaviorSubject<RateStats|undefined>(undefined)
-  private readonly api: OgApi
+  private readonly api: OgApi|NftApi
 
   constructor(
     private readonly snippetService: SnippetService,
@@ -74,11 +74,17 @@ export class StatsService {
     this.poolConfig$ = this.poolConfigSubject.pipe(filter((poolConfig): poolConfig is PoolConfig => poolConfig !== undefined), shareReplay())
     this.ticker$ = this.poolConfig$.pipe(map(poolConfig => poolConfig.ticker), shareReplay())
     this.poolStats$ = this.poolStatsSubject.pipe(filter((poolStats): poolStats is PoolStats => poolStats !== undefined), shareReplay())
-    this.accountStats$ = this.accountStatsSubject.pipe(filter((accountStats): accountStats is AccountStats<OgTopAccount> => accountStats !== undefined), shareReplay())
-    this.rewardStats$ = this.rewardStatsSubject.pipe(filter((rewardStats): rewardStats is RewardStats<RecentlyWonBlock> => rewardStats !== undefined), shareReplay())
+    this.accountStats$ = this.accountStatsSubject.pipe(filter((accountStats): accountStats is AccountStats => accountStats !== undefined), shareReplay())
+    this.rewardStats$ = this.rewardStatsSubject.pipe(filter((rewardStats): rewardStats is RewardStats => rewardStats !== undefined), shareReplay())
     this.recentPayouts$ = this.recentPayoutsSubject.pipe(filter((recentPayouts): recentPayouts is Payout[] => recentPayouts !== undefined), shareReplay())
     this.exchangeStats$ = this.exchangeStatsSubject.pipe(filter((exchangeStats): exchangeStats is RateStats => exchangeStats !== undefined), shareReplay())
-    this.api = new OgApi(poolsProvider.poolIdentifier)
+    if (poolsProvider.pool.type === PoolType.og) {
+      this.api = new OgApi(poolsProvider.poolIdentifier)
+    } else if (poolsProvider.pool.type === PoolType.nft) {
+      this.api = new NftApi(poolsProvider.poolIdentifier)
+    } else {
+      throw new Error(`No api available for type ${poolsProvider.pool.type}`)
+    }
     void this.initStats()
     setInterval(this.updatePoolConfig.bind(this), 60 * 60 * 1000)
     setInterval(this.updatePoolStats.bind(this), 31 * 1000)
@@ -154,19 +160,11 @@ export class StatsService {
     this.poolHistoricalStatsSubject.next(poolHistoricalStats)
   }
 
-  onNewAccountsStats(accountStats: AccountStats<OgTopAccount>) {
-    if (accountStats.topAccounts) {
-      accountStats.topAccounts.forEach(account => {
-        (account as any).pendingRounded = (new BigNumber(account.pending)).decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber()
-        if (account.collateral) {
-          (account as any).collateralRounded = (new BigNumber(account.collateral)).decimalPlaces(12, BigNumber.ROUND_FLOOR).toNumber()
-        }
-      })
-    }
+  onNewAccountsStats(accountStats: AccountStats) {
     this.accountStatsSubject.next(accountStats)
   }
 
-  onNewRewardStats(rewardStats: RewardStats<RecentlyWonBlock>) {
+  onNewRewardStats(rewardStats: RewardStats) {
     this.rewardStatsSubject.next(rewardStats)
   }
 
@@ -182,7 +180,7 @@ export class StatsService {
     return this.api.getAccountList({ page, limit })
   }
 
-  getAccount({ accountIdentifier, bustCache = false }) {
+  public async getAccount({ accountIdentifier, bustCache = false }): Promise<Account> {
     return this.api.getAccount({ accountIdentifier, bustCache })
   }
 
@@ -255,11 +253,11 @@ export class StatsService {
   }
 
   public async leavePool({ accountIdentifier, authToken, leaveForEver }) {
-    return this.requestWithError(this.api.leavePool({ accountIdentifier, authToken, leaveForEver }))
+    return this.requestWithError((this.api as OgApi).leavePool({ accountIdentifier, authToken, leaveForEver }))
   }
 
   public async rejoinPool({ accountIdentifier, authToken }) {
-    return this.requestWithError(this.api.rejoinPool({ accountIdentifier, authToken }))
+    return this.requestWithError((this.api as OgApi).rejoinPool({ accountIdentifier, authToken }))
   }
 
   private async requestWithError<T>(requestPromise: Promise<ApiResponse<T>>): Promise<T> {

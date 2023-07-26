@@ -11,6 +11,7 @@ import {CsvExporter} from '../csv-exporter'
 import {map} from 'rxjs/operators'
 import {EChartsOption} from 'echarts'
 import {StatsService} from '../stats.service'
+import {AccountWonBlock, Remark, RemarkType} from '../api/types/account/account-won-block'
 
 @Component({
   selector: 'app-farmer-won-blocks',
@@ -18,7 +19,7 @@ import {StatsService} from '../stats.service'
   styleUrls: ['./farmer-won-blocks.component.scss']
 })
 export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
-  @Input() wonBlocksObservable: Observable<WonBlock[]>
+  @Input() wonBlocksObservable: Observable<AccountWonBlock[]>
   @Input() isLoading = false
 
   public page = 1
@@ -79,7 +80,7 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
   }
   public chartUpdateOptions: EChartsOption
 
-  private readonly wonBlocksSubject: BehaviorSubject<WonBlock[]> = new BehaviorSubject<WonBlock[]>([])
+  private readonly wonBlocksSubject: BehaviorSubject<AccountWonBlock[]> = new BehaviorSubject<AccountWonBlock[]>([])
   private readonly subscriptions: Subscription[] = []
 
   constructor(
@@ -102,15 +103,15 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
     this.subscriptions.map(subscription => subscription.unsubscribe())
   }
 
-  public trackBlockByHash(index: number, block: WonBlock): string {
+  public trackBlockByHash(index: number, block: AccountWonBlock): string {
     return block.hash
   }
 
-  public getBlockExplorerBlockLink(block: WonBlock): string {
+  public getBlockExplorerBlockLink(block: AccountWonBlock): string {
     return this.statsService.poolConfig?.blockExplorerBlockUrlTemplate.replace('#BLOCK#', block.height.toString()).replace('#HASH#', block.hash)
   }
 
-  public getBlockDate(block: WonBlock): string {
+  public getBlockDate(block: AccountWonBlock): string {
     if (this.configService.wonBlockDateFormatting === DateFormatting.fixed) {
       return moment(block.createdAt).format('YYYY-MM-DD HH:mm')
     } else {
@@ -118,7 +119,7 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
     }
   }
 
-  public getEffortColor(block: WonBlock): string {
+  public getEffortColor(block: AccountWonBlock): string {
     const effort = block.effort
     if (effort === null || effort === undefined) {
       return ''
@@ -127,7 +128,7 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
     return getEffortColor(new BigNumber(effort))
   }
 
-  public getBlockEffort(block: WonBlock): string {
+  public getBlockEffort(block: AccountWonBlock): string {
     if (block.effort === null || block.effort === undefined) {
       return 'N/A'
     }
@@ -196,7 +197,7 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
     ])))
   }
 
-  private makeChartUpdateOptions(wonBlocks: WonBlock[]): EChartsOption {
+  private makeChartUpdateOptions(wonBlocks: AccountWonBlock[]): EChartsOption {
     const wonBlocksWithEffort = wonBlocks.filter(wonBlock => wonBlock.effort !== null)
 
     return {
@@ -221,22 +222,3 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
   }
 }
 
-export type WonBlock = {
-  height: number
-  hash: string
-  effort: number|null
-  createdAt: string
-  remarks: Remark[]
-}
-
-export interface Remark {
-  type: RemarkType
-  meta?: any
-}
-
-enum RemarkType {
-  gigahorseDevFee = 'GIGAHORSE_DEV_FEE',
-  corePoolFarmerReward = 'CORE_POOL_FARMER_REWARD',
-  hpoolFarmerReward = 'HPOOL_FARMER_REWARD',
-  farmerRewardAddressDiffers = 'FARMER_REWARD_ADDRESS_DIFFERS',
-}

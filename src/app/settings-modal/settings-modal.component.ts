@@ -1,7 +1,7 @@
 import {Component, ViewChild} from '@angular/core'
-import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap'
+import {NgbActiveModal, NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap'
 import {AccountService} from '../account.service'
-import {isCheatingOgAccount, isInactiveOgAccount} from '../api/types/account/account'
+import {isCheatingOgAccount, isInactiveOgAccount, isOgAccount} from '../api/types/account/account'
 
 @Component({
   selector: 'app-settings-modal',
@@ -9,7 +9,7 @@ import {isCheatingOgAccount, isInactiveOgAccount} from '../api/types/account/acc
   styleUrls: ['./settings-modal.component.scss']
 })
 export class SettingsModalComponent {
-  @ViewChild('settingsModal') modal
+  @ViewChild('settingsModal') modal: NgbActiveModal
 
   private modalRef: NgbModalRef = null
 
@@ -28,6 +28,6 @@ export class SettingsModalComponent {
     }
     const account = this.accountService.account
 
-    return !isInactiveOgAccount(account) && !isCheatingOgAccount(account)
+    return isOgAccount(account) && !isInactiveOgAccount(account) && !isCheatingOgAccount(account)
   }
 }

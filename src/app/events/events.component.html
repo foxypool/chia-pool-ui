@@ -4,8 +4,8 @@
       {{snippetService.getSnippet('events-component.title')}}:
     </h4>
     <div class="row">
-      <div *ngFor="let event of events" style="padding: 0.5em;">
-        <div class="card" *ngIf="event.type === EVENT_TYPE.EXTRA_BLOCK_REWARD">
+      <div *ngFor="let event of events$ | async" style="padding: 0.5em;">
+        <div class="card" *ngIf="event.type === EventType.extraBlockReward">
           <div class="card-header">
             {{snippetService.getSnippet('events-component.extra-block-reward.title')}}
           </div>
@@ -14,17 +14,17 @@
               <li>
                 {{snippetService.getSnippet('events-component.state')}}: <strong>{{snippetService.getSnippet('events-component.states.' + event.state)}}</strong>
               </li>
-              <li *ngIf="event.startedAt && event.state === EVENT_STATE.UPCOMING">
+              <li *ngIf="event.startedAt && event.state === EventState.upcoming">
                 {{snippetService.getSnippet('events-component.will-start')}}: {{getFormattedDate(event.startedAt)}}
               </li>
-              <li *ngIf="event.startedAt && (event.state === EVENT_STATE.ACTIVE || event.state === EVENT_STATE.ENDED)">
+              <li *ngIf="event.startedAt && (event.state === EventState.active || event.state === EventState.ended)">
                 {{snippetService.getSnippet('events-component.started-at')}}: {{getFormattedDate(event.startedAt)}}
               </li>
               <li *ngIf="event.endedAt">
                 {{snippetService.getSnippet('events-component.ended-at')}}: {{getFormattedDate(event.endedAt)}}
               </li>
               <li>
-                {{snippetService.getSnippet('events-component.extra-reward')}}: {{event.payload.extraReward}} {{ticker}}
+                {{snippetService.getSnippet('events-component.extra-reward')}}: {{event.payload.extraReward}} {{statsService.ticker$ | async}}
               </li>
               <li>
                 <span style="display: inline-table">

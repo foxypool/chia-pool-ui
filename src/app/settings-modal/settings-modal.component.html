@@ -1,7 +1,7 @@
-<ng-template #settingsModal let-modal>
+<ng-template #settingsModal let-dismiss="dismiss">
   <div class="modal-header">
     <h4 class="modal-title" style="color: #474747">Settings</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    <button type="button" class="btn-close" aria-label="Close" (click)="dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
     <div class="row">

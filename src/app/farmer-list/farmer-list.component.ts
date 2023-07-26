@@ -6,7 +6,7 @@ import {StatsService} from '../stats.service'
 import Capacity from '../capacity'
 import * as moment from 'moment'
 import {ActivatedRoute, Router} from '@angular/router'
-import {getAccountIdentifier, OgTopAccount} from '../api/types/account/top-account'
+import {getAccountIdentifier, TopAccount} from '../api/types/account/top-account'
 
 @Component({
   selector: 'app-farmer-list',
@@ -23,7 +23,7 @@ export class FarmerListComponent implements OnDestroy {
   public page = 1
   public total = 0
 
-  private readonly accountsSubject: BehaviorSubject<OgTopAccount[]> = new BehaviorSubject<OgTopAccount[]>([])
+  private readonly accountsSubject: BehaviorSubject<TopAccount[]> = new BehaviorSubject<TopAccount[]>([])
   private readonly isLoadingSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true)
 
   private readonly subscriptions: Subscription[] = [

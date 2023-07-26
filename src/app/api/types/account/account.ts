@@ -70,6 +70,9 @@ export function getAccountIdentifier(account: Account): string {
   if (isOgAccount(account)) {
     return account.poolPublicKey
   }
+  if (isNftAccount(account)) {
+    return account.singleton.genesis
+  }
 
-  return account.singleton.genesis
+  throw new Error('Can not determine account identifier')
 }

@@ -30,7 +30,7 @@ const k32SizeInGib = (new BigNumber(k32SizeInGb)).shiftedBy(9).dividedBy((new Bi
 export class HarvesterCardComponent implements OnInit, OnDestroy {
   @Input() harvester: Harvester
   @Output() updatedHarvester = new EventEmitter<void>()
-  @ViewChild(HarvesterSettingsModalComponent) settingsModal
+  @ViewChild(HarvesterSettingsModalComponent) settingsModal: HarvesterSettingsModalComponent
 
   public nameControl: UntypedFormControl
   public readonly faEllipsisV = faEllipsisV
