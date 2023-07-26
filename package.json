@@ -4,8 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --watch --disable-host-check",
-    "build": "ng build --configuration production",
-    "prebuild": "yarn run bin:generate-env-config",
+    "build": "yarn run bin:generate-env-config && ng build --configuration production",
     "bin:generate-env-config": "node ./bin/generate-env-config.js",
     "update": "ncu -u",
     "lint": "ng lint",
