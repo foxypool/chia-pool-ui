@@ -35,8 +35,8 @@
       </tr>
       <tr *ngFor="let block of recentlyWonBlocks | slice: (page - 1) * pageSize : page * pageSize; trackBy: trackBy">
         <td class="no-wrap">{{getBlockDate(block)}}</td>
-        <td *ngIf="(statsService.poolConfig$ | async).blockExplorerBlockUrlTemplate"><a href="{{getBlockExplorerBlockLink(block)}}" target="_blank" style="color: #b45bff">{{block.height}}</a></td>
-        <td *ngIf="!(statsService.poolConfig$ | async).blockExplorerBlockUrlTemplate">{{block.height}}</td>
+        <td *ngIf="(statsService.poolConfig$ | async)?.blockExplorerBlockUrlTemplate"><a href="{{getBlockExplorerBlockLink(block)}}" target="_blank" style="color: #b45bff">{{block.height}}</a></td>
+        <td *ngIf="!(statsService.poolConfig$ | async)?.blockExplorerBlockUrlTemplate">{{block.height}}</td>
         <td class="no-wrap">{{block.networkSpaceInTib ? getFormattedCapacityFromTiB(block.networkSpaceInTib) : snippetService.getSnippet('general.not-available.short')}}</td>
         <td class="no-wrap"><span [class]="getEffortColor(block)">{{getBlockEffort(block)}}</span></td>
         <td class="ellipsis" *ngIf="block.winner.accountReference">
@@ -45,10 +45,10 @@
         <td class="ellipsis" *ngIf="!block.winner.accountReference">
           {{block.winner.name || block.winner.payoutAddress || snippetService.getSnippet('general.unknown')}}
         </td>
-        <td class="no-wrap">{{block.reward}} {{(statsService.poolConfig$ | async).ticker}}</td>
+        <td class="no-wrap">{{block.reward}} {{statsService.ticker$}}</td>
         <td class="no-wrap" [style.padding-top]="block.distributed ? '12px' : '2px'" [style.padding-bottom]="block.distributed ? '12px' : '8px'">
           {{getBlockDistributedLabel(block)}}
-          <span *ngIf="!block.distributed">({{getBlockConfirms(block)}} / {{(statsService.poolConfig$ | async).blockRewardDistributionDelay}})</span>
+          <span *ngIf="!block.distributed">({{getBlockConfirms(block)}} / {{(statsService.poolConfig$ | async)?.blockRewardDistributionDelay}})</span>
           <ngb-progressbar *ngIf="!block.distributed" [striped]="true" [animated]="true" [type]="getBlockProgressType(block)" [value]="getBlockProgress(block)"></ngb-progressbar>
         </td>
       </tr>
