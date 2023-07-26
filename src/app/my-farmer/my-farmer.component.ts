@@ -310,7 +310,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       .pipe(
         map(([lastAcceptedPartialAt]) => lastAcceptedPartialAt !== undefined ? moment(lastAcceptedPartialAt).fromNow() : 'Never'),
         distinctUntilChanged(),
-        shareReplay()
+        shareReplay(),
       )
     const sharesStream = this.accountService.accountHistoricalStats
       .pipe(
@@ -402,8 +402,12 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         map(balance => balance.toNumber()),
         shareReplay({ refCount: true }),
       )
-    // Add dummy subscribe to trigger stream
-    this.subscriptions.push(this.payoutAddressBalance.subscribe(() => {}))
+
+    // Add dummy subscribes to trigger streams ahead of first use
+    this.subscriptions.push(
+      this.payoutAddressBalance.subscribe(() => {}),
+      this.lastAcceptedPartialAt$.subscribe(() => {}),
+    )
   }
 
   public ngOnDestroy(): void {

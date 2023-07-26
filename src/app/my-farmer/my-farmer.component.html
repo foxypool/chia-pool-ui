@@ -1,20 +1,20 @@
 <div class="row">
-  <div class="col-12" *ngIf="!accountService.haveAccountIdentifier">
+  <div class="col-12" *ngIf="(accountService.haveAccountIdentifier$ | async) === false">
     <div class="d-flex justify-content-center">
       <input type="text" class="form-control" placeholder="{{accountIdentifierInputPlaceholder}}" [(ngModel)]="accountIdentifierInput" style="width: 32em;margin-right: 0.5rem;">
       <button class="btn btn-success" style="margin-left: 0.5rem;" (click)="login()">
-        <fa-icon *ngIf="accountService.isLoading" [icon]="faCircleNotch" animation="spin"></fa-icon>
-        <span *ngIf="accountService.isLoading"> {{snippetService.getSnippet('my-farmer-component.login-button.label-logging-in')}}</span>
-        <span *ngIf="!accountService.isLoading">{{snippetService.getSnippet('my-farmer-component.login-button.label')}}</span>
+        <fa-icon *ngIf="accountService.isLoading$ | async" [icon]="faCircleNotch" animation="spin"></fa-icon>
+        <span *ngIf="accountService.isLoading$ | async"> {{snippetService.getSnippet('my-farmer-component.login-button.label-logging-in')}}</span>
+        <span *ngIf="(accountService.isLoading$ | async) === false">{{snippetService.getSnippet('my-farmer-component.login-button.label')}}</span>
       </button>
     </div>
   </div>
-  <div class="col-12" *ngIf="accountService.haveAccountIdentifier && !accountService.haveAccount && accountService.isLoading">
+  <div class="col-12" *ngIf="(accountService.haveAccountIdentifier$ | async) && (accountService.haveAccount$ | async) === false && accountService.isLoading$ | async">
     <div class="d-flex justify-content-center">
       <app-loading-state></app-loading-state>
     </div>
   </div>
-  <div class="col-12" *ngIf="accountService.haveAccountIdentifier && accountService.haveAccount">
+  <div class="col-12" *ngIf="(accountService.haveAccountIdentifier$ | async) && (accountService.haveAccount$ | async)">
     <div *ngIf="isPoolMember && (accountHasNeverSubmittedAPartial || showNewAccountFarmingAlert)" class="row mb-1 ps-2 pe-2">
       <ngb-alert *ngIf="accountHasNeverSubmittedAPartial" type="primary" class="mb-1 text-center" [dismissible]="false">
         {{accountHasNeverSubmittedPartialsAlertMessage}}
@@ -56,7 +56,7 @@
             >
           </div>
         </div>
-        <div class="fw-light fs-5 text-break">{{accountService.accountIdentifier}}</div>
+        <div class="fw-light fs-5 text-break">{{accountService.accountIdentifier$ | async}}</div>
       </div>
       <div class="col-12 col-md-auto my-auto action-box" *ngIf="!accountService.haveAuthToken">
         <button *ngIf="showAuthenticationButton" class="btn btn-success" (click)="authenticate()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.authenticate')}}</button>
@@ -129,7 +129,8 @@
             <h5>{{snippetService.getSnippet('my-farmer-component.last-partial-accepted-card.title')}}</h5>
           </div>
           <div class="card-body text-align-center card-font-size">
-            {{lastAcceptedPartialAt$ | async}}
+            <app-loading-state *ngIf="(lastAcceptedPartialAt$ | async) === null" width="1" height="1" colorClass="text-light"></app-loading-state>
+            <span>{{lastAcceptedPartialAt$ | async}}</span>
           </div>
         </div>
       </div>

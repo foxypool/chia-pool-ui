@@ -40,7 +40,7 @@ export class GenerateLoginLinkComponent {
   }
 
   private makePoolLoginLink(token: string): string {
-    const poolUrl = this.poolsProvider.pool.url as string
+    const poolUrl = this.poolsProvider.pool.url
     const accountIdentifier = this.accountService.accountIdentifier
 
     return `${poolUrl}/login?account_identifier=${accountIdentifier}&token=${token}`

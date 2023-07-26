@@ -24,53 +24,35 @@ export class AccountService {
   public static accountIdentifierStorageKey = 'accountIdentifier'
   public static authTokenStorageKey = (accountIdentifier: string): string => `authToken:${accountIdentifier}`
 
+  public readonly isLoading$: Observable<boolean>
+  public readonly haveAccount$: Observable<boolean>
+  public readonly haveAccountIdentifier$: Observable<boolean>
+  public readonly accountIdentifier$: Observable<string|null>
   public currentAccountIdentifier: Observable<string>
   public accountSubject = new BehaviorSubject<Account|null>(null)
   public accountHistoricalStats = new BehaviorSubject<AccountHistoricalStat[]>([])
   public accountWonBlocks = new BehaviorSubject<AccountWonBlock[]>([])
   public accountPayouts = new BehaviorSubject<AccountPayout[]>([])
-  public isLoading = false
   public isAuthenticating = false
   public isUpdatingAccount = false
   public isLeavingPool = false
   public isMyFarmerPage = true
 
-  private _accountIdentifier: string = null
-
-  constructor(
-    private readonly statsService: StatsService,
-    private readonly poolsProvider: PoolsProvider,
-    private readonly localStorageService: LocalStorageService,
-    private readonly toastService: ToastService,
-    private readonly snippetService: SnippetService,
-  ) {
-    this.migrateLegacyConfig()
-    this.accountIdentifier = this.accountIdentifierFromLocalStorage
-    this.currentAccountIdentifier = this.accountSubject
-      .asObservable()
-      .pipe(
-        filter(account => account !== null),
-        map(account => getAccountIdentifier(account)),
-        distinctUntilChanged(),
-        shareReplay(),
-      )
-  }
-
-  get account(): Account|null {
+  public get account(): Account|null {
     return this.accountSubject.getValue()
   }
 
-  set account(account: Account|null) {
+  public set account(account: Account|null) {
     this.accountSubject.next(account)
   }
 
-  public get accountIdentifier(): string {
-    return this._accountIdentifier
+  public get accountIdentifier(): string|null {
+    return this.accountIdentifierSubject.getValue()
   }
 
-  public set accountIdentifier(value: string) {
-    this._accountIdentifier = value
-    if (value) {
+  public set accountIdentifier(value: string|null) {
+    this.accountIdentifierSubject.next(value)
+    if (value !== null) {
       Sentry.setUser({ id: value })
     } else {
       Sentry.setUser(null)
@@ -81,8 +63,58 @@ export class AccountService {
     return this.localStorageService.getItem(AccountService.accountIdentifierStorageKey)
   }
 
+  public get haveAccountIdentifier(): boolean {
+    return !!this.accountIdentifier
+  }
+
+  public get haveAccount(): boolean {
+    return this.account !== null
+  }
+
+  public get haveAuthToken(): boolean {
+    return !!this.authToken
+  }
+
+  public get isAuthenticated(): boolean {
+    return this.haveAccountIdentifier && this.haveAuthToken
+  }
+
+  public get isExternalAccountIdentifier(): boolean {
+    return this.accountIdentifier !== this.accountIdentifierFromLocalStorage
+  }
+
+  private readonly accountIdentifierSubject: BehaviorSubject<string|null> = new BehaviorSubject<string|null>(null)
+  private readonly isLoadingSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
+
+  private set isLoading(isLoading: boolean) {
+    this.isLoadingSubject.next(isLoading)
+  }
+
   private get authToken(): string|null {
     return this.localStorageService.getItem(AccountService.authTokenStorageKey(this.accountIdentifier))
+  }
+
+  constructor(
+    private readonly statsService: StatsService,
+    private readonly poolsProvider: PoolsProvider,
+    private readonly localStorageService: LocalStorageService,
+    private readonly toastService: ToastService,
+    private readonly snippetService: SnippetService,
+  ) {
+    this.accountIdentifier$ = this.accountIdentifierSubject.pipe(distinctUntilChanged(), shareReplay())
+    this.haveAccountIdentifier$ = this.accountIdentifier$.pipe(map(identifier => identifier !== null), distinctUntilChanged(), shareReplay())
+    this.haveAccount$ = this.accountSubject.pipe(map(account => account !== null), distinctUntilChanged(), shareReplay())
+    this.isLoading$ = this.isLoadingSubject.pipe(distinctUntilChanged(), shareReplay())
+    this.migrateLegacyConfig()
+    this.accountIdentifier = this.accountIdentifierFromLocalStorage
+    this.currentAccountIdentifier = this.accountSubject
+      .asObservable()
+      .pipe(
+        filter(account => account !== null),
+        map(account => getAccountIdentifier(account)),
+        distinctUntilChanged(),
+        shareReplay(),
+      )
   }
 
   async login({ accountIdentifier }): Promise<boolean> {
@@ -186,26 +218,6 @@ export class AccountService {
 
   removeAuthTokenFromLocalStorage(): void {
     this.localStorageService.removeItem(AccountService.authTokenStorageKey(this.accountIdentifier))
-  }
-
-  public get haveAccountIdentifier(): boolean {
-    return !!this.accountIdentifier
-  }
-
-  get haveAccount(): boolean {
-    return this.account !== null
-  }
-
-  get haveAuthToken(): boolean {
-    return !!this.authToken
-  }
-
-  get isAuthenticated(): boolean {
-    return this.haveAccountIdentifier && this.haveAuthToken
-  }
-
-  public get isExternalAccountIdentifier(): boolean {
-    return this.accountIdentifier !== this.accountIdentifierFromLocalStorage
   }
 
   async updateAccount({ bustCache = false } = {}) {
