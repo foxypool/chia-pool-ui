@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import {BehaviorSubject} from 'rxjs'
+import {BehaviorSubject, Observable} from 'rxjs'
 import {BigNumber} from 'bignumber.js'
 import * as moment from 'moment'
 
@@ -13,25 +13,71 @@ import {PoolHistoricalStat} from './api/types/pool/pool-historical-stat'
 import {AccountStats} from './api/types/account/account-stats'
 import {OgTopAccount} from './api/types/account/top-account'
 import {ApiResponse, isErrorResponse} from './api/types/api-response'
+import {filter, map, shareReplay} from 'rxjs/operators'
+import { RewardStats, RecentlyWonBlock } from './api/types/pool/reward-stats'
+import { Payout } from './api/types/pool/payout'
+import { RateStats } from './api/types/pool/rate-stats'
 
 @Injectable({
   providedIn: 'root'
 })
 export class StatsService {
-  public poolConfig = new BehaviorSubject<any>({})
   public coinConfig = configForCoin('CHIA')
-  public poolStats = new BehaviorSubject<any>({})
-  public poolHistoricalStats = new BehaviorSubject<any>([])
-  public accountStats = new BehaviorSubject<any>({})
-  public rewardStats = new BehaviorSubject<any>({})
-  public lastPayouts = new BehaviorSubject<any>(null)
-  public exchangeStats = new BehaviorSubject<any>({})
+
+  public readonly ticker$: Observable<string>
+
+  public get poolConfig(): PoolConfig | undefined {
+    return this.poolConfigSubject.getValue()
+  }
+
+  public readonly poolConfig$: Observable<PoolConfig>
+  public readonly poolConfigSubject: BehaviorSubject<PoolConfig | undefined> = new BehaviorSubject<PoolConfig | undefined>(undefined)
+
+  public get poolStats(): PoolStats | undefined {
+    return this.poolStatsSubject.getValue()
+  }
+
+  public readonly poolStats$: Observable<PoolStats>
+  public readonly poolStatsSubject: BehaviorSubject<PoolStats | undefined> = new BehaviorSubject<PoolStats | undefined>(undefined)
+
+  public readonly poolHistoricalStatsSubject: BehaviorSubject<PoolHistoricalStat[]> = new BehaviorSubject<PoolHistoricalStat[]>([])
+
+  public get accountStats(): AccountStats<OgTopAccount> | undefined {
+    return this.accountStatsSubject.getValue()
+  }
+
+  public readonly accountStats$: Observable<AccountStats<OgTopAccount>>
+  public readonly accountStatsSubject: BehaviorSubject<AccountStats<OgTopAccount> | undefined> = new BehaviorSubject<AccountStats<OgTopAccount> | undefined>(undefined)
+
+  public get rewardStats(): RewardStats<RecentlyWonBlock> | undefined {
+    return this.rewardStatsSubject.getValue()
+  }
+
+  public readonly rewardStats$: Observable<RewardStats<RecentlyWonBlock>>
+  public readonly rewardStatsSubject: BehaviorSubject<RewardStats<RecentlyWonBlock> | undefined> = new BehaviorSubject<RewardStats<RecentlyWonBlock> | undefined>(undefined)
+
+  public get recentPayouts(): Payout[] | undefined {
+    return this.recentPayoutsSubject.getValue()
+  }
+
+  public readonly recentPayouts$: Observable<Payout[]>
+  public readonly recentPayoutsSubject: BehaviorSubject<Payout[] | undefined> = new BehaviorSubject<Payout[] | undefined>(undefined)
+
+  public readonly exchangeStats$: Observable<RateStats>
+  public readonly exchangeStatsSubject: BehaviorSubject<RateStats|undefined> = new BehaviorSubject<RateStats|undefined>(undefined)
   private readonly api: OgApi
 
   constructor(
     private readonly snippetService: SnippetService,
     poolsProvider: PoolsProvider,
   ) {
+    this.poolConfig$ = this.poolConfigSubject.pipe(filter((poolConfig): poolConfig is PoolConfig => poolConfig !== undefined), shareReplay())
+    this.ticker$ = this.poolConfig$.pipe(map(poolConfig => poolConfig.ticker), shareReplay())
+    this.poolStats$ = this.poolStatsSubject.pipe(filter((poolStats): poolStats is PoolStats => poolStats !== undefined), shareReplay())
+    this.accountStats$ = this.accountStatsSubject.pipe(filter((accountStats): accountStats is AccountStats<OgTopAccount> => accountStats !== undefined), shareReplay())
+    this.rewardStats$ = this.rewardStatsSubject.pipe(filter((rewardStats): rewardStats is RewardStats<RecentlyWonBlock> => rewardStats !== undefined), shareReplay())
+    this.recentPayouts$ = this.recentPayoutsSubject.pipe(filter((recentPayouts): recentPayouts is Payout[] => recentPayouts !== undefined), shareReplay())
+    this.exchangeStats$ = this.exchangeStatsSubject.pipe(filter((exchangeStats): exchangeStats is RateStats => exchangeStats !== undefined), shareReplay())
     this.api = new OgApi(poolsProvider.poolIdentifier)
     void this.initStats()
     setInterval(this.updatePoolConfig.bind(this), 60 * 60 * 1000)
@@ -56,7 +102,7 @@ export class StatsService {
   }
 
   async initStats() {
-   await Promise.all([
+    await Promise.all([
       this.updatePoolConfig(),
       this.updatePoolStats(),
       this.updatePoolHistoricalStats(),
@@ -96,16 +142,16 @@ export class StatsService {
   }
 
   onNewPoolConfig(poolConfig: PoolConfig) {
-    this.poolConfig.next(poolConfig)
+    this.poolConfigSubject.next(poolConfig)
     this.coinConfig = configForCoin(poolConfig.coin)
   }
 
   onNewPoolStats(poolStats: PoolStats) {
-    this.poolStats.next(poolStats)
+    this.poolStatsSubject.next(poolStats)
   }
 
   onNewPoolHistoricalStats(poolHistoricalStats: PoolHistoricalStat[]) {
-    this.poolHistoricalStats.next(poolHistoricalStats)
+    this.poolHistoricalStatsSubject.next(poolHistoricalStats)
   }
 
   onNewAccountsStats(accountStats: AccountStats<OgTopAccount>) {
@@ -117,19 +163,19 @@ export class StatsService {
         }
       })
     }
-    this.accountStats.next(accountStats)
+    this.accountStatsSubject.next(accountStats)
   }
 
-  onNewRewardStats(rewardStats) {
-    this.rewardStats.next(rewardStats)
+  onNewRewardStats(rewardStats: RewardStats<RecentlyWonBlock>) {
+    this.rewardStatsSubject.next(rewardStats)
   }
 
-  onNewLastPayouts(lastPayouts) {
-    this.lastPayouts.next(lastPayouts)
+  onNewLastPayouts(lastPayouts: Payout[]) {
+    this.recentPayoutsSubject.next(lastPayouts)
   }
 
-  onNewExchangeStats(exchangeStats) {
-    this.exchangeStats.next(exchangeStats)
+  onNewExchangeStats(exchangeStats: RateStats) {
+    this.exchangeStatsSubject.next(exchangeStats)
   }
 
   public async getAccounts({ page, limit}: { page: number, limit: number}) {

@@ -48,7 +48,7 @@
     <button type="button" class="btn btn-success w-100" (click)="updatePayoutOptions()" [disabled]="!canUpdatePayoutOptions">
       <span *ngIf="accountService.isUpdatingAccount">Applying</span>
       <span *ngIf="!accountService.isUpdatingAccount">Apply changes</span>
-      <fa-icon [icon]="faCircleNotch" [spin]="true" *ngIf="accountService.isUpdatingAccount" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
+      <fa-icon [icon]="faCircleNotch" animation="spin" *ngIf="accountService.isUpdatingAccount" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
     </button>
   </div>
 </div>

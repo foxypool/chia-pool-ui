@@ -1,4 +1,7 @@
-export interface Notice {}
+export interface Notice {
+  date: string
+  text: string
+}
 
 export interface PoolConfig {
   poolUrl: string

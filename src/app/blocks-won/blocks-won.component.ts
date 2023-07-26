@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy} from '@angular/core'
+import {Component, Input} from '@angular/core'
 import {StatsService} from '../stats.service'
 import * as moment from 'moment'
 import Capacity from '../capacity'
@@ -7,79 +7,29 @@ import {faCubes, faRightLeft} from '@fortawesome/free-solid-svg-icons'
 import {getEffortColor} from '../util'
 import BigNumber from 'bignumber.js'
 import {ConfigService, DateFormatting} from '../config.service'
-import {Subscription} from 'rxjs'
+import {RecentlyWonBlock} from '../api/types/pool/reward-stats'
 
 @Component({
   selector: 'app-blocks-won',
   templateUrl: './blocks-won.component.html',
   styleUrls: ['./blocks-won.component.scss']
 })
-export class BlocksWonComponent implements OnDestroy {
-
+export class BlocksWonComponent {
   @Input() limit: number|null = null
-  private _poolConfig:any = {}
-  private _poolStats:any = {}
-  public rewardStats:any = {}
 
-  public faCubes = faCubes
-  public faRightLeft = faRightLeft
+  public readonly faCubes = faCubes
+  public readonly faRightLeft = faRightLeft
   public page = 1
   public pageSize = 25
 
-  private readonly subscriptions: Subscription[] = [
-    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig)),
-    this.statsService.poolStats.asObservable().subscribe((poolStats => this.poolStats = poolStats)),
-    this.statsService.rewardStats.asObservable().subscribe((rewardStats => this.rewardStats = rewardStats)),
-  ]
-
-  constructor(
-    private readonly statsService: StatsService,
+  public constructor(
+    public readonly statsService: StatsService,
     private readonly _snippetService: SnippetService,
     private readonly configService: ConfigService,
   ) {}
 
-  public ngOnDestroy(): void {
-    this.subscriptions.map(subscription => subscription.unsubscribe())
-  }
-
   get snippetService(): SnippetService {
     return this._snippetService
-  }
-
-  get dr() {
-    return null
-  }
-
-  get distributionRatios() {
-    if (!this.poolStats || !this.poolStats.distributionRatios) {
-      return []
-    }
-
-    return this.poolStats.distributionRatios
-  }
-
-  get distributionRatiosWithNull() {
-    return [null].concat(this.distributionRatios)
-  }
-
-  get distributionRatiosLength() {
-    return this.distributionRatios.length
-  }
-
-  set poolConfig(poolConfig) {
-    this._poolConfig = poolConfig
-  }
-
-  get poolConfig() {
-    return this._poolConfig
-  }
-
-  set poolStats(stats) {
-    this._poolStats = stats
-  }
-
-  get poolStats() {
-    return this._poolStats
   }
 
   get recentlyWonBlocks() {
@@ -92,17 +42,8 @@ export class BlocksWonComponent implements OnDestroy {
     return recentlyWonBlocks.slice(0, this.limit)
   }
 
-  get recentlyWonBlocksUnfiltered() {
-    if (!this.rewardStats.recentlyWonBlocks) {
-      return []
-    }
-
-    let recentlyWonBlocks = this.rewardStats.recentlyWonBlocks
-    if (this.dr && this.distributionRatiosLength > 1) {
-      recentlyWonBlocks = recentlyWonBlocks.filter(wonBlock => wonBlock.distributionRatio === this.dr)
-    }
-
-    return recentlyWonBlocks
+  private get recentlyWonBlocksUnfiltered(): RecentlyWonBlock[] {
+    return this.statsService.rewardStats?.recentlyWonBlocks ?? []
   }
 
   getBlockDate(block): string {
@@ -124,21 +65,21 @@ export class BlocksWonComponent implements OnDestroy {
   }
 
   getBlockExplorerBlockLink(block) {
-    return this.poolConfig.blockExplorerBlockUrlTemplate.replace('#BLOCK#', block.height).replace('#HASH#', block.hash)
+    return this.statsService.poolConfig?.blockExplorerBlockUrlTemplate.replace('#BLOCK#', block.height).replace('#HASH#', block.hash)
   }
 
   getBlockConfirms(block) {
-    if (!this.poolStats.height) {
+    if (this.statsService.poolStats === undefined || this.statsService.poolConfig === undefined) {
       return 0
     }
 
-    return Math.min(Math.max(this.poolStats.height - block.height - 1, 0), this.poolConfig.blockRewardDistributionDelay)
+    return Math.min(Math.max(this.statsService.poolStats.height - block.height - 1, 0), this.statsService.poolConfig.blockRewardDistributionDelay ?? 0)
   }
 
   getBlockProgress(round) {
     const confirms = this.getBlockConfirms(round)
 
-    return (confirms / this.poolConfig.blockRewardDistributionDelay) * 100
+    return (confirms / this.statsService.poolConfig?.blockRewardDistributionDelay ?? 1) * 100
   }
 
   getBlockProgressType(block) {
@@ -182,7 +123,7 @@ export class BlocksWonComponent implements OnDestroy {
     return getEffortColor(new BigNumber(effort))
   }
 
-  trackBy(index, block) {
+  public trackBy(index: number, block: RecentlyWonBlock): string {
     return block.hash
   }
 

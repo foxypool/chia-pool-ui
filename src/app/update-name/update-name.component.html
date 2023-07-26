@@ -19,7 +19,7 @@
       <span *ngIf="accountService.isUpdatingAccount">{{snippetService.getSnippet('update-name-modal.updating')}}</span>
       <span *ngIf="!accountService.isUpdatingAccount && (newNameOrUndefined || !accountHasName)">{{snippetService.getSnippet('update-name-modal.update-name')}}</span>
       <span *ngIf="!accountService.isUpdatingAccount && !newNameOrUndefined && accountHasName">{{snippetService.getSnippet('update-name-modal.remove-name')}}</span>
-      <fa-icon [icon]="faCircleNotch" [spin]="true" *ngIf="accountService.isUpdatingAccount" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
+      <fa-icon [icon]="faCircleNotch" animation="spin" *ngIf="accountService.isUpdatingAccount" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
     </button>
   </div>
 </div>

@@ -30,7 +30,7 @@
     <button type="button" class="btn btn-success w-100" (click)="updateNotificationSettings()" [disabled]="!canUpdateNotificationSettings">
       <span *ngIf="isUpdating">Saving</span>
       <span *ngIf="!isUpdating">Apply changes</span>
-      <fa-icon [icon]="faCircleNotch" [spin]="true" *ngIf="isUpdating" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
+      <fa-icon [icon]="faCircleNotch" animation="spin" *ngIf="isUpdating" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
     </button>
   </div>
 </div>

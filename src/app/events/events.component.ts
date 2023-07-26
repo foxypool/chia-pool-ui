@@ -3,6 +3,7 @@ import {StatsService} from '../stats.service'
 import {SnippetService} from '../snippet.service'
 import * as moment from 'moment'
 import {Subscription} from 'rxjs'
+import {Event} from '../api/types/pool/pool-stats'
 
 @Component({
   selector: 'app-events',
@@ -18,12 +19,12 @@ export class EventsComponent implements OnInit, OnDestroy {
     ACTIVE: 'active',
     ENDED: 'ended',
   }
-  public events = []
-  public ticker = ''
+  public events: Event[] = []
+  public ticker: string = ''
 
   private readonly subscriptions: Subscription[] = [
-    this.statsService.poolStats.asObservable().subscribe(poolStats => this.events = poolStats.events),
-    this.statsService.poolConfig.asObservable().subscribe(poolConfig => this.ticker = poolConfig.ticker),
+    this.statsService.poolStats$.subscribe(poolStats => this.events = poolStats.events),
+    this.statsService.poolConfig$.subscribe(poolConfig => this.ticker = poolConfig.ticker),
   ]
 
   constructor(
@@ -32,10 +33,8 @@ export class EventsComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit(): void {
-    const poolStats = this.statsService.poolStats.getValue()
-    this.events = poolStats ? (poolStats.events || []) : []
-    const poolConfig = this.statsService.poolConfig.getValue()
-    this.ticker = poolConfig ? (poolConfig.ticker || '') : ''
+    this.events = this.statsService.poolStats?.events ?? []
+    this.ticker = this.statsService.poolConfig?.ticker ?? ''
   }
 
   public ngOnDestroy(): void {

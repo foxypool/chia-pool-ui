@@ -121,7 +121,6 @@ export default {
   'my-farmer-component.pool-public-key-card.title': 'Pool Public Key',
   'my-farmer-component.payout-address-card.title': 'Payout Address',
   'my-farmer-component.pending-balance-card.title': 'Pending balance',
-  'my-farmer-component.pool-pk-input.error.missing': 'No pool public key entered!',
   'my-farmer-component.pool-pk-input.placeholder': 'Pool Public Key',
   'my-farmer-component.rejoin-pool.success': 'Successfully rejoined the pool',
   'my-farmer-component.ec-chart.title': 'Effective Capacity',

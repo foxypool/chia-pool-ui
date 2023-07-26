@@ -15,7 +15,7 @@ const routes: Routes = [
   { path: 'top-accounts', component: TopAccountsComponent, pathMatch: 'full', data: { titlePrefixSnippet: 'top-accounts' } },
   { path: 'my-farmer', component: MyFarmerComponent, pathMatch: 'full', data: { titlePrefixSnippet: 'my-farmer' } },
   { path: 'farmers', component: FarmerListComponent, pathMatch: 'full', data: { titlePrefixSnippet: 'farmers' } },
-  { path: 'farmer/:poolPublicKey', component: MyFarmerComponent, pathMatch: 'full', data: { titlePrefixSnippet: 'farmer' } },
+  { path: 'farmer/:accountIdentifier', component: MyFarmerComponent, pathMatch: 'full', data: { titlePrefixSnippet: 'farmer' } },
   { path: 'notices', loadChildren: () => import('./notices/notices.module').then(m => m.NoticesModule) },
   { path: 'events', loadChildren: () => import('./events/events.module').then(m => m.EventsModule) },
   { path: 'login', redirectTo: 'my-farmer' },

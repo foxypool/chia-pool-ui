@@ -1,122 +1,78 @@
-import {Component, OnDestroy, OnInit} from '@angular/core'
-import {interval, Observable, Subscription} from 'rxjs'
+import {Component} from '@angular/core'
 import {StatsService} from '../stats.service'
-import * as moment from 'moment'
 import Capacity from '../capacity'
 import {SnippetService} from '../snippet.service'
 import {RatesService} from '../rates.service'
-import BigNumber from 'bignumber.js'
+import {BigNumber} from 'bignumber.js'
 import {getEffortColor} from '../util'
 import {faInfoCircle} from '@fortawesome/free-solid-svg-icons'
+import {Observable} from 'rxjs'
+import {map, shareReplay} from 'rxjs/operators'
 
 @Component({
   selector: 'app-stats-card',
   templateUrl: './stats-card.component.html',
   styleUrls: ['./stats-card.component.scss']
 })
-export class StatsCardComponent implements OnDestroy {
-  public faInfoCircle = faInfoCircle
+export class StatsCardComponent {
+  public readonly faInfoCircle = faInfoCircle
+  public readonly heightInfo$: Observable<string>
 
-  private _poolConfig:any = {}
-  private _poolStats:any = {}
-  public accountStats:any = {}
-  public rewardStats:any = {}
-
-  private readonly subscriptions: Subscription[] = [
-    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig)),
-    this.statsService.poolStats.asObservable().subscribe((poolStats => this.poolStats = poolStats)),
-    this.statsService.accountStats.asObservable().subscribe((accountStats => this.accountStats = accountStats)),
-    this.statsService.rewardStats.asObservable().subscribe((rewardStats => this.rewardStats = rewardStats)),
-  ]
-
-  constructor(
-    private readonly statsService: StatsService,
-    private readonly _snippetService: SnippetService,
-    public ratesService: RatesService,
-  ) {}
-
-  public ngOnDestroy(): void {
-    this.subscriptions.map(subscription => subscription.unsubscribe())
+  public get areAccountStatsLoading(): boolean {
+    return this.statsService.accountStats === undefined
   }
 
-  get snippetService(): SnippetService {
-    return this._snippetService
+  public get areRewardStatsLoading(): boolean {
+    return this.statsService.rewardStats === undefined
   }
 
-  set poolConfig(poolConfig) {
-    this._poolConfig = poolConfig
+  public get isPoolConfigLoading(): boolean {
+    return this.statsService.poolConfig === undefined
   }
 
-  get poolConfig() {
-    return this._poolConfig
+  public get arePoolStatsLoading(): boolean {
+    return this.statsService.poolStats === undefined
   }
 
-  set poolStats(stats) {
-    this._poolStats = stats
-  }
-
-  get poolStats() {
-    return this._poolStats
-  }
-
-  get accountStatsLoading() {
-    return this.accountStats.accountsWithShares === undefined
-  }
-
-  get rewardStatsLoading() {
-    return this.rewardStats.dailyRewardPerPiB === undefined
-  }
-
-  get poolConfigLoading() {
-    return this.poolConfig.ticker === undefined
-  }
-
-  get poolStatsLoading() {
-    return this.poolStats.networkSpaceInTiB === undefined
-  }
-
-  getFormattedCapacityFromTiB(capacityInTiB) {
-    return Capacity.fromTiB(capacityInTiB).toString()
-  }
-
-  getFormattedCapacityFromGiB(capacityInGiB) {
-    return new Capacity(capacityInGiB).toString()
-  }
-
-  get dailyRewardPerPiB() {
-    if (!this.rewardStats || !this.rewardStats.dailyRewardPerPiB) {
+  public get dailyRewardPerPiB(): number {
+    if (this.statsService.rewardStats === undefined) {
       return 0
     }
 
-    return this.rewardStats.dailyRewardPerPiB || 0
+    return this.statsService.rewardStats.dailyRewardPerPiB
   }
 
-  get dailyRewardPerPiBFormatted() {
+  public get networkSpaceInTiB(): string {
+    if (this.statsService.poolStats === undefined) {
+      return '0'
+    }
+
+    return this.statsService.poolStats.networkSpaceInTiB
+  }
+
+  public get dailyRewardPerPiBFormatted(): string {
     return this.dailyRewardPerPiB.toFixed(2)
   }
 
-  get networkSpaceInTiB() {
-    if (!this.poolStats || !this.poolStats.networkSpaceInTiB) {
-      return 0
+  public get currentEffort(): BigNumber | null {
+    if (this.isPoolConfigLoading || this.areRewardStatsLoading || this.areAccountStatsLoading) {
+      return null
     }
-
-    return this.poolStats.networkSpaceInTiB
-  }
-
-  get currentEffort(): BigNumber | null {
-    if (!this.rewardStats.recentlyWonBlocks || this.rewardStats.recentlyWonBlocks.length === 0 || !this.poolStats.networkSpaceInTiB || !this.poolStats.height || !this.accountStats.ecSum) {
+    const rewardStats = this.statsService.rewardStats
+    const accountStats = this.statsService.accountStats
+    if (rewardStats.recentlyWonBlocks.length === 0 || accountStats.ecSum === 0) {
       return null
     }
 
-    const lastWonBlockHeight = this.rewardStats.recentlyWonBlocks[0].height
-    const passedBlocks = this.poolStats.height - lastWonBlockHeight
-    const chanceToWinABlock = (new BigNumber(this.accountStats.ecSum)).dividedBy(1024).dividedBy(this.poolStats.networkSpaceInTiB)
+    const lastWonBlockHeight = rewardStats.recentlyWonBlocks[0].height
+    const passedBlocks = this.statsService.poolStats.height - lastWonBlockHeight
+    const chanceToWinABlock = (new BigNumber(accountStats.ecSum)).dividedBy(1024).dividedBy(this.statsService.poolStats.networkSpaceInTiB)
     const blockCountFor100PercentEffort = new BigNumber(1).dividedBy(chanceToWinABlock)
 
     return (new BigNumber(passedBlocks)).dividedBy(blockCountFor100PercentEffort)
   }
 
-  get currentEffortFormatted() {
+  public get currentEffortFormatted(): string {
     const effort = this.currentEffort
     if (effort === null) {
       return 'N/A'
@@ -125,15 +81,15 @@ export class StatsCardComponent implements OnDestroy {
     return `${effort.multipliedBy(100).toFixed(2)} %`
   }
 
-  get averageEffort() {
-    if (this.rewardStats.averageEffort === undefined || this.rewardStats.averageEffort === null) {
+  public get averageEffort(): BigNumber|null {
+    if (this.statsService.rewardStats === undefined || this.statsService.rewardStats.averageEffort === null) {
       return null
     }
 
-    return new BigNumber(this.rewardStats.averageEffort)
+    return new BigNumber(this.statsService.rewardStats.averageEffort)
   }
 
-  get averageEffortFormatted() {
+  public get averageEffortFormatted(): string {
     const effort = this.averageEffort
     if (effort === null) {
       return 'N/A'
@@ -142,7 +98,27 @@ export class StatsCardComponent implements OnDestroy {
     return `${effort.multipliedBy(100).toFixed(2)} %`
   }
 
-  getEffortColor(effort) {
+  constructor(
+    public readonly statsService: StatsService,
+    private readonly _snippetService: SnippetService,
+    public ratesService: RatesService,
+  ) {
+    this.heightInfo$ = this.statsService.poolStatsSubject.pipe(map(stats => stats?.height.toString() ?? 'N/A'), shareReplay())
+  }
+
+  public get snippetService(): SnippetService {
+    return this._snippetService
+  }
+
+  public getFormattedCapacityFromTiB(capacityInTiB): string {
+    return Capacity.fromTiB(capacityInTiB).toString()
+  }
+
+  public getFormattedCapacityFromGiB(capacityInGiB): string {
+    return new Capacity(capacityInGiB).toString()
+  }
+
+  public getEffortColor(effort): string {
     return getEffortColor(effort)
   }
 }

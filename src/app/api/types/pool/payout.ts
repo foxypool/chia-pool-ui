@@ -14,6 +14,7 @@ export interface PayoutTransaction {
 }
 
 export interface Payout {
+  _id: string
   state: PayoutState
   transactions: PayoutTransaction[]
   createdAt: string

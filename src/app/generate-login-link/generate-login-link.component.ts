@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component } from '@angular/core'
 import {faCircleNotch} from '@fortawesome/free-solid-svg-icons'
 import {BehaviorSubject, Observable} from 'rxjs'
 import {shareReplay} from 'rxjs/operators'
@@ -41,7 +41,7 @@ export class GenerateLoginLinkComponent {
 
   private makePoolLoginLink(token: string): string {
     const poolUrl = this.poolsProvider.pool.url as string
-    const accountIdentifier = this.accountService.poolPublicKey
+    const accountIdentifier = this.accountService.accountIdentifier
 
     return `${poolUrl}/login?account_identifier=${accountIdentifier}&token=${token}`
   }

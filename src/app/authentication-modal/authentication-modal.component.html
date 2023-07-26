@@ -41,7 +41,7 @@
     <button type="button" class="btn btn-success" (click)="authenticate()" [disabled]="accountService.isAuthenticating || !signature">
       <span *ngIf="accountService.isAuthenticating">{{snippetService.getSnippet('authentication-modal.authenticating')}}</span>
       <span *ngIf="!accountService.isAuthenticating">{{snippetService.getSnippet('authentication-modal.authenticate')}}</span>
-      <fa-icon [icon]="faCircleNotch" [spin]="true" *ngIf="accountService.isAuthenticating" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
+      <fa-icon [icon]="faCircleNotch" animation="spin" *ngIf="accountService.isAuthenticating" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
     </button>
   </div>
 </ng-template>

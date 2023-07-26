@@ -27,5 +27,5 @@ export interface NftRecentlyWonBlock extends RecentlyWonBlock {
 export interface RewardStats<RecentlyWonBlockType extends RecentlyWonBlock> {
   recentlyWonBlocks: RecentlyWonBlockType[]
   dailyRewardPerPiB: number
-  averageEffort: number
+  averageEffort: number|null
 }

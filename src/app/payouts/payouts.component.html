@@ -15,32 +15,32 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngIf="!lastPayouts">
+      <tr *ngIf="(statsService.recentPayouts$ | async) === null">
         <td colspan="4" style="text-align: center">
           <app-loading-state></app-loading-state>
         </td>
       </tr>
-      <tr *ngIf="lastPayouts && lastPayouts.length === 0">
+      <tr *ngIf="recentPayouts.length === 0">
         <td colspan="4" style="text-align: center; padding-top: 1rem">
           <app-empty-state [text]="snippetService.getSnippet('payouts-component.no-payouts-sent-yet')" [icon]="faMoneyCheck"></app-empty-state>
         </td>
       </tr>
-      <tr *ngFor="let payout of lastPayoutsArray; trackBy: trackPayoutBy">
+      <tr *ngFor="let payout of recentPayouts; trackBy: trackPayoutBy">
         <td class="no-wrap">{{getPayoutDate(payout)}}</td>
         <td class="no-wrap">
       <span *ngFor="let coinId of getCoinIdsForPayout(payout); let lastCoinId = last">
-        <a *ngIf="poolConfig.blockExplorerCoinUrlTemplate" href="{{getBlockExplorerCoinLink(coinId)}}" target="_blank" style="color: #b45bff">{{coinId}}</a>
-        <span *ngIf="!poolConfig.blockExplorerCoinUrlTemplate">{{coinId}}</span>
+        <a *ngIf="(statsService.poolConfig$ | async)?.blockExplorerCoinUrlTemplate" href="{{getBlockExplorerCoinLink(coinId)}}" target="_blank" style="color: #b45bff">{{coinId}}</a>
+        <span *ngIf="!(statsService.poolConfig$ | async)?.blockExplorerCoinUrlTemplate">{{coinId}}</span>
         <span *ngIf="!splitMultiPayoutsByBreak && !lastCoinId">, </span>
         <br *ngIf="splitMultiPayoutsByBreak && !lastCoinId">
       </span>
         </td>
         <td class="no-wrap">
-          <span (click)="toggleShowPayout(payout)">{{getTotalPayout(payout.transactions)}} {{poolConfig.ticker}}</span>
+          <span (click)="toggleShowPayout(payout)">{{getTotalPayout(payout.transactions)}} {{statsService.ticker$ | async}}</span>
           <span *ngIf="showPayout(payout._id)">
         <span *ngFor="let data of getAddressAmountPairs(payout._id)">
           <br>
-          {{data.address}}: {{data.amount}} {{poolConfig.ticker}}
+          {{data.address}}: {{data.amount}} {{statsService.ticker$ | async}}
         </span>
       </span>
         </td>

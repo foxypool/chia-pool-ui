@@ -10,6 +10,7 @@ import {getEffortColor, getEffortColorForChart} from '../util'
 import {CsvExporter} from '../csv-exporter'
 import {map} from 'rxjs/operators'
 import {EChartsOption} from 'echarts'
+import {StatsService} from '../stats.service'
 
 @Component({
   selector: 'app-farmer-won-blocks',
@@ -19,10 +20,6 @@ import {EChartsOption} from 'echarts'
 export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
   @Input() wonBlocksObservable: Observable<WonBlock[]>
   @Input() isLoading = false
-  @Input() poolConfig = {
-    blockExplorerBlockUrlTemplate: null,
-    ticker: '',
-  }
 
   public page = 1
   public pageSize = 10
@@ -86,7 +83,8 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
   private readonly subscriptions: Subscription[] = []
 
   constructor(
-    public snippetService: SnippetService,
+    public readonly snippetService: SnippetService,
+    public readonly statsService: StatsService,
     private readonly configService: ConfigService,
     private readonly csvExporter: CsvExporter,
   ) {}
@@ -109,7 +107,7 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
   }
 
   public getBlockExplorerBlockLink(block: WonBlock): string {
-    return this.poolConfig.blockExplorerBlockUrlTemplate.replace('#BLOCK#', block.height).replace('#HASH#', block.hash)
+    return this.statsService.poolConfig?.blockExplorerBlockUrlTemplate.replace('#BLOCK#', block.height.toString()).replace('#HASH#', block.hash)
   }
 
   public getBlockDate(block: WonBlock): string {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core'
 import axios, {AxiosInstance} from 'axios'
 import {BigNumber} from 'bignumber.js'
 import {TtlCache} from './ttl-cache'

@@ -1,20 +1,20 @@
 <div class="row">
-  <div class="col-12" *ngIf="!accountService.havePoolPublicKey">
+  <div class="col-12" *ngIf="!accountService.haveAccountIdentifier">
     <div class="d-flex justify-content-center">
-      <input type="text" class="form-control" placeholder="{{snippetService.getSnippet('my-farmer-component.pool-pk-input.placeholder')}}" [(ngModel)]="poolPublicKeyInput" style="width: 32em;margin-right: 0.5rem;">
+      <input type="text" class="form-control" placeholder="{{snippetService.getSnippet('my-farmer-component.pool-pk-input.placeholder')}}" [(ngModel)]="accountIdentifierInput" style="width: 32em;margin-right: 0.5rem;">
       <button class="btn btn-success" style="margin-left: 0.5rem;" (click)="login()">
-        <fa-icon *ngIf="accountService.isLoading" [icon]="faCircleNotch" [spin]="true"></fa-icon>
+        <fa-icon *ngIf="accountService.isLoading" [icon]="faCircleNotch" animation="spin"></fa-icon>
         <span *ngIf="accountService.isLoading"> {{snippetService.getSnippet('my-farmer-component.login-button.label-logging-in')}}</span>
         <span *ngIf="!accountService.isLoading">{{snippetService.getSnippet('my-farmer-component.login-button.label')}}</span>
       </button>
     </div>
   </div>
-  <div class="col-12" *ngIf="accountService.havePoolPublicKey && !accountService.haveAccount && accountService.isLoading">
+  <div class="col-12" *ngIf="accountService.haveAccountIdentifier && !accountService.haveAccount && accountService.isLoading">
     <div class="d-flex justify-content-center">
       <app-loading-state></app-loading-state>
     </div>
   </div>
-  <div class="col-12" *ngIf="accountService.havePoolPublicKey && accountService.haveAccount">
+  <div class="col-12" *ngIf="accountService.haveAccountIdentifier && accountService.haveAccount">
     <div *ngIf="isPoolMember && (accountHasNeverSubmittedAPartial || showNewAccountFarmingAlert)" class="row mb-1 ps-2 pe-2">
       <ngb-alert *ngIf="accountHasNeverSubmittedAPartial" type="primary" class="mb-1 text-center" [dismissible]="false">
         {{accountHasNeverSubmittedPartialsAlertMessage}}
@@ -56,7 +56,7 @@
             >
           </div>
         </div>
-        <div class="fw-light fs-5 text-break">{{accountService.account.poolPublicKey}}</div>
+        <div class="fw-light fs-5 text-break">{{accountService.accountIdentifier}}</div>
       </div>
       <div class="col-12 col-md-auto my-auto action-box" *ngIf="!accountService.haveAuthToken">
         <button class="btn btn-success" (click)="authenticate()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.authenticate')}}</button>
@@ -73,7 +73,7 @@
             <h5>{{snippetService.getSnippet('my-farmer-component.pending-balance-card.title')}}</h5>
           </div>
           <div class="card-body text-align-center card-font-size card-body-with-progress-bar">
-            <span ngbTooltip="{{ratesService.getValuesInFiatFormatted(accountService.account.pendingRounded)}}">{{accountService.account.pendingRounded}} {{poolConfig.ticker}}</span>
+            <span ngbTooltip="{{ratesService.getValuesInFiatFormatted(accountService.account.pendingRounded)}}">{{accountService.account.pendingRounded}} {{statsService.ticker$ | async}}</span>
           </div>
           <ng-template #pendingProgressTooltipContent>
             <span class="color-green">{{pendingProgressRaw.toFixed(2)}}%</span> of the minimum payout reached.
@@ -101,7 +101,7 @@
             ></fa-icon>
           </div>
           <div class="card-body text-align-center card-font-size">
-            <span ngbTooltip="{{ratesService.getValuesInFiatFormatted(estimatedScaledReward)}}">{{estimatedScaledReward}} {{poolConfig.ticker}}</span>
+            <span ngbTooltip="{{ratesService.getValuesInFiatFormatted(estimatedScaledReward)}}">{{estimatedScaledReward}} {{statsService.ticker$ | async}}</span>
             <span class="reward-interval ms-1" (click)="cycleRewardInterval()" ngbTooltip="Click to toggle between daily, weekly or monthly estimates">({{estimatedRewardIntervalLabel}})</span>
           </div>
         </div>
@@ -138,7 +138,7 @@
             <span></span> <!-- Dummy element for justify-content-between -->
             <h5>{{snippetService.getSnippet('my-farmer-component.payout-address-card.title')}}</h5>
             <app-loading-state *ngIf="isLoadingPayoutAddressBalance | async" width="1" height="1" colorClass="text-light"></app-loading-state>
-            <div class="d-inline-block" *ngIf="(isLoadingPayoutAddressBalance | async) === false" [ngbTooltip]="ratesService.getValuesInFiatFormatted(payoutAddressBalance | async)">{{payoutAddressBalance | async}} {{poolConfig.ticker}}</div>
+            <div class="d-inline-block" *ngIf="(isLoadingPayoutAddressBalance | async) === false" [ngbTooltip]="ratesService.getValuesInFiatFormatted(payoutAddressBalance | async)">{{payoutAddressBalance | async}} {{statsService.ticker$ | async}}</div>
           </div>
           <div class="card-body text-align-center card-font-size ellipsis">
             <fa-icon *ngIf="payoutAddressWarning !== undefined" [ngbTooltip]="payoutAddressWarning" [icon]="faTriangleExclamation" class="text-warning me-2"></fa-icon>
@@ -187,7 +187,7 @@
             ></fa-icon>
           </div>
           <div class="card-body text-align-center card-font-size card-body-with-progress-bar">
-            <span ngbTooltip="{{ratesService.getValuesInFiatFormatted(accountService.account.collateralRounded)}}">{{accountService.account.collateralRounded}} {{poolConfig.ticker}}</span>
+            <span ngbTooltip="{{ratesService.getValuesInFiatFormatted(accountService.account.collateralRounded)}}">{{accountService.account.collateralRounded}} {{statsService.ticker$ | async}}</span>
           </div>
           <ng-template #collateralProgressTooltipContent>
             <span class="color-green">{{collateralProgressRaw.toFixed(2)}}%</span> of your collateral reached.
@@ -257,11 +257,9 @@
               <div class="p-1 col-md-12">
                 <app-farmer-payout-history
                   [isLoading]="isAccountLoading | async"
-                  [poolConfig]="poolConfig"
                   [coinConfig]="statsService.coinConfig"
                   [payoutDateFormattingObservable]="payoutDateFormattingObservable"
                   [selectedCurrencyObservable]="selectedCurrencyObservable"
-                  [exchangeStatsObservable]="exchangeStatsObservable"
                   [payouts]="accountService.accountPayouts"
                 ></app-farmer-payout-history>
               </div>
@@ -273,7 +271,6 @@
               <div class="p-1 col-md-12">
                 <app-farmer-won-blocks
                   [isLoading]="isAccountLoading | async"
-                  [poolConfig]="poolConfig"
                   [wonBlocksObservable]="accountService.accountWonBlocks.asObservable()"
                 ></app-farmer-won-blocks>
               </div>

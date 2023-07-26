@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy} from '@angular/core'
+import {Component, Input} from '@angular/core'
 import {StatsService} from '../stats.service'
 import * as moment from 'moment'
 import {SnippetService} from '../snippet.service'
@@ -6,71 +6,41 @@ import {faMoneyCheckAlt, faExchangeAlt} from '@fortawesome/free-solid-svg-icons'
 import {BigNumber} from 'bignumber.js'
 import {PoolsProvider} from '../pools.provider'
 import {ConfigService, DateFormatting} from '../config.service'
-import {Subscription} from 'rxjs'
+import {Payout} from '../api/types/pool/payout'
 
 @Component({
   selector: 'app-payouts',
   templateUrl: './payouts.component.html',
   styleUrls: ['./payouts.component.scss']
 })
-export class PayoutsComponent implements OnDestroy {
-
+export class PayoutsComponent {
   @Input() limit: number|null = null
-  private _poolConfig:any = {}
-  private _poolStats:any = {}
-  public lastPayouts:any = null
   private showPayouts: any = {}
   private addressAmountPairs: any = {}
 
   public faMoneyCheck = faMoneyCheckAlt
   public faExchangeAlt = faExchangeAlt
 
-  private readonly subscriptions: Subscription[] = [
-    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig)),
-    this.statsService.poolStats.asObservable().subscribe((poolStats => this.poolStats = poolStats)),
-    this.statsService.lastPayouts.asObservable().subscribe((lastPayouts => this.lastPayouts = lastPayouts)),
-  ]
-
   constructor(
-    private readonly statsService: StatsService,
+    public readonly statsService: StatsService,
     private readonly _snippetService: SnippetService,
     private readonly poolsProvider: PoolsProvider,
     private readonly configService: ConfigService,
   ) {}
 
-  public ngOnDestroy(): void {
-    this.subscriptions.map(subscription => subscription.unsubscribe())
-  }
-
   get snippetService(): SnippetService {
     return this._snippetService
   }
 
-  set poolConfig(poolConfig) {
-    this._poolConfig = poolConfig
-  }
-
-  get poolConfig() {
-    return this._poolConfig
-  }
-
-  set poolStats(stats) {
-    this._poolStats = stats
-  }
-
-  get poolStats() {
-    return this._poolStats
-  }
-
-  get lastPayoutsArray() {
-    if (!this.lastPayouts) {
+  public get recentPayouts(): Payout[] {
+    if (this.statsService.recentPayouts === undefined) {
       return []
     }
     if (!this.limit) {
-      return this.lastPayouts
+      return this.statsService.recentPayouts
     }
 
-    return this.lastPayouts.slice(0, this.limit)
+    return this.statsService.recentPayouts.slice(0, this.limit)
   }
 
   getPayoutDate(payout): string {
@@ -123,8 +93,8 @@ export class PayoutsComponent implements OnDestroy {
       }).sort((a, b) => b.amount - a.amount)
   }
 
-  public getBlockExplorerCoinLink(coinId: string): string {
-    return this.poolConfig.blockExplorerCoinUrlTemplate.replace('#COIN#', coinId.ensureHexPrefix())
+  public getBlockExplorerCoinLink(coinId: string): string|undefined {
+    return this.statsService.poolConfig?.blockExplorerCoinUrlTemplate.replace('#COIN#', coinId.ensureHexPrefix())
   }
 
   getCoinIdsForPayout(payout) {
@@ -148,7 +118,7 @@ export class PayoutsComponent implements OnDestroy {
     return this.snippetService.getSnippet('payouts-component.confirmed')
   }
 
-  trackPayoutBy(index, payout) {
+  public trackPayoutBy(index: number, payout: Payout): string {
     return payout._id
   }
 

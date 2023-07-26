@@ -26,16 +26,12 @@ export class UpdatePayoutOptionsComponent {
     this.newPayoutMultiplesOf = this.accountService.account?.payoutMultiplesOf
   }
 
-  private get poolConfig() {
-    return this.statsService.poolConfig.getValue() || {}
-  }
-
   public get poolConfigMinimumPayout(): number {
-    return this.poolConfig.minimumPayout || 0.01
+    return this.statsService.poolConfig?.minimumPayout ?? 0.01
   }
 
-  public get ticker(): string {
-    return this.poolConfig.ticker
+  public get ticker(): string|undefined {
+    return this.statsService.poolConfig?.ticker
   }
 
   public async updatePayoutOptions() {

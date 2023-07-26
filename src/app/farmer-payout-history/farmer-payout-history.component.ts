@@ -12,6 +12,7 @@ import {map} from 'rxjs/operators'
 import {CoinConfig} from '../coin-config'
 import {RatesService} from '../rates.service'
 import {Moment} from 'moment'
+import {StatsService} from '../stats.service'
 
 @Component({
   selector: 'app-farmer-payout-history',
@@ -21,11 +22,9 @@ import {Moment} from 'moment'
 export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
   @Input() payouts: BehaviorSubject<AccountPayout[]>
   @Input() isLoading = false
-  @Input() poolConfig: PoolConfig
   @Input() coinConfig: CoinConfig
   @Input() payoutDateFormattingObservable: Observable<DateFormatting>
   @Input() selectedCurrencyObservable: Observable<string>
-  @Input() exchangeStatsObservable: Observable<unknown>
 
   public page = 1
   public pageSize = 7
@@ -78,7 +77,8 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
   private readonly subscriptions: Subscription[] = []
 
   constructor(
-    public snippetService: SnippetService,
+    public readonly snippetService: SnippetService,
+    public readonly statsService: StatsService,
     private readonly configService: ConfigService,
     private readonly csvExporter: CsvExporter,
     private readonly ratesService: RatesService,
@@ -103,7 +103,7 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
       this.payouts.asObservable(),
       this.payoutDateFormattingObservable,
       this.selectedCurrencyObservable,
-      this.exchangeStatsObservable,
+      this.statsService.exchangeStats$,
     ])
       .pipe(map(([accountPayouts, payoutDateFormatting]) => {
         return accountPayouts.map(accountPayout => {
@@ -142,11 +142,11 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
   }
 
   private getBlockExplorerCoinLink(coinId: string): string|undefined {
-    if (!this.poolConfig.blockExplorerCoinUrlTemplate) {
+    if (!this.statsService.poolConfig?.blockExplorerCoinUrlTemplate) {
       return
     }
 
-    return this.poolConfig.blockExplorerCoinUrlTemplate.replace('#COIN#', coinId.ensureHexPrefix())
+    return this.statsService.poolConfig.blockExplorerCoinUrlTemplate.replace('#COIN#', coinId.ensureHexPrefix())
   }
 
   private getFormattedPaymentState(payoutState: AccountPayoutState): string {
@@ -169,7 +169,7 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
   private makeChartUpdateOptions(payouts: AccountPayout[]): EChartsOption {
     return {
       tooltip: {
-        formatter: params => `<strong>${params[0].value[1]} ${this.poolConfig.ticker}</strong>`,
+        formatter: params => `<strong>${params[0].value[1]} ${this.statsService.poolConfig?.ticker}</strong>`,
       },
       series: [{
         data: payouts.map(payout => ({
@@ -199,9 +199,4 @@ interface FormattedAccountPayout {
   state: string,
   formattedPayoutDate: string,
   blockExplorerUrl?: string,
-}
-
-interface PoolConfig {
-  blockExplorerCoinUrlTemplate?: string
-  ticker: string
 }

@@ -16,8 +16,8 @@ import {AccountService} from '../account.service'
 import {AuthenticationModalComponent} from '../authentication-modal/authentication-modal.component'
 import {RatesService} from '../rates.service'
 import {ConfigService, DateFormatting, TimeInterval} from '../config.service'
-import { getEffortColor } from '../util'
-import {PoolsProvider} from '../pools.provider'
+import {getEffortColor} from '../util'
+import {PoolsProvider, PoolType} from '../pools.provider'
 import {SettingsModalComponent} from '../settings-modal/settings-modal.component'
 import {BalanceProvider} from '../balance-provider'
 import {fromPromise} from 'rxjs/internal/observable/innerFrom'
@@ -34,8 +34,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   @ViewChild(AuthenticationModalComponent) authenticationModal
   @ViewChild(SettingsModalComponent) settingsModal
 
-  public poolConfig:any = {}
-  public poolPublicKeyInput = null
+  public accountIdentifierInput: string|null = null
   public readonly faCircleNotch = faCircleNotch
   public readonly faInfoCircle = faInfoCircle
   public readonly faTriangleExclamation = faTriangleExclamation
@@ -58,21 +57,19 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   public readonly isLoadingPayoutAddressBalance: Observable<boolean>
 
   public isAccountLoading: Observable<boolean> = this.accountService.accountSubject
-    .asObservable()
     .pipe(
-      map(account => !account || !account.payoutAddress),
+      map(account => !account),
       distinctUntilChanged(),
       shareReplay(),
     )
   public payoutDateFormattingObservable: Observable<DateFormatting>
   public selectedCurrencyObservable: Observable<string>
-  public exchangeStatsObservable: Observable<unknown>
   public averageEffortFormatted: Observable<string>
   public averageEffortColorClass: Observable<string>
 
   private poolEc = 0
   private dailyRewardPerPib = 0
-  private networkSpaceInTiB = 0
+  private networkSpaceInTiB: string = '0'
   private currentHeight = 0
 
   private readonly historicalIntervalInMinutes = 15
@@ -82,13 +79,13 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
   private readonly subscriptions: Subscription[] = [
     this.activatedRoute.params.subscribe(async params => {
-      if (params.poolPublicKey) {
-        this.accountService.poolPublicKey = params.poolPublicKey
+      if (params.accountIdentifier) {
+        this.accountService.accountIdentifier = params.accountIdentifier
         this.accountService.isMyFarmerPage = false
       } else {
         this.accountService.isMyFarmerPage = true
-        if (this.accountService.poolPublicKey !== this.accountService.poolPublicKeyFromLocalStorage) {
-          this.accountService.poolPublicKey = this.accountService.poolPublicKeyFromLocalStorage
+        if (this.accountService.isExternalAccountIdentifier) {
+          this.accountService.accountIdentifier = this.accountService.accountIdentifierFromLocalStorage
         }
       }
       await this.initAccount()
@@ -99,10 +96,9 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         this.ecChartUpdateOptions = this.makeEcChartUpdateOptions(historicalStats)
         this.sharesChartUpdateOptions = this.makeSharesChartUpdateOptions(historicalStats)
       }),
-    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig)),
-    this.statsService.accountStats.asObservable().subscribe(accountStats => this.poolEc = accountStats.ecSum),
-    this.statsService.rewardStats.asObservable().subscribe(rewardStats => this.dailyRewardPerPib = rewardStats.dailyRewardPerPiB),
-    this.statsService.poolStats.asObservable().subscribe((poolStats => {
+    this.statsService.accountStats$.subscribe(accountStats => this.poolEc = accountStats.ecSum),
+    this.statsService.rewardStats$.subscribe(rewardStats => this.dailyRewardPerPib = rewardStats.dailyRewardPerPiB),
+    this.statsService.poolStats$.subscribe((poolStats => {
       this.currentHeight = poolStats.height
       this.networkSpaceInTiB = poolStats.networkSpaceInTiB
     })),
@@ -296,7 +292,6 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     }
     this.payoutDateFormattingObservable = this.configService.payoutDateFormattingSubject.asObservable()
     this.selectedCurrencyObservable = this.configService.selectedCurrencySubject.asObservable()
-    this.exchangeStatsObservable = this.statsService.exchangeStats.asObservable()
     const sharesStream = this.accountService.accountHistoricalStats
       .pipe(
         skip(1),
@@ -411,25 +406,25 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
   public async ngOnInit(): Promise<void> {
     this.accountUpdateInterval = setInterval(async () => {
-      if (!this.accountService.havePoolPublicKey) {
+      if (!this.accountService.haveAccountIdentifier) {
         return
       }
       await this.accountService.updateAccount()
     }, 3 * 60 * 1000)
     this.accountHistoricalUpdateInterval = setInterval(async () => {
-      if (!this.accountService.havePoolPublicKey) {
+      if (!this.accountService.haveAccountIdentifier) {
         return
       }
       await this.accountService.updateAccountHistoricalStats()
     }, (this.historicalIntervalInMinutes + 1) * 60 * 1000)
     this.accountWonBlocksUpdateInterval = setInterval(async () => {
-      if (!this.accountService.havePoolPublicKey) {
+      if (!this.accountService.haveAccountIdentifier) {
         return
       }
       await this.accountService.updateAccountWonBlocks()
     }, 11 * 60 * 1000)
     this.accountPayoutsUpdateInterval = setInterval(async () => {
-      if (!this.accountService.havePoolPublicKey) {
+      if (!this.accountService.haveAccountIdentifier) {
         return
       }
       await this.accountService.updateAccountPayouts()
@@ -478,7 +473,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   private async initAccount() {
-    if (!this.accountService.havePoolPublicKey) {
+    if (!this.accountService.haveAccountIdentifier) {
       return
     }
     await this.accountService.updateAccount()
@@ -751,8 +746,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         return payoutMultiplesOf
       }
     }
-    if (this.poolConfig.minimumPayout) {
-      return this.poolConfig.minimumPayout
+    if (this.statsService.poolConfig?.minimumPayout) {
+      return this.statsService.poolConfig.minimumPayout
     }
 
     return 0
@@ -799,12 +794,12 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
   public get collateralProgressRaw(): number {
     const account = this.accountService.account as any|null
-    if (!account || !account.collateralBN || !this.poolConfig.poolRewardPortion) {
+    if (!account || !account.collateralBN || !this.statsService.poolConfig?.poolRewardPortion) {
       return 0
     }
 
     return account.collateralBN
-      .dividedBy(this.poolConfig.poolRewardPortion)
+      .dividedBy(this.statsService.poolConfig.poolRewardPortion)
       .multipliedBy(100)
       .toNumber()
   }
@@ -816,10 +811,10 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   public get timeTillCollateralReached(): string {
-    if (this.poolConfig.poolRewardPortion === undefined || this.accountService.account === null) {
+    if (this.statsService.poolConfig === undefined || this.accountService.account === null) {
       return 'N/A'
     }
-    const remainingAmount = (new BigNumber(this.poolConfig.poolRewardPortion)).minus((this.accountService.account as any).collateralBN)
+    const remainingAmount = (new BigNumber(this.statsService.poolConfig.poolRewardPortion)).minus((this.accountService.account as any).collateralBN)
     if (remainingAmount.isLessThanOrEqualTo(0)) {
       return 'now'
     }
@@ -1001,15 +996,22 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   async login() {
-    if (!this.poolPublicKeyInput) {
-      this.toastService.showErrorToast(this.snippetService.getSnippet('my-farmer-component.pool-pk-input.error.missing'))
+    if (!this.accountIdentifierInput) {
+      const errorMessage = this.poolsProvider.pool.type === PoolType.og ? 'No pool public key entered!' : 'No pool public key entered!'
+      this.toastService.showErrorToast(errorMessage)
       return
     }
-    const success: boolean = await this.accountService.login({ poolPublicKey: this.poolPublicKeyInput })
+    let accountIdentifier = this.accountIdentifierInput.trim()
+    if (this.poolsProvider.pool.type === PoolType.og) {
+      accountIdentifier = accountIdentifier.ensureHexPrefix()
+    } else if(this.poolsProvider.pool.type === PoolType.nft) {
+      accountIdentifier = accountIdentifier.stripHexPrefix()
+    }
+    const success: boolean = await this.accountService.login({ accountIdentifier })
     if (!success) {
       return
     }
-    this.poolPublicKeyInput = null
+    this.accountIdentifierInput = null
   }
 
   getFormattedCapacity(capacityInGiB) {
@@ -1105,11 +1107,11 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   getBlockExplorerAddressLink(address) {
-    if (!this.poolConfig || !this.poolConfig.blockExplorerAddressUrlTemplate) {
+    if (this.statsService.poolConfig === undefined || !this.statsService.poolConfig.blockExplorerAddressUrlTemplate) {
       return ''
     }
 
-    return this.poolConfig.blockExplorerAddressUrlTemplate.replace('#ADDRESS#', address)
+    return this.statsService.poolConfig.blockExplorerAddressUrlTemplate.replace('#ADDRESS#', address)
   }
 
   public get payoutAddressWarning(): string|undefined {

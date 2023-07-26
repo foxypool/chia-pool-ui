@@ -1,12 +1,12 @@
 import {Component, OnDestroy} from '@angular/core'
 import {BehaviorSubject, combineLatest, Observable, Subscription, takeWhile} from 'rxjs'
 import {faHdd} from '@fortawesome/free-regular-svg-icons'
-import {distinctUntilChanged, filter, map, shareReplay} from 'rxjs/operators'
+import {distinctUntilChanged, map, shareReplay} from 'rxjs/operators'
 import {StatsService} from '../stats.service'
 import Capacity from '../capacity'
 import * as moment from 'moment'
 import {ActivatedRoute, Router} from '@angular/router'
-import {OgTopAccount} from '../api/types/account/top-account'
+import {getAccountIdentifier, OgTopAccount} from '../api/types/account/top-account'
 
 @Component({
   selector: 'app-farmer-list',
@@ -40,7 +40,7 @@ export class FarmerListComponent implements OnDestroy {
   ) {
     this.accounts = combineLatest([
       this.accountsSubject,
-      this.statsService.accountStats.pipe(map(stats => stats.ecSum), filter(ecSum => ecSum !== undefined), distinctUntilChanged()),
+      this.statsService.accountStats$.pipe(map(stats => stats.ecSum), distinctUntilChanged()),
     ])
       .pipe(
         map(([accounts, ecSum]) => {
@@ -48,7 +48,7 @@ export class FarmerListComponent implements OnDestroy {
             return {
               rank: account.rank ? `#${account.rank}` : 'N/A',
               name: account.name,
-              poolPublicKey: account.poolPublicKey,
+              accountIdentifier: getAccountIdentifier(account),
               payoutAddress: account.payoutAddress,
               ecShare: ((account.ec / ecSum) * 100).toFixed(2),
               ecFormatted: (new Capacity(account.ec)).toString(),
@@ -87,7 +87,7 @@ export class FarmerListComponent implements OnDestroy {
   }
 
   public trackBy(index: number, account: Account): string {
-    return account.poolPublicKey
+    return account.accountIdentifier
   }
 }
 
@@ -95,7 +95,7 @@ interface Account {
   rank: string
   name?: string
   payoutAddress: string
-  poolPublicKey: string
+  accountIdentifier: string
   ecFormatted: string
   ecShare: string
   joinedAtDuration: string

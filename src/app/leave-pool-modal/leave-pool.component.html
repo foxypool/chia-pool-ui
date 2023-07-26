@@ -27,7 +27,7 @@
     <button type="button" class="btn btn-danger w-100" (click)="leaveThePool()" [disabled]="accountService.isUpdatingAccount || accountService.isLeavingPool">
       <span *ngIf="accountService.isLeavingPool">{{snippetService.getSnippet('leave-pool-modal.leaving')}}</span>
       <span *ngIf="!accountService.isLeavingPool">{{snippetService.getSnippet('leave-pool-modal.leave')}}</span>
-      <fa-icon [icon]="faCircleNotch" [spin]="true" *ngIf="accountService.isLeavingPool" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
+      <fa-icon [icon]="faCircleNotch" animation="spin" *ngIf="accountService.isLeavingPool" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
     </button>
   </div>
 </div>

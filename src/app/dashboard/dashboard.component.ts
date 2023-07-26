@@ -2,6 +2,7 @@ import { Component } from '@angular/core'
 import {StatsService} from '../stats.service'
 import {SnippetService} from '../snippet.service'
 import * as moment from 'moment'
+import {Notice} from '../api/types/pool/pool-config'
 
 @Component({
   selector: 'app-dashboard',
@@ -19,20 +20,20 @@ export class DashboardComponent  {
     return this._snippetService
   }
 
-  get notices() {
-    const poolConfig = this.statsService.poolConfig.getValue()
-    if (!poolConfig || !poolConfig.notices) {
+  private get notices(): Notice[] {
+    const poolConfig = this.statsService.poolConfig
+    if (poolConfig === undefined) {
       return []
     }
 
     return poolConfig.notices.slice(0, 10)
   }
 
-  get noticesInTheLastWeekOrLess() {
+  public get noticesInTheLastWeekOrLess(): Notice[] {
     return this.notices.filter(notice => moment(notice.date).isAfter(moment().subtract(1, 'week')))
   }
 
-  get hasNotices() {
+  public get hasNotices(): boolean {
     return this.noticesInTheLastWeekOrLess.length > 0
   }
 
@@ -43,5 +44,4 @@ export class DashboardComponent  {
   getFormattedDate(date) {
     return moment(date).format('YYYY-MM-DD')
   }
-
 }

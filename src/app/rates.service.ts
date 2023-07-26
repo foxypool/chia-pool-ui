@@ -14,8 +14,8 @@ export class RatesService implements OnDestroy {
   private isTestnet = false
 
   private readonly subscriptions: Subscription[] = [
-    this.statsService.poolConfig.asObservable().subscribe(poolConfig => this.isTestnet = poolConfig.isTestnet),
-    this.statsService.exchangeStats.asObservable().subscribe(exchangeStats => {
+    this.statsService.poolConfig$.subscribe(poolConfig => this.isTestnet = poolConfig.isTestnet),
+    this.statsService.exchangeStats$.subscribe(exchangeStats => {
       this.rates = exchangeStats.rates
       this.currencies = exchangeStats.currencies
     }),
@@ -57,7 +57,7 @@ export class RatesService implements OnDestroy {
 
   public makeObservableForFormattedFiatValue(value: number): Observable<string> {
     return combineLatest([
-      this.statsService.exchangeStats,
+      this.statsService.exchangeStats$,
       this.configService.selectedCurrencySubject,
     ]).pipe(
       map(([exchangeStats]) => exchangeStats.rates),

@@ -17,12 +17,12 @@ import {AccountWonBlock} from './types/account/account-won-block'
 import {AccountPayout} from './types/account/account-payout'
 import {AuthenticationResult} from './types/auth/authentication-result'
 import {LoginTokenResult} from './types/auth/login-token-result'
-import {TopAccount} from './types/account/top-account'
+import {BaseTopAccount} from './types/account/top-account'
 import {ApiResponse} from './types/api-response'
 
 export abstract class AbstractApi<
   AccountType extends Account,
-  TopAccountType extends TopAccount,
+  TopAccountType extends BaseTopAccount,
   RecentlyWonBlockType extends RecentlyWonBlock,
 > {
   protected readonly client: AxiosInstance

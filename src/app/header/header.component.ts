@@ -1,4 +1,4 @@
-import {Component, OnDestroy} from '@angular/core'
+import {Component} from '@angular/core'
 import {StatsService} from '../stats.service'
 import {SnippetService} from '../snippet.service'
 import {PoolsProvider} from '../pools.provider'
@@ -6,39 +6,25 @@ import {AccountService} from '../account.service'
 import {RatesService} from '../rates.service'
 import {Router} from '@angular/router'
 import {faSearch} from '@fortawesome/free-solid-svg-icons'
-import {Subscription} from 'rxjs'
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnDestroy {
-
-  private _poolConfig:any = {}
-  private _poolStats:any = {}
-
+export class HeaderComponent {
   public isMenuCollapsed = true
   public accountSearchInput = ''
   public searchIcon = faSearch
 
-  private readonly subscriptions: Subscription[] = [
-    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig)),
-    this.statsService.poolStats.asObservable().subscribe((poolStats => this.poolStats = poolStats)),
-  ]
-
   constructor(
     public accountService: AccountService,
-    private readonly statsService: StatsService,
+    public readonly statsService: StatsService,
     private readonly _snippetService: SnippetService,
     private readonly poolsProvider: PoolsProvider,
     public ratesService: RatesService,
     private readonly router: Router,
   ) {}
-
-  public ngOnDestroy(): void {
-    this.subscriptions.map(subscription => subscription.unsubscribe())
-  }
 
   public isLinkActive(url: string): boolean {
     const queryParamsIndex = this.router.url.indexOf('?')
@@ -52,7 +38,7 @@ export class HeaderComponent implements OnDestroy {
       return this.accountService.isAuthenticated
     }
 
-    return this.accountService.havePoolPublicKey
+    return this.accountService.haveAccountIdentifier
   }
 
   toggleMenuCollapse() {
@@ -78,39 +64,23 @@ export class HeaderComponent implements OnDestroy {
     this.isMenuCollapsed = true
   }
 
-  set poolConfig(poolConfig) {
-    this._poolConfig = poolConfig
-  }
-
-  get poolConfig() {
-    return this._poolConfig || {}
-  }
-
-  get poolStats() {
-    return this._poolStats
-  }
-
-  set poolStats(value: any) {
-    this._poolStats = value
-  }
-
-  get poolTitle() {
-    if (this.poolConfig.poolName) {
-      return this.poolConfig.poolName
+  public get poolTitle(): string {
+    if (this.statsService.poolConfig?.poolName) {
+      return this.statsService.poolConfig.poolName
     }
-    if (!this.poolConfig.coin) {
-      return 'Foxy-Pool'
+    if (this.statsService.poolConfig?.coin) {
+      return `Foxy-Pool ${this.statsService.poolConfig.coin}`
     }
 
-    return `Foxy-Pool ${this.poolConfig.coin}`
+    return 'Foxy-Pool'
   }
 
   get poolUrl() {
-    if (!this.poolConfig.poolUrl) {
+    if (!this.statsService.poolConfig?.poolUrl) {
       return ''
     }
 
-    return this.poolConfig.poolUrl
+    return this.statsService.poolConfig.poolUrl
   }
 
   get otherPools() {

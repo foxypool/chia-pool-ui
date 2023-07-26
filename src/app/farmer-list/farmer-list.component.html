@@ -21,7 +21,7 @@
       </tr>
       <tr *ngFor="let account of accounts | async; trackBy: trackBy">
         <td>{{account.rank}}</td>
-        <td class="ellipsis"><a class="farmer-page-link" routerLink="/farmer/{{account.poolPublicKey}}">{{account.name ? account.name : account.payoutAddress}}</a></td>
+        <td class="ellipsis"><a class="farmer-page-link" routerLink="/farmer/{{account.accountIdentifier}}">{{account.name ? account.name : account.payoutAddress}}</a></td>
         <td class="no-wrap">{{account.ecFormatted}} <span style="font-size: 12.8px">({{account.ecShare}}%)</span></td>
         <td class="no-wrap">{{account.joinedAtDuration}}</td>
       </tr>

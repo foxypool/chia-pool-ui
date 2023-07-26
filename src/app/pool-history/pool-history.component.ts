@@ -17,7 +17,7 @@ export class PoolHistoryComponent implements OnDestroy {
   public chartUpdateOptions: EChartsOption
 
   private readonly subscriptions: Subscription[] = [
-    this.statsService.poolHistoricalStats.subscribe(historicalStats => this.chartUpdateOptions = this.makeChartUpdateOptions(historicalStats)),
+    this.statsService.poolHistoricalStatsSubject.subscribe(historicalStats => this.chartUpdateOptions = this.makeChartUpdateOptions(historicalStats)),
   ]
 
   constructor(

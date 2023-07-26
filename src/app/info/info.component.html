@@ -20,16 +20,16 @@
           {{snippetService.getSnippet('info-component.pool-info.pplns-info', historicalTimeInHours)}}
         </li>
         <li>
-          {{snippetService.getSnippet('info-component.pool-info.payout.fee-info', poolConfig.poolFee)}}
+          {{snippetService.getSnippet('info-component.pool-info.payout.fee-info', (statsService.poolConfig$ | async)?.poolFee)}}
         </li>
         <li>
           {{snippetService.getSnippet('info-component.pool-info.payout.interval-info')}}
         </li>
         <li>
-          {{snippetService.getSnippet('info-component.pool-info.payout.minimum-info', poolConfig.minimumPayout, poolConfig.ticker)}}
+          {{snippetService.getSnippet('info-component.pool-info.payout.minimum-info', (statsService.poolConfig$ | async)?.minimumPayout, statsService.ticker$ | async)}}
         </li>
         <li>
-          {{snippetService.getSnippet('info-component.pool-info.distribution-delay-info', poolConfig.blockRewardDistributionDelay)}}
+          {{snippetService.getSnippet('info-component.pool-info.distribution-delay-info', (statsService.poolConfig$ | async)?.blockRewardDistributionDelay)}}
         </li>
       </ul>
     </div>

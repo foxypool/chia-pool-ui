@@ -58,10 +58,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.seoService.updateMeta({ name: 'description', content: event.description })
       }
     }))
-    this.subscriptions.push(this.statsService.poolConfig.asObservable().subscribe((poolConfig => {
-      if (!poolConfig.coin) {
-        return
-      }
+    this.subscriptions.push(this.statsService.poolConfig$.subscribe((poolConfig => {
       this.poolName = poolConfig.poolName ? poolConfig.poolName : `Foxy-Pool ${poolConfig.coin}`
       this.updateTitle()
       this.seoService.updateMeta({ name: 'description', content: `${this.poolName}, a fair ${poolConfig.coin} PoSt (Proof of space time) pool with low fees hosted in Europe. No registration required and easy to use.` })

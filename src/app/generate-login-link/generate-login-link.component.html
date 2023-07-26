@@ -38,7 +38,7 @@
     <button type="button" class="btn btn-primary w-100" (click)="generateLoginToken()" [disabled]="isGenerating">
       <span *ngIf="isGenerating">Generating</span>
       <span *ngIf="!isGenerating">Generate login link</span>
-      <fa-icon [icon]="faCircleNotch" [spin]="true" *ngIf="isGenerating" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
+      <fa-icon [icon]="faCircleNotch" animation="spin" *ngIf="isGenerating" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
     </button>
   </div>
 </div>

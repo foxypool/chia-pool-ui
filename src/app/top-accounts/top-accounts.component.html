@@ -19,20 +19,20 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngIf="!accountStats.topAccounts">
+      <tr *ngIf="(topAccounts$ | async) === null">
         <td colspan="3" style="text-align: center">
           <app-loading-state></app-loading-state>
         </td>
       </tr>
-      <tr *ngIf="accountStats.topAccounts && topAccounts.length === 0">
+      <tr *ngIf="(topAccounts$ | async)?.length === 0">
         <td colspan="3" style="text-align: center; padding-top: 1rem">
           <app-empty-state [text]="snippetService.getSnippet('top-accounts-component.no-miners-found')" [icon]="faHdd"></app-empty-state>
         </td>
       </tr>
-      <tr *ngFor="let account of topAccounts; trackBy: trackBy">
-        <td class="ellipsis"><a class="farmer-page-link" routerLink="/farmer/{{account.poolPublicKey}}">{{account.name ? account.name : account.payoutAddress}}</a></td>
-        <td class="no-wrap">{{account.pendingRounded}}<span *ngIf="account.pendingRounded === 0 && account.collateral"><span style="font-size: 12.8px"> +{{account.collateralRounded}}</span></span> {{poolConfig.ticker}}</td>
-        <td class="no-wrap">{{getFormattedCapacity(account.ec)}} <span style="font-size: 12.8px">({{getEcShare(account)}} %)</span></td>
+      <tr *ngFor="let account of topAccounts$ | async; trackBy: trackBy">
+        <td class="ellipsis"><a class="farmer-page-link" routerLink="/farmer/{{account.accountIdentifier}}">{{account.name ? account.name : account.payoutAddress}}</a></td>
+        <td class="no-wrap">{{account.pendingRounded}}<span *ngIf="account.pendingRounded === 0 && account.collateralRounded !== undefined"><span style="font-size: 12.8px"> +{{account.collateralRounded}}</span></span> {{statsService.ticker$ | async}}</td>
+        <td class="no-wrap">{{account.capacity}} <span style="font-size: 12.8px">({{account.capacityShare}} %)</span></td>
       </tr>
     </tbody>
   </table>

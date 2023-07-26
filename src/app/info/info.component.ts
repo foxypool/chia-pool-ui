@@ -18,13 +18,11 @@ export class InfoComponent implements OnInit, OnDestroy {
   public readonly clientVersionsChartOptions: EChartsOption
   public clientVersionsChartUpdateOptions: EChartsOption
 
-  private _poolConfig:any = {}
   private clientVersionsUpdateInterval?: ReturnType<typeof setInterval>
   private readonly clientVersions: BehaviorSubject<ClientVersion[]> = new BehaviorSubject<ClientVersion[]>([])
   private readonly clientVersionsChartModeSubject: BehaviorSubject<ClientVersionsChartMode> = new BehaviorSubject<ClientVersionsChartMode>(ClientVersionsChartMode.regular)
 
   private readonly subscriptions: Subscription[] = [
-    this.statsService.poolConfig.asObservable().subscribe((poolConfig => this.poolConfig = poolConfig)),
     combineLatest([
       this.clientVersions.asObservable(),
       this.clientVersionsChartModeSubject.asObservable(),
@@ -191,19 +189,11 @@ export class InfoComponent implements OnInit, OnDestroy {
     return this._snippetService
   }
 
-  set poolConfig(poolConfig) {
-    this._poolConfig = poolConfig
-  }
-
-  get poolConfig() {
-    return this._poolConfig
-  }
-
   get historicalTimeInHours() {
-    if (!this.poolConfig.historicalTimeInMinutes) {
+    if (this.statsService.poolConfig === undefined) {
       return 'N/A'
     }
-    return Math.round(this.poolConfig.historicalTimeInMinutes / 60)
+    return Math.round(this.statsService.poolConfig.historicalTimeInMinutes / 60)
   }
 
   get docsGettingStartedUrl() {

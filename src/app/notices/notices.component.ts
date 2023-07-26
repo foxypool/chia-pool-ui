@@ -2,6 +2,7 @@ import { Component } from '@angular/core'
 import {StatsService} from '../stats.service'
 import {SnippetService} from '../snippet.service'
 import * as moment from 'moment'
+import {Notice} from '../api/types/pool/pool-config'
 
 @Component({
   selector: 'app-notices',
@@ -18,9 +19,9 @@ export class NoticesComponent  {
     return this._snippetService
   }
 
-  get notices() {
-    const poolConfig = this.statsService.poolConfig.getValue()
-    if (!poolConfig || !poolConfig.notices) {
+  get notices(): Notice[] {
+    const poolConfig = this.statsService.poolConfig
+    if (poolConfig === undefined) {
       return []
     }
 

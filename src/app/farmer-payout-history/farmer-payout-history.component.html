@@ -43,7 +43,7 @@
               <a *ngIf="payout.blockExplorerUrl !== undefined" href="{{payout.blockExplorerUrl}}" target="_blank" style="color: #b45bff">{{payout.coinId}}</a>
               <span *ngIf="payout.blockExplorerUrl === undefined">{{payout.coinId}}</span>
             </td>
-            <td style="white-space: nowrap">{{payout.amountFormatted}} {{poolConfig.ticker}}</td>
+            <td style="white-space: nowrap">{{payout.amountFormatted}} {{statsService.ticker$ | async}}</td>
             <td style="white-space: nowrap">{{payout.fiatAmountFormatted}}</td>
             <td>{{payout.state}}</td>
           </tr>
