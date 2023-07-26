@@ -34,6 +34,7 @@ Sentry.init({
       tracePropagationTargets: ['localhost', 'https://api2.foxypool.io/api'],
       routingInstrumentation: Sentry.routingInstrumentation,
     }),
+    new Sentry.Replay(),
   ],
   // Performance Monitoring
   tracesSampleRate: 0.05,
