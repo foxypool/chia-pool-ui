@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 
 import {StatsService} from './stats.service'
-import {PoolsProvider} from './pools.provider'
+import {PoolsProvider, PoolType} from './pools.provider'
 import {LocalStorageService} from './local-storage.service'
 import {ToastService} from './toast.service'
 import {SnippetService} from './snippet.service'
@@ -13,12 +13,14 @@ import {AccountHistoricalStat} from './api/types/account/account-historical-stat
 import {LoginTokenResult} from './api/types/auth/login-token-result'
 import {Account, AccountNotificationSettings, getAccountIdentifier} from './api/types/account/account'
 import {AccountWonBlock} from './api/types/account/account-won-block'
+import {makeAccountIdentifierName} from './util'
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
   public static poolPublicKeyStorageKey = 'poolPublicKey'
+  public static singletonGenesisStorageKey = 'singletonGenesis'
   public static accountIdentifierStorageKey = 'accountIdentifier'
   public static authTokenStorageKey = (accountIdentifier: string): string => `authToken:${accountIdentifier}`
 
@@ -86,7 +88,7 @@ export class AccountService {
   async login({ accountIdentifier }): Promise<boolean> {
     const account = await this.getAccount({ accountIdentifier })
     if (account === null) {
-      this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', accountIdentifier))
+      this.toastService.showErrorToast(makeInvalidFarmerErrorMessage(this.poolsProvider.pool.type, accountIdentifier))
       return false
     }
     this.setAccountIdentifierInLocalStorage(accountIdentifier)
@@ -105,7 +107,7 @@ export class AccountService {
   async loginUsingToken({ accountIdentifier, token }): Promise<void> {
     const account = await this.getAccount({ accountIdentifier })
     if (account === null) {
-      this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', accountIdentifier))
+      this.toastService.showErrorToast(makeInvalidFarmerErrorMessage(this.poolsProvider.pool.type, accountIdentifier))
       return
     }
     this.setAccountIdentifierInLocalStorage(accountIdentifier)
@@ -145,7 +147,7 @@ export class AccountService {
   async doesAccountExist({ accountIdentifier }) {
     const account = await this.getAccount({ accountIdentifier })
     if (account === null) {
-      this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', accountIdentifier))
+      this.toastService.showErrorToast(makeInvalidFarmerErrorMessage(this.poolsProvider.pool.type, accountIdentifier))
 
       return false
     }
@@ -216,7 +218,7 @@ export class AccountService {
       this.accountHistoricalStats.next([])
       this.accountWonBlocks.next([])
       this.accountPayouts.next([])
-      this.toastService.showErrorToast(this.snippetService.getSnippet('account-service.login.error.invalid-farmer', this.accountIdentifier))
+      this.toastService.showErrorToast(makeInvalidFarmerErrorMessage(this.poolsProvider.pool.type, this.accountIdentifier))
     }
   }
 
@@ -463,10 +465,19 @@ export class AccountService {
       this.setAccountIdentifierInLocalStorage(legacyPoolPublicKey)
       this.localStorageService.removeItem(AccountService.poolPublicKeyStorageKey)
     }
+    const legacyLauncherId = this.localStorageService.getItem(AccountService.singletonGenesisStorageKey)
+    if (legacyLauncherId !== null) {
+      this.setAccountIdentifierInLocalStorage(legacyLauncherId)
+      this.localStorageService.removeItem(AccountService.singletonGenesisStorageKey)
+    }
     const legacyAuthToken = this.localStorageService.getItem('authToken')
     if (legacyAuthToken) {
       this.localStorageService.setItem(AccountService.authTokenStorageKey(this.accountIdentifierFromLocalStorage), legacyAuthToken)
       this.localStorageService.removeItem('authToken')
     }
   }
+}
+
+function makeInvalidFarmerErrorMessage(poolType: PoolType, accountIdentifier: string): string {
+  return `Could not find farmer for ${makeAccountIdentifierName(poolType)} "${accountIdentifier}"`
 }

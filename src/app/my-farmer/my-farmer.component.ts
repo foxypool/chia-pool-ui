@@ -16,14 +16,14 @@ import {AccountService} from '../account.service'
 import {AuthenticationModalComponent} from '../authentication-modal/authentication-modal.component'
 import {RatesService} from '../rates.service'
 import {ConfigService, DateFormatting, TimeInterval} from '../config.service'
-import {getEffortColor} from '../util'
+import {getEffortColor, makeAccountIdentifierName} from '../util'
 import {PoolsProvider, PoolType} from '../pools.provider'
 import {SettingsModalComponent} from '../settings-modal/settings-modal.component'
 import {BalanceProvider} from '../balance-provider'
 import {fromPromise} from 'rxjs/internal/observable/innerFrom'
 import {corePoolAddress, hpoolAddress} from '../known-addresses'
 import {AccountHistoricalStat} from '../api/types/account/account-historical-stat'
-import {isCheatingOgAccount, isInactiveOgAccount, isOgAccount} from '../api/types/account/account'
+import {isCheatingOgAccount, isInactiveOgAccount, isNftAccount, isOgAccount} from '../api/types/account/account'
 
 @Component({
   selector: 'app-my-farmer',
@@ -67,6 +67,13 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   public averageEffortFormatted: Observable<string>
   public averageEffortColorClass: Observable<string>
   public readonly lastAcceptedPartialAt$: Observable<string>
+  public readonly showAuthenticationButton: boolean = this.poolsProvider.pool.type === PoolType.og
+  public readonly showAuthenticationDocsLinkButton: boolean = this.poolsProvider.pool.type === PoolType.nft
+  public readonly accountIdentifierInputPlaceholder: string = makeAccountIdentifierName(this.poolsProvider.pool.type)
+
+  public get authDocsUrl(): string {
+    return `https://docs.foxypool.io/proof-of-spacetime/foxy-pool/pools/${this.poolsProvider.poolIdentifier}/authenticate/`
+  }
 
   private poolEc = 0
   private dailyRewardPerPib = 0
@@ -443,6 +450,11 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       await this.accountService.updateAccountPayouts()
     }, 11 * 60 * 1000)
 
+    if (this.isLoginRequest()) {
+      await this.loginAndAuthFromQueryParams()
+      await this.router.navigate([])
+    }
+
     if (this.isLoginTokenRequest) {
       await this.authenticateUsingTokenFromQueryParams()
       await this.router.navigate([])
@@ -584,10 +596,11 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   private get tenureBadge(): Badge|undefined {
-    if (this.accountService.account === null || isInactiveOgAccount(this.accountService.account) || isCheatingOgAccount(this.accountService.account)) {
+    const account = this.accountService.account
+    if (account === null || isInactiveOgAccount(account) || isCheatingOgAccount(account) || (isNftAccount(account) && !account.isPoolMember)) {
       return
     }
-    const farmingSince = this.accountService.account.rejoinedAt || this.accountService.account.createdAt
+    const farmingSince = account.rejoinedAt || account.createdAt
     if (moment().diff(farmingSince, 'years') >= 5) {
       return {
         imgSrcPath: 'assets/tenure-ranks/5-years.png',
@@ -706,7 +719,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   private get firstYearBadge(): Badge|undefined {
-    if (this.accountService.account === null || moment(this.accountService.account.createdAt).isAfter('2022-06-13T00:00:00.000Z')) {
+    if (this.accountService.account === null || moment(this.accountService.account.createdAt).subtract(1, 'year').isAfter(this.poolsProvider.pool.launchDate)) {
       return
     }
 
@@ -880,7 +893,15 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   }
 
   public get isPoolMember(): boolean {
-    return this.accountService.account !== null && !isInactiveOgAccount(this.accountService.account) && !isCheatingOgAccount(this.accountService.account)
+    const account = this.accountService.account
+    if (account === null) {
+      return false
+    }
+    if (isOgAccount(account)) {
+      return !isInactiveOgAccount(account) && !isCheatingOgAccount(account)
+    }
+
+    return account.isPoolMember
   }
 
   public get accountHasNeverSubmittedAPartial(): boolean {
@@ -910,6 +931,31 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     const farmingSince = this.accountService.account.rejoinedAt || this.accountService.account.createdAt
 
     return moment(farmingSince).isAfter(moment().subtract(1, 'day'))
+  }
+
+  async loginAndAuthFromQueryParams() {
+    const accountIdentifier = this.activatedRoute.snapshot.queryParamMap.get('launcher_id')?.stripHexPrefix()
+    const message = this.activatedRoute.snapshot.queryParamMap.get('authentication_token')
+    const signature = this.activatedRoute.snapshot.queryParamMap.get('signature')
+    const success = await this.accountService.login({ accountIdentifier })
+    if (!success) {
+      return
+    }
+    try {
+      await this.accountService.authenticate({ message, signature })
+      this.toastService.showSuccessToast(this.snippetService.getSnippet('authentication-modal.success'))
+    } catch (err) {
+      this.toastService.showErrorToast(err.message)
+      return
+    }
+  }
+
+  isLoginRequest() {
+    const singletonGenesis = this.activatedRoute.snapshot.queryParamMap.get('launcher_id')
+    const message = this.activatedRoute.snapshot.queryParamMap.get('authentication_token')
+    const signature = this.activatedRoute.snapshot.queryParamMap.get('signature')
+
+    return singletonGenesis && message && signature
   }
 
   private makeEcChartUpdateOptions(historicalStats: AccountHistoricalStat[]): EChartsOption {
@@ -1038,8 +1084,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
   async login() {
     if (!this.accountIdentifierInput) {
-      const errorMessage = this.poolsProvider.pool.type === PoolType.og ? 'No pool public key entered!' : 'No pool public key entered!'
-      this.toastService.showErrorToast(errorMessage)
+      this.toastService.showErrorToast(`No ${makeAccountIdentifierName(this.poolsProvider.pool.type)} entered!`)
+
       return
     }
     let accountIdentifier = this.accountIdentifierInput.trim()

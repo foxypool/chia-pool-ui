@@ -13,6 +13,9 @@
     </h4>
     <div>
       <ul>
+        <li *ngIf="supportsCompressedPlots">
+          Compressed plots are supported <fa-icon [icon]="faCheck" class="color-green"></fa-icon>
+        </li>
         <li>
           {{snippetService.getSnippet('info-component.pool-info.block-split-info')}}
         </li>

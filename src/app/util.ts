@@ -1,4 +1,5 @@
 import {BigNumber} from 'bignumber.js'
+import {PoolType} from './pools.provider'
 
 export function getEffortColor(effort: BigNumber | null | undefined): string {
   if (effort === null || effort === undefined) {
@@ -56,4 +57,11 @@ export function getEffortColorForChart(effort: number | null | undefined): strin
   }
 
   return '#ff4d4d'
+}
+
+export function makeAccountIdentifierName(poolType: PoolType): string {
+  switch (poolType) {
+    case PoolType.og: return 'Pool Public Key'
+    case PoolType.nft: return 'Launcher Id'
+  }
 }

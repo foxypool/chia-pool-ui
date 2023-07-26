@@ -6,6 +6,7 @@ import {InfoRoutingModule} from './info-routing.module'
 import {NgbDropdownModule} from '@ng-bootstrap/ng-bootstrap'
 import {NgxEchartsModule} from 'ngx-echarts'
 import {FormsModule} from '@angular/forms'
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome'
 
 @NgModule({
   declarations: [InfoComponent],
@@ -15,6 +16,7 @@ import {FormsModule} from '@angular/forms'
     NgbDropdownModule,
     NgxEchartsModule,
     FormsModule,
+    FontAwesomeModule,
   ],
 })
 export class InfoModule { }

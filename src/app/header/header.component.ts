@@ -6,6 +6,7 @@ import {AccountService} from '../account.service'
 import {RatesService} from '../rates.service'
 import {Router} from '@angular/router'
 import {faSearch} from '@fortawesome/free-solid-svg-icons'
+import {makeAccountIdentifierName} from '../util'
 
 @Component({
   selector: 'app-header',
@@ -16,6 +17,7 @@ export class HeaderComponent {
   public isMenuCollapsed = true
   public accountSearchInput = ''
   public searchIcon = faSearch
+  public readonly accountSearchInputPlaceholder: string = makeAccountIdentifierName(this.poolsProvider.pool.type)
 
   constructor(
     public accountService: AccountService,

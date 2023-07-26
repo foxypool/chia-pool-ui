@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-12" *ngIf="!accountService.haveAccountIdentifier">
     <div class="d-flex justify-content-center">
-      <input type="text" class="form-control" placeholder="{{snippetService.getSnippet('my-farmer-component.pool-pk-input.placeholder')}}" [(ngModel)]="accountIdentifierInput" style="width: 32em;margin-right: 0.5rem;">
+      <input type="text" class="form-control" placeholder="{{accountIdentifierInputPlaceholder}}" [(ngModel)]="accountIdentifierInput" style="width: 32em;margin-right: 0.5rem;">
       <button class="btn btn-success" style="margin-left: 0.5rem;" (click)="login()">
         <fa-icon *ngIf="accountService.isLoading" [icon]="faCircleNotch" animation="spin"></fa-icon>
         <span *ngIf="accountService.isLoading"> {{snippetService.getSnippet('my-farmer-component.login-button.label-logging-in')}}</span>
@@ -59,7 +59,8 @@
         <div class="fw-light fs-5 text-break">{{accountService.accountIdentifier}}</div>
       </div>
       <div class="col-12 col-md-auto my-auto action-box" *ngIf="!accountService.haveAuthToken">
-        <button class="btn btn-success" (click)="authenticate()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.authenticate')}}</button>
+        <button *ngIf="showAuthenticationButton" class="btn btn-success" (click)="authenticate()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.authenticate')}}</button>
+        <a *ngIf="showAuthenticationDocsLinkButton" class="btn btn-success text-decoration-none" [href]="authDocsUrl" target="_blank">Authenticate</a>
       </div>
       <div class="col-12 col-md-auto my-auto action-box" *ngIf="accountService.haveAuthToken">
         <button *ngIf="canRejoinPool" class="btn btn-success me-2" (click)="rejoinPool()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.action.rejoin-pool')}}</button>

@@ -8,6 +8,7 @@ import {getEffortColor} from '../util'
 import BigNumber from 'bignumber.js'
 import {ConfigService, DateFormatting} from '../config.service'
 import {RecentlyWonBlock} from '../api/types/pool/reward-stats'
+import {TransactionState} from '../api/types/transaction-state'
 
 @Component({
   selector: 'app-blocks-won',
@@ -95,11 +96,17 @@ export class BlocksWonComponent {
     return 'secondary'
   }
 
-  getBlockDistributedLabel(block) {
+  public getBlockDistributedLabel(block: RecentlyWonBlock): string {
     if (block.distributed) {
       return this.snippetService.getSnippet('blocks-won-component.distributed')
     }
     if (block.isRewardClaimed) {
+      return this.snippetService.getSnippet('blocks-won-component.pending')
+    }
+    if ('rewardClaimTx' in block && block.rewardClaimTx?.state === TransactionState.inMempool) {
+      return this.snippetService.getSnippet('blocks-won-component.in-mempool')
+    }
+    if ('rewardClaimTx' in block && block.rewardClaimTx?.state === TransactionState.confirmed) {
       return this.snippetService.getSnippet('blocks-won-component.pending')
     }
 

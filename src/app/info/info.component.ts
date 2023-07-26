@@ -1,12 +1,13 @@
 import {Component, OnDestroy, OnInit} from '@angular/core'
 import {StatsService} from '../stats.service'
 import {SnippetService} from '../snippet.service'
-import {PoolsProvider} from '../pools.provider'
+import {PoolsProvider, PoolType} from '../pools.provider'
 import {BehaviorSubject, combineLatest, Subscription} from 'rxjs'
 import {EChartsOption} from 'echarts'
 import {compare} from 'compare-versions'
 import {clientVersions} from '../client-versions'
 import {ClientVersion} from '../api/types/pool/client-version'
+import {faCheck} from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'app-info',
@@ -17,6 +18,12 @@ export class InfoComponent implements OnInit, OnDestroy {
   public readonly ClientVersionsChartMode = ClientVersionsChartMode
   public readonly clientVersionsChartOptions: EChartsOption
   public clientVersionsChartUpdateOptions: EChartsOption
+
+  public get supportsCompressedPlots(): boolean {
+    return this.poolsProvider.pool.type === PoolType.nft
+  }
+
+  protected readonly faCheck = faCheck
 
   private clientVersionsUpdateInterval?: ReturnType<typeof setInterval>
   private readonly clientVersions: BehaviorSubject<ClientVersion[]> = new BehaviorSubject<ClientVersion[]>([])

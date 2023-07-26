@@ -32,7 +32,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.poolName = `Foxy-Pool ${this.poolsProvider.coin}`
     this.updateTitle()
     this.seoService.updateMeta({ name: 'description', content: `${this.poolName}, a fair ${this.poolsProvider.coin} PoSt (Proof of space time) pool with low fees hosted in Europe. No registration required and easy to use.` })
-    this.seoService.updateMeta({ name: 'keywords', content: `${this.poolsProvider.coin}, Pool, Foxy-Pool, PoSt, Proof of space time, Mining` })
+    this.seoService.updateMeta({ name: 'keywords', content: `${this.poolsProvider.coin}, Pool, Foxy-Pool, PoSt, Proof of space time, Farming, Mining` })
     console.log(
       `Using %ccommit %c${gitCommitHash}`,
       'color: #44bba4',

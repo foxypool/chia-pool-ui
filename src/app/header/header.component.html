@@ -76,7 +76,7 @@
         class="form-control dark-background"
         type="search"
         [(ngModel)]="accountSearchInput"
-        [placeholder]="snippetService.getSnippet('header-component.search.placeholder')"
+        [placeholder]="accountSearchInputPlaceholder"
         (keyup.enter)="search()"
         aria-label="Search"
       >
