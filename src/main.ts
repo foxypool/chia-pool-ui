@@ -23,6 +23,7 @@ const ignoreErrors = [
   'ChunkLoadError: Loading chunk',
   'undefined is not an object (evaluating \'a.P\')',
   'undefined is not an object (evaluating \'a.fa\')',
+  'Cannot read properties of undefined (reading \'firefoxSample\')'
 ]
 
 Sentry.init({
