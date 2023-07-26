@@ -26,7 +26,7 @@ const ignoreErrors = [
 ]
 
 Sentry.init({
-  dsn: 'https://f1ed3ebc92ba45d99ebc558a547e362d@o236153.ingest.sentry.io/5906348',
+  dsn: 'https://37abd9100b744f01a9b38464c91c28e3@o236153.ingest.sentry.io/4505596429860864',
   release: gitCommitHash || null,
   integrations: [
     new Sentry.BrowserTracing({
@@ -34,7 +34,11 @@ Sentry.init({
       routingInstrumentation: Sentry.routingInstrumentation,
     }),
   ],
-  tracesSampleRate: 0,
+  // Performance Monitoring
+  tracesSampleRate: 0.05,
+  // Session Replay
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0,
   allowUrls: ['foxypool.io'],
   ignoreErrors,
   beforeSend(event: Event, hint?: EventHint): PromiseLike<Event | null> | Event | null {
