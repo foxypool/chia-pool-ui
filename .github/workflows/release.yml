@@ -14,6 +14,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
+      - name: Use current yarn
+        run: yarn set version stable
       - name: Install
         run: yarn install
       - name: Build with source maps
