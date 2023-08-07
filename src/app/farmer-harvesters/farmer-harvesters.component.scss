@@ -17,3 +17,37 @@
   background-color: #262629;
   border-color: #18191c;
 }
+.page-size-select {
+  width: 4em;
+}
+.page-size-select-option {
+  background-color: #262629;
+}
+.dark-background {
+  background-color: #262629;
+  color: #cfd0d1;
+  border-color: #6c757d;
+}
+.page-size-select-label {
+  font-size: small;
+}
+.footer-grid {
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 5px;
+  grid-auto-flow: row;
+  justify-items: center;
+}
+.pagination-grid-item {
+  grid-column-start: 2;
+}
+@media (max-width: 606px) {
+  .footer-grid {
+    grid-template-columns: repeat(1, 1fr);
+    grid-column-gap: 5px;
+    grid-auto-flow: row;
+    justify-items: center;
+  }
+  .pagination-grid-item {
+    grid-column-start: 1;
+  }
+}

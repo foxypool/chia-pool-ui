@@ -11,14 +11,33 @@ import { Harvester } from '../api/types/harvester/harvester'
   styleUrls: ['./farmer-harvesters.component.scss']
 })
 export class FarmerHarvestersComponent implements OnInit, OnDestroy {
+  public get pageSize(): number {
+    return this._pageSize
+  }
+
+  public set pageSize(value: number) {
+    this._pageSize = value
+    if (this._pageSize > this.harvestersSubject.getValue().length && this.page > 1) {
+      this.page = 1
+    }
+  }
+
   public page = 1
-  public pageSize = 5
+  public readonly pageSizes: number[] = [
+    5,
+    10,
+    15,
+    20,
+    25,
+    50,
+  ]
   public readonly faTractor = faTractor
   public readonly isLoading: Observable<boolean>
   public readonly harvesters: Observable<Harvester[]>
   private readonly isLoadingSubject: BehaviorSubject<boolean> = new BehaviorSubject(true)
   private readonly harvestersSubject: BehaviorSubject<Harvester[]> = new BehaviorSubject<Harvester[]>([])
   private harvestersUpdateInterval?: ReturnType<typeof setInterval>
+  private _pageSize = 5
   private readonly subscriptions: Subscription[] = [
     this.accountService.currentAccountIdentifier.pipe(skip(1)).subscribe(async () => {
       this.page = 1

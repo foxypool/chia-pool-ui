@@ -13,13 +13,26 @@
     <app-harvester-card [harvester]="harvester" (updatedHarvester)="updateHarvesters({ bustCache: true })"></app-harvester-card>
   </div>
 </div>
-<ngb-pagination
-  *ngIf="(harvesters | async).length > pageSize"
-  class="d-flex justify-content-center"
-  [(page)]="page"
-  [pageSize]="pageSize"
-  [collectionSize]="(harvesters | async).length"
-  [maxSize]="5"
-  [rotate]="true"
-  [boundaryLinks]="true">
-</ngb-pagination>
+<div class="d-grid footer-grid">
+  <div class="pagination-grid-item">
+    <ngb-pagination
+      *ngIf="(harvesters | async).length > pageSize"
+      [(page)]="page"
+      [pageSize]="pageSize"
+      [collectionSize]="(harvesters | async).length"
+      [maxSize]="5"
+      [rotate]="true"
+      [boundaryLinks]="true">
+    </ngb-pagination>
+  </div>
+  <div style="margin-left: auto">
+    <div class="input-group" style="flex-wrap: nowrap">
+      <label class="input-group-text dark-background page-size-select-label">
+        Items per page
+      </label>
+      <select  class="form-select dark-background page-size-select" [(ngModel)]="pageSize">
+        <option *ngFor="let currPageSize of pageSizes" [ngValue]="currPageSize" class="page-size-select-option">{{currPageSize}}</option>
+      </select>
+    </div>
+  </div>
+</div>
