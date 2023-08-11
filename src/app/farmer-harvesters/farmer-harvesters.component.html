@@ -25,7 +25,7 @@
       [boundaryLinks]="true">
     </ngb-pagination>
   </div>
-  <div style="margin-left: auto">
+  <div style="margin-left: auto" *ngIf="showItemsPerPageSelection | async">
     <div class="input-group" style="flex-wrap: nowrap">
       <label class="input-group-text dark-background page-size-select-label">
         Items per page

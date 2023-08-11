@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core'
 import {AccountService} from '../account.service'
 import {BehaviorSubject, Observable, Subscription} from 'rxjs'
 import {faTractor} from '@fortawesome/free-solid-svg-icons'
-import {skip} from 'rxjs/operators'
+import {distinctUntilChanged, map, shareReplay, skip} from 'rxjs/operators'
 import { Harvester } from '../api/types/harvester/harvester'
 
 @Component({
@@ -31,6 +31,7 @@ export class FarmerHarvestersComponent implements OnInit, OnDestroy {
     25,
     50,
   ]
+  public readonly showItemsPerPageSelection: Observable<boolean>
   public readonly faTractor = faTractor
   public readonly isLoading: Observable<boolean>
   public readonly harvesters: Observable<Harvester[]>
@@ -48,6 +49,11 @@ export class FarmerHarvestersComponent implements OnInit, OnDestroy {
   public constructor(private readonly accountService: AccountService) {
     this.harvesters = this.harvestersSubject.asObservable()
     this.isLoading = this.isLoadingSubject.asObservable()
+    this.showItemsPerPageSelection = this.harvesters.pipe(
+      map(harvesters => harvesters.length > 0),
+      distinctUntilChanged(),
+      shareReplay(),
+    )
   }
 
   public async ngOnInit(): Promise<void> {
