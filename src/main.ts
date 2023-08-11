@@ -23,7 +23,8 @@ const ignoreErrors = [
   'ChunkLoadError: Loading chunk',
   'undefined is not an object (evaluating \'a.P\')',
   'undefined is not an object (evaluating \'a.fa\')',
-  'Cannot read properties of undefined (reading \'firefoxSample\')'
+  'Cannot read properties of undefined (reading \'firefoxSample\')',
+  'Can\'t find variable: msDiscoverChatAvailable',
 ]
 
 Sentry.init({
@@ -42,6 +43,11 @@ Sentry.init({
   replaysSessionSampleRate: 0,
   replaysOnErrorSampleRate: 1.0,
   allowUrls: ['foxypool.io'],
+  denyUrls: [
+    /extensions\//i,
+    /^chrome:\/\//i,
+    /^chrome-extension:\/\//i,
+  ],
   ignoreErrors,
   beforeSend(event: Event, hint?: EventHint): PromiseLike<Event | null> | Event | null {
     const error = hint.originalException
