@@ -24,3 +24,20 @@
 .highlight:hover{
   color: rgba(255, 255, 255, 0.9);
 }
+
+:host ::ng-deep editable {
+  cursor: default !important;
+}
+
+.harvester-name-or-peer-id-container {
+  width: fit-content;
+  cursor: pointer;
+}
+
+.harvester-name-or-peer-id-view-mode + .visible-on-hover {
+  display: none;
+}
+
+.harvester-name-or-peer-id-view-mode:hover + .visible-on-hover {
+  display: block;
+}

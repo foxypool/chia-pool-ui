@@ -12,7 +12,7 @@ import {EChartsOption} from 'echarts'
 import {Moment} from 'moment'
 import {compare} from 'compare-versions'
 import {clientVersions} from '../client-versions'
-import {faEllipsisV, faReceipt} from '@fortawesome/free-solid-svg-icons'
+import {faEllipsisV, faPencil, faReceipt} from '@fortawesome/free-solid-svg-icons'
 import {HarvesterSettingsModalComponent} from '../harvester-settings-modal/harvester-settings-modal.component'
 import {HarvesterStats, RejectedSubmissionType} from '../api/types/harvester/harvester-stats'
 import {ProofTime} from '../api/types/harvester/proof-time'
@@ -35,6 +35,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   public nameControl: UntypedFormControl
   public readonly faEllipsisV = faEllipsisV
   public readonly faReceipt = faReceipt
+  public readonly faPencil = faPencil
   public readonly ChartMode = ChartMode
   public readonly showSharesChart: Observable<boolean>
   public readonly showProofTimesChart: Observable<boolean>

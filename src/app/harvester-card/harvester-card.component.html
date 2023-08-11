@@ -3,7 +3,12 @@
     <div>
       <h5>
         <editable [enabled]="canEditName" (save)="updateName()" (cancel)="cancelNameUpdate()">
-          <ng-template viewMode>{{nameOrPeerIdSlug}}</ng-template>
+          <ng-template viewMode>
+            <div class="d-flex harvester-name-or-peer-id-container">
+              <div class="harvester-name-or-peer-id-view-mode">{{nameOrPeerIdSlug}}</div>
+              <div class="ps-1 visible-on-hover"><fa-icon [icon]="faPencil"></fa-icon></div>
+            </div>
+          </ng-template>
 
           <ng-template editMode>
             <input editableOnEnter editableOnEscape class="form-control harvester-name-input" type="text" [formControl]="nameControl"/>
