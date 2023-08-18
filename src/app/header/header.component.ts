@@ -4,9 +4,10 @@ import {SnippetService} from '../snippet.service'
 import {PoolsProvider} from '../pools.provider'
 import {AccountService} from '../account.service'
 import {RatesService} from '../rates.service'
-import {Router} from '@angular/router'
+import {ActivatedRoute, Router} from '@angular/router'
 import {faSearch} from '@fortawesome/free-solid-svg-icons'
 import {makeAccountIdentifierName} from '../util'
+import {MyFarmerComponent} from '../my-farmer/my-farmer.component'
 
 @Component({
   selector: 'app-header',
@@ -26,6 +27,7 @@ export class HeaderComponent {
     private readonly poolsProvider: PoolsProvider,
     public ratesService: RatesService,
     private readonly router: Router,
+    private readonly route: ActivatedRoute,
   ) {}
 
   public isLinkActive(url: string): boolean {
@@ -35,12 +37,15 @@ export class HeaderComponent {
     return baseUrl === url
   }
 
-  get showLogoutButton(): boolean {
+  public get showLogoutButton(): boolean {
+    if (this.route.firstChild?.component !== MyFarmerComponent) {
+      return false
+    }
     if (!this.accountService.isMyFarmerPage) {
       return this.accountService.isAuthenticated
     }
 
-    return this.accountService.haveAccountIdentifier
+    return this.accountService.haveAccountIdentifier || this.accountService.accountIdentifierFromLocalStorage !== null
   }
 
   toggleMenuCollapse() {
