@@ -65,7 +65,7 @@
         </a>
       </li>
     </ul>
-    <div class="d-flex flex-wrap">
+    <div class="d-flex flex-wrap flex-md-nowrap">
       <div class="header-row-item" *ngIf="showLogoutButton">
         <button class="btn dark-background btn-outline-danger logout-button" (click)="accountService.logout()">{{snippetService.getSnippet('header-component.button.logout')}}</button>
       </div>
