@@ -25,6 +25,7 @@ const ignoreErrors = [
   'undefined is not an object (evaluating \'a.fa\')',
   'Cannot read properties of undefined (reading \'firefoxSample\')',
   'Can\'t find variable: msDiscoverChatAvailable',
+  'SecurityError: Failed to read the \'localStorage\'',
 ]
 
 Sentry.init({
