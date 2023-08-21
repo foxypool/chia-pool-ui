@@ -1,5 +1,6 @@
 import {ToastrService} from 'ngx-toastr'
 import {Injectable} from '@angular/core'
+import {IndividualConfig} from 'ngx-toastr/toastr/toastr-config'
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,7 @@ import {Injectable} from '@angular/core'
 export class ToastService {
   constructor(private readonly toastr: ToastrService) {}
 
-  showSuccessToast(msg, title = '', options = {}) {
+  showSuccessToast(msg, title = '', options: Partial<IndividualConfig> = {}) {
     options = Object.assign({
       timeOut: 1500,
       progressBar: true,
@@ -16,7 +17,7 @@ export class ToastService {
     this.toastr.success(msg, title, options)
   }
 
-  showInfoToast(msg, title = '', options = {}) {
+  showInfoToast(msg, title = '', options: Partial<IndividualConfig> = {}) {
     options = Object.assign({
       timeOut: 3000,
       progressBar: true,
@@ -25,7 +26,7 @@ export class ToastService {
     this.toastr.info(msg, title, options)
   }
 
-  showErrorToast(msg, title = '', options = {}) {
+  showErrorToast(msg, title = '', options: Partial<IndividualConfig> = {}) {
     options = Object.assign({
       timeOut: 5000,
       progressBar: true,
