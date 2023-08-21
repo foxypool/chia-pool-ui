@@ -36,7 +36,7 @@ export class AccountService {
   public isAuthenticating = false
   public isUpdatingAccount = false
   public isLeavingPool = false
-  public isMyFarmerPage = true
+  public isMyFarmerAccount = true
 
   public get account(): Account|null {
     return this.accountSubject.getValue()
@@ -223,7 +223,7 @@ export class AccountService {
   async updateAccount({ bustCache = false } = {}) {
     this.account = await this.getAccount({ accountIdentifier: this.accountIdentifier, bustCache })
     if (!this.haveAccount) {
-      if (this.isMyFarmerPage) {
+      if (this.isMyFarmerAccount) {
         this.removeAuthTokenFromLocalStorage()
         this.removeAccountIdentifierFromLocalStorage()
       }

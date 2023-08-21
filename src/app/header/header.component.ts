@@ -38,14 +38,18 @@ export class HeaderComponent {
   }
 
   public get showLogoutButton(): boolean {
-    if (this.route.firstChild?.component !== MyFarmerComponent) {
+    if (!this.isCurrentlyOnMyFarmerPage) {
       return false
     }
-    if (!this.accountService.isMyFarmerPage) {
+    if (!this.accountService.isMyFarmerAccount) {
       return this.accountService.isAuthenticated
     }
 
     return this.accountService.haveAccountIdentifier || this.accountService.accountIdentifierFromLocalStorage !== null
+  }
+
+  private get isCurrentlyOnMyFarmerPage(): boolean {
+    return this.route.firstChild?.component === MyFarmerComponent
   }
 
   toggleMenuCollapse() {

@@ -89,9 +89,9 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     this.activatedRoute.params.subscribe(async params => {
       if (params.accountIdentifier) {
         this.accountService.accountIdentifier = params.accountIdentifier
-        this.accountService.isMyFarmerPage = false
+        this.accountService.isMyFarmerAccount = false
       } else {
-        this.accountService.isMyFarmerPage = true
+        this.accountService.isMyFarmerAccount = true
         if (this.accountService.isExternalAccountIdentifier) {
           this.accountService.accountIdentifier = this.accountService.accountIdentifierFromLocalStorage
         }
@@ -507,7 +507,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     }
     await this.accountService.updateAccount()
     if (!this.accountService.haveAccount) {
-      if (!this.accountService.isMyFarmerPage) {
+      if (!this.accountService.isMyFarmerAccount) {
         await new Promise(resolve => setTimeout(resolve, 500))
         await this.router.navigate(['/'])
       }
