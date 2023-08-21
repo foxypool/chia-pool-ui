@@ -1068,7 +1068,9 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
   private ecChartTooltipFormatter(unit, params) {
     return params.map(series => {
-      return `${series.marker}${series.seriesName} <span style="padding-left: 10px; float: right"><strong>${series.value[1]} ${unit}</strong></span>`
+      const value = series.value !== undefined ? series.value[1] : 'N/A'
+
+      return `${series.marker}${series.seriesName} <span style="padding-left: 10px; float: right"><strong>${value} ${unit}</strong></span>`
     }).join('<br/>')
   }
 
