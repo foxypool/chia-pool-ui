@@ -1,0 +1,11 @@
+<div class="p-2 border border-primary rounded text-center">
+  <div class="mb-1">{{versionName}}</div>
+  <div class="d-flex justify-content-center" style="gap: 0.33rem !important;">
+    <h5 [ngClass]="versionColorClasses">{{versionString}}</h5>
+    <fa-icon
+      *ngIf="versionUpdateTooltip !== undefined"
+      [icon]="faInfoCircle"
+      [ngbTooltip]="versionUpdateTooltip"
+    ></fa-icon>
+  </div>
+</div>

@@ -69,34 +69,39 @@
         </div>
       </div>
       <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl col-xxl col-xxxl col-xxxxl col-xxxxxl p-1">
-        <div class="p-2 border border-primary rounded text-center">
-          <div class="mb-1">Chia Version</div>
-          <h5 [ngClass]="chiaVersionColorClasses">{{fullChiaVersionString}}</h5>
-        </div>
+        <app-version-info
+          versionName="Chia Version"
+          [versionString]="fullChiaVersionString"
+          [versionUpdateInfo]="chiaVersionUpdateInfo"
+        ></app-version-info>
       </div>
       <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl col-xxl col-xxxl col-xxxxl col-xxxxxl p-1" *ngIf="hasOgVersion">
-        <div class="p-2 border border-primary rounded text-center">
-          <div class="mb-1">OG Version</div>
-          <h5 [ngClass]="ogVersionColorClasses">{{ogVersion}}</h5>
-        </div>
+        <app-version-info
+          versionName="OG Version"
+          [versionString]="ogVersion"
+          [versionUpdateInfo]="ogVersionUpdateInfo"
+        ></app-version-info>
       </div>
       <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl col-xxl col-xxxl col-xxxxl col-xxxxxl p-1" *ngIf="hasGigahorseVersion">
-        <div class="p-2 border border-primary rounded text-center">
-          <div class="mb-1">Gigahorse Version</div>
-          <h5 [ngClass]="gigahorseVersionColorClasses">{{gigahorseVersion}}</h5>
-        </div>
+        <app-version-info
+          versionName="Gigahorse Version"
+          [versionString]="gigahorseVersion"
+          [versionUpdateInfo]="gigahorseVersionUpdateInfo"
+        ></app-version-info>
       </div>
       <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl col-xxl col-xxxl col-xxxxl col-xxxxxl p-1" *ngIf="hasChiaCompressionVersion">
-        <div class="p-2 border border-primary rounded text-center">
-          <div class="mb-1">Compression Version</div>
-          <h5 [ngClass]="chiaCompressionVersionColorClasses">{{chiaCompressionVersion}}</h5>
-        </div>
+        <app-version-info
+          versionName="Compression Version"
+          [versionString]="chiaCompressionVersion"
+          [versionUpdateInfo]="chiaCompressionVersionUpdateInfo"
+        ></app-version-info>
       </div>
       <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl col-xxl col-xxxl col-xxxxl col-xxxxxl p-1" *ngIf="hasFoxyFarmerVersion">
-        <div class="p-2 border border-primary rounded text-center">
-          <div class="mb-1">Foxy-Farmer Version</div>
-          <h5 [ngClass]="foxyFarmerVersionColorClasses">{{foxyFarmerVersion}}</h5>
-        </div>
+        <app-version-info
+          versionName="Foxy-Farmer Version"
+          [versionString]="foxyFarmerVersion"
+          [versionUpdateInfo]="foxyFarmerVersionUpdateInfo"
+        ></app-version-info>
       </div>
     </div>
     <div class="row" *ngIf="showSharesChart | async">

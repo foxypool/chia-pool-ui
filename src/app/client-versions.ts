@@ -4,7 +4,7 @@ export const clientVersions = {
     recommendedMinimum: '2.0.0',
     current: '2.0.0',
     recent: '1.8.0',
-    outdated: '1.6.0',
+    outdated: '1.7.0',
   },
   og: {
     minimum: '1.2.0',
@@ -22,4 +22,10 @@ export const clientVersions = {
     minimum: '4.3',
     recommendedMinimum: '4.3',
   },
+}
+
+export enum VersionUpdateInfo {
+  noActionRequired,
+  updateRecommended,
+  updateStronglyRecommended,
 }

@@ -3,20 +3,20 @@ import {UntypedFormControl} from '@angular/forms'
 import {ToastService} from '../toast.service'
 import {AccountService} from '../account.service'
 import * as moment from 'moment'
+import {Moment} from 'moment'
 import {BehaviorSubject, Observable, Subscription, take} from 'rxjs'
 import {StatsService} from '../stats.service'
 import {distinctUntilChanged, filter, map, shareReplay} from 'rxjs/operators'
 import {BigNumber} from 'bignumber.js'
 import Capacity from '../capacity'
 import {EChartsOption} from 'echarts'
-import {Moment} from 'moment'
 import {compare} from 'compare-versions'
-import {clientVersions} from '../client-versions'
+import {clientVersions, VersionUpdateInfo} from '../client-versions'
 import {faEllipsisV, faPencil, faReceipt} from '@fortawesome/free-solid-svg-icons'
 import {HarvesterSettingsModalComponent} from '../harvester-settings-modal/harvester-settings-modal.component'
 import {HarvesterStats, RejectedSubmissionType} from '../api/types/harvester/harvester-stats'
 import {ProofTime} from '../api/types/harvester/proof-time'
-import { Harvester } from '../api/types/harvester/harvester'
+import {Harvester} from '../api/types/harvester/harvester'
 
 const sharesPerDayPerK32 = 10
 const k32SizeInGb = 108.837
@@ -356,19 +356,19 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     return moment(this.harvester.lastAcceptedPartialAt).fromNow()
   }
 
-  public get chiaVersionColorClasses(): string[] {
+  public get chiaVersionUpdateInfo(): VersionUpdateInfo {
     const chiaVersion = this.chiaVersion
     if (chiaVersion === undefined) {
-      return []
+      return VersionUpdateInfo.noActionRequired
     }
     if (compare(chiaVersion, clientVersions.chia.recommendedMinimum, '>=')) {
-      return []
+      return VersionUpdateInfo.noActionRequired
     }
     if (compare(chiaVersion, clientVersions.chia.minimum, '>=')) {
-      return ['color-orange']
+      return VersionUpdateInfo.updateRecommended
     }
 
-    return ['color-red']
+    return VersionUpdateInfo.updateStronglyRecommended
   }
 
   private get chiaVersion(): string|undefined {
@@ -414,19 +414,19 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     return chiaVersion
   }
 
-  public get ogVersionColorClasses(): string[] {
+  public get ogVersionUpdateInfo(): VersionUpdateInfo {
     const ogVersion = this.ogVersion
     if (ogVersion === undefined) {
-      return []
+      return VersionUpdateInfo.noActionRequired
     }
     if (compare(ogVersion, clientVersions.og.recommendedMinimum, '>=')) {
-      return []
+      return VersionUpdateInfo.noActionRequired
     }
     if (compare(ogVersion, clientVersions.og.minimum, '>=')) {
-      return ['color-orange']
+      return VersionUpdateInfo.updateRecommended
     }
 
-    return ['color-red']
+    return VersionUpdateInfo.updateStronglyRecommended
   }
 
   public get ogVersion(): string|undefined {
@@ -445,19 +445,19 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     return this.ogVersion !== undefined
   }
 
-  public get foxyFarmerVersionColorClasses(): string[] {
+  public get foxyFarmerVersionUpdateInfo(): VersionUpdateInfo {
     const foxyFarmerVersion = this.foxyFarmerVersion
     if (foxyFarmerVersion === undefined) {
-      return []
+      return VersionUpdateInfo.noActionRequired
     }
     if (compare(foxyFarmerVersion, clientVersions.foxyFarmer.recommendedMinimum, '>=')) {
-      return []
+      return VersionUpdateInfo.noActionRequired
     }
     if (compare(foxyFarmerVersion, clientVersions.foxyFarmer.minimum, '>=')) {
-      return ['color-orange']
+      return VersionUpdateInfo.updateRecommended
     }
 
-    return ['color-red']
+    return VersionUpdateInfo.updateStronglyRecommended
   }
 
   public get foxyFarmerVersion(): string|undefined {
@@ -476,23 +476,23 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     return this.foxyFarmerVersion !== undefined
   }
 
-  public get gigahorseVersionColorClasses(): string[] {
+  public get gigahorseVersionUpdateInfo(): VersionUpdateInfo {
     const gigahorseVersion = this.gigahorseVersion
     if (gigahorseVersion === undefined) {
-      return []
+      return VersionUpdateInfo.noActionRequired
     }
     const gigahorseVersionNumber = parseInt(gigahorseVersion, 10)
     if (isNaN(gigahorseVersionNumber)) {
-      return []
+      return VersionUpdateInfo.noActionRequired
     }
     if (gigahorseVersionNumber >= clientVersions.gigahorse.recommendedMinimum) {
-      return []
+      return VersionUpdateInfo.noActionRequired
     }
     if (gigahorseVersionNumber >= clientVersions.gigahorse.minimum) {
-      return ['color-orange']
+      return VersionUpdateInfo.updateRecommended
     }
 
-    return ['color-red']
+    return VersionUpdateInfo.updateStronglyRecommended
   }
 
   public get gigahorseVersion(): string|undefined {
@@ -544,20 +544,20 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     }
   }
 
-  public get chiaCompressionVersionColorClasses(): string[] {
+  public get chiaCompressionVersionUpdateInfo(): VersionUpdateInfo {
     const compressionAlphaVersion = this.chiaCompressionAlphaVersion
     if (compressionAlphaVersion !== undefined) {
       if (compare(compressionAlphaVersion, clientVersions.chiaCompressionAlpha.recommendedMinimum, '>=')) {
-        return []
+        return VersionUpdateInfo.noActionRequired
       }
       if (compare(compressionAlphaVersion, clientVersions.chiaCompressionAlpha.minimum, '>=')) {
-        return ['color-orange']
+        return VersionUpdateInfo.updateRecommended
       }
 
-      return ['color-red']
+      return VersionUpdateInfo.updateStronglyRecommended
     }
 
-    return []
+    return VersionUpdateInfo.noActionRequired
   }
 
   public get chiaCompressionVersion(): string|undefined {
