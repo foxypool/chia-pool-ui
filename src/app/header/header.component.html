@@ -81,8 +81,11 @@
           (keyup.enter)="search()"
           aria-label="Search"
         >
-        <div class="input-group-text dark-background search-button" (click)="search()">
+        <div *ngIf="(isSearchingAccount$ | async) === false" class="input-group-text dark-background search-button" (click)="search()">
           <fa-icon [icon]="searchIcon" class="color-green"></fa-icon>
+        </div>
+        <div *ngIf="isSearchingAccount$ | async" class="input-group-text dark-background">
+          <fa-icon [icon]="faCircleNotch" animation="spin" class="color-green"></fa-icon>
         </div>
       </div>
       <div ngbDropdown display="dynamic" class="d-inline-block header-row-item" *ngIf="otherPools.length > 0">

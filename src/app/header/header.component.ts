@@ -5,9 +5,10 @@ import {PoolsProvider} from '../pools.provider'
 import {AccountService} from '../account.service'
 import {RatesService} from '../rates.service'
 import {ActivatedRoute, Router} from '@angular/router'
-import {faSearch} from '@fortawesome/free-solid-svg-icons'
+import {faCircleNotch, faSearch} from '@fortawesome/free-solid-svg-icons'
 import {makeAccountIdentifierName} from '../util'
 import {MyFarmerComponent} from '../my-farmer/my-farmer.component'
+import {BehaviorSubject, Observable} from 'rxjs'
 
 @Component({
   selector: 'app-header',
@@ -17,8 +18,13 @@ import {MyFarmerComponent} from '../my-farmer/my-farmer.component'
 export class HeaderComponent {
   public isMenuCollapsed = true
   public accountSearchInput = ''
-  public searchIcon = faSearch
   public readonly accountSearchInputPlaceholder: string = makeAccountIdentifierName(this.poolsProvider.pool.type)
+  public readonly isSearchingAccount$: Observable<boolean>
+
+  protected readonly searchIcon = faSearch
+  protected readonly faCircleNotch = faCircleNotch
+
+  private readonly isSearchingAccount: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
 
   constructor(
     public accountService: AccountService,
@@ -28,7 +34,9 @@ export class HeaderComponent {
     public ratesService: RatesService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
-  ) {}
+  ) {
+    this.isSearchingAccount$ = this.isSearchingAccount.asObservable()
+  }
 
   public isLinkActive(url: string): boolean {
     const queryParamsIndex = this.router.url.indexOf('?')
@@ -60,14 +68,20 @@ export class HeaderComponent {
     return this._snippetService
   }
 
-  async search() {
+  public async search() {
     this.accountSearchInput = this.accountSearchInput.trim()
     if (!this.accountSearchInput) {
       return
     }
-    if (await this.accountService.doesAccountExist({ accountIdentifier: this.accountSearchInput })) {
-      await this.router.navigate([`/farmer/${this.accountSearchInput}`])
-      this.accountSearchInput = ''
+    this.isSearchingAccount.next(true)
+    try {
+      const accountExists = await this.accountService.doesAccountExist({ accountIdentifier: this.accountSearchInput })
+      if (accountExists) {
+        await this.router.navigate([`/farmer/${this.accountSearchInput}`])
+        this.accountSearchInput = ''
+      }
+    } finally {
+      this.isSearchingAccount.next(false)
     }
   }
 
