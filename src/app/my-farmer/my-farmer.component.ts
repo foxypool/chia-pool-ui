@@ -260,7 +260,6 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         name: this.snippetService.getSnippet('my-farmer-component.shares-chart.invalid-shares.name'),
         color: '#dc3545',
         large: true,
-        barWidth: 6,
       }, {
         data: [],
         type: 'bar',
@@ -268,7 +267,6 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         name: this.snippetService.getSnippet('my-farmer-component.shares-chart.stale-shares.name'),
         color: '#c98a1a',
         large: true,
-        barWidth: 6,
       }, {
         data: [],
         type: 'bar',
@@ -276,7 +274,6 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         name: this.snippetService.getSnippet('my-farmer-component.shares-chart.valid-shares.name'),
         color: '#037ffc',
         large: true,
-        barWidth: 6,
       }, {
         data: [],
         type: 'line',

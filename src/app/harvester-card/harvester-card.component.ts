@@ -183,7 +183,6 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         name: 'Invalid Shares',
         color: '#dc3545',
         large: true,
-        barWidth: 6,
       }, {
         data: [],
         type: 'bar',
@@ -191,7 +190,6 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         name: 'Stale Shares',
         color: '#c98a1a',
         large: true,
-        barWidth: 6,
       }, {
         data: [],
         type: 'bar',
@@ -199,7 +197,6 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         name: 'Valid Shares',
         color: '#037ffc',
         large: true,
-        barWidth: 6,
       }, {
         data: [],
         type: 'line',
