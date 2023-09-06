@@ -129,7 +129,6 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     private readonly configService: ConfigService,
     private readonly balanceProvider: BalanceProvider,
   ) {
-    this.selectedNavTab = this.activatedRoute.fragment.pipe(map(fragment => fragment === null ? 'stats' : fragment))
     this.ecChartOptions = {
       title: {
         text: this.snippetService.getSnippet('my-farmer-component.ec-chart.title'),
@@ -401,11 +400,13 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         map(balance => balance.toNumber()),
         shareReplay({ refCount: true }),
       )
+    this.selectedNavTab = this.activatedRoute.fragment.pipe(map(fragment => fragment === null ? 'stats' : fragment))
 
     // Add dummy subscribes to trigger streams ahead of first use
     this.subscriptions.push(
       this.payoutAddressBalance.subscribe(() => {}),
       this.lastAcceptedPartialAt$.subscribe(() => {}),
+      sharesStream.subscribe(() => {}),
     )
   }
 
