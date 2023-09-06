@@ -70,6 +70,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   public readonly showAuthenticationButton: boolean = this.poolsProvider.pool.type === PoolType.og
   public readonly showAuthenticationDocsLinkButton: boolean = this.poolsProvider.pool.type === PoolType.nft
   public readonly accountIdentifierInputPlaceholder: string = makeAccountIdentifierName(this.poolsProvider.pool.type)
+  public readonly selectedNavTab: Observable<string>
 
   public get authDocsUrl(): string {
     return `https://docs.foxypool.io/proof-of-spacetime/foxy-pool/pools/${this.poolsProvider.poolIdentifier}/authenticate/`
@@ -128,6 +129,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     private readonly configService: ConfigService,
     private readonly balanceProvider: BalanceProvider,
   ) {
+    this.selectedNavTab = this.activatedRoute.fragment.pipe(map(fragment => fragment === null ? 'stats' : fragment))
     this.ecChartOptions = {
       title: {
         text: this.snippetService.getSnippet('my-farmer-component.ec-chart.title'),

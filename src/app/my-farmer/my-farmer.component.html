@@ -218,9 +218,9 @@
     </div>
     <div class="row">
       <div class="p-2 col-md-12">
-        <ul ngbNav #nav="ngbNav" class="nav-tabs">
+        <ul ngbNav #nav="ngbNav" [activeId]="selectedNavTab | async" class="nav-tabs">
           <li ngbNavItem="stats" [destroyOnHide]="true">
-            <a class="text-decoration-none" ngbNavLink><h5>{{snippetService.getSnippet('my-farmer-component.tabs.stats.label')}}</h5></a>
+            <a class="text-decoration-none" ngbNavLink routerLink="." [fragment]="null"><h5>{{snippetService.getSnippet('my-farmer-component.tabs.stats.label')}}</h5></a>
             <ng-template ngbNavContent>
               <div class="p-1 col-md-12">
                 <div echarts [options]="ecChartOptions" [merge]="ecChartUpdateOptions" theme="default" class="ec-chart"></div>
@@ -254,7 +254,7 @@
             </ng-template>
           </li>
           <li ngbNavItem="recent-payouts" [destroyOnHide]="true">
-            <a class="text-decoration-none" ngbNavLink><h5>{{snippetService.getSnippet('my-farmer-component.tabs.recent-payouts.label')}}</h5></a>
+            <a class="text-decoration-none" ngbNavLink routerLink="." fragment="recent-payouts"><h5>{{snippetService.getSnippet('my-farmer-component.tabs.recent-payouts.label')}}</h5></a>
             <ng-template ngbNavContent>
               <div class="p-1 col-md-12">
                 <app-farmer-payout-history
@@ -268,7 +268,7 @@
             </ng-template>
           </li>
           <li ngbNavItem="won-blocks" [destroyOnHide]="true">
-            <a class="text-decoration-none" ngbNavLink><h5>{{snippetService.getSnippet('my-farmer-component.tabs.won-blocks.label')}}</h5></a>
+            <a class="text-decoration-none" ngbNavLink routerLink="." fragment="won-blocks"><h5>{{snippetService.getSnippet('my-farmer-component.tabs.won-blocks.label')}}</h5></a>
             <ng-template ngbNavContent>
               <div class="p-1 col-md-12">
                 <app-farmer-won-blocks
@@ -279,7 +279,7 @@
             </ng-template>
           </li>
           <li ngbNavItem="harvesters" [destroyOnHide]="true">
-            <a class="text-decoration-none" ngbNavLink><h5>Harvesters</h5></a>
+            <a class="text-decoration-none" ngbNavLink routerLink="." fragment="harvesters"><h5>Harvesters</h5></a>
             <ng-template ngbNavContent>
               <div class="p-1 col-md-12">
                 <app-farmer-harvesters></app-farmer-harvesters>
