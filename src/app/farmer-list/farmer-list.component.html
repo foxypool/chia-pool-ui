@@ -39,6 +39,9 @@
   [boundaryLinks]="true"
   (pageChange)="onPageChange()">
   <ng-template ngbPaginationNumber let-p>
-    {{ p }} <app-loading-state *ngIf="p === page && (isLoading | async)" width="1" height="1" colorClass="text-light"></app-loading-state>
+    <div class="d-flex flex-nowrap gap-1">
+      {{ p }}
+      <app-loading-state *ngIf="p === page && (isLoading | async)" width="1" height="1" colorClass="text-light"></app-loading-state>
+    </div>
   </ng-template>
 </ngb-pagination>
