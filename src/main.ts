@@ -26,6 +26,7 @@ const ignoreErrors = [
   'Cannot read properties of undefined (reading \'firefoxSample\')',
   'Can\'t find variable: msDiscoverChatAvailable',
   'SecurityError: Failed to read the \'localStorage\'',
+  'chrome-extension://',
 ]
 
 Sentry.init({
@@ -52,11 +53,19 @@ Sentry.init({
   ignoreErrors,
   beforeSend(event: Event, hint?: EventHint): PromiseLike<Event | null> | Event | null {
     const error = hint.originalException
-    if (
-      (error && typeof error === 'string' && ignoreErrors.some(snip => error.indexOf(snip) !== -1))
-      || (error && error instanceof Error && error.message && ignoreErrors.some(snip => error.message.indexOf(snip) !== -1))
-    ) {
+    if (!error) {
+      return event
+    }
+    if (typeof error === 'string' && ignoreErrors.some(snip => error.indexOf(snip) !== -1)) {
       return null
+    }
+    if (error instanceof Error) {
+      if (error.message && ignoreErrors.some(snip => error.message.indexOf(snip) !== -1)) {
+        return null
+      }
+      if (error.stack && ignoreErrors.some(snip => error.stack.indexOf(snip) !== -1)) {
+        return null
+      }
     }
 
     return event
