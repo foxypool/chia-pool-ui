@@ -539,9 +539,12 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     if (this.accountService.accountWonBlocks.value.length === 0 || !this.accountService.account.ec || !this.currentHeight || !this.networkSpaceInTiB) {
       return null
     }
+    const lastWonBlock = this.accountService.accountWonBlocks.value[0]
+    if (this.accountService.account.rejoinedAt !== undefined && moment(lastWonBlock.createdAt).isBefore(this.accountService.account.rejoinedAt)) {
+      return null
+    }
 
-    const lastWonBlockHeight = this.accountService.accountWonBlocks.value[0].height
-    const passedBlocks = this.currentHeight - lastWonBlockHeight
+    const passedBlocks = this.currentHeight - lastWonBlock.height
     const chanceToWinABlock = (new BigNumber(this.accountService.account.ec)).dividedBy(1024).dividedBy(this.networkSpaceInTiB)
     const blockCountFor100PercentEffort = new BigNumber(1).dividedBy(chanceToWinABlock)
 
