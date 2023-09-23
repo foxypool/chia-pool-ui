@@ -21,7 +21,7 @@ export class ChiaDashboardService implements OnDestroy {
   private readonly satellitesSubject: BehaviorSubject<Satellite[]|undefined> = new BehaviorSubject<Satellite[]|undefined>(undefined)
   private readonly isLoadingSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
 
-  private readonly cache: TtlCache = new TtlCache(60)
+  private readonly cache: TtlCache = new TtlCache(2 * 60)
   private api?: ChiaDashboardApi
   private bestBaseUrl?: string
   private updateSatellitesInterval?: ReturnType<typeof setInterval>
@@ -41,7 +41,7 @@ export class ChiaDashboardService implements OnDestroy {
       this.isLoadingSubject.pipe(distinctUntilChanged()),
       this.satellitesSubject.pipe(distinctUntilChanged()),
     ]).pipe(map(([isLoading, satellites]) => isLoading && satellites === undefined))
-    this.updateSatellitesInterval = setInterval(this.updateSatellites.bind(this), 60 * 1000)
+    this.updateSatellitesInterval = setInterval(this.updateSatellites.bind(this), 2 * 60 * 1000)
   }
 
   public ngOnDestroy(): void {
