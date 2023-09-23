@@ -7,6 +7,10 @@ export interface AccountNotificationSettings {
   harvesterOfflineDurationInMinutes: number
 }
 
+export interface Integrations {
+  chiaDashboardShareKey?: string
+}
+
 export interface BaseAccount {
   pending: string
   ec: number
@@ -24,6 +28,7 @@ export interface BaseAccount {
   minimumPayout?: string
   payoutMultiplesOf?: string
   lastAcceptedPartialAt?: string
+  integrations?: Integrations
 }
 
 export interface OgBaseAccount extends BaseAccount {

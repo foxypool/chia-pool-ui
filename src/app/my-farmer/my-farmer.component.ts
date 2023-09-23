@@ -24,6 +24,7 @@ import {fromPromise} from 'rxjs/internal/observable/innerFrom'
 import {corePoolAddress, hpoolAddress} from '../known-addresses'
 import {AccountHistoricalStat} from '../api/types/account/account-historical-stat'
 import {isCheatingOgAccount, isInactiveOgAccount, isNftAccount, isOgAccount} from '../api/types/account/account'
+import {ChiaDashboardService} from '../chia-dashboard.service'
 
 @Component({
   selector: 'app-my-farmer',
@@ -55,6 +56,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   public readonly invalidSharesColorClasses: Observable<string[]>
   public readonly payoutAddressBalance: Observable<number>
   public readonly isLoadingPayoutAddressBalance: Observable<boolean>
+  public readonly reportedRawCapacity$: Observable<string>
+  public readonly reportedEffectiveCapacity$: Observable<string>
 
   public isAccountLoading: Observable<boolean> = this.accountService.accountSubject
     .pipe(
@@ -71,6 +74,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   public readonly showAuthenticationDocsLinkButton: boolean = this.poolsProvider.pool.type === PoolType.nft
   public readonly accountIdentifierInputPlaceholder: string = makeAccountIdentifierName(this.poolsProvider.pool.type)
   public readonly selectedNavTab: Observable<string>
+  public readonly hasChiaDashboardShareKey$: Observable<boolean>
 
   public get authDocsUrl(): string {
     return `https://docs.foxypool.io/proof-of-spacetime/foxy-pool/pools/${this.poolsProvider.poolIdentifier}/authenticate/`
@@ -128,6 +132,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly configService: ConfigService,
     private readonly balanceProvider: BalanceProvider,
+    protected readonly chiaDashboardService: ChiaDashboardService,
   ) {
     this.ecChartOptions = {
       title: {
@@ -401,6 +406,42 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         shareReplay({ refCount: true }),
       )
     this.selectedNavTab = this.activatedRoute.fragment.pipe(map(fragment => fragment === null ? 'stats' : fragment))
+    const harvesters = this.chiaDashboardService.satellites$.pipe(
+      filter(satellites => satellites !== undefined),
+      map(satellites => satellites
+        .filter(satellite => !satellite.hidden)
+        .map(satellite => satellite.services.harvester)
+        .filter(harvester => harvester.stats !== undefined && harvester.lastUpdate !== undefined && moment(harvester.lastUpdate).isAfter(moment().subtract(5, 'minutes')))
+      ),
+      shareReplay(),
+    )
+    this.reportedRawCapacity$ = harvesters.pipe(
+      map(harvesters => {
+        const reportedRawCapacityInGib = harvesters.reduce((rawCapacityInGib, harvester) => {
+          const plotStats = this.poolsProvider.pool.type === PoolType.og ? harvester.stats.ogPlots : harvester.stats.nftPlots
+
+          return rawCapacityInGib.plus(plotStats.rawCapacityInGib)
+        }, new BigNumber(0))
+
+        return (new Capacity(reportedRawCapacityInGib.toNumber())).toString()
+      }),
+    )
+    this.reportedEffectiveCapacity$ = harvesters.pipe(
+      map(harvesters => {
+        const reportedEffectiveCapacityInGib = harvesters.reduce((effectiveCapacityInGib, harvester) => {
+          const plotStats = this.poolsProvider.pool.type === PoolType.og ? harvester.stats.ogPlots : harvester.stats.nftPlots
+
+          return effectiveCapacityInGib.plus(plotStats.effectiveCapacityInGib)
+        }, new BigNumber(0))
+
+        return (new Capacity(reportedEffectiveCapacityInGib.toNumber())).toString()
+      }),
+    )
+    this.hasChiaDashboardShareKey$ = this.accountService.accountSubject.pipe(
+      map(account => account?.integrations?.chiaDashboardShareKey !== undefined),
+      distinctUntilChanged(),
+      shareReplay(),
+    )
 
     // Add dummy subscribes to trigger streams ahead of first use
     this.subscriptions.push(

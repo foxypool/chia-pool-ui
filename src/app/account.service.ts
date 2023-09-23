@@ -424,6 +424,23 @@ export class AccountService {
     }
   }
 
+  public async updateIntegrations({ chiaDashboardShareKey }: { chiaDashboardShareKey?: string }) {
+    if (!this.isAuthenticated) {
+      return
+    }
+    this.isUpdatingAccount = true
+    try {
+      await this.statsService.updateIntegrations({
+        accountIdentifier: this.accountIdentifier,
+        authToken: this.authToken,
+        chiaDashboardShareKey,
+      })
+      await this.updateAccount({ bustCache: true })
+    } finally {
+      this.isUpdatingAccount = false
+    }
+  }
+
   public async updateDifficulty({ difficulty, isFixedDifficulty }): Promise<void> {
     if (!this.isAuthenticated) {
       return

@@ -123,6 +123,22 @@
           </div>
         </div>
       </div>
+      <div *ngIf="hasChiaDashboardShareKey$ | async" class="p-1 col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl col-xxxl-4 col-xxxxl col-xxxxxl">
+        <div class="card">
+          <div class="card-header text-align-center">
+            <h5>Reported Capacity</h5>
+            <fa-icon
+              [icon]="faInfoCircle"
+              ngbTooltip="The reported raw and effective capacities are aggregated from all available harvesters connected to your chia-dashboard."
+              class="header-info-icon"
+            ></fa-icon>
+          </div>
+          <div class="card-body text-align-center card-font-size">
+            <app-loading-state *ngIf="chiaDashboardService.isInitialLoading$ | async" width="1" height="1" colorClass="text-light"></app-loading-state>
+            <span *ngIf="(chiaDashboardService.isInitialLoading$ | async) === false && (reportedRawCapacity$ | async) !== null && (reportedEffectiveCapacity$ | async) !== null" ngbTooltip="Reported raw / effective capacity">{{reportedRawCapacity$ | async}} / {{reportedEffectiveCapacity$ | async}}</span>
+          </div>
+        </div>
+      </div>
       <div class="p-1 col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl col-xxxl-4 col-xxxxl col-xxxxxl">
         <div class="card">
           <div class="card-header text-align-center">
@@ -134,7 +150,7 @@
           </div>
         </div>
       </div>
-      <div class="p-1 col-12 col-sm-12 col-md-8 col-lg-6 col-xl-6 col-xxl-6 order-xxl-last col-xxxl-12 col-xxxxl-8 col-xxxxxl-6">
+      <div class="p-1 col-12 col-md-8 col-lg-6 col-xl-6 col-xxl-6 order-xxl-last col-xxxl-12 col-xxxxl-8 col-xxxxxl-6" [class.col-sm-12]="(hasChiaDashboardShareKey$ | async) === false" [class.col-sm-6]="hasChiaDashboardShareKey$ | async">
         <div class="card">
           <div class="card-header text-align-center d-flex justify-content-between">
             <span></span> <!-- Dummy element for justify-content-between -->
@@ -148,7 +164,7 @@
           </div>
         </div>
       </div>
-      <div class="p-1 col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl col-xxxl-4 col-xxxxl col-xxxxxl">
+      <div class="p-1 col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 col-xxl col-xxxl-4 col-xxxxl col-xxxxxl" [class.col-xxl-2]="hasChiaDashboardShareKey$ | async" [class.col-md-4]="hasChiaDashboardShareKey$ | async">
         <div class="card">
           <div class="card-header text-align-center">
             <h5>Current Effort</h5>

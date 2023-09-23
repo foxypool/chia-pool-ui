@@ -55,6 +55,18 @@
           <h5 *ngIf="(isLoading | async) === false">{{averageEc | async}}</h5>
         </div>
       </div>
+      <div *ngIf="reportedRawCapacity$ | async" class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl col-xxl col-xxxl col-xxxxl col-xxxxxl p-1">
+        <div class="p-2 border border-primary rounded text-center">
+          <div class="mb-1">Raw Capacity</div>
+          <h5>{{reportedRawCapacity$ | async}}</h5>
+        </div>
+      </div>
+      <div *ngIf="reportedEffectiveCapacity$ | async" class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl col-xxl col-xxxl col-xxxxl col-xxxxxl p-1">
+        <div class="p-2 border border-primary rounded text-center">
+          <div class="mb-1">Reported Capacity</div>
+          <h5>{{reportedEffectiveCapacity$ | async}}</h5>
+        </div>
+      </div>
       <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl col-xxl col-xxxl col-xxxxl col-xxxxxl p-1">
         <div class="p-2 border border-primary rounded text-center">
           <div class="mb-1">Average proof time</div>

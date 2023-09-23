@@ -240,6 +240,10 @@ export class StatsService {
     return this.requestWithError(this.api.updatePayoutOptions({ accountIdentifier, authToken, minimumPayout, payoutMultiplesOf }))
   }
 
+  public updateIntegrations({ accountIdentifier, authToken, chiaDashboardShareKey }) {
+    return this.requestWithError(this.api.updateIntegrations({ accountIdentifier, authToken, chiaDashboardShareKey }))
+  }
+
   public updateAccountDifficulty({ accountIdentifier, authToken, difficulty, isFixedDifficulty }) {
     return this.requestWithError(this.api.updateAccountDifficulty({ accountIdentifier, authToken, difficulty, isFixedDifficulty }))
   }

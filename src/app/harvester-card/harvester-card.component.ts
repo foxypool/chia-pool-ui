@@ -17,6 +17,8 @@ import {HarvesterSettingsModalComponent} from '../harvester-settings-modal/harve
 import {HarvesterStats, RejectedSubmissionType} from '../api/types/harvester/harvester-stats'
 import {ProofTime} from '../api/types/harvester/proof-time'
 import {Harvester} from '../api/types/harvester/harvester'
+import {PoolsProvider, PoolType} from '../pools.provider'
+import {ChiaDashboardService} from '../chia-dashboard.service'
 
 const sharesPerDayPerK32 = 10
 const k32SizeInGb = 108.837
@@ -51,10 +53,17 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   public readonly totalValidSharesPercentage: Observable<string>
   public readonly totalStaleSharesPercentage: Observable<string>
   public readonly staleSharesColorClasses: Observable<string[]>
+  public readonly reportedRawCapacity$: Observable<string>
+  public readonly reportedEffectiveCapacity$: Observable<string>
   public readonly sharesChartOptions: EChartsOption
   public sharesChartUpdateOptions: EChartsOption
   public readonly proofTimesChartOptions: EChartsOption
   public proofTimesChartUpdateOptions: EChartsOption
+
+  private get hasChiaDashboardShareKey(): boolean {
+    return this.accountService.account?.integrations?.chiaDashboardShareKey !== undefined
+  }
+
   private readonly stats: Observable<HarvesterStats>
   private readonly statsSubject: BehaviorSubject<HarvesterStats|undefined> = new BehaviorSubject<HarvesterStats>(undefined)
   private statsUpdateInterval?: ReturnType<typeof setInterval>
@@ -66,8 +75,10 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
 
   constructor(
     public readonly accountService: AccountService,
+    protected readonly chiaDashboardService: ChiaDashboardService,
     private readonly statsService: StatsService,
     private readonly toastService: ToastService,
+    private readonly poolsProvider: PoolsProvider,
   ) {
     this.isLoadingProofTimes = this.isLoadingProofTimesSubject.pipe(shareReplay())
     this.showSharesChart = this.chartModeSubject.pipe(map(mode => mode === ChartMode.shares), shareReplay())
@@ -313,6 +324,34 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
             this.isLoadingProofTimesSubject.next(false)
           }
         })
+    )
+
+    const harvester = this.chiaDashboardService.satellites$.pipe(
+      filter(satellites => satellites !== undefined),
+      map(satellites => satellites
+        .filter(satellite => !satellite.hidden)
+        .map(satellite => satellite.services.harvester)
+        .filter(harvester => harvester.stats !== undefined && harvester.lastUpdate !== undefined && moment(harvester.lastUpdate).isAfter(moment().subtract(5, 'minutes')))
+        .find(harvester => harvester.stats.nodeId === this.harvester.peerId.ensureHexPrefix())
+      ),
+      filter(harvester => harvester !== undefined),
+      shareReplay(),
+    )
+    this.reportedRawCapacity$ = harvester.pipe(
+      map(harvester => {
+        const plotStats = this.poolsProvider.pool.type === PoolType.og ? harvester.stats.ogPlots : harvester.stats.nftPlots
+        const rawCapacityInGib = new BigNumber(plotStats.rawCapacityInGib)
+
+        return (new Capacity(rawCapacityInGib.toNumber())).toString()
+      }),
+    )
+    this.reportedEffectiveCapacity$ = harvester.pipe(
+      map(harvester => {
+        const plotStats = this.poolsProvider.pool.type === PoolType.og ? harvester.stats.ogPlots : harvester.stats.nftPlots
+        const effectiveCapacityInGib = new BigNumber(plotStats.effectiveCapacityInGib)
+
+        return (new Capacity(effectiveCapacityInGib.toNumber())).toString()
+      }),
     )
   }
 
@@ -592,6 +631,9 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     }
     if (this.hasFoxyFarmerVersion) {
       count += 1
+    }
+    if (this.hasChiaDashboardShareKey) {
+      count += 2
     }
 
     return count

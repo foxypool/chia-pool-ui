@@ -199,6 +199,15 @@ export abstract class AbstractApi<
 
     return data
   }
+  public async updateIntegrations({ accountIdentifier, authToken, chiaDashboardShareKey }: UpdateAccountIntegrations): Promise<ApiResponse<void>> {
+    const { data } = await this.client.put<ApiResponse<void>>(`account/${accountIdentifier}/integrations`, {
+      chiaDashboardShareKey,
+    }, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    })
+
+    return data
+  }
 
   public async updateAccountDifficulty({ accountIdentifier, authToken, difficulty, isFixedDifficulty }: UpdateAccountDifficultyOptions): Promise<ApiResponse<void>> {
     const { data } = await this.client.put<ApiResponse<void>>(`account/${accountIdentifier}/difficulty`, {
@@ -227,6 +236,10 @@ export interface UpdateAccountNameOptions extends AuthenticatedAccountRequestOpt
 export interface UpdateAccountPayoutOptions extends AuthenticatedAccountRequestOptions {
   minimumPayout?: string,
   payoutMultiplesOf?: string
+}
+
+export interface UpdateAccountIntegrations extends AuthenticatedAccountRequestOptions {
+  chiaDashboardShareKey?: string,
 }
 
 export interface UpdateAccountDifficultyOptions extends AuthenticatedAccountRequestOptions {

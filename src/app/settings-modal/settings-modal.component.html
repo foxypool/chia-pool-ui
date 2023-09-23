@@ -31,6 +31,12 @@
               <app-update-notification-settings></app-update-notification-settings>
             </ng-template>
           </li>
+          <li ngbNavItem="integrations" [destroyOnHide]="true">
+            <a class="text-decoration-none" ngbNavLink>Integrations</a>
+            <ng-template ngbNavContent>
+              <app-integration-settings></app-integration-settings>
+            </ng-template>
+          </li>
           <li ngbNavItem="login-link" [destroyOnHide]="true">
             <a class="text-decoration-none" ngbNavLink>Login Link</a>
             <ng-template ngbNavContent>

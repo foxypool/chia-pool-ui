@@ -52,6 +52,7 @@ import {
 import { GenerateLoginLinkComponent } from './generate-login-link/generate-login-link.component'
 import {QRCodeModule} from 'angularx-qrcode'
 import { VersionInfoComponent } from './version-info/version-info.component'
+import { IntegrationSettingsComponent } from './integration-settings/integration-settings.component'
 
 @NgModule({
   declarations: [
@@ -84,6 +85,7 @@ import { VersionInfoComponent } from './version-info/version-info.component'
     UpdateHarvesterNotificationSettingsComponent,
     GenerateLoginLinkComponent,
     VersionInfoComponent,
+    IntegrationSettingsComponent,
   ],
   imports: [
     BrowserModule,
