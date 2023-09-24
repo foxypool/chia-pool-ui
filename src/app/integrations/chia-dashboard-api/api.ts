@@ -50,7 +50,7 @@ export class ChiaDashboardApi {
     const start = new Date()
     let isAvailable: boolean
     try {
-      await this.client.get('ping')
+      await this.client.get('ping', { timeout: 5 * 1000 })
       isAvailable = true
     } catch (err) {
       isAvailable = false

@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-12">
       <form [formGroup]="form">
-        <div class="d-flex" [class.is-invalid]="form.invalid">
+        <div class="d-flex gap-2" [class.is-invalid]="form.invalid">
           <input
             type="text"
             class="form-control"
@@ -11,7 +11,7 @@
             formControlName="chiaDashboardShareKey"
             aria-describedby="chiaDashboardShareKeyFeedback"
           >
-          <fa-icon [icon]="faCircleNotch" animation="spin" *ngIf="isValidatingShareKey" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
+          <app-loading-state *ngIf="isValidatingShareKey" width="2" height="2"></app-loading-state>
         </div>
         <div id="chiaDashboardShareKeyFeedback" class="invalid-feedback">
           The provided share key is not valid.
