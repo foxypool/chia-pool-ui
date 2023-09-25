@@ -19,6 +19,8 @@ import {ProofTime} from '../api/types/harvester/proof-time'
 import {Harvester} from '../api/types/harvester/harvester'
 import {PoolsProvider, PoolType} from '../pools.provider'
 import {ChiaDashboardService} from '../chia-dashboard.service'
+import {HarvesterStatus} from '../status/harvester-status'
+import {LastUpdatedState} from '../status/last-updated-state'
 
 const sharesPerDayPerK32 = 10
 const k32SizeInGb = 108.837
@@ -55,12 +57,16 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   public readonly staleSharesColorClasses: Observable<string[]>
   public readonly reportedRawCapacity$: Observable<string>
   public readonly reportedEffectiveCapacity$: Observable<string>
+  public readonly status$: Observable<string>
+  public readonly statusTooltip$: Observable<string>
+  public readonly statusDotColorClass$: Observable<string>
+  public readonly relativeLastUpdated$: Observable<string>
   public readonly sharesChartOptions: EChartsOption
   public sharesChartUpdateOptions: EChartsOption
   public readonly proofTimesChartOptions: EChartsOption
   public proofTimesChartUpdateOptions: EChartsOption
 
-  private get hasChiaDashboardShareKey(): boolean {
+  public get hasChiaDashboardShareKey(): boolean {
     return this.accountService.account?.integrations?.chiaDashboardShareKey !== undefined
   }
 
@@ -326,18 +332,27 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         })
     )
 
-    const harvester = this.chiaDashboardService.satellites$.pipe(
+    const harvesterWithStatus$ = this.chiaDashboardService.satellites$.pipe(
       filter(satellites => satellites !== undefined),
       map(satellites => satellites
         .filter(satellite => !satellite.hidden)
         .map(satellite => satellite.services.harvester)
-        .filter(harvester => harvester.stats !== undefined && harvester.lastUpdate !== undefined && moment(harvester.lastUpdate).isAfter(moment().subtract(5, 'minutes')))
+        .filter(harvester => harvester.stats !== undefined)
         .find(harvester => harvester.stats.nodeId === this.harvester.peerId.ensureHexPrefix())
       ),
       filter(harvester => harvester !== undefined),
+      map(harvester => ({
+        status: HarvesterStatus.fromHarvesterStats(harvester),
+        harvester,
+      })),
       shareReplay(),
     )
-    this.reportedRawCapacity$ = harvester.pipe(
+    const harvesterWithStatusOk$ = harvesterWithStatus$.pipe(
+      filter(({ status }) => status.lastUpdatedState === LastUpdatedState.ok),
+      map(({ harvester }) => harvester),
+      shareReplay(),
+    )
+    this.reportedRawCapacity$ = harvesterWithStatusOk$.pipe(
       map(harvester => {
         const plotStats = this.poolsProvider.pool.type === PoolType.og ? harvester.stats.ogPlots : harvester.stats.nftPlots
         const rawCapacityInGib = new BigNumber(plotStats.rawCapacityInGib)
@@ -345,13 +360,25 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         return (new Capacity(rawCapacityInGib.toNumber())).toString()
       }),
     )
-    this.reportedEffectiveCapacity$ = harvester.pipe(
+    this.reportedEffectiveCapacity$ = harvesterWithStatusOk$.pipe(
       map(harvester => {
         const plotStats = this.poolsProvider.pool.type === PoolType.og ? harvester.stats.ogPlots : harvester.stats.nftPlots
         const effectiveCapacityInGib = new BigNumber(plotStats.effectiveCapacityInGib)
 
         return (new Capacity(effectiveCapacityInGib.toNumber())).toString()
       }),
+    )
+    this.status$ = harvesterWithStatus$.pipe(
+      map(({ status }) => status.toString()),
+    )
+    this.statusTooltip$ = harvesterWithStatus$.pipe(
+      map(({ status }) => status.statusTooltip),
+    )
+    this.statusDotColorClass$ = harvesterWithStatus$.pipe(
+      map(({ status }) => status.dotColorClass),
+    )
+    this.relativeLastUpdated$ = harvesterWithStatus$.pipe(
+      map(({ status }) => status.relativeLastUpdated),
     )
   }
 
