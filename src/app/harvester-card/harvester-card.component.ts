@@ -57,6 +57,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   public readonly staleSharesColorClasses: Observable<string[]>
   public readonly reportedRawCapacity$: Observable<string>
   public readonly reportedEffectiveCapacity$: Observable<string>
+  public readonly plotCount$: Observable<number>
   public readonly status$: Observable<string>
   public readonly statusTooltip$: Observable<string>
   public readonly statusDotColorClass$: Observable<string>
@@ -368,6 +369,13 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         return (new Capacity(effectiveCapacityInGib.toNumber())).toString()
       }),
     )
+    this.plotCount$ = harvesterWithStatusOk$.pipe(
+      map(harvester => {
+        const plotStats = this.poolsProvider.pool.type === PoolType.og ? harvester.stats.ogPlots : harvester.stats.nftPlots
+
+        return plotStats.count
+      }),
+    )
     this.status$ = harvesterWithStatus$.pipe(
       map(({ status }) => status.toString()),
     )
@@ -660,7 +668,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       count += 1
     }
     if (this.hasChiaDashboardShareKey) {
-      count += 2
+      count += 3
     }
 
     return count
