@@ -19,7 +19,7 @@
       </h5>
       <div *ngIf="hasName">{{peerIdSlug}}</div>
     </div>
-    <div class="d-flex justify-content-between align-items-baseline gap-3">
+    <div class="d-flex justify-content-between align-items-center gap-3">
       <select class="form-select dark-background" [ngModel]="chartMode | async" (ngModelChange)="setChartMode($event)">
         <option [value]="ChartMode.shares">Shares</option>
         <option [value]="ChartMode.proofTimes">Proof times</option>
@@ -29,7 +29,7 @@
         class="highlight"
         [icon]="faEllipsisV"
         size="2xl"
-        style="cursor: pointer; margin-bottom: 0.2rem;"
+        style="cursor: pointer;"
         (click)="openSettingsModal()"
       ></fa-icon>
     </div>
