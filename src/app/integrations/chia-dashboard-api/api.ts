@@ -9,7 +9,7 @@ const apiBaseUrls: string[] = [
 
 export async function getBestChiaDashboardApiBaseUrl(): Promise<string|undefined> {
   try {
-    const results = await Promise.all(
+    const bestResult = await Promise.any(
       apiBaseUrls.map(async baseUrl => {
         const api = new ChiaDashboardApi(baseUrl)
 
@@ -19,11 +19,6 @@ export async function getBestChiaDashboardApiBaseUrl(): Promise<string|undefined
         }
       })
     )
-    const availableApis = results.filter(result => result.pingResult.isAvailable)
-    if (availableApis.length === 0) {
-      return
-    }
-    const bestResult = availableApis.reduce((bestResult, result) => bestResult === undefined || bestResult.pingResult.latencyInMs > result.pingResult.latencyInMs ? result : bestResult, undefined)
 
     return bestResult.baseUrl
   } catch (err) {
@@ -48,20 +43,10 @@ export class ChiaDashboardApi {
 
   public async ping(): Promise<PingResult> {
     const start = new Date()
-    let isAvailable: boolean
-    try {
-      await this.client.get('ping', { timeout: 5 * 1000 })
-      isAvailable = true
-    } catch (err) {
-      isAvailable = false
-    }
-
+    await this.client.get('ping')
     const latencyInMs = (new Date()).getTime() - start.getTime()
 
-    return {
-      isAvailable,
-      latencyInMs,
-    }
+    return { latencyInMs }
   }
 
   public async isValidShareKey(): Promise<boolean> {
@@ -82,6 +67,5 @@ export class ChiaDashboardApi {
 }
 
 export interface PingResult {
-  isAvailable: boolean
   latencyInMs: number
 }
