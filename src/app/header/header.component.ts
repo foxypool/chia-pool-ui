@@ -27,6 +27,10 @@ export class HeaderComponent {
     return this.themeProvider.isDarkTheme
   }
 
+  public get navbarClasses(): string {
+    return this.isDarkTheme ? 'navbar-dark' : 'navbar-light'
+  }
+
   protected readonly searchIcon = faSearch
   protected readonly faCircleNotch = faCircleNotch
   protected readonly faSun = faSun
