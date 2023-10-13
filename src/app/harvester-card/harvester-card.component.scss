@@ -11,11 +11,6 @@
 .proof-times-chart {
   height: 15rem;
 }
-.dark-background {
-  background-color: #262629;
-  color: #cfd0d1;
-  border-color: #6c757d;
-}
 .btn:focus {
   outline: none;
   box-shadow: none;
@@ -23,10 +18,10 @@
 .highlight {
   -webkit-transition: color 0.3s;
   transition: color 0.3s;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--highlight-color);
 }
 .highlight:hover{
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--highlight-color-hover);
 }
 
 :host ::ng-deep editable {

@@ -1,18 +1,5 @@
-.dropdown-menu {
-  background-color: #2f3136;
-  color: #cfd0d1;
-}
-.dropdown-item {
-  color: #cfd0d1;
-}
-.dropdown-divider {
-  border-top: 1px solid #262629;
-}
-.dropdown-item:focus, .dropdown-item:hover {
-  background-color: #262629;
-}
 ::ng-deep .progress {
-  background-color: #262629 !important;
+  background-color: var(--progress-bar-background-color) !important;
 }
 .ellipsis {
   overflow: hidden;
@@ -22,21 +9,21 @@
   max-width: 150px;
 }
 ::ng-deep .page-link {
-  background-color: #262629;
-  border-color: #18191c;
+  background-color: var(--page-link-background-color);
+  border-color: var(--page-link-border-color);
   -webkit-transition: color 0.3s;
   transition: color 0.3s;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--highlight-color);
 }
 ::ng-deep .page-link:hover {
-  color: rgba(255, 255, 255, 0.9);
-  border-color: #18191c;
+  color: var(--highlight-color-hover);
+  border-color: var(--page-link-border-color);
   text-decoration: none;
 }
 ::ng-deep .page-item:not(.active) .page-link:hover {
-  background-color: #262629;
+  background-color: var(--page-link-background-color);
 }
 ::ng-deep .page-item.disabled .page-link {
-  background-color: #262629;
-  border-color: #18191c;
+  background-color: var(--page-link-background-color);
+  border-color: var(--page-link-border-color);
 }

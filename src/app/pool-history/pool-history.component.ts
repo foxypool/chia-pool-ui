@@ -6,6 +6,7 @@ import * as moment from 'moment'
 import BigNumber from 'bignumber.js'
 import {Subscription} from 'rxjs'
 import {getEffortColorForChart} from '../util'
+import {colors, Theme, ThemeProvider} from '../theme-provider'
 
 @Component({
   selector: 'app-pool-history',
@@ -17,12 +18,18 @@ export class PoolHistoryComponent implements OnDestroy {
   public chartUpdateOptions: EChartsOption
 
   private readonly subscriptions: Subscription[] = [
-    this.statsService.poolHistoricalStatsSubject.subscribe(historicalStats => this.chartUpdateOptions = this.makeChartUpdateOptions(historicalStats)),
+    this.statsService.poolHistoricalStatsSubject.subscribe(historicalStats => {
+      this.chartUpdateOptions = {
+        ...(this.chartUpdateOptions || {}),
+        ...this.makeChartUpdateOptions(historicalStats),
+      }
+    }),
   ]
 
   constructor(
     private readonly snippetService: SnippetService,
     private readonly statsService: StatsService,
+    private readonly themeProvider: ThemeProvider,
   ) {
     this.chartOptions = {
       title: {
@@ -30,7 +37,7 @@ export class PoolHistoryComponent implements OnDestroy {
         left: 'center',
         top: 0,
         textStyle: {
-          color: '#cfd0d1'
+          color: this.themeProvider.isDarkTheme ? colors.darkTheme.textColor : colors.lightTheme.textColor,
         }
       },
       legend: {
@@ -40,7 +47,7 @@ export class PoolHistoryComponent implements OnDestroy {
         ],
         top: 25,
         textStyle: {
-          color: '#cfd0d1',
+          color: this.themeProvider.isDarkTheme ? colors.darkTheme.textColor : colors.lightTheme.textColor,
         },
       },
       grid: {
@@ -102,6 +109,24 @@ export class PoolHistoryComponent implements OnDestroy {
         yAxisIndex: 1,
       }],
     }
+    this.subscriptions.push(
+      this.themeProvider.theme$.subscribe(theme => {
+        const textColor = theme === Theme.dark ? colors.darkTheme.textColor : colors.lightTheme.textColor
+        this.chartUpdateOptions = {
+          ...(this.chartUpdateOptions || {}),
+          title: {
+            textStyle: {
+              color: textColor,
+            },
+          },
+          legend: {
+            textStyle: {
+              color: textColor,
+            },
+          },
+        }
+      })
+    )
   }
 
   public ngOnDestroy(): void {

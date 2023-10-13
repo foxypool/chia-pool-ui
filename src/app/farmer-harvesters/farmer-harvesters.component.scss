@@ -1,35 +1,36 @@
 ::ng-deep .page-link {
-  background-color: #262629;
-  border-color: #18191c;
+  background-color: var(--page-link-background-color);
+  border-color: var(--page-link-border-color);
   -webkit-transition: color 0.3s;
   transition: color 0.3s;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--highlight-color);
 }
 ::ng-deep .page-link:hover {
-  color: rgba(255, 255, 255, 0.9);
-  border-color: #18191c;
+  color: var(--highlight-color-hover);
+  border-color: var(--page-link-border-color);
   text-decoration: none;
 }
 ::ng-deep .page-item:not(.active) .page-link:hover {
-  background-color: #262629;
+  background-color: var(--page-link-background-color);
 }
 ::ng-deep .page-item.disabled .page-link {
-  background-color: #262629;
-  border-color: #18191c;
+  background-color: var(--page-link-background-color);
+  border-color: var(--page-link-border-color);
 }
 .page-size-select {
   width: 4em;
+  background-color: var(--input-field-background-color);
+  color: var(--text-color);
+  border-color: var(--input-field-border-color);
 }
 .page-size-select-option {
-  background-color: #262629;
-}
-.dark-background {
-  background-color: #262629;
-  color: #cfd0d1;
-  border-color: #6c757d;
+  background-color: var(--select-item-background-color);
 }
 .page-size-select-label {
   font-size: small;
+  background-color: var(--input-field-background-color);
+  color: var(--text-color);
+  border-color: var(--input-field-border-color);
 }
 .footer-grid {
   grid-template-columns: repeat(3, 1fr);

@@ -8,6 +8,7 @@ import {compare} from 'compare-versions'
 import {clientVersions} from '../client-versions'
 import {ClientVersion} from '../api/types/pool/client-version'
 import {faCheck} from '@fortawesome/free-solid-svg-icons'
+import {colors, Theme, ThemeProvider} from '../theme-provider'
 
 @Component({
   selector: 'app-info',
@@ -53,6 +54,7 @@ export class InfoComponent implements OnInit, OnDestroy {
     public statsService: StatsService,
     private readonly _snippetService: SnippetService,
     private readonly poolsProvider: PoolsProvider,
+    private readonly themeProvider: ThemeProvider,
   ) {
     this.clientVersionsChartOptions = {
       title: {
@@ -60,16 +62,16 @@ export class InfoComponent implements OnInit, OnDestroy {
         left: 'center',
         top: 0,
         textStyle: {
-          color: '#cfd0d1'
+          color: this.themeProvider.isDarkTheme ? colors.darkTheme.textColor : colors.lightTheme.textColor,
         }
       },
       tooltip: {
         trigger: 'item',
         formatter: '{b}: {d}% ({c})',
         textStyle: {
-          color: '#cfd0d1',
+          color: this.themeProvider.isDarkTheme ? colors.darkTheme.textColor : colors.lightTheme.textColor,
         },
-        backgroundColor: '#212326',
+        backgroundColor: this.themeProvider.isDarkTheme ? colors.darkTheme.tooltip.backgroundColor : colors.lightTheme.tooltip.backgroundColor,
         borderColor: 'transparent',
       },
       series: [{
@@ -77,11 +79,11 @@ export class InfoComponent implements OnInit, OnDestroy {
         radius : '60%',
         data: [],
         label: {
-          color: '#cfd0d1',
+          color: this.themeProvider.isDarkTheme ? colors.darkTheme.textColor : colors.lightTheme.textColor,
         },
         labelLine: {
           lineStyle: {
-            color: '#cfd0d1',
+            color: this.themeProvider.isDarkTheme ? colors.darkTheme.textColor : colors.lightTheme.textColor,
           },
         },
         emphasis: {
@@ -93,6 +95,35 @@ export class InfoComponent implements OnInit, OnDestroy {
         },
       }],
     }
+    this.subscriptions.push(
+      this.themeProvider.theme$.subscribe(theme => {
+        const textColor = theme === Theme.dark ? colors.darkTheme.textColor : colors.lightTheme.textColor
+        this.clientVersionsChartUpdateOptions = {
+          ...(this.clientVersionsChartUpdateOptions || {}),
+          title: {
+            textStyle: {
+              color: textColor,
+            },
+          },
+          tooltip: {
+            backgroundColor: theme === Theme.dark ? colors.darkTheme.tooltip.backgroundColor : colors.lightTheme.tooltip.backgroundColor,
+            textStyle: {
+              color: textColor,
+            },
+          },
+          series: [{
+            label: {
+              color: textColor,
+            },
+            labelLine: {
+              lineStyle: {
+                color: textColor,
+              },
+            },
+          }],
+        }
+      })
+    )
   }
 
   public ngOnInit() {

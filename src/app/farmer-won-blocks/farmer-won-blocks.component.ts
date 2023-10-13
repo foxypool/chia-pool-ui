@@ -12,6 +12,7 @@ import {map} from 'rxjs/operators'
 import {EChartsOption} from 'echarts'
 import {StatsService} from '../stats.service'
 import {AccountWonBlock, Remark, RemarkType} from '../api/types/account/account-won-block'
+import {colors, Theme, ThemeProvider} from '../theme-provider'
 
 @Component({
   selector: 'app-farmer-won-blocks',
@@ -34,7 +35,7 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
       left: 'center',
       top: 0,
       textStyle: {
-        color: '#cfd0d1'
+        color: this.themeProvider.isDarkTheme ? colors.darkTheme.textColor : colors.lightTheme.textColor,
       }
     },
     grid: {
@@ -80,6 +81,10 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
   }
   public chartUpdateOptions: EChartsOption
 
+  public get exportCsvButtonClasses(): string {
+    return this.themeProvider.isDarkTheme ? 'btn-outline-info' : 'btn-info'
+  }
+
   private readonly wonBlocksSubject: BehaviorSubject<AccountWonBlock[]> = new BehaviorSubject<AccountWonBlock[]>([])
   private readonly subscriptions: Subscription[] = []
 
@@ -88,6 +93,7 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
     public readonly statsService: StatsService,
     private readonly configService: ConfigService,
     private readonly csvExporter: CsvExporter,
+    private readonly themeProvider: ThemeProvider,
   ) {}
 
   public ngOnInit(): void {
@@ -95,7 +101,25 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
     this.hasWonBlocksWithEffort = this.wonBlocksObservable.pipe(map(wonBlocks => wonBlocks.filter(wonBlock => wonBlock.effort !== null).length > 0))
     this.subscriptions.push(this.wonBlocksObservable.subscribe(this.wonBlocksSubject))
     this.subscriptions.push(
-      this.wonBlocksObservable.subscribe(wonBlocks => this.chartUpdateOptions = this.makeChartUpdateOptions(wonBlocks)),
+      this.wonBlocksObservable.subscribe(wonBlocks => {
+        this.chartUpdateOptions = {
+          ...(this.chartUpdateOptions || {}),
+          ...this.makeChartUpdateOptions(wonBlocks),
+        }
+      }),
+    )
+    this.subscriptions.push(
+      this.themeProvider.theme$.subscribe(theme => {
+        const textColor = theme === Theme.dark ? colors.darkTheme.textColor : colors.lightTheme.textColor
+        this.chartUpdateOptions = {
+          ...(this.chartUpdateOptions || {}),
+          title: {
+            textStyle: {
+              color: textColor,
+            },
+          },
+        }
+      })
     )
   }
 

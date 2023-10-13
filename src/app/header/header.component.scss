@@ -3,26 +3,27 @@
   padding-right: 4px;
 }
 .dropdown-menu {
-  background-color: #2f3136;
-  color: #cfd0d1;
+  background-color: var(--dropdown-menu-background-color);
+  color: var(--text-color);
 }
 .dropdown-item {
-  color: #cfd0d1;
+  color: var(--text-color);
 }
 .dropdown-divider {
-  border-top: 1px solid #262629;
+  border-top: 1px solid var(--dropdown-item-divider-color);
 }
 .dropdown-item:focus, .dropdown-item:hover {
-  background-color: #262629;
+  background-color: var(--dropdown-item-background-color-hover);
 }
 .sticky-navbar {
   position: fixed;
-  background-color: #2f3136;
+  background-color: var(--navbar-background-color);
   top: 0;
   width: 100vw;
   z-index: 1030;
   padding-left: 1em;
   padding-right: 2em;
+  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.07), inset 0 -1px 0 rgba(0,0,0,0.07);
 }
 @media (min-width: 1700px) {
   .sticky-navbar {
@@ -37,26 +38,46 @@
     padding-right: 7%;
   }
 }
-.dark-background {
-  background-color: #262629;
-  color: #cfd0d1;
-  border-color: #6c757d;
+
+.logout-button {
+  color: var(--text-color);
+  background-color: var(--button-background-color);
+  border-color: var(--button-border-color);
 }
 .logout-button:hover{
   color:#fff;
   background-color:#dc3545;
   border-color:#dc3545
 }
-.other-pools-button:hover{
-  color:#212529;
-  background-color:#f8f9fa;
-  border-color:#f8f9fa
+.other-pools-button {
+  color: var(--text-color);
+  background-color: var(--button-background-color);
+  border-color: var(--button-border-color);
 }
-.search-button{
+.other-pools-button:hover{
+  color: var(--button-color-hover);
+  background-color: var(--button-background-color-hover);
+  border-color: var(--button-border-color-hover);
+}
+.search-button {
+  color: var(--text-color);
+  background-color: var(--button-background-color);
+  border-color: var(--button-border-color);
   cursor: pointer;
+}
+.is-searching-account-spinner {
+  color: var(--text-color);
+  background-color: var(--button-background-color);
 }
 .search-input {
   max-width: 16em;
+}
+.theme-selector {
+  cursor: pointer;
+  color: var(--highlight-color);
+}
+.theme-selector:hover {
+  color: var(--highlight-color-hover);
 }
 @media (max-width: 1200px) {
   .navbar-nav {
@@ -77,6 +98,7 @@
   font-size: 1.1em;
   margin-left: 8px;
   vertical-align: top;
+  color: var(--brand-text-color);
 }
 @media (max-width: 1620px) and (min-width: 1200px) {
   .pool-title {

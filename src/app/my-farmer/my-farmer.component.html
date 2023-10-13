@@ -64,7 +64,7 @@
       </div>
       <div class="col-12 col-md-auto my-auto action-box" *ngIf="accountService.haveAuthToken">
         <button *ngIf="canRejoinPool" class="btn btn-success me-2" (click)="rejoinPool()">{{snippetService.getSnippet('my-farmer-component.manage-account-card.action.rejoin-pool')}}</button>
-        <button class="btn btn-outline-light" (click)="openSettingsModal()">Settings</button>
+        <button class="btn" [ngClass]="settingsButtonClasses" (click)="openSettingsModal()">Settings</button>
       </div>
     </div>
     <div class="row row-cols-xxl-5" [ngClass]="rowClasses">

@@ -27,10 +27,10 @@
   </div>
   <div style="margin-left: auto" *ngIf="showItemsPerPageSelection | async">
     <div class="input-group" style="flex-wrap: nowrap">
-      <label class="input-group-text dark-background page-size-select-label">
+      <label class="input-group-text page-size-select-label">
         Items per page
       </label>
-      <select  class="form-select dark-background page-size-select" [(ngModel)]="pageSize">
+      <select  class="form-select page-size-select" [(ngModel)]="pageSize">
         <option *ngFor="let currPageSize of pageSizes" [ngValue]="currPageSize" class="page-size-select-option">{{currPageSize}}</option>
       </select>
     </div>

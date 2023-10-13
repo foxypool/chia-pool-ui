@@ -65,31 +65,31 @@
         </a>
       </li>
     </ul>
-    <div class="d-flex flex-wrap flex-md-nowrap">
+    <div class="d-flex flex-wrap flex-md-nowrap align-items-center">
       <div class="header-row-item" *ngIf="showLogoutButton">
-        <button class="btn dark-background btn-outline-danger logout-button" (click)="accountService.logout()">{{snippetService.getSnippet('header-component.button.logout')}}</button>
+        <button class="btn btn-outline-danger logout-button" (click)="accountService.logout()">{{snippetService.getSnippet('header-component.button.logout')}}</button>
       </div>
       <div class="header-row-item" *ngIf="ratesService.currencies && ratesService.currencies.length > 0">
         <app-currency-selector></app-currency-selector>
       </div>
       <div class="input-group header-row-item search-input">
         <input
-          class="form-control dark-background"
+          class="form-control input-field"
           type="search"
           [(ngModel)]="accountSearchInput"
           [placeholder]="accountSearchInputPlaceholder"
           (keyup.enter)="search()"
           aria-label="Search"
         >
-        <div *ngIf="(isSearchingAccount$ | async) === false" class="input-group-text dark-background search-button" (click)="search()">
+        <div *ngIf="(isSearchingAccount$ | async) === false" class="input-group-text search-button" (click)="search()">
           <fa-icon [icon]="searchIcon" class="color-green"></fa-icon>
         </div>
-        <div *ngIf="isSearchingAccount$ | async" class="input-group-text dark-background">
+        <div *ngIf="isSearchingAccount$ | async" class="input-group-text is-searching-account-spinner">
           <fa-icon [icon]="faCircleNotch" animation="spin" class="color-green"></fa-icon>
         </div>
       </div>
       <div ngbDropdown display="dynamic" class="d-inline-block header-row-item" *ngIf="otherPools.length > 0">
-        <button class="btn btn-outline-light dark-background other-pools-button" id="poolsDropdown" ngbDropdownToggle>
+        <button class="btn btn-outline-light other-pools-button" id="poolsDropdown" ngbDropdownToggle>
           {{snippetService.getSnippet('header-component.button.other-pools')}}
         </button>
         <div ngbDropdownMenu aria-labelledby="poolsDropdown">
@@ -99,6 +99,10 @@
             <div *ngIf="getPool(i + 1) && getPool(i + 1).algorithm !== pool.algorithm" class="dropdown-divider"></div>
           </div>
         </div>
+      </div>
+      <div class="header-row-item theme-selector" (click)="toggleTheme()">
+        <fa-icon *ngIf="isDarkTheme" [icon]="faSun" size="xl"></fa-icon>
+        <fa-icon *ngIf="!isDarkTheme" [icon]="faMoon" size="xl"></fa-icon>
       </div>
     </div>
   </div>

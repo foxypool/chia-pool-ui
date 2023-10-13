@@ -28,10 +28,10 @@
   margin-top: -40px;
   margin-right: -10px;
   float: right;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--info-icon-color);
 }
 .header-info-icon:hover{
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--info-icon-color-hover);
 }
 .ellipsis {
   white-space: nowrap;
@@ -39,7 +39,7 @@
   text-overflow: ellipsis;
 }
 ::ng-deep .progress {
-  background-color: #262629 !important;
+  background-color: var(--progress-bar-background-color) !important;
 }
 .card-progress-bar {
   border-radius: 0 0 0.25rem 0.25rem;
@@ -50,10 +50,10 @@
   margin-bottom: -0.5rem;
 }
 .nav-tabs {
-  border-bottom-color: #2b2e33;
+  border-bottom-color: var(--nav-tabs-bottom-border-color);
 }
 .nav-tabs .nav-link {
-  color: #cfd0d1;
+  color: var(--text-color);
   border-top: unset;
   border-left: unset;
   border-right: unset;

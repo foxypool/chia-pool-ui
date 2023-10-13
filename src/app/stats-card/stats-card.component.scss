@@ -1,6 +1,6 @@
 .card {
   text-align: center;
-  background-color: #2f3136;
+  background-color: var(--card-background-color);
   margin-bottom: 1em;
 }
 .card-header-large {
@@ -24,8 +24,8 @@
 .header-info-icon {
   margin-top: -10px;
   float: right;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--info-icon-color);
 }
 .header-info-icon:hover{
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--info-icon-color-hover);
 }

@@ -5,13 +5,13 @@
 </div>
 <div class="row justify-content-end">
   <div class="col-auto">
-    <button *ngIf="hasWonBlocksObservable | async" type="button" class="btn btn-outline-info btn-sm" style="float: right" (click)="exportCsv()">{{snippetService.getSnippet('download-csv-button.title')}}</button>
+    <button *ngIf="hasWonBlocksObservable | async" type="button" class="btn btn-sm" [ngClass]="exportCsvButtonClasses" style="float: right" (click)="exportCsv()">{{snippetService.getSnippet('download-csv-button.title')}}</button>
   </div>
 </div>
 <div class="row">
   <div class="col-md-12">
     <div class="table-responsive-lg">
-      <table class="table dark-theme">
+      <table class="table">
         <thead>
           <tr>
             <th scope="col">

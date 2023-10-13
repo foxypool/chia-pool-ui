@@ -25,6 +25,7 @@ import {corePoolAddress, hpoolAddress} from '../known-addresses'
 import {AccountHistoricalStat} from '../api/types/account/account-historical-stat'
 import {isCheatingOgAccount, isInactiveOgAccount, isNftAccount, isOgAccount} from '../api/types/account/account'
 import {ChiaDashboardService} from '../chia-dashboard.service'
+import {colors, Theme, ThemeProvider} from '../theme-provider'
 
 @Component({
   selector: 'app-my-farmer',
@@ -80,6 +81,10 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     return `https://docs.foxypool.io/proof-of-spacetime/foxy-pool/pools/${this.poolsProvider.poolIdentifier}/authenticate/`
   }
 
+  public get settingsButtonClasses(): string {
+    return this.themeProvider.isDarkTheme ? 'btn-outline-light' : 'btn-outline-dark'
+  }
+
   private poolEc = 0
   private dailyRewardPerPib = 0
   private networkSpaceInTiB: string = '0'
@@ -106,8 +111,14 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     this.accountService.accountHistoricalStats
       .pipe(skip(1))
       .subscribe(historicalStats => {
-        this.ecChartUpdateOptions = this.makeEcChartUpdateOptions(historicalStats)
-        this.sharesChartUpdateOptions = this.makeSharesChartUpdateOptions(historicalStats)
+        this.ecChartUpdateOptions = {
+          ...(this.ecChartUpdateOptions || {}),
+          ...this.makeEcChartUpdateOptions(historicalStats),
+        }
+        this.sharesChartUpdateOptions = {
+          ...(this.sharesChartUpdateOptions || {}),
+          ...this.makeSharesChartUpdateOptions(historicalStats),
+        }
       }),
     this.statsService.accountStats$.subscribe(accountStats => this.poolEc = accountStats.ecSum),
     this.statsService.rewardStats$.subscribe(rewardStats => this.dailyRewardPerPib = rewardStats.dailyRewardPerPiB),
@@ -133,6 +144,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     private readonly configService: ConfigService,
     private readonly balanceProvider: BalanceProvider,
     protected readonly chiaDashboardService: ChiaDashboardService,
+    private readonly themeProvider: ThemeProvider,
   ) {
     this.ecChartOptions = {
       title: {
@@ -140,7 +152,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         left: 'center',
         top: 0,
         textStyle: {
-          color: '#cfd0d1'
+          color: this.themeProvider.isDarkTheme ? colors.darkTheme.textColor : colors.lightTheme.textColor,
         }
       },
       legend: {
@@ -150,15 +162,15 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         ],
         top: 25,
         textStyle: {
-          color: '#cfd0d1',
+          color: this.themeProvider.isDarkTheme ? colors.darkTheme.textColor : colors.lightTheme.textColor,
         },
         tooltip: {
           show: true,
-          backgroundColor: '#151517',
+          backgroundColor: this.themeProvider.isDarkTheme ? colors.darkTheme.tooltip.backgroundColor : colors.lightTheme.tooltip.backgroundColor,
           borderWidth: 0,
           padding: 7,
           textStyle: {
-            color: '#cfd0d1',
+            color: this.themeProvider.isDarkTheme ? colors.darkTheme.textColor : colors.lightTheme.textColor,
           },
           formatter: params => {
             if (params.name === this.currentEcSeriesName) {
@@ -242,7 +254,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         ],
         top: 10,
         textStyle: {
-          color: '#cfd0d1',
+          color: this.themeProvider.isDarkTheme ? colors.darkTheme.textColor : colors.lightTheme.textColor,
         },
       },
       grid: {
@@ -292,7 +304,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         data: [],
         type: 'line',
         name: this.snippetService.getSnippet('my-farmer-component.shares-chart.partials.name'),
-        color: '#46e8eb',
+        color: this.themeProvider.isDarkTheme ? colors.darkTheme.partialsChartColor : colors.lightTheme.partialsChartColor,
         symbol: 'none',
         yAxisIndex: 1,
         smooth: true,
@@ -441,6 +453,41 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       map(account => account?.integrations?.chiaDashboardShareKey !== undefined),
       distinctUntilChanged(),
       shareReplay(),
+    )
+    this.subscriptions.push(
+      this.themeProvider.theme$.subscribe(theme => {
+        const textColor = theme === Theme.dark ? colors.darkTheme.textColor : colors.lightTheme.textColor
+        this.ecChartUpdateOptions = {
+          ...(this.ecChartUpdateOptions || {}),
+          title: {
+            textStyle: {
+              color: textColor,
+            },
+          },
+          legend: {
+            textStyle: {
+              color: textColor,
+            },
+            tooltip: {
+              backgroundColor: theme === Theme.dark ? colors.darkTheme.tooltip.backgroundColor : colors.lightTheme.tooltip.backgroundColor,
+              textStyle: {
+                color: textColor,
+              },
+            },
+          },
+        }
+        this.sharesChartUpdateOptions = {
+          ...(this.sharesChartUpdateOptions || {}),
+          legend: {
+            textStyle: {
+              color: textColor,
+            },
+          },
+          series: [{}, {}, {}, {}, {
+            color: this.themeProvider.isDarkTheme ? colors.darkTheme.partialsChartColor : colors.lightTheme.partialsChartColor,
+          }],
+        }
+      })
     )
 
     // Add dummy subscribes to trigger streams ahead of first use
@@ -1106,6 +1153,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         data: missingDifficultyDataLeading.concat(historicalDifficultySeries, missingDifficultyDataTrailing),
       }, {
         data: missingShareCountDataLeading.concat(historicalShareCountSeries, missingShareCountDataTrailing),
+        color: this.themeProvider.isDarkTheme ? colors.darkTheme.partialsChartColor : colors.lightTheme.partialsChartColor,
       }],
     }
   }

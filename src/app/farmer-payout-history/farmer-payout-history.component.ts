@@ -13,6 +13,7 @@ import {CoinConfig} from '../coin-config'
 import {RatesService} from '../rates.service'
 import {Moment} from 'moment'
 import {StatsService} from '../stats.service'
+import {ThemeProvider} from '../theme-provider'
 
 @Component({
   selector: 'app-farmer-payout-history',
@@ -74,6 +75,11 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
     }],
   }
   public chartUpdateOptions: EChartsOption
+
+  public get exportCsvButtonClasses(): string {
+    return this.themeProvider.isDarkTheme ? 'btn-outline-info' : 'btn-info'
+  }
+
   private readonly subscriptions: Subscription[] = []
 
   constructor(
@@ -82,6 +88,7 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
     private readonly configService: ConfigService,
     private readonly csvExporter: CsvExporter,
     private readonly ratesService: RatesService,
+    private readonly themeProvider: ThemeProvider,
   ) {}
 
   public exportCsv(): void {

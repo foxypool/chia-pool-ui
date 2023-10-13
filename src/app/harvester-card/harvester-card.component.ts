@@ -21,6 +21,7 @@ import {PoolsProvider, PoolType} from '../pools.provider'
 import {ChiaDashboardService} from '../chia-dashboard.service'
 import {HarvesterStatus} from '../status/harvester-status'
 import {LastUpdatedState} from '../status/last-updated-state'
+import {colors, Theme, ThemeProvider} from '../theme-provider'
 
 const sharesPerDayPerK32 = 10
 const k32SizeInGb = 108.837
@@ -86,6 +87,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     private readonly statsService: StatsService,
     private readonly toastService: ToastService,
     private readonly poolsProvider: PoolsProvider,
+    private readonly themeProvider: ThemeProvider,
   ) {
     this.isLoadingProofTimes = this.isLoadingProofTimesSubject.pipe(shareReplay())
     this.showSharesChart = this.chartModeSubject.pipe(map(mode => mode === ChartMode.shares), shareReplay())
@@ -146,7 +148,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         left: 'center',
         top: 0,
         textStyle: {
-          color: '#cfd0d1'
+          color: this.themeProvider.isDarkTheme ? colors.darkTheme.textColor : colors.lightTheme.textColor,
         }
       },
       legend: {
@@ -158,7 +160,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         ],
         top: 25,
         textStyle: {
-          color: '#cfd0d1',
+          color: this.themeProvider.isDarkTheme ? colors.darkTheme.textColor : colors.lightTheme.textColor,
         },
       },
       grid: {
@@ -219,7 +221,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         data: [],
         type: 'line',
         name: 'Proof times',
-        color: '#c6d8d3',
+        color: this.themeProvider.isDarkTheme ? colors.darkTheme.proofTimesColor : colors.darkTheme.proofTimesColor,
         showSymbol: false,
         lineStyle: {
           type: 'dotted',
@@ -235,7 +237,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         left: 'center',
         top: 0,
         textStyle: {
-          color: '#cfd0d1'
+          color: this.themeProvider.isDarkTheme ? colors.darkTheme.textColor : colors.lightTheme.textColor,
         }
       },
       grid: {
@@ -275,11 +277,46 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       }],
     }
     this.subscriptions.push(this.stats.subscribe(stats => {
-      this.sharesChartUpdateOptions = this.makeSharesChartUpdateOptions(stats)
+      this.sharesChartUpdateOptions = {
+        ...(this.sharesChartUpdateOptions || {}),
+        ...this.makeSharesChartUpdateOptions(stats),
+      }
     }))
     this.subscriptions.push(this.proofTimes.subscribe(proofTimes => {
-      this.proofTimesChartUpdateOptions = this.makeProofTimesChartUpdateOptions(proofTimes)
+      this.proofTimesChartUpdateOptions = {
+        ...(this.proofTimesChartUpdateOptions || {}),
+        ...this.makeProofTimesChartUpdateOptions(proofTimes),
+      }
     }))
+    this.subscriptions.push(
+      this.themeProvider.theme$.subscribe(theme => {
+        const textColor = theme === Theme.dark ? colors.darkTheme.textColor : colors.lightTheme.textColor
+        this.sharesChartUpdateOptions = {
+          ...(this.sharesChartUpdateOptions || {}),
+          title: {
+            textStyle: {
+              color: textColor,
+            },
+          },
+          legend: {
+            textStyle: {
+              color: textColor,
+            },
+          },
+          series: [{},{},{},{
+            color: this.themeProvider.isDarkTheme ? colors.darkTheme.proofTimesColor : colors.lightTheme.proofTimesColor,
+          }],
+        }
+        this.proofTimesChartUpdateOptions = {
+          ...(this.proofTimesChartUpdateOptions || {}),
+          title: {
+            textStyle: {
+              color: textColor,
+            },
+          },
+        }
+      })
+    )
     const sharesStream = this.stats
       .pipe(
         map(harvesterStats => {
@@ -788,6 +825,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         data: validSharesSeries,
       }, {
         data: averageProofTimesSeries,
+        color: this.themeProvider.isDarkTheme ? colors.darkTheme.proofTimesColor : colors.lightTheme.proofTimesColor
       }],
     }
   }

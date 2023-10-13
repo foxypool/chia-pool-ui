@@ -5,10 +5,12 @@ import {PoolsProvider} from '../pools.provider'
 import {AccountService} from '../account.service'
 import {RatesService} from '../rates.service'
 import {ActivatedRoute, Router} from '@angular/router'
-import {faCircleNotch, faSearch} from '@fortawesome/free-solid-svg-icons'
+import {faCircleNotch, faMoon, faSearch} from '@fortawesome/free-solid-svg-icons'
 import {makeAccountIdentifierName} from '../util'
 import {MyFarmerComponent} from '../my-farmer/my-farmer.component'
 import {BehaviorSubject, Observable} from 'rxjs'
+import {ThemeProvider} from '../theme-provider'
+import {faSun} from '@fortawesome/free-regular-svg-icons'
 
 @Component({
   selector: 'app-header',
@@ -21,8 +23,14 @@ export class HeaderComponent {
   public readonly accountSearchInputPlaceholder: string = makeAccountIdentifierName(this.poolsProvider.pool.type)
   public readonly isSearchingAccount$: Observable<boolean>
 
+  public get isDarkTheme(): boolean {
+    return this.themeProvider.isDarkTheme
+  }
+
   protected readonly searchIcon = faSearch
   protected readonly faCircleNotch = faCircleNotch
+  protected readonly faSun = faSun
+  protected readonly faMoon = faMoon
 
   private readonly isSearchingAccount: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
 
@@ -34,6 +42,7 @@ export class HeaderComponent {
     public ratesService: RatesService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    private readonly themeProvider: ThemeProvider,
   ) {
     this.isSearchingAccount$ = this.isSearchingAccount.asObservable()
   }
@@ -66,6 +75,10 @@ export class HeaderComponent {
 
   get snippetService(): SnippetService {
     return this._snippetService
+  }
+
+  public toggleTheme() {
+    this.themeProvider.toggle()
   }
 
   public async search() {
