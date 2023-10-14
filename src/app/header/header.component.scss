@@ -105,3 +105,72 @@
     display: none;
   }
 }
+.theme-switcher-checkbox {
+  font-size: 18px;
+}
+.theme-switcher-label {
+  display: flex;
+  width: 75px;
+  height: 35px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 6px;
+  background: #222;
+  border-radius: 50px;
+  cursor: pointer;
+  position: relative;
+  transition: 0.3s;
+}
+.theme-switcher-checkbox:checked + .theme-switcher-label {
+  background: #c0c0c0;
+}
+.theme-switcher-checkbox:checked + .theme-switcher-label .theme-switcher-ball {
+  background: #222;
+}
+.theme-switcher-checkbox {
+  display: none;
+}
+.theme-switcher-sun-icon {
+  color: gold;
+  transition: 0.3s;
+}
+.theme-switcher-moon-icon {
+  color: #fff;
+  transition: 0.3s;
+}
+.theme-switcher-ball {
+  display: none;
+}
+.theme-switcher-checkbox:checked + label .theme-switcher-sun-icon {
+  transform: translateX(-43px) rotate(160deg);
+}
+.theme-switcher-checkbox:checked + label .theme-switcher-moon-icon {
+  transform: translateX(0) rotate(0);
+}
+.theme-switcher-label .theme-switcher-moon-icon {
+  opacity: 0;
+  transform: translateX(43px) rotate(250deg);
+}
+.theme-switcher-label .theme-switcher-sun-icon {
+  opacity: 1;
+}
+.theme-switcher-checkbox:checked + label .theme-switcher-sun-icon {
+  opacity: 0;
+}
+.theme-switcher-checkbox:checked + label .theme-switcher-moon-icon {
+  opacity: 1;
+}
+.theme-switcher-label .theme-switcher-ball {
+  position: absolute;
+  display: block;
+  width: 25px;
+  height: 25px;
+  top: 5px;
+  left: 5px;
+  background: #fff;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+.theme-switcher-checkbox:checked + .theme-switcher-label .theme-switcher-ball {
+  transform: translateX(40px);
+}

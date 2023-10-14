@@ -9,7 +9,7 @@ import {faCircleNotch, faMoon, faSearch} from '@fortawesome/free-solid-svg-icons
 import {makeAccountIdentifierName} from '../util'
 import {MyFarmerComponent} from '../my-farmer/my-farmer.component'
 import {BehaviorSubject, Observable} from 'rxjs'
-import {ThemeProvider} from '../theme-provider'
+import {Theme, ThemeProvider} from '../theme-provider'
 import {faSun} from '@fortawesome/free-regular-svg-icons'
 
 @Component({
@@ -23,8 +23,12 @@ export class HeaderComponent {
   public readonly accountSearchInputPlaceholder: string = makeAccountIdentifierName(this.poolsProvider.pool.type)
   public readonly isSearchingAccount$: Observable<boolean>
 
-  public get isDarkTheme(): boolean {
-    return this.themeProvider.isDarkTheme
+  public get showMoonInThemeSwitcher(): boolean {
+    return !this.isDarkTheme
+  }
+
+  public set showMoonInThemeSwitcher(showMoon: boolean) {
+    this.isDarkTheme = !showMoon
   }
 
   public get navbarClasses(): string {
@@ -35,6 +39,14 @@ export class HeaderComponent {
   protected readonly faCircleNotch = faCircleNotch
   protected readonly faSun = faSun
   protected readonly faMoon = faMoon
+
+  private get isDarkTheme(): boolean {
+    return this.themeProvider.isDarkTheme
+  }
+
+  private set isDarkTheme(shouldBeDarkTheme: boolean) {
+    this.themeProvider.theme = shouldBeDarkTheme ? Theme.dark : Theme.light
+  }
 
   private readonly isSearchingAccount: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
 
@@ -79,10 +91,6 @@ export class HeaderComponent {
 
   get snippetService(): SnippetService {
     return this._snippetService
-  }
-
-  public toggleTheme() {
-    this.themeProvider.toggle()
   }
 
   public async search() {

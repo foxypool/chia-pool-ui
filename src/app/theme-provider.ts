@@ -41,6 +41,10 @@ export class ThemeProvider implements OnDestroy {
     return this.themeSubject.getValue()
   }
 
+  public set theme(theme: Theme) {
+    this.themeSubject.next(theme)
+  }
+
   private get persistedTheme(): Theme|undefined {
     const persistedThemeRaw = this.localStorageService.getItem('selected-theme') ?? undefined
 
@@ -71,12 +75,6 @@ export class ThemeProvider implements OnDestroy {
 
   public ngOnDestroy(): void {
     this.subscriptions.map(subscription => subscription.unsubscribe())
-  }
-
-  public toggle() {
-    const theme = this.theme
-    const nextTheme = theme === Theme.dark ? Theme.light : Theme.dark
-    this.themeSubject.next(nextTheme)
   }
 }
 

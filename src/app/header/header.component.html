@@ -100,9 +100,15 @@
           </div>
         </div>
       </div>
-      <div class="header-row-item theme-selector" (click)="toggleTheme()">
-        <fa-icon *ngIf="isDarkTheme" [icon]="faSun" size="xl"></fa-icon>
-        <fa-icon *ngIf="!isDarkTheme" [icon]="faMoon" size="xl"></fa-icon>
+      <div class="header-row-item theme-selector">
+        <div class="theme-switcher-container">
+          <input type="checkbox" id="theme-switch" class="theme-switcher-checkbox" [(ngModel)]="showMoonInThemeSwitcher"/>
+          <label for="theme-switch" class="theme-switcher-label">
+            <fa-icon [icon]="faMoon" class="theme-switcher-moon-icon" size="xl"></fa-icon>
+            <fa-icon [icon]="faSun" class="theme-switcher-sun-icon" size="xl"></fa-icon>
+            <span class="theme-switcher-ball"></span>
+          </label>
+        </div>
       </div>
     </div>
   </div>
