@@ -58,7 +58,6 @@ export class ThemeProvider implements OnDestroy {
     private readonly localStorageService: LocalStorageService,
   ) {
     this.theme$ = this.themeSubject.pipe(distinctUntilChanged())
-    // this.themeSubject.next(Theme.light)
     this.subscriptions.push(
       this.theme$.subscribe(theme => {
         if (theme === Theme.dark) {
