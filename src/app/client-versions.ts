@@ -12,7 +12,7 @@ export const clientVersions = {
   },
   foxyFarmer: {
     minimum: '1.4.0',
-    recommendedMinimum: '1.7.0',
+    recommendedMinimum: '1.9.1',
   },
   gigahorse: {
     minimum: 10,
