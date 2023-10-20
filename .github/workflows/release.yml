@@ -9,17 +9,19 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: latest
       - name: Set up Node.js 18
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-      - name: Use current yarn
-        run: yarn set version stable
+          cache: 'pnpm'
       - name: Install
-        run: yarn install
+        run: pnpm install
       - name: Build with source maps
-        run: yarn build
+        run: pnpm run build
       - name: Create Sentry release
         uses: getsentry/action-release@v1
         env:
