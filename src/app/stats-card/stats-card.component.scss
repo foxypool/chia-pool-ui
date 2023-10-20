@@ -1,7 +1,11 @@
 .card {
   text-align: center;
-  background-color: var(--card-background-color);
   margin-bottom: 1em;
+}
+@media (max-width: 992px) {
+  .card {
+    margin-bottom: 0.5em;
+  }
 }
 .card-header-large {
   padding: 0.5rem 0.25rem;

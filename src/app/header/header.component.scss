@@ -74,10 +74,6 @@
 }
 .theme-selector {
   cursor: pointer;
-  color: var(--highlight-color);
-}
-.theme-selector:hover {
-  color: var(--highlight-color-hover);
 }
 @media (max-width: 1200px) {
   .navbar-nav {

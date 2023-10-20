@@ -1,4 +1,5 @@
 $form-select-indicator-color: #cfd0d1;
+$input-placeholder-color: #6c757d;
 
 @import 'bootstrap/scss/functions';
 @import 'bootstrap/scss/variables';
@@ -70,6 +71,13 @@ body.dark-theme {
   --brand-text-color: #fff;
 }
 
+.pagination {
+  --bs-pagination-disabled-color: rgb(108, 117, 125);
+}
+.card-header {
+  --bs-card-cap-bg: rgba(0, 0, 0, 0.03);
+}
+
 body {
   background-color: var(--background-color);
   color: var(--text-color);
@@ -80,6 +88,12 @@ body {
   color: var(--text-color);
   border-color: var(--input-field-border-color);
 }
+.input-field:focus,
+.input-field:active,
+.input-field:focus:active {
+  background-color: var(--input-field-background-color);
+  color: var(--text-color);
+}
 
 table {
   background-color: var(--background-color) !important;
@@ -88,9 +102,13 @@ table {
 
 .table th {
   border-color: var(--table-border-color);
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 .table td {
   border-color: var(--table-border-color);
+  background-color: var(--background-color);
+  color: var(--text-color);
   padding: 0.75rem;
 }
 a {
@@ -110,6 +128,7 @@ html, body {
 
 .card {
   background-color: var(--card-background-color);
+  color: var(--text-color);
 }
 .dot {
   margin-top: 3px;
