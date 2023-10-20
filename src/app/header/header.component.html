@@ -69,7 +69,12 @@
       <div class="header-row-item" *ngIf="showLogoutButton">
         <button class="btn btn-outline-danger logout-button" (click)="accountService.logout()">{{snippetService.getSnippet('header-component.button.logout')}}</button>
       </div>
-      <div class="header-row-item" *ngIf="ratesService.currencies && ratesService.currencies.length > 0">
+      <div class="header-row-item" *ngIf="showJoinPoolButton">
+        <a class="btn btn-primary text-decoration-none" [href]="joinPoolUrl" target="_blank">
+          Join Pool
+        </a>
+      </div>
+      <div class="header-row-item" *ngIf="ratesService.currencies.length > 0">
         <app-currency-selector></app-currency-selector>
       </div>
       <div class="input-group header-row-item search-input">

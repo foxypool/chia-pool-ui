@@ -23,6 +23,14 @@ export class HeaderComponent {
   public readonly accountSearchInputPlaceholder: string = makeAccountIdentifierName(this.poolsProvider.pool.type)
   public readonly isSearchingAccount$: Observable<boolean>
 
+  public get showJoinPoolButton(): boolean {
+    return this.accountService.accountIdentifierFromLocalStorage === null
+  }
+
+  public get joinPoolUrl(): string {
+    return `https://docs.foxypool.io/proof-of-spacetime/foxy-pool/pools/${this.poolsProvider.poolIdentifier}/getting-started/`
+  }
+
   public get showMoonInThemeSwitcher(): boolean {
     return !this.isDarkTheme
   }

@@ -12,7 +12,7 @@
           </ng-template>
 
           <ng-template editMode>
-            <input editableOnEnter editableOnEscape class="form-control harvester-name-input" type="text" [formControl]="nameControl"/>
+            <input editableOnEnter editableOnEscape class="form-control input-field harvester-name-input" type="text" [formControl]="nameControl"/>
           </ng-template>
         </editable>
         <span *ngIf="(status$ | async) !== null" class="badge status-pill" [ngClass]="statusDotColorClass$ | async" [ngbTooltip]="statusTooltip$ | async">{{status$ | async}}</span>
