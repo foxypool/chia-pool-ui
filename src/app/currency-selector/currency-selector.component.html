@@ -1,4 +1,4 @@
-<div class="input-group">
+<div class="input-group flex-nowrap">
   <select class="form-select currency-select input-field" [ngModel]="configService.selectedCurrencySubject | async" (ngModelChange)="configService.selectedCurrencySubject.next($event)">
     <option *ngFor="let currency of ratesService.currencies" [ngValue]="currency" class="currency-select-option">{{ currency.toUpperCase() }}</option>
   </select>

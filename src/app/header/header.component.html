@@ -70,7 +70,7 @@
         <button class="btn btn-outline-danger logout-button" (click)="accountService.logout()">{{snippetService.getSnippet('header-component.button.logout')}}</button>
       </div>
       <div class="header-row-item" *ngIf="showJoinPoolButton">
-        <a class="btn btn-primary text-decoration-none" [href]="joinPoolUrl" target="_blank">
+        <a class="btn btn-primary text-decoration-none no-wrap" [href]="joinPoolUrl" target="_blank">
           Join Pool
         </a>
       </div>
