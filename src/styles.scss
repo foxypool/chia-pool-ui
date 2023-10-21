@@ -86,6 +86,10 @@ body.dark-theme {
   --slider-bubble-color: #cfd0d1;
 }
 
+body.dark-theme .popover {
+  --bs-popover-bg: #ebebeb;
+  --bs-popover-body-color: #212529;
+}
 .tooltip {
   --bs-tooltip-color: white;
   --bs-tooltip-bg: black;
