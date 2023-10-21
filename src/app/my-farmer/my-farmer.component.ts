@@ -422,8 +422,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       filter(satellites => satellites !== undefined),
       map(satellites => satellites
         .filter(satellite => !satellite.hidden)
-        .map(satellite => satellite.services.harvester)
-        .filter(harvester => harvester.stats !== undefined && harvester.lastUpdate !== undefined && moment(harvester.lastUpdate).isAfter(moment().subtract(5, 'minutes')))
+        .map(satellite => satellite.services?.harvester)
+        .filter(harvester => harvester !== undefined && harvester.stats !== undefined && harvester.lastUpdate !== undefined && moment(harvester.lastUpdate).isAfter(moment().subtract(5, 'minutes')))
       ),
       shareReplay(),
     )
@@ -483,9 +483,6 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
               color: textColor,
             },
           },
-          series: [{}, {}, {}, {}, {
-            color: this.themeProvider.isDarkTheme ? colors.darkTheme.partialsChartColor : colors.lightTheme.partialsChartColor,
-          }],
         }
       })
     )

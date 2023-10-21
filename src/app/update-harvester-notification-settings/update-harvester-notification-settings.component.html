@@ -1,11 +1,11 @@
-<h5 style="color: #474747">Notification settings</h5>
+<h5 class="settings-modal-text">Notification settings</h5>
 <div class="row mt-3">
   <div class="col-12">
     <div class="form-group">
       <label for="harvesterOfflineDuration" class="form-label">
         <div class="form-check form-switch">
           <input class="form-check-input" [ngClass]="{ 'inherited-switch': isInheritedAreOfflineNotificationsEnabled }" type="checkbox" role="switch" id="enableHarvesterOfflineNotifications" [(ngModel)]="areOfflineNotificationsEnabled">
-          <label class="form-check-label text-color-and-size" for="enableHarvesterOfflineNotifications" style="display: inline">
+          <label class="form-check-label settings-modal-text bigger-text" for="enableHarvesterOfflineNotifications" style="display: inline">
             Notify when this Harvester does not send any partials for
           </label>
         </div>
@@ -18,7 +18,7 @@
 </div>
 <div class="row mt-4">
   <div class="col-12" >
-    <div class="alert alert-info" role="alert" style="font-size: 1.1rem">
+    <div class="alert alert-info bigger-text" role="alert">
       You can subscribe and unsubscribe to your accounts notification using your discord account by using the corresponding slash command:<br>
       <code>/subscribe-to-notifications</code><br>
       or <code>/unsubscribe-from-notifications</code>

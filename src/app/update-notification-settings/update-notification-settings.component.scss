@@ -1,7 +1,3 @@
-.text-color-and-size {
-  color: #474747;
-  font-size: 1.1rem;
-}
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -11,13 +7,13 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 .input-group-text {
-  border: 1px solid black;
+  border: 1px solid var(--settings-input-field-border-color);
 }
 .form-control {
-  border: 1px solid black;
+  border: 1px solid var(--settings-input-field-border-color);
 }
 .custom-select {
-  border: 1px solid black;
+  border: 1px solid var(--settings-input-field-border-color);
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }

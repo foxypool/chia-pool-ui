@@ -1,11 +1,11 @@
-<h5 style="color: #474747">Notification settings</h5>
+<h5 class="settings-modal-text">Notification settings</h5>
 <div class="row">
   <div class="col-12">
     <div class="form-group">
       <label for="ecLastHourThreshold" class="form-label">
         <div class="form-check form-switch">
           <input class="form-check-input" type="checkbox" role="switch" id="enableEcChangeNotifications" [(ngModel)]="areEcChangeNotificationsEnabled">
-          <label class="form-check-label text-color-and-size" for="enableEcChangeNotifications" style="display: inline">
+          <label class="form-check-label settings-modal-text bigger-text" for="enableEcChangeNotifications" style="display: inline">
             Notify when the current EC drops below
           </label>
         </div>
@@ -39,7 +39,7 @@
       <label for="harvesterOfflineDuration" class="form-label">
         <div class="form-check form-switch">
           <input class="form-check-input" type="checkbox" role="switch" id="enableHarvesterOfflineNotifications" [(ngModel)]="areHarvesterOfflineNotificationsEnabled">
-          <label class="form-check-label text-color-and-size" for="enableHarvesterOfflineNotifications" style="display: inline">
+          <label class="form-check-label settings-modal-text bigger-text" for="enableHarvesterOfflineNotifications" style="display: inline">
             Notify when a Harvester does not send any partials for
           </label>
         </div>
@@ -54,7 +54,7 @@
   <div class="col-12">
     <div class="form-check form-switch" style="padding-bottom: 1rem">
       <input class="form-check-input" type="checkbox" role="switch" id="enableBlockWonNotifications" [(ngModel)]="areBlockWonNotificationsEnabled">
-      <label class="form-check-label text-color-and-size" for="enableBlockWonNotifications" style="display: inline">
+      <label class="form-check-label settings-modal-text bigger-text" for="enableBlockWonNotifications" style="display: inline">
         Notify on block win
       </label>
     </div>
@@ -64,7 +64,7 @@
   <div class="col-12">
     <div class="form-check form-switch" style="padding-bottom: 1rem">
       <input class="form-check-input" type="checkbox" role="switch" id="enablePayoutAddressChangeNotifications" [(ngModel)]="arePayoutAddressChangeNotificationsEnabled">
-      <label class="form-check-label text-color-and-size" for="enablePayoutAddressChangeNotifications" style="display: inline">
+      <label class="form-check-label settings-modal-text bigger-text" for="enablePayoutAddressChangeNotifications" style="display: inline">
         Notify on payout address change
       </label>
     </div>

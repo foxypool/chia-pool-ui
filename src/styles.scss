@@ -37,6 +37,13 @@ body {
   --page-link-border-color: rgba(0, 0, 0, 0.4);
   --nav-tabs-bottom-border-color: #e9ecef;
   --brand-text-color: #000;
+  --settings-modal-text-color: #474747;
+  --settings-input-field-border-color: black;
+  --slider-selection-background-color-disabled: #8b91a2;
+  --slider-pointer-background-color-disabled: #d8e0f3;
+  --slider-legend-color: #474747;
+  --slider-tick-color: #474747;
+  --slider-bubble-color: #55637d;
 }
 
 body.dark-theme {
@@ -69,8 +76,20 @@ body.dark-theme {
   --page-link-border-color: #18191c;
   --nav-tabs-bottom-border-color: #2b2e33;
   --brand-text-color: #fff;
+  --bs-border-color-translucent: rgba(0, 0, 0, 0.175);
+  --settings-modal-text-color: initial;
+  --settings-input-field-border-color: var(--bs-border-color);
+  --slider-selection-background-color-disabled: #8b91a2;
+  --slider-pointer-background-color-disabled: #d8e0f3;
+  --slider-legend-color: #cfd0d1;
+  --slider-tick-color: #cfd0d1;
+  --slider-bubble-color: #cfd0d1;
 }
 
+.tooltip {
+  --bs-tooltip-color: white;
+  --bs-tooltip-bg: black;
+}
 .pagination {
   --bs-pagination-disabled-color: rgb(108, 117, 125);
 }
@@ -93,11 +112,6 @@ body {
 .input-field:focus:active {
   background-color: var(--input-field-background-color);
   color: var(--text-color);
-}
-
-table {
-  background-color: var(--background-color) !important;
-  color: var(--text-color) !important;
 }
 
 .table th {
@@ -229,4 +243,12 @@ $color-green-orange: #b9a44c;
 }
 .farmer-page-link:hover {
   border-bottom: 2px solid rgb(66, 134, 244);
+}
+
+.settings-modal-text {
+  color: var(--settings-modal-text-color);
+}
+
+.bigger-text {
+  font-size: 1.1rem;
 }

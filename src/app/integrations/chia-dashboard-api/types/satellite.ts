@@ -98,7 +98,7 @@ export interface Satellite {
   _id: string
   name: string
   hidden: boolean
-  services: {
+  services?: {
     daemon?: ChiaService<DaemonStats>
     farmer: ChiaService<FarmerStats>
     harvester: ChiaService<HarvesterStats>

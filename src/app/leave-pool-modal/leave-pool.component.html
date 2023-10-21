@@ -1,4 +1,4 @@
-<h5 style="color: #474747">{{snippetService.getSnippet('leave-pool-modal.title')}}</h5>
+<h5 class="settings-modal-text">{{snippetService.getSnippet('leave-pool-modal.title')}}</h5>
 <div class="row">
   <div class="col-12" *ngIf="haveCollateral">
     <div class="form-check checkbox-lg" style="padding-bottom: 1rem">
@@ -7,17 +7,17 @@
         {{ snippetService.getSnippet('leave-pool-modal.leave-forever') }}
       </label>
     </div>
-    <div class="alert alert-danger" role="alert" style="font-size: 1.1rem" *ngIf="leaveForEver">
+    <div class="alert alert-danger bigger-text" role="alert" *ngIf="leaveForEver">
       {{snippetService.getSnippet('leave-pool-modal.collateral-warning')}}
     </div>
   </div>
   <div class="col-12" >
-    <div class="alert alert-info" role="alert" style="font-size: 1.1rem" *ngIf="!leaveForEver">
+    <div class="alert alert-info bigger-text" role="alert" *ngIf="!leaveForEver">
       {{snippetService.getSnippet('leave-pool-modal.rejoin-info')}}
     </div>
   </div>
   <div class="col-12" >
-    <div class="alert alert-warning" role="alert" style="font-size: 1.1rem">
+    <div class="alert alert-warning bigger-text" role="alert">
       <span [innerHTML]="snippetService.getSnippet('leave-pool-modal.read-leave-guide-info', leavePoolGuideUrl)"></span>
     </div>
   </div>

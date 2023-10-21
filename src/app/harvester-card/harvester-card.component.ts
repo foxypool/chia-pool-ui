@@ -303,9 +303,6 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
               color: textColor,
             },
           },
-          series: [{},{},{},{
-            color: this.themeProvider.isDarkTheme ? colors.darkTheme.proofTimesColor : colors.lightTheme.proofTimesColor,
-          }],
         }
         this.proofTimesChartUpdateOptions = {
           ...(this.proofTimesChartUpdateOptions || {}),
@@ -374,8 +371,8 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       filter(satellites => satellites !== undefined),
       map(satellites => satellites
         .filter(satellite => !satellite.hidden)
-        .map(satellite => satellite.services.harvester)
-        .filter(harvester => harvester.stats !== undefined)
+        .map(satellite => satellite.services?.harvester)
+        .filter(harvester => harvester?.stats !== undefined)
         .find(harvester => harvester.stats.nodeId === this.harvester.peerId.ensureHexPrefix())
       ),
       filter(harvester => harvester !== undefined),
