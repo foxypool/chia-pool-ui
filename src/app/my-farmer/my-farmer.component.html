@@ -15,11 +15,11 @@
     </div>
   </div>
   <div class="col-12" *ngIf="(accountService.haveAccountIdentifier$ | async) && (accountService.haveAccount$ | async)">
-    <div *ngIf="isPoolMember && (accountHasNeverSubmittedAPartial || showNewAccountFarmingAlert)" class="row mb-1 ps-2 pe-2">
-      <ngb-alert *ngIf="accountHasNeverSubmittedAPartial" type="primary" class="mb-1 text-center no-border-color" [dismissible]="false">
-        {{accountHasNeverSubmittedPartialsAlertMessage}}
+    <div *ngIf="isPoolMember && (accountHasNeverSubmittedAPartial || shouldShowRejoinedAlert || shouldShowNewAccountFarmingAlert)" class="row mb-1 ps-2 pe-2">
+      <ngb-alert *ngIf="accountHasNeverSubmittedAPartial || shouldShowRejoinedAlert" type="primary" class="mb-1 text-center no-border-color" [dismissible]="false">
+        {{accountHasJoinedAlertMessage}}
       </ngb-alert>
-      <ngb-alert *ngIf="!accountHasNeverSubmittedAPartial && showNewAccountFarmingAlert" type="primary" class="mb-1 text-center no-border-color" (closed)="hideNewAccountInfoAlert()">
+      <ngb-alert *ngIf="shouldShowNewAccountFarmingAlert" type="primary" class="mb-1 text-center no-border-color" (closed)="hideNewAccountInfoAlert()">
         You just started farming, it will take 24h to show accurate estimations based on farm size.
       </ngb-alert>
     </div>

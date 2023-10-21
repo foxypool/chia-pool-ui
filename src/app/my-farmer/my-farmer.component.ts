@@ -1000,24 +1000,36 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     return this.accountService.account?.lastAcceptedPartialAt === undefined
   }
 
-  public get accountHasNeverSubmittedPartialsAlertMessage(): string|undefined {
-    if (this.accountService.account === null) {
+  public get accountHasJoinedAlertMessage(): string|undefined {
+    const farmingSinceRaw = this.accountService.account?.rejoinedAt ?? this.accountService.account?.createdAt
+    if (farmingSinceRaw === undefined) {
       return
     }
 
-    const createdAt = moment(this.accountService.account.createdAt)
-    if (createdAt.isAfter(moment().subtract(1, 'hour'))) {
-      return 'You just joined the pool, waiting for your farm to start submitting partials to the pool.'
+    const farmingSince = moment(farmingSinceRaw)
+    const joinedWording = this.accountService.account.rejoinedAt === undefined ? 'joined' : 'rejoined'
+    if (farmingSince.isAfter(moment().subtract(1, 'hour'))) {
+      return `You just ${joinedWording} the pool, waiting for your farm to start submitting partials to the pool.`
     }
-    if (createdAt.isAfter(moment().subtract(7, 'days'))) {
-      return 'You recently joined the pool, waiting for your farm to start submitting partials to the pool.'
+    if (farmingSince.isAfter(moment().subtract(7, 'days'))) {
+      return `You recently ${joinedWording} the pool, waiting for your farm to start submitting partials to the pool.`
     }
 
-    return 'You joined the pool a while ago, waiting for your farm to start submitting partials to the pool.'
+    return `You ${joinedWording} the pool a while ago, waiting for your farm to start submitting partials to the pool.`
   }
 
-  public get showNewAccountFarmingAlert(): boolean {
-    if (this.configService.hideNewAccountInfoAlert || this.accountService.account === null || this.accountHasNeverSubmittedAPartial) {
+  public get shouldShowRejoinedAlert(): boolean {
+    const rejoinedAt = this.accountService.account?.rejoinedAt
+    const lastAcceptedPartialAt = this.accountService.account?.lastAcceptedPartialAt
+    if (rejoinedAt === undefined || lastAcceptedPartialAt === undefined) {
+      return false
+    }
+
+    return moment(rejoinedAt).isAfter(lastAcceptedPartialAt)
+  }
+
+  public get shouldShowNewAccountFarmingAlert(): boolean {
+    if (this.configService.hideNewAccountInfoAlert || this.accountService.account === null || this.accountHasNeverSubmittedAPartial || this.shouldShowRejoinedAlert) {
       return false
     }
     const farmingSince = this.accountService.account.rejoinedAt || this.accountService.account.createdAt
