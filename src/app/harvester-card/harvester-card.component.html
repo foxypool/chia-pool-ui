@@ -15,7 +15,7 @@
             <input editableOnEnter editableOnEscape class="form-control input-field harvester-name-input" type="text" [formControl]="nameControl"/>
           </ng-template>
         </editable>
-        <span *ngIf="(status$ | async) !== null" class="badge status-pill" [ngClass]="statusDotColorClass$ | async" [ngbTooltip]="statusTooltip$ | async">{{status$ | async}}</span>
+        <span *ngIf="(status$ | async) !== null" class="badge status-pill" [ngClass]="statusColorClass$ | async" [ngbTooltip]="statusTooltip$ | async">{{status$ | async}}</span>
       </h5>
       <div *ngIf="hasName">{{peerIdSlug}}</div>
     </div>

@@ -23,6 +23,17 @@ export class HarvesterStatus {
     return makeDotColorClassForLastUpdatedState(this.lastUpdatedState)
   }
 
+  public get statusColorClass(): string {
+    if (this.lastUpdatedState !== LastUpdatedState.ok) {
+      return 'background-color-orange'
+    }
+    if (this.service.stats.farmerConnectionsCount > 0) {
+      return 'background-color-light-green'
+    }
+
+    return 'background-color-red'
+  }
+
   public get statusTooltip(): string {
     if (this.lastUpdatedState !== LastUpdatedState.ok) {
       return 'Chia-Dashboard did not receive any updates from this harvester in a while'

@@ -62,6 +62,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   public readonly status$: Observable<string>
   public readonly statusTooltip$: Observable<string>
   public readonly statusDotColorClass$: Observable<string>
+  public readonly statusColorClass$: Observable<string>
   public readonly relativeLastUpdated$: Observable<string>
   public readonly sharesChartOptions: EChartsOption
   public sharesChartUpdateOptions: EChartsOption
@@ -418,6 +419,9 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     )
     this.statusDotColorClass$ = harvesterWithStatus$.pipe(
       map(({ status }) => status.dotColorClass),
+    )
+    this.statusColorClass$ = harvesterWithStatus$.pipe(
+      map(({ status }) => status.statusColorClass),
     )
     this.relativeLastUpdated$ = harvesterWithStatus$.pipe(
       map(({ status }) => status.relativeLastUpdated),
