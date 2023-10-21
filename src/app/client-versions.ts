@@ -16,7 +16,7 @@ export const clientVersions = {
   },
   gigahorse: {
     minimum: 10,
-    recommendedMinimum: 14,
+    recommendedMinimum: 20,
   },
   chiaCompressionAlpha: {
     minimum: '4.3',
