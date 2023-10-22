@@ -3,9 +3,9 @@ import {faCircleNotch} from '@fortawesome/free-solid-svg-icons'
 import {AccountService} from '../account.service'
 import {SnippetService} from '../snippet.service'
 import {ToastService} from '../toast.service'
-import {Options} from '@angular-slider/ngx-slider'
 import {options} from '../harvester-offline-duration-options'
 import {Harvester} from '../api/types/harvester/harvester'
+import {Options} from 'ngx-slider-v2'
 
 @Component({
   selector: 'app-update-harvester-notification-settings',

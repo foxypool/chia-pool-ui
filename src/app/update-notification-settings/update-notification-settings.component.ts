@@ -4,8 +4,8 @@ import {AccountService} from '../account.service'
 import {SnippetService} from '../snippet.service'
 import {ToastService} from '../toast.service'
 import {BigNumber} from 'bignumber.js'
-import {Options} from '@angular-slider/ngx-slider'
 import {options} from '../harvester-offline-duration-options'
+import {Options} from 'ngx-slider-v2'
 
 @Component({
   selector: 'app-update-notification-settings',

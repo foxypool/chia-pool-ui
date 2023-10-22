@@ -44,7 +44,6 @@ import { EditableModule } from '@ngneat/edit-in-place'
 import { SettingsModalComponent } from './settings-modal/settings-modal.component'
 import {NgOptimizedImage} from '@angular/common'
 import { FarmerListComponent } from './farmer-list/farmer-list.component'
-import {NgxSliderModule} from '@angular-slider/ngx-slider'
 import {HarvesterSettingsModalComponent} from './harvester-settings-modal/harvester-settings-modal.component'
 import {
   UpdateHarvesterNotificationSettingsComponent
@@ -53,6 +52,7 @@ import { GenerateLoginLinkComponent } from './generate-login-link/generate-login
 import {QRCodeModule} from 'angularx-qrcode'
 import { VersionInfoComponent } from './version-info/version-info.component'
 import { IntegrationSettingsComponent } from './integration-settings/integration-settings.component'
+import {NgxSliderModule} from 'ngx-slider-v2'
 
 @NgModule({
   declarations: [

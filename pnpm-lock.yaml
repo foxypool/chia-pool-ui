@@ -5,9 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@angular-slider/ngx-slider':
-    specifier: ^2.0.4
-    version: 2.0.4(@angular/common@15.2.10)(@angular/core@15.2.10)(@angular/forms@15.2.10)
   '@angular/animations':
     specifier: ^15.2.9
     version: 15.2.10(@angular/core@15.2.10)
@@ -95,6 +92,9 @@ dependencies:
   ngx-scrolltop:
     specifier: ^5.1.0
     version: 5.1.0(@angular/common@15.2.10)(@angular/core@15.2.10)
+  ngx-slider-v2:
+    specifier: ^15.0.6
+    version: 15.0.6(@angular/common@15.2.10)(@angular/core@15.2.10)(@angular/forms@15.2.10)
   ngx-toastr:
     specifier: ^16.2.0
     version: 16.2.0(@angular/common@15.2.10)(@angular/core@15.2.10)(@angular/platform-browser@15.2.10)
@@ -436,21 +436,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
-
-  /@angular-slider/ngx-slider@2.0.4(@angular/common@15.2.10)(@angular/core@15.2.10)(@angular/forms@15.2.10):
-    resolution: {integrity: sha512-EccMcGlb2bJJWikXZBjRwdWgRiYYmWd3UCgf8l3KAlyqPAxPVgxI73wqipp4/nZwidq53a9s3OB+KC79enfM2A==}
-    peerDependencies:
-      '@angular/common': '>=6.1.0'
-      '@angular/core': '>=6.1.0'
-      '@angular/forms': '>=6.1.0'
-    dependencies:
-      '@angular/common': 15.2.10(@angular/core@15.2.10)(rxjs@7.8.1)
-      '@angular/core': 15.2.10(rxjs@7.8.1)(zone.js@0.11.8)
-      '@angular/forms': 15.2.10(@angular/common@15.2.10)(@angular/core@15.2.10)(@angular/platform-browser@15.2.10)(rxjs@7.8.1)
-      detect-passive-events: 2.0.3
-      rxjs: 6.6.7
-      tslib: 1.14.1
-    dev: false
 
   /@angular/animations@15.2.10(@angular/core@15.2.10):
     resolution: {integrity: sha512-yxfN8qQpMaukRU5LjFkJBmy85rqrOp86tYVCsf+hmPEFRiXBMUj6xYLeCMcpk3Mt1JtnWGBR34ivGx+7bNeAow==}
@@ -6178,6 +6163,21 @@ packages:
       tslib: 2.6.2
     dev: false
 
+  /ngx-slider-v2@15.0.6(@angular/common@15.2.10)(@angular/core@15.2.10)(@angular/forms@15.2.10):
+    resolution: {integrity: sha512-UAQxLa1ORv5Jx+Exo1C06rdLKkhwQ+CzFqCQKmgoF5Ns0y90lW7NJtOXFUAUC5SWtJJzkfI0iqLX5OZhNQslTA==}
+    peerDependencies:
+      '@angular/common': ^15.0.4
+      '@angular/core': ^15.0.4
+      '@angular/forms': ^15.0.4
+    dependencies:
+      '@angular/common': 15.2.10(@angular/core@15.2.10)(rxjs@7.8.1)
+      '@angular/core': 15.2.10(rxjs@7.8.1)(zone.js@0.11.8)
+      '@angular/forms': 15.2.10(@angular/common@15.2.10)(@angular/core@15.2.10)(@angular/platform-browser@15.2.10)(rxjs@7.8.1)
+      detect-passive-events: 2.0.3
+      rxjs: 7.8.1
+      tslib: 2.6.2
+    dev: false
+
   /ngx-toastr@16.2.0(@angular/common@15.2.10)(@angular/core@15.2.10)(@angular/platform-browser@15.2.10):
     resolution: {integrity: sha512-7X6UhOKiaUeC2eTOsUqctZH0ZWKG8VlzDxWJhdEF1N3kPod46SU/Vn2l0hbt8EDwTjxHKfKyevU2idkYDoZYog==}
     peerDependencies:
@@ -7241,6 +7241,7 @@ packages:
     engines: {npm: '>=2.0.0'}
     dependencies:
       tslib: 1.14.1
+    dev: true
 
   /rxjs@7.8.1:
     resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
@@ -7912,6 +7913,7 @@ packages:
 
   /tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
+    dev: true
 
   /tslib@2.3.0:
     resolution: {integrity: sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==}
