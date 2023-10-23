@@ -5,7 +5,7 @@
         <span *ngIf="(statusDotColorClass$ | async) !== null" class="dot" [ngClass]="statusDotColorClass$ | async" ngbTooltip="Last updated {{relativeLastUpdated$ | async}}"></span>
         <editable [enabled]="canEditName" (save)="updateName()" (cancel)="cancelNameUpdate()">
           <ng-template viewMode>
-            <div class="d-flex harvester-name-or-peer-id-container">
+            <div class="d-flex harvester-name-or-peer-id-container" [ngClass]="{ 'is-editable': canEditName }">
               <div class="harvester-name-or-peer-id-view-mode">{{nameOrPeerIdSlug}}</div>
               <div class="ps-1 visible-on-hover"><fa-icon [icon]="faPencil"></fa-icon></div>
             </div>

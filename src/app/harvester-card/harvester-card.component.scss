@@ -24,12 +24,14 @@
   color: var(--highlight-color-hover);
 }
 
-:host ::ng-deep editable {
-  cursor: default !important;
+editable {
+  cursor: default;
 }
 
 .harvester-name-or-peer-id-container {
   width: fit-content;
+}
+.is-editable {
   cursor: pointer;
 }
 
@@ -37,6 +39,6 @@
   display: none;
 }
 
-.harvester-name-or-peer-id-view-mode:hover + .visible-on-hover {
+.is-editable .harvester-name-or-peer-id-view-mode:hover + .visible-on-hover {
   display: block;
 }
