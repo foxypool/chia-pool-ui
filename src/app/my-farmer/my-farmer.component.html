@@ -234,75 +234,83 @@
     </div>
     <div class="row">
       <div class="p-2 col-md-12">
-        <ul ngbNav #nav="ngbNav" [activeId]="selectedNavTab | async" class="nav-tabs">
-          <li ngbNavItem="stats" [destroyOnHide]="true">
-            <a class="text-decoration-none" ngbNavLink routerLink="." [fragment]="null"><h5>{{snippetService.getSnippet('my-farmer-component.tabs.stats.label')}}</h5></a>
-            <ng-template ngbNavContent>
-              <div class="p-1 col-md-12">
-                <div echarts [options]="ecChartOptions" [merge]="ecChartUpdateOptions" theme="default" class="ec-chart"></div>
-              </div>
-              <div class="row mt-2 text-align-center ms-0 me-0">
-                <h5 style="font-weight: bold">Shares</h5>
-              </div>
-              <div class="row justify-content-center ms-0 me-0 shares-box-container">
-                <div class="col-12 col-sm-4 col-xxxxl-6 shares-box">
-                  <div class="p-2 border border-primary rounded">
-                    <h5 class="mb-1 fw-lighter">Valid Shares</h5>
-                    <h4>{{totalValidShares | async}} <span class="shares-box-percentage">({{totalValidSharesPercentage | async}}%)</span></h4>
+        <div class="d-flex">
+          <ul ngbNav #nav="ngbNav" [activeId]="selectedNavTab | async" class="nav-tabs flex-grow-1">
+            <li ngbNavItem="stats" [destroyOnHide]="true">
+              <a class="text-decoration-none" ngbNavLink routerLink="." [fragment]="null"><h5>{{snippetService.getSnippet('my-farmer-component.tabs.stats.label')}}</h5></a>
+              <ng-template ngbNavContent>
+                <div class="p-1 col-md-12">
+                  <div echarts [options]="ecChartOptions" [merge]="ecChartUpdateOptions" theme="default" class="ec-chart"></div>
+                </div>
+                <div class="row mt-2 text-align-center ms-0 me-0">
+                  <h5 style="font-weight: bold">Shares</h5>
+                </div>
+                <div class="row justify-content-center ms-0 me-0 shares-box-container">
+                  <div class="col-12 col-sm-4 col-xxxxl-6 shares-box">
+                    <div class="p-2 border border-primary rounded">
+                      <h5 class="mb-1 fw-lighter">Valid Shares</h5>
+                      <h4>{{totalValidShares | async}} <span class="shares-box-percentage">({{totalValidSharesPercentage | async}}%)</span></h4>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-4 col-xxxxl-6 shares-box">
+                    <div class="p-2 border border-primary rounded">
+                      <h5 class="mb-1 fw-lighter">Stale Shares</h5>
+                      <h4 [ngClass]="staleSharesColorClasses | async">{{totalStaleShares | async}} <span class="shares-box-percentage">({{totalStaleSharesPercentage | async}}%)</span></h4>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-4 col-xxxxl-6 shares-box">
+                    <div class="p-2 border border-primary rounded">
+                      <h5 class="mb-1 fw-lighter">Invalid Shares</h5>
+                      <h4 [ngClass]="invalidSharesColorClasses | async">{{totalInvalidShares | async}} <span class="shares-box-percentage">({{totalInvalidSharesPercentage | async}}%)</span></h4>
+                    </div>
                   </div>
                 </div>
-                <div class="col-12 col-sm-4 col-xxxxl-6 shares-box">
-                  <div class="p-2 border border-primary rounded">
-                    <h5 class="mb-1 fw-lighter">Stale Shares</h5>
-                    <h4 [ngClass]="staleSharesColorClasses | async">{{totalStaleShares | async}} <span class="shares-box-percentage">({{totalStaleSharesPercentage | async}}%)</span></h4>
-                  </div>
+                <div class="p-1 col-md-12">
+                  <div echarts [options]="sharesChartOptions" [merge]="sharesChartUpdateOptions" (chartLegendSelectChanged)="onSharesChartLegendSelectChanged($event)" theme="default" class="shares-chart"></div>
                 </div>
-                <div class="col-12 col-sm-4 col-xxxxl-6 shares-box">
-                  <div class="p-2 border border-primary rounded">
-                    <h5 class="mb-1 fw-lighter">Invalid Shares</h5>
-                    <h4 [ngClass]="invalidSharesColorClasses | async">{{totalInvalidShares | async}} <span class="shares-box-percentage">({{totalInvalidSharesPercentage | async}}%)</span></h4>
-                  </div>
+              </ng-template>
+            </li>
+            <li ngbNavItem="recent-payouts" [destroyOnHide]="true">
+              <a class="text-decoration-none" ngbNavLink routerLink="." fragment="recent-payouts"><h5>{{snippetService.getSnippet('my-farmer-component.tabs.recent-payouts.label')}}</h5></a>
+              <ng-template ngbNavContent>
+                <div class="p-1 col-md-12">
+                  <app-farmer-payout-history
+                    [isLoading]="isAccountLoading | async"
+                    [coinConfig]="statsService.coinConfig"
+                    [payoutDateFormattingObservable]="payoutDateFormattingObservable"
+                    [selectedCurrencyObservable]="selectedCurrencyObservable"
+                    [payouts]="accountService.accountPayouts"
+                  ></app-farmer-payout-history>
                 </div>
-              </div>
-              <div class="p-1 col-md-12">
-                <div echarts [options]="sharesChartOptions" [merge]="sharesChartUpdateOptions" (chartLegendSelectChanged)="onSharesChartLegendSelectChanged($event)" theme="default" class="shares-chart"></div>
-              </div>
-            </ng-template>
-          </li>
-          <li ngbNavItem="recent-payouts" [destroyOnHide]="true">
-            <a class="text-decoration-none" ngbNavLink routerLink="." fragment="recent-payouts"><h5>{{snippetService.getSnippet('my-farmer-component.tabs.recent-payouts.label')}}</h5></a>
-            <ng-template ngbNavContent>
-              <div class="p-1 col-md-12">
-                <app-farmer-payout-history
-                  [isLoading]="isAccountLoading | async"
-                  [coinConfig]="statsService.coinConfig"
-                  [payoutDateFormattingObservable]="payoutDateFormattingObservable"
-                  [selectedCurrencyObservable]="selectedCurrencyObservable"
-                  [payouts]="accountService.accountPayouts"
-                ></app-farmer-payout-history>
-              </div>
-            </ng-template>
-          </li>
-          <li ngbNavItem="won-blocks" [destroyOnHide]="true">
-            <a class="text-decoration-none" ngbNavLink routerLink="." fragment="won-blocks"><h5>{{snippetService.getSnippet('my-farmer-component.tabs.won-blocks.label')}}</h5></a>
-            <ng-template ngbNavContent>
-              <div class="p-1 col-md-12">
-                <app-farmer-won-blocks
-                  [isLoading]="isAccountLoading | async"
-                  [wonBlocksObservable]="accountService.accountWonBlocks.asObservable()"
-                ></app-farmer-won-blocks>
-              </div>
-            </ng-template>
-          </li>
-          <li ngbNavItem="harvesters" [destroyOnHide]="true">
-            <a class="text-decoration-none" ngbNavLink routerLink="." fragment="harvesters"><h5>Harvesters</h5></a>
-            <ng-template ngbNavContent>
-              <div class="p-1 col-md-12">
-                <app-farmer-harvesters></app-farmer-harvesters>
-              </div>
-            </ng-template>
-          </li>
-        </ul>
+              </ng-template>
+            </li>
+            <li ngbNavItem="won-blocks" [destroyOnHide]="true">
+              <a class="text-decoration-none" ngbNavLink routerLink="." fragment="won-blocks"><h5>{{snippetService.getSnippet('my-farmer-component.tabs.won-blocks.label')}}</h5></a>
+              <ng-template ngbNavContent>
+                <div class="p-1 col-md-12">
+                  <app-farmer-won-blocks
+                    [isLoading]="isAccountLoading | async"
+                    [wonBlocksObservable]="accountService.accountWonBlocks.asObservable()"
+                  ></app-farmer-won-blocks>
+                </div>
+              </ng-template>
+            </li>
+            <li ngbNavItem="harvesters" [destroyOnHide]="true">
+              <a class="text-decoration-none" ngbNavLink routerLink="." fragment="harvesters"><h5>Harvesters</h5></a>
+              <ng-template ngbNavContent>
+                <div class="p-1 col-md-12">
+                  <app-farmer-harvesters></app-farmer-harvesters>
+                </div>
+              </ng-template>
+            </li>
+          </ul>
+          <div class="flex-nowrap d-flex duration-selection" *ngIf="showDurationSelection | async">
+            <div *ngFor="let duration of possibleDurations" class="z-2">
+              <input type="radio" class="btn-check" name="options-base" id="duration-radio-{{duration}}" autocomplete="off" [(ngModel)]="selectedHistoricalStatsDuration" [value]="duration">
+              <label class="btn" for="duration-radio-{{duration}}">{{duration.toUpperCase()}}</label>
+            </div>
+          </div>
+        </div>
         <div [ngbNavOutlet]="nav" class="mt-2"></div>
       </div>
     </div>

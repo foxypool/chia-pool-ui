@@ -26,6 +26,11 @@ import {AccountHistoricalStat} from '../api/types/account/account-historical-sta
 import {isCheatingOgAccount, isInactiveOgAccount, isNftAccount, isOgAccount} from '../api/types/account/account'
 import {ChiaDashboardService} from '../chia-dashboard.service'
 import {colors, Theme, ThemeProvider} from '../theme-provider'
+import {
+  durationInHours, getResolutionInMinutes,
+  HistoricalStatsDuration,
+} from '../api/types/historical-stats-duration'
+import {HistoricalStatsDurationProvider} from '../historical-stats-duration-provider'
 
 @Component({
   selector: 'app-my-farmer',
@@ -75,6 +80,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   public readonly showAuthenticationDocsLinkButton: boolean = this.poolsProvider.pool.type === PoolType.nft
   public readonly accountIdentifierInputPlaceholder: string = makeAccountIdentifierName(this.poolsProvider.pool.type)
   public readonly selectedNavTab: Observable<string>
+  public readonly showDurationSelection: Observable<boolean>
   public readonly hasChiaDashboardShareKey$: Observable<boolean>
 
   public get authDocsUrl(): string {
@@ -85,12 +91,28 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     return this.themeProvider.isDarkTheme ? 'btn-outline-light' : 'btn-outline-dark'
   }
 
+  public get possibleDurations(): HistoricalStatsDuration[] {
+    return this.historicalStatsDurationProvider.possibleDurations
+  }
+
+  public get selectedHistoricalStatsDuration(): HistoricalStatsDuration {
+    return this.historicalStatsDurationProvider.selectedDuration
+  }
+
+  public set selectedHistoricalStatsDuration(duration: HistoricalStatsDuration) {
+    this.historicalStatsDurationProvider.selectedDuration = duration
+  }
+
+  private get historicalIntervalInMinutes(): number {
+    return getResolutionInMinutes(this.selectedHistoricalStatsDuration)
+  }
+
   private poolEc = 0
   private dailyRewardPerPib = 0
   private networkSpaceInTiB: string = '0'
   private currentHeight = 0
 
-  private readonly historicalIntervalInMinutes = 15
+  private readonly historicalStatsRefreshIntervalInMinutes = 15
   private readonly currentEcSeriesName = 'Current Effective Capacity'
   private readonly averageEcSeriesName = 'Average Effective Capacity'
   private readonly isUpdatingPayoutAddressBalance: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true)
@@ -126,6 +148,9 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       this.currentHeight = poolStats.height
       this.networkSpaceInTiB = poolStats.networkSpaceInTiB
     })),
+    this.historicalStatsDurationProvider.selectedDuration$.pipe(skip(1)).subscribe(async _ => {
+      await this.accountService.updateAccountHistoricalStats()
+    }),
   ]
   private accountUpdateInterval: ReturnType<typeof setInterval> = null
   private accountHistoricalUpdateInterval: ReturnType<typeof setInterval> = null
@@ -145,6 +170,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     private readonly balanceProvider: BalanceProvider,
     protected readonly chiaDashboardService: ChiaDashboardService,
     private readonly themeProvider: ThemeProvider,
+    private readonly historicalStatsDurationProvider: HistoricalStatsDurationProvider,
   ) {
     this.ecChartOptions = {
       title: {
@@ -417,7 +443,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         map(balance => balance.toNumber()),
         shareReplay({ refCount: true }),
       )
-    this.selectedNavTab = this.activatedRoute.fragment.pipe(map(fragment => fragment === null ? 'stats' : fragment))
+    this.selectedNavTab = this.activatedRoute.fragment.pipe(map(fragment => fragment === null ? 'stats' : fragment), shareReplay())
+    this.showDurationSelection = this.selectedNavTab.pipe(map(tabId => tabId === 'stats' || tabId === 'harvesters'), shareReplay(), distinctUntilChanged())
     const harvesters = this.chiaDashboardService.satellites$.pipe(
       filter(satellites => satellites !== undefined),
       map(satellites => satellites
@@ -525,7 +552,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         return
       }
       await this.accountService.updateAccountHistoricalStats()
-    }, (this.historicalIntervalInMinutes + 1) * 60 * 1000)
+    }, (this.historicalStatsRefreshIntervalInMinutes + 1) * 60 * 1000)
     this.accountWonBlocksUpdateInterval = setInterval(async () => {
       if (!this.accountService.haveAccountIdentifier) {
         return
@@ -1073,9 +1100,10 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     const ecSeries = historicalStats.map(stats => [stats.createdAt, (new BigNumber(stats.ec)).dividedBy((new BigNumber(1024)).exponentiatedBy(unitIndex)).decimalPlaces(2).toNumber()])
     const lastDate = historicalStats.length > 0 ? historicalStats[0].createdAt : new Date()
     const missingDataLeading = []
-    if (moment(lastDate).isAfter(moment().subtract(23, 'hours'))) {
+    const historicalDurationInHours = durationInHours(this.selectedHistoricalStatsDuration)
+    if (moment(lastDate).isAfter(moment().subtract(historicalDurationInHours - 1, 'hours'))) {
       let startDate = moment(lastDate).subtract(this.historicalIntervalInMinutes, 'minutes')
-      while (startDate.isAfter(moment().subtract(1, 'day'))) {
+      while (startDate.isAfter(moment().subtract(historicalDurationInHours, 'hours'))) {
         missingDataLeading.unshift([startDate.toISOString(), 0])
         startDate = startDate.subtract(this.historicalIntervalInMinutes, 'minutes')
       }
@@ -1105,6 +1133,10 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
           },
         },
       },
+      xAxis: {
+        type: 'time',
+        minInterval: this.historicalIntervalInMinutes * 60 * 1000,
+      },
       yAxis: {
         axisLabel: {
           formatter: `{value} ${unit}`,
@@ -1128,9 +1160,10 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     const missingSharesDataLeading = []
     const missingShareCountDataLeading = []
     const missingDifficultyDataLeading = []
-    if (moment(lastDate).isAfter(moment().subtract(23, 'hours'))) {
+    const historicalDurationInHours = durationInHours(this.selectedHistoricalStatsDuration)
+    if (moment(lastDate).isAfter(moment().subtract(historicalDurationInHours - 1, 'hours'))) {
       let startDate = moment(lastDate).subtract(this.historicalIntervalInMinutes, 'minutes')
-      while (startDate.isAfter(moment().subtract(1, 'day'))) {
+      while (startDate.isAfter(moment().subtract(historicalDurationInHours, 'hours'))) {
         missingSharesDataLeading.unshift([startDate.toISOString(), 0])
         missingShareCountDataLeading.unshift([startDate.toISOString(), 0])
         missingDifficultyDataLeading.unshift([startDate.toISOString(), 1])
@@ -1152,6 +1185,10 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     }
 
     return {
+      xAxis: {
+        type: 'time',
+        minInterval: this.historicalIntervalInMinutes * 60 * 1000,
+      },
       series: [{
         data: missingSharesDataLeading.concat(historicalInvalidSharesSeries, missingSharesDataTrailing),
       }, {

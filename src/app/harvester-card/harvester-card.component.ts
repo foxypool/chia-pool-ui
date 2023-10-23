@@ -6,7 +6,7 @@ import * as moment from 'moment'
 import {Moment} from 'moment'
 import {BehaviorSubject, Observable, Subscription, take} from 'rxjs'
 import {StatsService} from '../stats.service'
-import {distinctUntilChanged, filter, map, shareReplay} from 'rxjs/operators'
+import {distinctUntilChanged, filter, map, shareReplay, skip} from 'rxjs/operators'
 import {BigNumber} from 'bignumber.js'
 import Capacity from '../capacity'
 import {EChartsOption} from 'echarts'
@@ -22,6 +22,10 @@ import {ChiaDashboardService} from '../chia-dashboard.service'
 import {HarvesterStatus} from '../status/harvester-status'
 import {LastUpdatedState} from '../status/last-updated-state'
 import {colors, Theme, ThemeProvider} from '../theme-provider'
+import {
+  durationInDays, getResolutionInMinutes,
+} from '../api/types/historical-stats-duration'
+import {HistoricalStatsDurationProvider} from '../historical-stats-duration-provider'
 
 const sharesPerDayPerK32 = 10
 const k32SizeInGb = 108.837
@@ -73,6 +77,10 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     return this.accountService.account?.integrations?.chiaDashboardShareKey !== undefined
   }
 
+  private get historicalIntervalInMinutes(): number {
+    return getResolutionInMinutes(this.historicalStatsDurationProvider.selectedDuration)
+  }
+
   private readonly stats: Observable<HarvesterStats>
   private readonly statsSubject: BehaviorSubject<HarvesterStats|undefined> = new BehaviorSubject<HarvesterStats>(undefined)
   private statsUpdateInterval?: ReturnType<typeof setInterval>
@@ -80,7 +88,15 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   private readonly chartModeSubject: BehaviorSubject<ChartMode> = new BehaviorSubject<ChartMode>(ChartMode.shares)
   private readonly proofTimes: BehaviorSubject<ProofTime[]> = new BehaviorSubject<ProofTime[]>([])
   private readonly isLoadingProofTimesSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
-  private readonly subscriptions: Subscription[] = []
+  private readonly subscriptions: Subscription[] = [
+    this.historicalStatsDurationProvider.selectedDuration$.pipe(skip(1)).subscribe(async _ => {
+      if (this.harvester === undefined) {
+        return
+      }
+      await this.updateStats()
+      await this.updateProofTimes()
+    }),
+  ]
 
   constructor(
     public readonly accountService: AccountService,
@@ -89,6 +105,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     private readonly toastService: ToastService,
     private readonly poolsProvider: PoolsProvider,
     private readonly themeProvider: ThemeProvider,
+    private readonly historicalStatsDurationProvider: HistoricalStatsDurationProvider,
   ) {
     this.isLoadingProofTimes = this.isLoadingProofTimesSubject.pipe(shareReplay())
     this.showSharesChart = this.chartModeSubject.pipe(map(mode => mode === ChartMode.shares), shareReplay())
@@ -104,7 +121,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       map(stats => {
         const totalShares = stats.submissionStats.reduce((acc, submissionStat) => acc.plus(submissionStat.shares), new BigNumber(0))
         const ecInGib = totalShares
-          .dividedBy(sharesPerDayPerK32)
+          .dividedBy(sharesPerDayPerK32 * durationInDays(this.historicalStatsDurationProvider.selectedDuration))
           .multipliedBy(k32SizeInGib)
 
         return new Capacity(ecInGib.toNumber()).toString()
@@ -176,7 +193,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       },
       xAxis: {
         type: 'time',
-        minInterval: 15 * 60 * 1000,
+        minInterval: this.historicalIntervalInMinutes * 60 * 1000,
       },
       yAxis: [{
         type: 'value',
@@ -374,7 +391,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         .filter(satellite => !satellite.hidden)
         .map(satellite => satellite.services?.harvester)
         .filter(harvester => harvester?.stats !== undefined)
-        .find(harvester => harvester.stats.nodeId === this.harvester.peerId.ensureHexPrefix())
+        .find(harvester => harvester.stats.nodeId === this.harvester?.peerId.ensureHexPrefix())
       ),
       filter(harvester => harvester !== undefined),
       map(harvester => ({
@@ -750,11 +767,17 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   private async updateStats(): Promise<void> {
-    this.statsSubject.next(await this.statsService.getHarvesterStats(this.harvester._id))
+    this.statsSubject.next(await this.statsService.getHarvesterStats({
+      harvesterId: this.harvester._id,
+      duration: this.historicalStatsDurationProvider.selectedDuration,
+    }))
   }
 
   private async updateProofTimes(): Promise<void> {
-    this.proofTimes.next(await this.statsService.getHarvesterProofTimes(this.harvester._id))
+    this.proofTimes.next(await this.statsService.getHarvesterProofTimes({
+      harvesterId: this.harvester._id,
+      duration: this.historicalStatsDurationProvider.selectedDuration,
+    }))
   }
 
   private makeSharesChartUpdateOptions(stats: HarvesterStats): EChartsOption {
@@ -793,6 +816,25 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       return date.clone().set({ minutes: minutesRoundedDown, seconds: 0, milliseconds: 0 })
     }
 
+    const roundToNextLowerHour = (date: Moment): Moment => {
+      return date.clone().set({ minutes: 0, seconds: 0, milliseconds: 0 })
+    }
+
+    const roundToNextLower4Hour = (date: Moment): Moment => {
+      const hoursRoundedDown = Math.floor(date.hours() / 4) * 4
+
+      return date.clone().set({ hours: hoursRoundedDown, minutes: 0, seconds: 0, milliseconds: 0 })
+    }
+
+    const resolutionInMinutes = this.historicalIntervalInMinutes
+    const applyRounding = (date: Moment): Moment => {
+      switch (this.historicalStatsDurationProvider.selectedDuration) {
+        case '1d': return roundToNextLower15Min(date)
+        case '7d': return roundToNextLowerHour(date)
+        case '30d': return roundToNextLower4Hour(date)
+      }
+    }
+
     const insertEmptyPositionIfNotExists = (position: number, date: Moment, series: (string | number)[][]) => {
       const dateAsIsoString = date.toISOString()
       if (position >= series.length) {
@@ -807,17 +849,22 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       series.splice(position, 0, [dateAsIsoString, 0])
     }
 
-    let startDate = roundToNextLower15Min(moment()).subtract(1, 'day')
+    const historicalDurationInDays = durationInDays(this.historicalStatsDurationProvider.selectedDuration)
+    let startDate = applyRounding(moment().utc()).subtract(historicalDurationInDays, 'day')
     let currentPosition = 0
     while (startDate.isBefore(moment())) {
       insertEmptyPositionIfNotExists(currentPosition, startDate, invalidSharesSeries)
       insertEmptyPositionIfNotExists(currentPosition, startDate, staleSharesSeries)
       insertEmptyPositionIfNotExists(currentPosition, startDate, validSharesSeries)
       currentPosition += 1
-      startDate = startDate.add(15, 'minutes')
+      startDate = startDate.add(resolutionInMinutes, 'minutes')
     }
 
     return {
+      xAxis: {
+        type: 'time',
+        minInterval: resolutionInMinutes * 60 * 1000,
+      },
       series: [{
         data: invalidSharesSeries,
       }, {
