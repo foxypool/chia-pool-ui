@@ -36,7 +36,7 @@ export class PoolsProvider {
     name: 'Foxy-Pool CHIA',
     url: 'https://chia.foxypool.io',
     poolIdentifier: 'chia',
-    hostnames: ['chia.foxypool.io', 'localhost'],
+    hostnames: ['chia.foxypool.io', 'localhost', 'add-historical-duration-sele.chia-pool-ui.pages.dev'],
     algorithm: Algorithm.post,
     downloadUrl: 'https://github.com/Chia-Network/chia-blockchain/releases/latest',
     type: PoolType.nft,
