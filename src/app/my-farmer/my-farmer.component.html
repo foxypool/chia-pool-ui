@@ -234,8 +234,8 @@
     </div>
     <div class="row">
       <div class="p-2 col-md-12">
-        <div class="d-flex">
-          <ul ngbNav #nav="ngbNav" [activeId]="selectedNavTab | async" class="nav-tabs flex-grow-1">
+        <div class="row">
+          <ul ngbNav #nav="ngbNav" [activeId]="selectedNavTab | async" class="nav-tabs col-12 col-sm" [ngClass]="{'nav-tabs-no-border': showDurationSelection | async}">
             <li ngbNavItem="stats" [destroyOnHide]="true">
               <a class="text-decoration-none" ngbNavLink routerLink="." [fragment]="null"><h5>{{snippetService.getSnippet('my-farmer-component.tabs.stats.label')}}</h5></a>
               <ng-template ngbNavContent>
@@ -304,7 +304,7 @@
               </ng-template>
             </li>
           </ul>
-          <div class="flex-nowrap d-flex duration-selection" *ngIf="showDurationSelection | async">
+          <div class="col-12 col-sm-auto d-flex justify-content-end duration-selection" *ngIf="showDurationSelection | async">
             <div *ngFor="let duration of possibleDurations" class="z-2">
               <input type="radio" class="btn-check" name="options-base" id="duration-radio-{{duration}}" autocomplete="off" [(ngModel)]="selectedHistoricalStatsDuration" [value]="duration">
               <label class="btn" for="duration-radio-{{duration}}">{{duration.toUpperCase()}}</label>

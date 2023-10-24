@@ -102,3 +102,18 @@
   border-left: unset;
   border-right: unset;
 }
+@media (max-width:576px) {
+  .nav-tabs-no-border {
+    border: unset;
+  }
+}
+@media (max-width:576px) {
+  .duration-selection {
+    padding-bottom: 1rem;
+  }
+}
+@media (min-width: 474px) and (max-width:576px) {
+  .duration-selection {
+    padding-top: 0.5rem;
+  }
+}
