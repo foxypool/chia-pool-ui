@@ -107,6 +107,14 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     return getResolutionInMinutes(this.selectedHistoricalStatsDuration)
   }
 
+  private get safeguardHours(): number {
+    switch (this.selectedHistoricalStatsDuration) {
+      case '1d': return 1
+      case '7d': return 2
+      case '30d': return 5
+    }
+  }
+
   private poolEc = 0
   private dailyRewardPerPib = 0
   private networkSpaceInTiB: string = '0'
@@ -1101,7 +1109,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     const lastDate = historicalStats.length > 0 ? historicalStats[0].createdAt : new Date()
     const missingDataLeading = []
     const historicalDurationInHours = durationInHours(this.selectedHistoricalStatsDuration)
-    if (moment(lastDate).isAfter(moment().subtract(historicalDurationInHours - 1, 'hours'))) {
+    const safeguardHours = this.safeguardHours
+    if (moment(lastDate).isAfter(moment().subtract(historicalDurationInHours - safeguardHours, 'hours'))) {
       let startDate = moment(lastDate).subtract(this.historicalIntervalInMinutes, 'minutes')
       while (startDate.isAfter(moment().subtract(historicalDurationInHours, 'hours'))) {
         missingDataLeading.unshift([startDate.toISOString(), 0])
@@ -1110,7 +1119,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     }
     const latestDate = historicalStats.length > 0 ? historicalStats[historicalStats.length - 1].createdAt : new Date()
     const missingDataTrailing = []
-    if (moment(latestDate).isBefore(moment().subtract(1, 'hours'))) {
+    if (moment(latestDate).isBefore(moment().subtract(safeguardHours, 'hours'))) {
       let endDate = moment(latestDate).add(this.historicalIntervalInMinutes, 'minutes')
       while (endDate.isBefore(moment())) {
         missingDataTrailing.push([endDate.toISOString(), 0])
@@ -1161,7 +1170,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     const missingShareCountDataLeading = []
     const missingDifficultyDataLeading = []
     const historicalDurationInHours = durationInHours(this.selectedHistoricalStatsDuration)
-    if (moment(lastDate).isAfter(moment().subtract(historicalDurationInHours - 1, 'hours'))) {
+    const safeguardHours = this.safeguardHours
+    if (moment(lastDate).isAfter(moment().subtract(historicalDurationInHours - safeguardHours, 'hours'))) {
       let startDate = moment(lastDate).subtract(this.historicalIntervalInMinutes, 'minutes')
       while (startDate.isAfter(moment().subtract(historicalDurationInHours, 'hours'))) {
         missingSharesDataLeading.unshift([startDate.toISOString(), 0])
@@ -1174,7 +1184,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     const missingSharesDataTrailing = []
     const missingShareCountDataTrailing = []
     const missingDifficultyDataTrailing = []
-    if (moment(latestDate).isBefore(moment().subtract(1, 'hours'))) {
+    if (moment(latestDate).isBefore(moment().subtract(safeguardHours, 'hours'))) {
       let endDate = moment(latestDate).add(this.historicalIntervalInMinutes, 'minutes')
       while (endDate.isBefore(moment())) {
         missingSharesDataTrailing.push([endDate.toISOString(), 0])
