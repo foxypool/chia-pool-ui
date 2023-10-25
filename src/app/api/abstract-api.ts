@@ -189,6 +189,14 @@ export abstract class AbstractApi<
     return data
   }
 
+  public async deleteHarvester({ accountIdentifier, authToken, harvesterPeerId }: UpdateHarvesterOptions): Promise<ApiResponse<void>> {
+    const { data } = await this.client.delete<ApiResponse<void>>(`account/${accountIdentifier}/harvester/${harvesterPeerId}`, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    })
+
+    return data
+  }
+
   public async updatePayoutOptions({ accountIdentifier, authToken, minimumPayout, payoutMultiplesOf }: UpdateAccountPayoutOptions): Promise<ApiResponse<void>> {
     const { data } = await this.client.put<ApiResponse<void>>(`account/${accountIdentifier}/payout-options`, {
       minimumPayout,

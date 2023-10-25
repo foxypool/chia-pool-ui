@@ -505,6 +505,17 @@ export class AccountService {
     })
   }
 
+  public async deleteHarvester(harvesterPeerId: string): Promise<void> {
+    if (!this.isAuthenticated) {
+      return
+    }
+    await this.statsService.deleteHarvester({
+      accountIdentifier: this.accountIdentifier,
+      authToken: this.authToken,
+      harvesterPeerId,
+    })
+  }
+
   private migrateLegacyConfig() {
     const legacyPoolPublicKey = this.localStorageService.getItem(AccountService.poolPublicKeyStorageKey)
     if (legacyPoolPublicKey !== null) {
