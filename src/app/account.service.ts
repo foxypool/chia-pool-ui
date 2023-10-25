@@ -11,7 +11,7 @@ import {AccountPayout} from './farmer-payout-history/farmer-payout-history.compo
 import {distinctUntilChanged, filter, map, shareReplay} from 'rxjs/operators'
 import {AccountHistoricalStat} from './api/types/account/account-historical-stat'
 import {LoginTokenResult} from './api/types/auth/login-token-result'
-import {Account, AccountNotificationSettings, getAccountIdentifier} from './api/types/account/account'
+import {Account, AccountNotificationSettings, AccountSettings, getAccountIdentifier} from './api/types/account/account'
 import {AccountWonBlock} from './api/types/account/account-won-block'
 import {makeAccountIdentifierName} from './util'
 
@@ -469,6 +469,23 @@ export class AccountService {
         accountIdentifier: this.accountIdentifier,
         authToken: this.authToken,
         notificationSettings,
+      })
+      await this.updateAccount({ bustCache: true })
+    } finally {
+      this.isUpdatingAccount = false
+    }
+  }
+
+  public async updateSettings(partialSettings: Partial<AccountSettings>): Promise<void> {
+    if (!this.isAuthenticated) {
+      return
+    }
+    this.isUpdatingAccount = true
+    try {
+      await this.statsService.updateSettings({
+        accountIdentifier: this.accountIdentifier,
+        authToken: this.authToken,
+        partialSettings,
       })
       await this.updateAccount({ bustCache: true })
     } finally {

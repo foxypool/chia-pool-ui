@@ -256,6 +256,14 @@ export class StatsService {
     return this.requestWithError(this.api.updateNotificationSettings({ accountIdentifier, authToken, notificationSettings }))
   }
 
+  public updateSettings({
+    accountIdentifier,
+    authToken,
+    partialSettings,
+  }): Promise<unknown> {
+    return this.requestWithError(this.api.updateSettings({ accountIdentifier, authToken, partialSettings }))
+  }
+
   public async leavePool({ accountIdentifier, authToken, leaveForEver }) {
     return this.requestWithError((this.api as OgApi).leavePool({ accountIdentifier, authToken, leaveForEver }))
   }

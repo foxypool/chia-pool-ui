@@ -10,6 +10,7 @@ export interface BaseTopAccount extends Omit<BaseAccount,
   | 'ecLastHour'
   | 'notificationSettings'
   | 'integrations'
+  | 'settings'
 > {}
 
 export interface NftTopAccount extends BaseTopAccount {
