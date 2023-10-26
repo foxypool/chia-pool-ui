@@ -16,7 +16,7 @@ import {AccountService} from '../account.service'
 import {AuthenticationModalComponent} from '../authentication-modal/authentication-modal.component'
 import {RatesService} from '../rates.service'
 import {ConfigService, DateFormatting, TimeInterval} from '../config.service'
-import {getEffortColor, makeAccountIdentifierName} from '../util'
+import {getEffortColor, makeAccountIdentifierName, sleep} from '../util'
 import {PoolsProvider, PoolType} from '../pools.provider'
 import {SettingsModalComponent} from '../settings-modal/settings-modal.component'
 import {BalanceProvider} from '../balance-provider'
@@ -593,7 +593,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     await this.accountService.updateAccount()
     if (!this.accountService.haveAccount) {
       if (!this.accountService.isMyFarmerAccount) {
-        await new Promise(resolve => setTimeout(resolve, 500))
+        await sleep(500)
         await this.router.navigate(['/'])
       }
 

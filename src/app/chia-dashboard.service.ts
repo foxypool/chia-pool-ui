@@ -7,6 +7,7 @@ import {AccountService} from './account.service'
 import {combineLatest, distinctUntilChanged, map, BehaviorSubject, Observable, Subscription} from 'rxjs'
 import {Satellite} from './integrations/chia-dashboard-api/types/satellite'
 import {TtlCache} from './ttl-cache'
+import {sleep} from './util'
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,7 @@ export class ChiaDashboardService implements OnDestroy {
   private api?: ChiaDashboardApi
   private bestBaseUrl?: string
   private updateSatellitesInterval?: ReturnType<typeof setInterval>
+  private retryCounter: number = 0
 
   private readonly subscriptions: Subscription[] = [
     this.accountService.accountSubject
@@ -88,9 +90,24 @@ export class ChiaDashboardService implements OnDestroy {
       return
     }
 
+    // Wait for next tick, so that false is available in retries
+    await sleep(0)
+    if (this.isLoadingSubject.getValue()) {
+      return
+    }
+
     this.isLoadingSubject.next(true)
     try {
       this.satellitesSubject.next(await this.api.getSatellites())
+      this.retryCounter = 0
+    } catch (err) {
+      if (this.retryCounter > 3) {
+        return
+      }
+      this.retryCounter += 1
+      await sleep(5 * 1000)
+
+      return this.updateSatellites()
     } finally {
       this.isLoadingSubject.next(false)
     }
