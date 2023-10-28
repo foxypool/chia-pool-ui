@@ -19,6 +19,7 @@ import {AuthenticationResult} from './types/auth/authentication-result'
 import {LoginTokenResult} from './types/auth/login-token-result'
 import {BaseTopAccount} from './types/account/top-account'
 import {ApiResponse} from './types/api-response'
+import {HistoricalStatsDuration} from './types/historical-stats-duration'
 
 export abstract class AbstractApi<
   AccountType extends Account,
@@ -100,14 +101,14 @@ export abstract class AbstractApi<
     return data
   }
 
-  public async getHarvesterStats(harvesterId: string): Promise<HarvesterStats> {
-    const { data } = await this.client.get<HarvesterStats>(`harvester/${harvesterId}/stats`)
+  public async getHarvesterStats({ harvesterId, duration }: { harvesterId: string, duration: HistoricalStatsDuration }): Promise<HarvesterStats> {
+    const { data } = await this.client.get<HarvesterStats>(`harvester/${harvesterId}/stats`, { params: { duration } })
 
     return data
   }
 
-  public async getHarvesterProofTimes(harvesterId: string): Promise<ProofTime[]> {
-    const { data } = await this.client.get<ProofTime[]>(`harvester/${harvesterId}/proof-times`)
+  public async getHarvesterProofTimes({ harvesterId, duration }: { harvesterId: string, duration: HistoricalStatsDuration }): Promise<ProofTime[]> {
+    const { data } = await this.client.get<ProofTime[]>(`harvester/${harvesterId}/proof-times`, { params: { duration } })
 
     return data
   }
@@ -118,8 +119,8 @@ export abstract class AbstractApi<
     return data
   }
 
-  public async getAccountHistoricalStats(accountIdentifier: string): Promise<AccountHistoricalStat[]> {
-    const { data } = await this.client.get<AccountHistoricalStat[]>(`account/${accountIdentifier}/historical`)
+  public async getAccountHistoricalStats({ accountIdentifier, duration }: { accountIdentifier: string, duration: HistoricalStatsDuration }): Promise<AccountHistoricalStat[]> {
+    const { data } = await this.client.get<AccountHistoricalStat[]>(`account/${accountIdentifier}/historical`, { params: { duration }})
 
     return data
   }

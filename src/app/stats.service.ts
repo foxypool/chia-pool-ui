@@ -17,6 +17,7 @@ import {Payout} from './api/types/pool/payout'
 import {RateStats} from './api/types/pool/rate-stats'
 import {NftApi} from './api/nft-api'
 import {Account} from './api/types/account/account'
+import {HistoricalStatsDuration} from './api/types/historical-stats-duration'
 
 @Injectable({
   providedIn: 'root'
@@ -188,8 +189,8 @@ export class StatsService {
     return this.api.getAccountHarvesters({ accountIdentifier, bustCache })
   }
 
-  getAccountHistoricalStats(accountIdentifier: string) {
-    return this.api.getAccountHistoricalStats(accountIdentifier)
+  getAccountHistoricalStats({ accountIdentifier, duration }: { accountIdentifier: string, duration: HistoricalStatsDuration }) {
+    return this.api.getAccountHistoricalStats({ accountIdentifier, duration })
   }
 
   public getAccountWonBlocks(accountIdentifier: string) {
@@ -200,12 +201,12 @@ export class StatsService {
     return this.api.getAccountPayouts(accountIdentifier)
   }
 
-  public async getHarvesterStats(harvesterId: string) {
-    return this.api.getHarvesterStats(harvesterId)
+  public async getHarvesterStats({ harvesterId, duration }: { harvesterId: string, duration: HistoricalStatsDuration }) {
+    return this.api.getHarvesterStats({ harvesterId, duration })
   }
 
-  public async getHarvesterProofTimes(harvesterId: string) {
-    return this.api.getHarvesterProofTimes(harvesterId)
+  public async getHarvesterProofTimes({ harvesterId, duration }: { harvesterId: string, duration: HistoricalStatsDuration }) {
+    return this.api.getHarvesterProofTimes({ harvesterId, duration })
   }
 
   public async getClientVersions() {

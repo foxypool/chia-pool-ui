@@ -14,6 +14,8 @@ import {LoginTokenResult} from './api/types/auth/login-token-result'
 import {Account, AccountNotificationSettings, AccountSettings, getAccountIdentifier} from './api/types/account/account'
 import {AccountWonBlock} from './api/types/account/account-won-block'
 import {makeAccountIdentifierName} from './util'
+import {HistoricalStatsDuration} from './api/types/historical-stats-duration'
+import {HistoricalStatsDurationProvider} from './historical-stats-duration-provider'
 
 @Injectable({
   providedIn: 'root'
@@ -100,6 +102,7 @@ export class AccountService {
     private readonly localStorageService: LocalStorageService,
     private readonly toastService: ToastService,
     private readonly snippetService: SnippetService,
+    private readonly historicalStatsDurationProvider: HistoricalStatsDurationProvider,
   ) {
     this.accountIdentifier$ = this.accountIdentifierSubject.pipe(distinctUntilChanged(), shareReplay())
     this.haveAccountIdentifier$ = this.accountIdentifier$.pipe(map(identifier => identifier !== null), distinctUntilChanged(), shareReplay())
@@ -235,7 +238,7 @@ export class AccountService {
   }
 
   async updateAccountHistoricalStats() {
-    this.accountHistoricalStats.next(await this.getAccountHistoricalStats({ accountIdentifier: this.accountIdentifier }))
+    this.accountHistoricalStats.next(await this.getAccountHistoricalStats({ accountIdentifier: this.accountIdentifier, duration: this.historicalStatsDurationProvider.selectedDuration }))
   }
 
   async updateAccountWonBlocks() {
@@ -276,11 +279,11 @@ export class AccountService {
     return accountHarvesters
   }
 
-  async getAccountHistoricalStats({ accountIdentifier }): Promise<AccountHistoricalStat[]> {
+  async getAccountHistoricalStats({ accountIdentifier, duration }: { accountIdentifier: string, duration: HistoricalStatsDuration }): Promise<AccountHistoricalStat[]> {
     this.isLoading = true
     let accountHistoricalStats = []
     try {
-      accountHistoricalStats = await this.statsService.getAccountHistoricalStats(accountIdentifier)
+      accountHistoricalStats = await this.statsService.getAccountHistoricalStats({ accountIdentifier, duration })
     } finally {
       this.isLoading = false
     }

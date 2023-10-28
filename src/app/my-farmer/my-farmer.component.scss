@@ -95,3 +95,25 @@
 .reward-interval:hover {
   color: #007bff;
 }
+.duration-selection {
+  padding-right: 0.75rem;
+  border: 1px solid var(--nav-tabs-bottom-border-color);
+  border-top: unset;
+  border-left: unset;
+  border-right: unset;
+}
+@media (max-width:576px) {
+  .nav-tabs-no-border {
+    border: unset;
+  }
+}
+@media (max-width:576px) {
+  .duration-selection {
+    padding-bottom: 1rem;
+  }
+}
+@media (min-width: 474px) and (max-width:576px) {
+  .duration-selection {
+    padding-top: 0.5rem;
+  }
+}
