@@ -423,7 +423,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       map(satellites => satellites
         .filter(satellite => !satellite.hidden)
         .map(satellite => satellite.services?.harvester)
-        .filter(harvester => harvester !== undefined && harvester.stats !== undefined && harvester.lastUpdate !== undefined && moment(harvester.lastUpdate).isAfter(moment().subtract(5, 'minutes')))
+        .filter(harvester => harvester !== undefined && harvester.stats !== undefined && harvester.stats.plotCount !== undefined && harvester.lastUpdate !== undefined && moment(harvester.lastUpdate).isAfter(moment().subtract(5, 'minutes')))
       ),
       shareReplay(),
     )
