@@ -19,6 +19,12 @@
               <app-update-payout-options></app-update-payout-options>
             </ng-template>
           </li>
+          <li ngbNavItem="blocks" [destroyOnHide]="true">
+            <a class="text-decoration-none" ngbNavLink>Blocks</a>
+            <ng-template ngbNavContent>
+              <app-update-block-settings></app-update-block-settings>
+            </ng-template>
+          </li>
           <li ngbNavItem="difficulty" [destroyOnHide]="true">
             <a class="text-decoration-none" ngbNavLink>Difficulty</a>
             <ng-template ngbNavContent>

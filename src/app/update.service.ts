@@ -4,6 +4,7 @@ import {ToastService} from './toast.service'
 import {SnippetService} from './snippet.service'
 import {filter, first} from 'rxjs/operators'
 import {concat, interval, Subscription} from 'rxjs'
+import {sleep} from './util'
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class UpdateService implements OnDestroy {
       .pipe(filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'))
       .subscribe(async () => {
         this.toastService.showInfoToast(this.snippetService.getSnippet('update-service.updating'), '', { timeOut: 2 * 1000 })
-        await new Promise(resolve => setTimeout(resolve, 2 * 1000))
+        await sleep(2 * 1000)
         await this.swUpdate.activateUpdate()
         document.location.reload()
       }),

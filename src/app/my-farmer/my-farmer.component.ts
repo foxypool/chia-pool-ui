@@ -16,7 +16,7 @@ import {AccountService} from '../account.service'
 import {AuthenticationModalComponent} from '../authentication-modal/authentication-modal.component'
 import {RatesService} from '../rates.service'
 import {ConfigService, DateFormatting, TimeInterval} from '../config.service'
-import {getEffortColor, makeAccountIdentifierName} from '../util'
+import {getEffortColor, makeAccountIdentifierName, sleep} from '../util'
 import {PoolsProvider, PoolType} from '../pools.provider'
 import {SettingsModalComponent} from '../settings-modal/settings-modal.component'
 import {BalanceProvider} from '../balance-provider'
@@ -458,7 +458,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       map(satellites => satellites
         .filter(satellite => !satellite.hidden)
         .map(satellite => satellite.services?.harvester)
-        .filter(harvester => harvester !== undefined && harvester.stats !== undefined && harvester.lastUpdate !== undefined && moment(harvester.lastUpdate).isAfter(moment().subtract(5, 'minutes')))
+        .filter(harvester => harvester !== undefined && harvester.stats !== undefined && harvester.stats.plotCount !== undefined && harvester.lastUpdate !== undefined && moment(harvester.lastUpdate).isAfter(moment().subtract(5, 'minutes')))
       ),
       shareReplay(),
     )
@@ -628,7 +628,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     await this.accountService.updateAccount()
     if (!this.accountService.haveAccount) {
       if (!this.accountService.isMyFarmerAccount) {
-        await new Promise(resolve => setTimeout(resolve, 500))
+        await sleep(500)
         await this.router.navigate(['/'])
       }
 

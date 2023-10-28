@@ -9,6 +9,8 @@ export interface BaseTopAccount extends Omit<BaseAccount,
   | 'isFixedDifficulty'
   | 'ecLastHour'
   | 'notificationSettings'
+  | 'integrations'
+  | 'settings'
 > {}
 
 export interface NftTopAccount extends BaseTopAccount {

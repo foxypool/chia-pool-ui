@@ -7,7 +7,7 @@ import {RecentlyWonBlock, RewardStats} from './types/pool/reward-stats'
 import {Payout} from './types/pool/payout'
 import {RateStats} from './types/pool/rate-stats'
 import {AccountList} from './types/account/account-list'
-import {Account, AccountNotificationSettings} from './types/account/account'
+import {Account, AccountNotificationSettings, AccountSettings} from './types/account/account'
 import {Harvester, HarvesterNotificationSettings} from './types/harvester/harvester'
 import {HarvesterStats} from './types/harvester/harvester-stats'
 import {ProofTime} from './types/harvester/proof-time'
@@ -190,6 +190,14 @@ export abstract class AbstractApi<
     return data
   }
 
+  public async deleteHarvester({ accountIdentifier, authToken, harvesterPeerId }: UpdateHarvesterOptions): Promise<ApiResponse<void>> {
+    const { data } = await this.client.delete<ApiResponse<void>>(`account/${accountIdentifier}/harvester/${harvesterPeerId}`, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    })
+
+    return data
+  }
+
   public async updatePayoutOptions({ accountIdentifier, authToken, minimumPayout, payoutMultiplesOf }: UpdateAccountPayoutOptions): Promise<ApiResponse<void>> {
     const { data } = await this.client.put<ApiResponse<void>>(`account/${accountIdentifier}/payout-options`, {
       minimumPayout,
@@ -228,6 +236,14 @@ export abstract class AbstractApi<
 
     return data
   }
+
+  public async updateSettings({accountIdentifier, authToken, partialSettings }: UpdateAccountSettingsOptions): Promise<ApiResponse<void>> {
+    const { data } = await this.client.put<ApiResponse<void>>(`account/${accountIdentifier}/settings`, partialSettings, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    })
+
+    return data
+  }
 }
 
 export interface UpdateAccountNameOptions extends AuthenticatedAccountRequestOptions {
@@ -250,6 +266,10 @@ export interface UpdateAccountDifficultyOptions extends AuthenticatedAccountRequ
 
 export interface UpdateAccountNotificationSettingsOptions extends AuthenticatedAccountRequestOptions {
   notificationSettings: AccountNotificationSettings
+}
+
+export interface UpdateAccountSettingsOptions extends AuthenticatedAccountRequestOptions {
+  partialSettings: Partial<AccountSettings>
 }
 
 export interface UpdateHarvesterNameOptions extends UpdateHarvesterOptions {

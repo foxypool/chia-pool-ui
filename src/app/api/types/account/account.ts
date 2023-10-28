@@ -11,6 +11,14 @@ export interface Integrations {
   chiaDashboardShareKey?: string
 }
 
+export interface AccountBlockSettings {
+  ignoreDifferingFarmerRewardAddresses: boolean
+}
+
+export interface AccountSettings {
+  blocks: AccountBlockSettings
+}
+
 export interface BaseAccount {
   pending: string
   ec: number
@@ -29,6 +37,7 @@ export interface BaseAccount {
   payoutMultiplesOf?: string
   lastAcceptedPartialAt?: string
   integrations?: Integrations
+  settings?: AccountSettings
 }
 
 export interface OgBaseAccount extends BaseAccount {

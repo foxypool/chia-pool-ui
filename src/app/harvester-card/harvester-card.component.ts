@@ -390,7 +390,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       map(satellites => satellites
         .filter(satellite => !satellite.hidden)
         .map(satellite => satellite.services?.harvester)
-        .filter(harvester => harvester?.stats !== undefined)
+        .filter(harvester => harvester?.stats !== undefined && harvester.stats.plotCount !== undefined)
         .find(harvester => harvester.stats.nodeId === this.harvester?.peerId.ensureHexPrefix())
       ),
       filter(harvester => harvester !== undefined),

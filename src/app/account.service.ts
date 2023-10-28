@@ -11,7 +11,7 @@ import {AccountPayout} from './farmer-payout-history/farmer-payout-history.compo
 import {distinctUntilChanged, filter, map, shareReplay} from 'rxjs/operators'
 import {AccountHistoricalStat} from './api/types/account/account-historical-stat'
 import {LoginTokenResult} from './api/types/auth/login-token-result'
-import {Account, AccountNotificationSettings, getAccountIdentifier} from './api/types/account/account'
+import {Account, AccountNotificationSettings, AccountSettings, getAccountIdentifier} from './api/types/account/account'
 import {AccountWonBlock} from './api/types/account/account-won-block'
 import {makeAccountIdentifierName} from './util'
 import {HistoricalStatsDuration} from './api/types/historical-stats-duration'
@@ -479,6 +479,23 @@ export class AccountService {
     }
   }
 
+  public async updateSettings(partialSettings: Partial<AccountSettings>): Promise<void> {
+    if (!this.isAuthenticated) {
+      return
+    }
+    this.isUpdatingAccount = true
+    try {
+      await this.statsService.updateSettings({
+        accountIdentifier: this.accountIdentifier,
+        authToken: this.authToken,
+        partialSettings,
+      })
+      await this.updateAccount({ bustCache: true })
+    } finally {
+      this.isUpdatingAccount = false
+    }
+  }
+
   public async updateHarvesterNotificationSettings({ harvesterPeerId, notificationSettings }): Promise<void> {
     if (!this.isAuthenticated) {
       return
@@ -488,6 +505,17 @@ export class AccountService {
       authToken: this.authToken,
       harvesterPeerId,
       notificationSettings,
+    })
+  }
+
+  public async deleteHarvester(harvesterPeerId: string): Promise<void> {
+    if (!this.isAuthenticated) {
+      return
+    }
+    await this.statsService.deleteHarvester({
+      accountIdentifier: this.accountIdentifier,
+      authToken: this.authToken,
+      harvesterPeerId,
     })
   }
 

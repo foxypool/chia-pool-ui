@@ -237,6 +237,10 @@ export class StatsService {
     return this.requestWithError(this.api.updateHarvesterNotificationSettings({ accountIdentifier, authToken, harvesterPeerId, notificationSettings }))
   }
 
+  public async deleteHarvester({ accountIdentifier, authToken, harvesterPeerId }) {
+    return this.requestWithError(this.api.deleteHarvester({ accountIdentifier, authToken, harvesterPeerId }))
+  }
+
   public updatePayoutOptions({ accountIdentifier, authToken, minimumPayout, payoutMultiplesOf }) {
     return this.requestWithError(this.api.updatePayoutOptions({ accountIdentifier, authToken, minimumPayout, payoutMultiplesOf }))
   }
@@ -255,6 +259,14 @@ export class StatsService {
     notificationSettings,
   }): Promise<unknown> {
     return this.requestWithError(this.api.updateNotificationSettings({ accountIdentifier, authToken, notificationSettings }))
+  }
+
+  public updateSettings({
+    accountIdentifier,
+    authToken,
+    partialSettings,
+  }): Promise<unknown> {
+    return this.requestWithError(this.api.updateSettings({ accountIdentifier, authToken, partialSettings }))
   }
 
   public async leavePool({ accountIdentifier, authToken, leaveForEver }) {

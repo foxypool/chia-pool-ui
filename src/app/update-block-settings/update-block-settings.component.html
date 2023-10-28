@@ -1,0 +1,20 @@
+<h5 class="settings-modal-text">Block settings</h5>
+<div class="row">
+  <div class="col-12">
+    <div class="form-check form-switch" style="padding-bottom: 1rem">
+      <input class="form-check-input" type="checkbox" role="switch" id="ignoreDifferingFarmerRewardAddresses" [(ngModel)]="ignoreDifferingFarmerRewardAddresses">
+      <label class="form-check-label settings-modal-text bigger-text" for="ignoreDifferingFarmerRewardAddresses" style="display: inline">
+        Ignore differing farmer reward addresses
+      </label>
+    </div>
+  </div>
+</div>
+<div class="row mt-2">
+  <div class="col-12">
+    <button type="button" class="btn btn-success w-100" (click)="updateSettings()" [disabled]="!canUpdateSettings">
+      <span *ngIf="accountService.isUpdatingAccount">Saving</span>
+      <span *ngIf="!accountService.isUpdatingAccount">Apply changes</span>
+      <fa-icon [icon]="faCircleNotch" animation="spin" *ngIf="accountService.isUpdatingAccount" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
+    </button>
+  </div>
+</div>

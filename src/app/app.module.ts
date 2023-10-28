@@ -53,6 +53,8 @@ import {QRCodeModule} from 'angularx-qrcode'
 import { VersionInfoComponent } from './version-info/version-info.component'
 import { IntegrationSettingsComponent } from './integration-settings/integration-settings.component'
 import {NgxSliderModule} from 'ngx-slider-v2'
+import { UpdateBlockSettingsComponent } from './update-block-settings/update-block-settings.component';
+import { ConfirmationModalComponent } from './confirmation-modal/confirmation-modal.component'
 
 @NgModule({
   declarations: [
@@ -86,6 +88,8 @@ import {NgxSliderModule} from 'ngx-slider-v2'
     GenerateLoginLinkComponent,
     VersionInfoComponent,
     IntegrationSettingsComponent,
+    UpdateBlockSettingsComponent,
+    ConfirmationModalComponent,
   ],
   imports: [
     BrowserModule,
