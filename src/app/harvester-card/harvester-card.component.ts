@@ -895,7 +895,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
 
     }).join('<br/>')
 
-    const date: string | undefined = params.at(0)?.value.at(0)
+    const date: string | undefined = params.at(0)?.value?.at(0)
     if (date === undefined) {
       return seriesTooltip
     }
@@ -920,8 +920,8 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     if (params === undefined) {
       return ''
     }
-    const date: string | undefined = params.at(0)?.value.at(0)
-    const proofTime: number | undefined = params.at(0)?.value.at(1)
+    const date: string | undefined = params.at(0)?.value?.at(0)
+    const proofTime: number | undefined = params.at(0)?.value?.at(1)
     if (date === undefined || proofTime === undefined) {
       return ''
     }
