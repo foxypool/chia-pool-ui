@@ -20,7 +20,7 @@ export const colors = {
   lightTheme: {
     textColor: '#000',
     tooltip: {
-      backgroundColor: '#fff',
+      backgroundColor: '#fefefe',
     },
     partialsChartColor: '#236263',
     proofTimesColor: '#859993',
