@@ -234,7 +234,7 @@
     </div>
     <div class="row">
       <div class="p-2 col-md-12">
-        <div class="row">
+        <div class="row m-0">
           <ul ngbNav #nav="ngbNav" [activeId]="selectedNavTab | async" class="nav-tabs col-12 col-sm" [ngClass]="{'nav-tabs-no-border': showDurationSelection | async}">
             <li ngbNavItem="stats" [destroyOnHide]="true">
               <a class="text-decoration-none" ngbNavLink routerLink="." [fragment]="null"><h5>{{snippetService.getSnippet('my-farmer-component.tabs.stats.label')}}</h5></a>
