@@ -1,14 +1,14 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core'
 import * as moment from 'moment'
 import BigNumber from 'bignumber.js'
-import {faCubes, faExchangeAlt} from '@fortawesome/free-solid-svg-icons'
+import {faCubes, faExchangeAlt, faInfoCircle} from '@fortawesome/free-solid-svg-icons'
 import {BehaviorSubject, Observable, Subscription} from 'rxjs'
 
 import {SnippetService} from '../snippet.service'
 import {ConfigService, DateFormatting} from '../config.service'
 import {getEffortColor, getEffortColorForChart} from '../util'
 import {CsvExporter} from '../csv-exporter'
-import {map} from 'rxjs/operators'
+import {map, shareReplay} from 'rxjs/operators'
 import {EChartsOption} from 'echarts'
 import {StatsService} from '../stats.service'
 import {AccountWonBlock, Remark, RemarkType} from '../api/types/account/account-won-block'
@@ -85,6 +85,15 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
     return this.themeProvider.isDarkTheme ? 'btn-outline-info' : 'btn-info'
   }
 
+  public get effectiveGigahorseDevFeeBoxClasses(): string {
+    return this.themeProvider.isDarkTheme ? 'border-primary' : 'border-black'
+  }
+
+  public hasGigahorseDevFeeBlocksAndEnoughWonBlocks$: Observable<boolean>
+  public effectiveGigahorseDevFee$: Observable<string>
+
+  protected readonly faInfoCircle = faInfoCircle
+
   private readonly wonBlocksSubject: BehaviorSubject<AccountWonBlock[]> = new BehaviorSubject<AccountWonBlock[]>([])
   private readonly subscriptions: Subscription[] = []
 
@@ -99,6 +108,29 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.hasWonBlocksObservable = this.wonBlocksObservable.pipe(map(wonBlocks => wonBlocks.length > 0))
     this.hasWonBlocksWithEffort = this.wonBlocksObservable.pipe(map(wonBlocks => wonBlocks.filter(wonBlock => wonBlock.effort !== null).length > 0))
+    const gigahorseDevFeeBlocksAndWonBlocks = this.wonBlocksObservable.pipe(
+      map(wonBlocks => {
+        const gigahorseDevFeeBlocks = wonBlocks.filter(wonBlock => wonBlock.remarks.some(remark => remark.type === RemarkType.gigahorseDevFee))
+
+        return {
+          wonBlocks,
+          gigahorseDevFeeBlocks,
+        }
+      }),
+      shareReplay(),
+    )
+    this.hasGigahorseDevFeeBlocksAndEnoughWonBlocks$ = gigahorseDevFeeBlocksAndWonBlocks.pipe(
+      map(({ gigahorseDevFeeBlocks, wonBlocks }) => gigahorseDevFeeBlocks.length > 0 && wonBlocks.length >= 8),
+    )
+    this.effectiveGigahorseDevFee$ = gigahorseDevFeeBlocksAndWonBlocks.pipe(
+      map(({ wonBlocks, gigahorseDevFeeBlocks }) => {
+        if (wonBlocks.length === 0) {
+          return '0%'
+        }
+
+        return `${((gigahorseDevFeeBlocks.length / wonBlocks.length / 8) * 100).toFixed(3)}%`
+      }),
+    )
     this.subscriptions.push(this.wonBlocksObservable.subscribe(this.wonBlocksSubject))
     this.subscriptions.push(
       this.wonBlocksObservable.subscribe(wonBlocks => {

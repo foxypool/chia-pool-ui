@@ -24,4 +24,13 @@
   background-color: var(--page-link-background-color);
   border-color: var(--page-link-border-color);
 }
-
+.info-icon {
+  font-size: 0.75rem;
+  margin-top: -4px;
+  margin-right: -5px;
+  float: right;
+  color: var(--info-icon-color);
+}
+.info-icon:hover{
+  color: var(--info-icon-color-hover);
+}

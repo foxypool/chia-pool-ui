@@ -4,6 +4,16 @@
   </div>
 </div>
 <div class="row justify-content-end">
+  <div class="col-auto" *ngIf="hasGigahorseDevFeeBlocksAndEnoughWonBlocks$ | async">
+    <div class="ps-2 pt-1 pe-2 pb-1 border rounded-1" [ngClass]="effectiveGigahorseDevFeeBoxClasses" style="font-size: 0.875rem">
+      <span class="fw-lighter pe-1">Effective Gigahorse Dev Fee:</span><span class="fw-bold">{{effectiveGigahorseDevFee$ | async}}</span>
+      <fa-icon
+        [icon]="faInfoCircle"
+        ngbTooltip="The effective Gigahorse Dev Fee is calculated based on the number of blocks you won which went to the Gigahorse Dev Fee address compared to the total number of blocks you won."
+        class="ps-1 info-icon"
+      ></fa-icon>
+    </div>
+  </div>
   <div class="col-auto">
     <button *ngIf="hasWonBlocksObservable | async" type="button" class="btn btn-sm" [ngClass]="exportCsvButtonClasses" style="float: right" (click)="exportCsv()">{{snippetService.getSnippet('download-csv-button.title')}}</button>
   </div>
