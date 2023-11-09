@@ -15,7 +15,12 @@ export interface AccountBlockSettings {
   ignoreDifferingFarmerRewardAddresses: boolean
 }
 
+export interface AccountProfileSettings {
+  imageUrl?: string
+}
+
 export interface AccountSettings {
+  profile?: AccountProfileSettings
   blocks: AccountBlockSettings
 }
 

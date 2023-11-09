@@ -64,6 +64,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   public readonly isLoadingPayoutAddressBalance: Observable<boolean>
   public readonly reportedRawCapacity$: Observable<string>
   public readonly reportedEffectiveCapacity$: Observable<string>
+  public readonly accountImageUrl$: Observable<string|undefined>
 
   public isAccountLoading: Observable<boolean> = this.accountService.accountSubject
     .pipe(
@@ -520,6 +521,11 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
           },
         }
       })
+    )
+    this.accountImageUrl$ = this.accountService.accountSubject.pipe(
+      map(account => account?.settings.profile?.imageUrl),
+      distinctUntilChanged(),
+      shareReplay(1),
     )
 
     // Add dummy subscribes to trigger streams ahead of first use

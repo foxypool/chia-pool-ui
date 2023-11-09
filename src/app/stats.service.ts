@@ -18,6 +18,7 @@ import {RateStats} from './api/types/pool/rate-stats'
 import {NftApi} from './api/nft-api'
 import {Account} from './api/types/account/account'
 import {HistoricalStatsDuration} from './api/types/historical-stats-duration'
+import {UpdateAccountSettingsOptions} from './api/abstract-api'
 
 @Injectable({
   providedIn: 'root'
@@ -265,7 +266,7 @@ export class StatsService {
     accountIdentifier,
     authToken,
     partialSettings,
-  }): Promise<unknown> {
+  }: UpdateAccountSettingsOptions): Promise<unknown> {
     return this.requestWithError(this.api.updateSettings({ accountIdentifier, authToken, partialSettings }))
   }
 

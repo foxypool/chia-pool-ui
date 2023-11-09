@@ -332,17 +332,28 @@ export class AccountService {
     }
   }
 
-  async updateName({ newName }) {
+  async updateAccountSettings(options: UpdateAccountSettingsOptions) {
     if (!this.isAuthenticated) {
       return
     }
     this.isUpdatingAccount = true
     try {
-      await this.statsService.updateAccountName({
-        accountIdentifier: this.accountIdentifier,
-        authToken: this.authToken,
-        newName,
-      })
+      if ('name' in options) {
+          await this.statsService.updateAccountName({
+            accountIdentifier: this.accountIdentifier,
+            authToken: this.authToken,
+            newName: options.name,
+          })
+      }
+      if ('imageUrl' in options) {
+        await this.statsService.updateSettings({
+          accountIdentifier: this.accountIdentifier,
+          authToken: this.authToken,
+          partialSettings: {
+            profile: { imageUrl: options.imageUrl ?? null },
+          },
+        })
+      }
       await this.updateAccount({ bustCache: true })
     } finally {
       this.isUpdatingAccount = false
@@ -540,4 +551,9 @@ export class AccountService {
 
 function makeInvalidFarmerErrorMessage(poolType: PoolType, accountIdentifier: string): string {
   return `Could not find farmer for ${makeAccountIdentifierName(poolType)} "${accountIdentifier}"`
+}
+
+export interface UpdateAccountSettingsOptions {
+  name?: string
+  imageUrl?: string
 }

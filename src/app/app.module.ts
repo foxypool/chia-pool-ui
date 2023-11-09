@@ -26,7 +26,7 @@ import { LoadingStateComponent } from './loading-state/loading-state.component'
 import { MyFarmerComponent } from './my-farmer/my-farmer.component'
 import { AuthenticationModalComponent } from './authentication-modal/authentication-modal.component'
 import {ClipboardModule} from 'ngx-clipboard'
-import { UpdateNameComponent } from './update-name/update-name.component'
+import { UpdateAccountComponent } from './update-account/update-account.component'
 import { LeavePoolComponent } from './leave-pool-modal/leave-pool.component'
 import { UpdatePayoutOptionsComponent } from './update-minimum-payout/update-payout-options.component'
 import {NgxEchartsModule} from 'ngx-echarts'
@@ -70,7 +70,7 @@ import { ConfirmationModalComponent } from './confirmation-modal/confirmation-mo
     LoadingStateComponent,
     MyFarmerComponent,
     AuthenticationModalComponent,
-    UpdateNameComponent,
+    UpdateAccountComponent,
     LeavePoolComponent,
     UpdatePayoutOptionsComponent,
     UpdateDifficultyComponent,

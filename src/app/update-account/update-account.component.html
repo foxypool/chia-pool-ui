@@ -1,0 +1,39 @@
+<h6 class="settings-modal-text">{{snippetService.getSnippet('update-name-modal.title')}}</h6>
+<div class="row">
+  <div class="col-12">
+    <input type="text"
+           class="form-control"
+           aria-describedby="nameFeedback"
+           placeholder="{{snippetService.getSnippet('update-name-modal.account-name')}}"
+           [class.is-invalid]="!isNewNameValid"
+           [(ngModel)]="newName"
+    >
+    <div id="nameFeedback" class="invalid-feedback">
+      {{snippetService.getSnippet('update-name-modal.error.name-too-long')}}
+    </div>
+  </div>
+</div>
+<h6 class="pt-2 settings-modal-text">Account Image URL</h6>
+<div class="row">
+  <div class="col-12">
+    <input type="text"
+           class="form-control"
+           aria-describedby="imageUrlFeedback"
+           placeholder="https://your-image-here.jpg"
+           [class.is-invalid]="!isNewImageUrlValid"
+           [(ngModel)]="newImageUrl"
+    >
+    <div id="imageUrlFeedback" class="invalid-feedback">
+      Not a valid url
+    </div>
+  </div>
+</div>
+<div class="row mt-2">
+  <div class="col-12">
+    <button type="button" class="btn btn-success w-100" (click)="updateAccount()" [disabled]="!canUpdateAccount">
+      <span *ngIf="accountService.isUpdatingAccount">Applying</span>
+      <span *ngIf="!accountService.isUpdatingAccount">Apply changes</span>
+      <fa-icon [icon]="faCircleNotch" animation="spin" *ngIf="accountService.isUpdatingAccount" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
+    </button>
+  </div>
+</div>
