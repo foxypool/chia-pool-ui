@@ -24,7 +24,7 @@
       </ngb-alert>
     </div>
     <div class="row mb-1">
-      <div class="col-auto my-auto pe-0" *ngIf="accountImageUrl$ | async">
+      <div class="col-auto my-auto pe-0 profile-picture-image-wrapper" *ngIf="accountImageUrl$ | async">
         <img [src]="accountImageUrl$ | async" class="img-fluid rounded profile-picture-image">
       </div>
       <div class="col col-md">

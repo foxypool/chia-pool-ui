@@ -106,14 +106,23 @@
   max-height: 3.9rem;
   margin-bottom: -0.3rem;
 }
-@media (max-width:864px) {
+@media (max-width:926px) {
   .profile-picture-image {
     max-height: 5.6rem;
   }
 }
-@media (max-width:472px) {
+@media (max-width:512px) {
   .profile-picture-image {
     max-height: 7.2rem;
+  }
+}
+@media (max-width:454px) {
+  .profile-picture-image-wrapper {
+    width: 100%;
+    text-align: center;
+  }
+  .profile-picture-image {
+    margin-bottom: 1rem;
   }
 }
 @media (max-width:576px) {
