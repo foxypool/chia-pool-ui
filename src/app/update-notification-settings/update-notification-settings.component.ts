@@ -14,10 +14,13 @@ import {Options} from 'ngx-slider-v2'
 })
 export class UpdateNotificationSettingsComponent {
   public possibleCapacityDenominators: string[] = ['GiB', 'TiB', 'PiB']
-  public selectedCapacityDenominator = 'TiB'
+  public selectedCurrentEcCapacityDenominator = 'TiB'
+  public selectedAverageEcCapacityDenominator = 'TiB'
   public faCircleNotch = faCircleNotch
-  public newEcLastHourThresholdInGib: number | undefined
-  public areEcChangeNotificationsEnabled = false
+  public newCurrentEcThresholdInGib: number
+  public newAverageEcThresholdInGib: number
+  public areCurrentEcChangeNotificationsEnabled = false
+  public areAverageEcChangeNotificationsEnabled = false
   public areBlockWonNotificationsEnabled = false
   public arePayoutAddressChangeNotificationsEnabled = false
   public areHarvesterOfflineNotificationsEnabled = false
@@ -28,8 +31,10 @@ export class UpdateNotificationSettingsComponent {
     public snippetService: SnippetService,
     private readonly toastService: ToastService,
   ) {
-    this.newEcLastHourThresholdInGib = this.currentEcLastHourThresholdInGib
-    this.areEcChangeNotificationsEnabled = this.currentAreEcChangeNotificationsEnabled
+    this.newCurrentEcThresholdInGib = this.currentEcLastHourThresholdInGib
+    this.newAverageEcThresholdInGib = this.currentAverageEcThresholdInGib
+    this.areCurrentEcChangeNotificationsEnabled = this.currentAreEcChangeNotificationsEnabled
+    this.areAverageEcChangeNotificationsEnabled = this.currentAreAverageEcChangeNotificationsEnabled
     this.areBlockWonNotificationsEnabled = this.currentAreBlockWonNotificationsEnabled
     this.arePayoutAddressChangeNotificationsEnabled = this.currentArePayoutAddressChangeNotificationsEnabled
     this.areHarvesterOfflineNotificationsEnabled = this.currentAreHarvesterOfflineNotificationsEnabled
@@ -44,41 +49,75 @@ export class UpdateNotificationSettingsComponent {
   }
 
   public get newEcLastHourThreshold(): number {
-    switch (this.selectedCapacityDenominator) {
-      case 'GiB': return this.newEcLastHourThresholdInGib
-      case 'TiB': return new BigNumber(this.newEcLastHourThresholdInGib).dividedBy(1024).toNumber()
-      case 'PiB': return new BigNumber(this.newEcLastHourThresholdInGib).dividedBy(1024).dividedBy(1024).toNumber()
+    switch (this.selectedCurrentEcCapacityDenominator) {
+      case 'GiB': return this.newCurrentEcThresholdInGib
+      case 'TiB': return new BigNumber(this.newCurrentEcThresholdInGib).dividedBy(1024).toNumber()
+      case 'PiB': return new BigNumber(this.newCurrentEcThresholdInGib).dividedBy(1024).dividedBy(1024).toNumber()
     }
   }
 
   public set newEcLastHourThreshold(newValue: number) {
-    switch (this.selectedCapacityDenominator) {
+    switch (this.selectedCurrentEcCapacityDenominator) {
       case 'GiB':
-        this.newEcLastHourThresholdInGib = newValue
+        this.newCurrentEcThresholdInGib = newValue
         break
       case 'TiB':
-        this.newEcLastHourThresholdInGib = new BigNumber(newValue).multipliedBy(1024).toNumber()
+        this.newCurrentEcThresholdInGib = new BigNumber(newValue).multipliedBy(1024).toNumber()
         break
       case 'PiB':
-        this.newEcLastHourThresholdInGib = new BigNumber(newValue).multipliedBy(1024).multipliedBy(1024).toNumber()
+        this.newCurrentEcThresholdInGib = new BigNumber(newValue).multipliedBy(1024).multipliedBy(1024).toNumber()
+        break
+    }
+  }
+
+  public get newAverageEcThreshold(): number {
+    switch (this.selectedAverageEcCapacityDenominator) {
+      case 'GiB': return this.newAverageEcThresholdInGib
+      case 'TiB': return new BigNumber(this.newAverageEcThresholdInGib).dividedBy(1024).toNumber()
+      case 'PiB': return new BigNumber(this.newAverageEcThresholdInGib).dividedBy(1024).dividedBy(1024).toNumber()
+    }
+  }
+
+  public set newAverageEcThreshold(newValue: number) {
+    switch (this.selectedAverageEcCapacityDenominator) {
+      case 'GiB':
+        this.newAverageEcThresholdInGib = newValue
+        break
+      case 'TiB':
+        this.newAverageEcThresholdInGib = new BigNumber(newValue).multipliedBy(1024).toNumber()
+        break
+      case 'PiB':
+        this.newAverageEcThresholdInGib = new BigNumber(newValue).multipliedBy(1024).multipliedBy(1024).toNumber()
         break
     }
   }
 
   public get currentEcLastHourThreshold(): number {
-    switch (this.selectedCapacityDenominator) {
+    switch (this.selectedCurrentEcCapacityDenominator) {
       case 'GiB': return this.currentEcLastHourThresholdInGib
       case 'TiB': return new BigNumber(this.currentEcLastHourThresholdInGib).dividedBy(1024).toNumber()
       case 'PiB': return new BigNumber(this.currentEcLastHourThresholdInGib).dividedBy(1024).dividedBy(1024).toNumber()
     }
   }
 
+  public get currentAverageEcThreshold(): number {
+    switch (this.selectedAverageEcCapacityDenominator) {
+      case 'GiB': return this.currentAverageEcThresholdInGib
+      case 'TiB': return new BigNumber(this.currentAverageEcThresholdInGib).dividedBy(1024).toNumber()
+      case 'PiB': return new BigNumber(this.currentAverageEcThresholdInGib).dividedBy(1024).dividedBy(1024).toNumber()
+    }
+  }
+
+  public get isValidAverageEcThreshold(): boolean {
+    return this.newAverageEcThresholdInGib !== undefined && this.newAverageEcThresholdInGib >= 0
+  }
+
   public get isValidEcLastHourThreshold(): boolean {
-    return this.newEcLastHourThresholdInGib !== undefined && this.newEcLastHourThresholdInGib >= 0
+    return this.newCurrentEcThresholdInGib !== undefined && this.newCurrentEcThresholdInGib >= 0
   }
 
   public get canUpdateNotificationSettings(): boolean {
-    return !this.accountService.isUpdatingAccount && this.isValidEcLastHourThreshold && this.areValuesChanged
+    return !this.accountService.isUpdatingAccount && this.isValidEcLastHourThreshold && this.isValidAverageEcThreshold && this.areValuesChanged
   }
 
   public async updateNotificationSettings(): Promise<void> {
@@ -87,8 +126,10 @@ export class UpdateNotificationSettingsComponent {
     }
     try {
       await this.accountService.updateNotificationSettings({
-        ecLastHourThreshold: this.newEcLastHourThresholdInGib,
-        areEcChangeNotificationsEnabled: this.areEcChangeNotificationsEnabled,
+        ecLastHourThreshold: this.newCurrentEcThresholdInGib,
+        averageEcThreshold: this.newAverageEcThresholdInGib,
+        areEcChangeNotificationsEnabled: this.areCurrentEcChangeNotificationsEnabled,
+        areAverageEcChangeNotificationsEnabled: this.areAverageEcChangeNotificationsEnabled,
         areBlockWonNotificationsEnabled: this.areBlockWonNotificationsEnabled,
         arePayoutAddressChangeNotificationsEnabled: this.arePayoutAddressChangeNotificationsEnabled,
         areHarvesterOfflineNotificationsEnabled: this.areHarvesterOfflineNotificationsEnabled,
@@ -102,6 +143,10 @@ export class UpdateNotificationSettingsComponent {
 
   private get currentAreEcChangeNotificationsEnabled(): boolean {
     return this.accountService.account.notificationSettings?.areEcChangeNotificationsEnabled ?? false
+  }
+
+  private get currentAreAverageEcChangeNotificationsEnabled(): boolean {
+    return this.accountService.account.notificationSettings?.areAverageEcChangeNotificationsEnabled ?? false
   }
 
   private get currentAreBlockWonNotificationsEnabled(): boolean {
@@ -120,15 +165,25 @@ export class UpdateNotificationSettingsComponent {
     return this.accountService.account.notificationSettings?.ecLastHourThreshold ?? 0
   }
 
+  private get currentAverageEcThresholdInGib(): number {
+    return this.accountService.account.notificationSettings?.averageEcThreshold ?? 0
+  }
+
   private get currentHarvesterOfflineDurationInMinutes(): number {
     return this.accountService.account.notificationSettings?.harvesterOfflineDurationInMinutes ?? 20
   }
 
   private get areValuesChanged(): boolean {
-    if (this.newEcLastHourThresholdInGib !== this.currentEcLastHourThresholdInGib) {
+    if (this.newCurrentEcThresholdInGib !== this.currentEcLastHourThresholdInGib) {
       return true
     }
-    if (this.areEcChangeNotificationsEnabled !== this.currentAreEcChangeNotificationsEnabled) {
+    if (this.areCurrentEcChangeNotificationsEnabled !== this.currentAreEcChangeNotificationsEnabled) {
+      return true
+    }
+    if (this.newAverageEcThresholdInGib !== this.currentAverageEcThresholdInGib) {
+      return true
+    }
+    if (this.areAverageEcChangeNotificationsEnabled !== this.currentAreAverageEcChangeNotificationsEnabled) {
       return true
     }
     if (this.areBlockWonNotificationsEnabled !== this.currentAreBlockWonNotificationsEnabled) {

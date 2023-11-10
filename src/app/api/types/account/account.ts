@@ -1,6 +1,8 @@
 export interface AccountNotificationSettings {
   areEcChangeNotificationsEnabled: boolean
+  areAverageEcChangeNotificationsEnabled: boolean
   ecLastHourThreshold: number
+  averageEcThreshold: number
   areBlockWonNotificationsEnabled: boolean
   arePayoutAddressChangeNotificationsEnabled: boolean
   areHarvesterOfflineNotificationsEnabled: boolean
