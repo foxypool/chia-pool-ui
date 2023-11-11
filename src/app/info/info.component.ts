@@ -152,7 +152,14 @@ export class InfoComponent implements OnInit, OnDestroy {
 
   private makeRegularClientVersionsChartUpdateOptions(clientVersions: ClientVersion[]): EChartsOption {
     const clientVersionWithCount = clientVersions.reduce((acc, clientVersion) => {
-      const key = clientVersion.clientName.indexOf('Chia') === -1 ? 'Unknown' : clientVersion.clientVersion
+      let key: string
+      if (clientVersion.clientName?.indexOf('Chia') !== -1) {
+        key = clientVersion.clientVersion
+      } else if (clientVersion.clientName === 'dg_fast_farmer') {
+        key = `Fast Farmer ${clientVersion.clientVersion}`
+      } else {
+        key = 'Unknown'
+      }
       let clientCount = acc.get(key) ?? 0
       clientCount += clientVersion.count
       acc.set(key, clientCount)
@@ -172,13 +179,19 @@ export class InfoComponent implements OnInit, OnDestroy {
   private makeSimplifiedClientVersionsChartUpdateOptions(clientVersionInfos: ClientVersion[]): EChartsOption {
     const clientVersionWithCount = clientVersionInfos.reduce((acc, clientVersion) => {
       let key: string
-      if (clientVersion.clientName.indexOf('Chia') === -1) {
+      let comparisonKey: 'chia'|'fastFarmer'|undefined
+      if (clientVersion.clientName === 'dg_fast_farmer') {
+        comparisonKey = 'fastFarmer'
+      } else if (clientVersion.clientName.indexOf('Chia') !== -1) {
+        comparisonKey = 'chia'
+      }
+      if (comparisonKey === undefined) {
         key = 'Unknown'
-      } else if (compare(clientVersion.clientVersion, clientVersions.chia.current, '>=')) {
+      } else if (compare(clientVersion.clientVersion, clientVersions[comparisonKey].current, '>=')) {
         key = 'Current'
-      } else if (compare(clientVersion.clientVersion, clientVersions.chia.recent, '>=')) {
+      } else if (compare(clientVersion.clientVersion, clientVersions[comparisonKey].recent, '>=')) {
         key = 'Recent'
-      } else if (compare(clientVersion.clientVersion, clientVersions.chia.outdated, '>=')) {
+      } else if (compare(clientVersion.clientVersion, clientVersions[comparisonKey].outdated, '>=')) {
         key = 'Outdated'
       } else {
         key = 'Ancient'
@@ -202,10 +215,16 @@ export class InfoComponent implements OnInit, OnDestroy {
   private makeThirdPartyVersionsClientVersionsChartUpdateOptions(clientVersionInfos: ClientVersion[]): EChartsOption {
     const clientVersionWithCount = clientVersionInfos.reduce((acc, clientVersion) => {
       let key: string
-      if (clientVersion.localName1 === 'giga' || clientVersion.localName2 === 'giga') {
+      if (clientVersion.clientName === 'dg_fast_farmer') {
+        key = 'Fast Farmer'
+      } else if (clientVersion.localName1 === 'giga' || clientVersion.localName2 === 'giga') {
         key = 'Gigahorse'
-      } else {
+      } else if (clientVersion.localName1 === 'ff' || clientVersion.localName2 === 'ff' || clientVersion.localName3 == 'ff') {
+        key = 'Foxy-Farmer'
+      } else if (clientVersion.clientName.indexOf('Chia') !== -1) {
         key = 'Chia'
+      } else {
+        key = clientVersion.clientName ?? 'Unknown'
       }
       let clientCount = acc.get(key) ?? 0
       clientCount += clientVersion.count

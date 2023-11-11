@@ -1,6 +1,6 @@
 export interface ClientVersion {
-  clientName: string
-  clientVersion: string
+  clientName: string|null
+  clientVersion: string|null
   localName1: string|null
   localVersion1: string|null
   localName2: string|null

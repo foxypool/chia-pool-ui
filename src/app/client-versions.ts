@@ -14,6 +14,13 @@ export const clientVersions = {
     minimum: '1.4.0',
     recommendedMinimum: '1.9.1',
   },
+  fastFarmer: {
+    minimum: '1.0.0',
+    recommendedMinimum: '1.0.1',
+    current: '1.0.1',
+    recent: '1.0.0',
+    outdated: '0.0.0',
+  },
   gigahorse: {
     minimum: 10,
     recommendedMinimum: 20,

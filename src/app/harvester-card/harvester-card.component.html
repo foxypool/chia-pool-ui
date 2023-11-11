@@ -88,11 +88,18 @@
           <h5>{{lastAcceptedPartialAt}}</h5>
         </div>
       </div>
-      <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl col-xxl col-xxxl col-xxxxl col-xxxxxl p-1">
+      <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl col-xxl col-xxxl col-xxxxl col-xxxxxl p-1" *ngIf="hasChiaVersion">
         <app-version-info
           versionName="Chia Version"
           [versionString]="fullChiaVersionString"
           [versionUpdateInfo]="chiaVersionUpdateInfo"
+        ></app-version-info>
+      </div>
+      <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl col-xxl col-xxxl col-xxxxl col-xxxxxl p-1" *ngIf="hasFastFarmerVersion">
+        <app-version-info
+          versionName="Fast Farmer Version"
+          [versionString]="fastFarmerVersion"
+          [versionUpdateInfo]="fastFarmerVersionUpdateInfo"
         ></app-version-info>
       </div>
       <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl col-xxl col-xxxl col-xxxxl col-xxxxxl p-1" *ngIf="hasOgVersion">

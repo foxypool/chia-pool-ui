@@ -508,6 +508,10 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     return this.harvester.versionInfo.clientVersion
   }
 
+  public get hasChiaVersion(): boolean {
+    return this.chiaVersion !== undefined
+  }
+
   private get chiaRcVersion(): string|undefined {
     if (this.harvester.versionInfo.localName1 === 'rc') {
       return this.harvester.versionInfo.localVersion1 ?? undefined
@@ -520,10 +524,10 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     }
   }
 
-  public get fullChiaVersionString(): string {
+  public get fullChiaVersionString(): string|undefined {
     const chiaVersion = this.chiaVersion
     if (chiaVersion === undefined) {
-      return 'Unknown'
+      return
     }
 
     // If we already show explicit compression version ignore rc and beta info
@@ -699,6 +703,31 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     return this.chiaCompressionVersion !== undefined
   }
 
+  public get fastFarmerVersionUpdateInfo(): VersionUpdateInfo {
+    const fastFarmerVersion = this.fastFarmerVersion
+    if (fastFarmerVersion === undefined) {
+      return VersionUpdateInfo.noActionRequired
+    }
+    if (compare(fastFarmerVersion, clientVersions.fastFarmer.recommendedMinimum, '>=')) {
+      return VersionUpdateInfo.noActionRequired
+    }
+    if (compare(fastFarmerVersion, clientVersions.fastFarmer.minimum, '>=')) {
+      return VersionUpdateInfo.updateRecommended
+    }
+
+    return VersionUpdateInfo.updateStronglyRecommended
+  }
+
+  public get fastFarmerVersion(): string|undefined {
+    if (this.harvester.versionInfo.clientName === 'dg_fast_farmer') {
+      return this.harvester.versionInfo.clientVersion ?? undefined
+    }
+  }
+
+  public get hasFastFarmerVersion(): boolean {
+    return this.fastFarmerVersion !== undefined
+  }
+
   public get rowColumnClasses(): string[] {
     const cardCount = this.cardCount
 
@@ -709,7 +738,13 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   private get cardCount(): number {
-    let count = 6
+    let count = 5
+    if (this.hasChiaVersion) {
+      count += 1
+    }
+    if (this.hasFastFarmerVersion) {
+      count += 1
+    }
     if (this.hasOgVersion) {
       count += 1
     }
