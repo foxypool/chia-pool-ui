@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core'
 import {faInfoCircle} from '@fortawesome/free-solid-svg-icons'
-import {VersionUpdateInfo} from '../client-versions'
+import {VersionUpdateInfo} from '../clients/clients'
 
 @Component({
   selector: 'app-version-info',

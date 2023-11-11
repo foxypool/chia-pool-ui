@@ -5,10 +5,15 @@ import {PoolsProvider, PoolType} from '../pools.provider'
 import {BehaviorSubject, combineLatest, Subscription} from 'rxjs'
 import {EChartsOption} from 'echarts'
 import {compare} from 'compare-versions'
-import {clientVersions} from '../client-versions'
 import {ClientVersion} from '../api/types/pool/client-version'
 import {faCheck} from '@fortawesome/free-solid-svg-icons'
 import {colors, Theme, ThemeProvider} from '../theme-provider'
+import {
+  chiaClient,
+  Client, getClientForClientVersion,
+  getGroupedClientForClientVersion,
+  getVersionFromClientVersion
+} from '../clients/clients'
 
 @Component({
   selector: 'app-info',
@@ -152,13 +157,15 @@ export class InfoComponent implements OnInit, OnDestroy {
 
   private makeRegularClientVersionsChartUpdateOptions(clientVersions: ClientVersion[]): EChartsOption {
     const clientVersionWithCount = clientVersions.reduce((acc, clientVersion) => {
-      let key: string
-      if (clientVersion.clientName?.indexOf('Chia') !== -1) {
-        key = clientVersion.clientVersion
-      } else if (clientVersion.clientName === 'dg_fast_farmer') {
-        key = `Fast Farmer ${clientVersion.clientVersion}`
-      } else {
-        key = 'Unknown'
+      let key: string = 'Unknown'
+      const client = getGroupedClientForClientVersion(clientVersion)
+      if (client !== undefined) {
+        const version = getVersionFromClientVersion(client, clientVersion)
+        if (client === chiaClient) {
+          key = version
+        } else {
+          key = `${client.displayName} ${version}`
+        }
       }
       let clientCount = acc.get(key) ?? 0
       clientCount += clientVersion.count
@@ -178,24 +185,13 @@ export class InfoComponent implements OnInit, OnDestroy {
 
   private makeSimplifiedClientVersionsChartUpdateOptions(clientVersionInfos: ClientVersion[]): EChartsOption {
     const clientVersionWithCount = clientVersionInfos.reduce((acc, clientVersion) => {
-      let key: string
-      let comparisonKey: 'chia'|'fastFarmer'|undefined
-      if (clientVersion.clientName === 'dg_fast_farmer') {
-        comparisonKey = 'fastFarmer'
-      } else if (clientVersion.clientName.indexOf('Chia') !== -1) {
-        comparisonKey = 'chia'
+      let category: SimplifiedChartCategory = SimplifiedChartCategory.unknown
+      const client = getGroupedClientForClientVersion(clientVersion)
+      if (client !== undefined) {
+        const version = getVersionFromClientVersion(client, clientVersion)
+        category = getSimplifiedChartCategoryFor(client, version)
       }
-      if (comparisonKey === undefined) {
-        key = 'Unknown'
-      } else if (compare(clientVersion.clientVersion, clientVersions[comparisonKey].current, '>=')) {
-        key = 'Current'
-      } else if (compare(clientVersion.clientVersion, clientVersions[comparisonKey].recent, '>=')) {
-        key = 'Recent'
-      } else if (compare(clientVersion.clientVersion, clientVersions[comparisonKey].outdated, '>=')) {
-        key = 'Outdated'
-      } else {
-        key = 'Ancient'
-      }
+      const key = category.toString()
       let clientCount = acc.get(key) ?? 0
       clientCount += clientVersion.count
       acc.set(key, clientCount)
@@ -214,18 +210,8 @@ export class InfoComponent implements OnInit, OnDestroy {
 
   private makeThirdPartyVersionsClientVersionsChartUpdateOptions(clientVersionInfos: ClientVersion[]): EChartsOption {
     const clientVersionWithCount = clientVersionInfos.reduce((acc, clientVersion) => {
-      let key: string
-      if (clientVersion.clientName === 'dg_fast_farmer') {
-        key = 'Fast Farmer'
-      } else if (clientVersion.localName1 === 'giga' || clientVersion.localName2 === 'giga') {
-        key = 'Gigahorse'
-      } else if (clientVersion.localName1 === 'ff' || clientVersion.localName2 === 'ff' || clientVersion.localName3 == 'ff') {
-        key = 'Foxy-Farmer'
-      } else if (clientVersion.clientName.indexOf('Chia') !== -1) {
-        key = 'Chia'
-      } else {
-        key = clientVersion.clientName ?? 'Unknown'
-      }
+      const client = getClientForClientVersion(clientVersion)
+      const key = client?.displayName ?? 'Unknown'
       let clientCount = acc.get(key) ?? 0
       clientCount += clientVersion.count
       acc.set(key, clientCount)
@@ -262,4 +248,24 @@ enum ClientVersionsChartMode {
   simplified = 'simplified',
   regular = 'regular',
   thirdPartyVersions = 'thirdPartyVersions',
+}
+
+enum SimplifiedChartCategory {
+  unknown = 'Unknown',
+  current = 'Current',
+  recent = 'Recent',
+  outdated = 'Outdated',
+  ancient = 'Ancient',
+}
+
+function getSimplifiedChartCategoryFor(client: Client<unknown>, version: string): SimplifiedChartCategory {
+  if (client.versions.current !== undefined && compare(version, client.versions.current as string, '>=')) {
+    return SimplifiedChartCategory.current
+  } else if (client.versions.recent !== undefined && compare(version, client.versions.recent as string, '>=')) {
+    return SimplifiedChartCategory.recent
+  } else if (client.versions.outdated !== undefined && compare(version, client.versions.outdated as string, '>=')) {
+    return SimplifiedChartCategory.outdated
+  }
+
+  return SimplifiedChartCategory.ancient
 }

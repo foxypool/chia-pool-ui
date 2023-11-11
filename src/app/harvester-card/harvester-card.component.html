@@ -102,6 +102,13 @@
           [versionUpdateInfo]="fastFarmerVersionUpdateInfo"
         ></app-version-info>
       </div>
+      <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl col-xxl col-xxxl col-xxxxl col-xxxxxl p-1" *ngIf="hasLiteFarmerVersion">
+        <app-version-info
+          versionName="Lite Farmer Version"
+          [versionString]="liteFarmerVersion"
+          [versionUpdateInfo]="liteFarmerVersionUpdateInfo"
+        ></app-version-info>
+      </div>
       <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl col-xxl col-xxxl col-xxxxl col-xxxxxl p-1" *ngIf="hasOgVersion">
         <app-version-info
           versionName="OG Version"
@@ -114,13 +121,6 @@
           versionName="Gigahorse Version"
           [versionString]="gigahorseVersion"
           [versionUpdateInfo]="gigahorseVersionUpdateInfo"
-        ></app-version-info>
-      </div>
-      <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl col-xxl col-xxxl col-xxxxl col-xxxxxl p-1" *ngIf="hasChiaCompressionVersion">
-        <app-version-info
-          versionName="Compression Version"
-          [versionString]="chiaCompressionVersion"
-          [versionUpdateInfo]="chiaCompressionVersionUpdateInfo"
         ></app-version-info>
       </div>
       <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl col-xxl col-xxxl col-xxxxl col-xxxxxl p-1" *ngIf="hasFoxyFarmerVersion">

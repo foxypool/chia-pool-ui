@@ -10,8 +10,6 @@ import {distinctUntilChanged, filter, map, shareReplay, skip} from 'rxjs/operato
 import {BigNumber} from 'bignumber.js'
 import Capacity from '../capacity'
 import {EChartsOption} from 'echarts'
-import {compare} from 'compare-versions'
-import {clientVersions, VersionUpdateInfo} from '../client-versions'
 import {faEllipsisV, faPencil, faReceipt} from '@fortawesome/free-solid-svg-icons'
 import {HarvesterSettingsModalComponent} from '../harvester-settings-modal/harvester-settings-modal.component'
 import {HarvesterStats, RejectedSubmissionType} from '../api/types/harvester/harvester-stats'
@@ -26,6 +24,14 @@ import {
   durationInDays, getResolutionInMinutes,
 } from '../api/types/historical-stats-duration'
 import {HistoricalStatsDurationProvider} from '../historical-stats-duration-provider'
+import {
+  chiaClient,
+  chiaOgClient,
+  fastFarmerClient,
+  foxyFarmerClient, getIntegerVersionUpdateInfo, getSemverVersionUpdateInfo, getVersionFromClientVersion,
+  gigahorseClient,
+  liteFarmerClient, VersionUpdateInfo
+} from '../clients/clients'
 
 const sharesPerDayPerK32 = 10
 const k32SizeInGb = 108.837
@@ -486,26 +492,11 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   public get chiaVersionUpdateInfo(): VersionUpdateInfo {
-    const chiaVersion = this.chiaVersion
-    if (chiaVersion === undefined) {
-      return VersionUpdateInfo.noActionRequired
-    }
-    if (compare(chiaVersion, clientVersions.chia.recommendedMinimum, '>=')) {
-      return VersionUpdateInfo.noActionRequired
-    }
-    if (compare(chiaVersion, clientVersions.chia.minimum, '>=')) {
-      return VersionUpdateInfo.updateRecommended
-    }
-
-    return VersionUpdateInfo.updateStronglyRecommended
+    return getSemverVersionUpdateInfo(chiaClient, this.chiaVersion)
   }
 
   private get chiaVersion(): string|undefined {
-    if (this.harvester.versionInfo.clientName === null || this.harvester.versionInfo.clientName.indexOf('Chia') === -1) {
-      return
-    }
-
-    return this.harvester.versionInfo.clientVersion
+    return getVersionFromClientVersion(chiaClient, this.harvester.versionInfo)
   }
 
   public get hasChiaVersion(): boolean {
@@ -530,11 +521,6 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       return
     }
 
-    // If we already show explicit compression version ignore rc and beta info
-    if (this.hasChiaCompressionVersion) {
-      return chiaVersion
-    }
-
     const rcVersion = this.chiaRcVersion
     if (rcVersion !== undefined) {
       return `${chiaVersion} RC ${rcVersion}`
@@ -548,30 +534,11 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   public get ogVersionUpdateInfo(): VersionUpdateInfo {
-    const ogVersion = this.ogVersion
-    if (ogVersion === undefined) {
-      return VersionUpdateInfo.noActionRequired
-    }
-    if (compare(ogVersion, clientVersions.og.recommendedMinimum, '>=')) {
-      return VersionUpdateInfo.noActionRequired
-    }
-    if (compare(ogVersion, clientVersions.og.minimum, '>=')) {
-      return VersionUpdateInfo.updateRecommended
-    }
-
-    return VersionUpdateInfo.updateStronglyRecommended
+    return getSemverVersionUpdateInfo(chiaOgClient, this.ogVersion)
   }
 
   public get ogVersion(): string|undefined {
-    if (this.harvester.versionInfo.localName1 === 'og') {
-      return this.harvester.versionInfo.localVersion1 ?? undefined
-    }
-    if (this.harvester.versionInfo.localName2 === 'og') {
-      return this.harvester.versionInfo.localVersion2 ?? undefined
-    }
-    if (this.harvester.versionInfo.localName3 === 'og') {
-      return this.harvester.versionInfo.localVersion3 ?? undefined
-    }
+    return getVersionFromClientVersion(chiaOgClient, this.harvester.versionInfo)
   }
 
   public get hasOgVersion(): boolean {
@@ -579,30 +546,11 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   public get foxyFarmerVersionUpdateInfo(): VersionUpdateInfo {
-    const foxyFarmerVersion = this.foxyFarmerVersion
-    if (foxyFarmerVersion === undefined) {
-      return VersionUpdateInfo.noActionRequired
-    }
-    if (compare(foxyFarmerVersion, clientVersions.foxyFarmer.recommendedMinimum, '>=')) {
-      return VersionUpdateInfo.noActionRequired
-    }
-    if (compare(foxyFarmerVersion, clientVersions.foxyFarmer.minimum, '>=')) {
-      return VersionUpdateInfo.updateRecommended
-    }
-
-    return VersionUpdateInfo.updateStronglyRecommended
+    return getSemverVersionUpdateInfo(foxyFarmerClient, this.foxyFarmerVersion)
   }
 
   public get foxyFarmerVersion(): string|undefined {
-    if (this.harvester.versionInfo.localName1 === 'ff') {
-      return this.harvester.versionInfo.localVersion1 ?? undefined
-    }
-    if (this.harvester.versionInfo.localName2 === 'ff') {
-      return this.harvester.versionInfo.localVersion2 ?? undefined
-    }
-    if (this.harvester.versionInfo.localName3 === 'ff') {
-      return this.harvester.versionInfo.localVersion3 ?? undefined
-    }
+    return getVersionFromClientVersion(foxyFarmerClient, this.harvester.versionInfo)
   }
 
   public get hasFoxyFarmerVersion(): boolean {
@@ -610,122 +558,39 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   public get gigahorseVersionUpdateInfo(): VersionUpdateInfo {
-    const gigahorseVersion = this.gigahorseVersion
-    if (gigahorseVersion === undefined) {
-      return VersionUpdateInfo.noActionRequired
-    }
-    const gigahorseVersionNumber = parseInt(gigahorseVersion, 10)
-    if (isNaN(gigahorseVersionNumber)) {
-      return VersionUpdateInfo.noActionRequired
-    }
-    if (gigahorseVersionNumber >= clientVersions.gigahorse.recommendedMinimum) {
-      return VersionUpdateInfo.noActionRequired
-    }
-    if (gigahorseVersionNumber >= clientVersions.gigahorse.minimum) {
-      return VersionUpdateInfo.updateRecommended
-    }
-
-    return VersionUpdateInfo.updateStronglyRecommended
+    return getIntegerVersionUpdateInfo(gigahorseClient, this.gigahorseVersion)
   }
 
   public get gigahorseVersion(): string|undefined {
-    if (this.harvester.versionInfo.localName1 === 'giga') {
-      return this.harvester.versionInfo.localVersion1 ?? undefined
-    }
+    return getVersionFromClientVersion(gigahorseClient, this.harvester.versionInfo)
   }
 
   public get hasGigahorseVersion(): boolean {
     return this.gigahorseVersion !== undefined
   }
 
-  private get chiaCompressionAlphaVersion(): string|undefined {
-    if (this.harvester.versionInfo.localName1 === 'compression-alpha') {
-      return this.harvester.versionInfo.localVersion1 ?? undefined
-    }
-    if (this.harvester.versionInfo.localName2 === 'compression-alpha') {
-      return this.harvester.versionInfo.localVersion2 ?? undefined
-    }
-    if (this.harvester.versionInfo.localName3 === 'compression-alpha') {
-      return this.harvester.versionInfo.localVersion3 ?? undefined
-    }
-    if (
-      this.harvester.versionInfo.clientVersion === '2.0.0'
-      && this.harvester.versionInfo.localName1 === 'b'
-      && this.harvester.versionInfo.localVersion1 === '5'
-      && this.harvester.versionInfo.localName2 === 'dev'
-      && this.harvester.versionInfo.localVersion2 === '76'
-    ) {
-      return '4.6'
-    }
-    if (
-      this.harvester.versionInfo.clientVersion === '1.8.2'
-      && this.harvester.versionInfo.localName1 === 'rc'
-      && this.harvester.versionInfo.localVersion1 === '6'
-      && this.harvester.versionInfo.localName2 === 'dev'
-      && this.harvester.versionInfo.localVersion2 === '115'
-    ) {
-      return '4.5'
-    }
-    if (
-      this.harvester.versionInfo.clientVersion === '2.0.0'
-      && this.harvester.versionInfo.localName1 === 'b'
-      && this.harvester.versionInfo.localVersion1 === '3'
-      && this.harvester.versionInfo.localName2 === 'dev'
-      && this.harvester.versionInfo.localVersion2 === '116'
-    ) {
-      return '4.3'
-    }
-  }
-
-  public get chiaCompressionVersionUpdateInfo(): VersionUpdateInfo {
-    const compressionAlphaVersion = this.chiaCompressionAlphaVersion
-    if (compressionAlphaVersion !== undefined) {
-      if (compare(compressionAlphaVersion, clientVersions.chiaCompressionAlpha.recommendedMinimum, '>=')) {
-        return VersionUpdateInfo.noActionRequired
-      }
-      if (compare(compressionAlphaVersion, clientVersions.chiaCompressionAlpha.minimum, '>=')) {
-        return VersionUpdateInfo.updateRecommended
-      }
-
-      return VersionUpdateInfo.updateStronglyRecommended
-    }
-
-    return VersionUpdateInfo.noActionRequired
-  }
-
-  public get chiaCompressionVersion(): string|undefined {
-    if (this.chiaCompressionAlphaVersion !== undefined) {
-      return `Alpha ${this.chiaCompressionAlphaVersion}`
-    }
-  }
-
-  public get hasChiaCompressionVersion(): boolean {
-    return this.chiaCompressionVersion !== undefined
-  }
-
   public get fastFarmerVersionUpdateInfo(): VersionUpdateInfo {
-    const fastFarmerVersion = this.fastFarmerVersion
-    if (fastFarmerVersion === undefined) {
-      return VersionUpdateInfo.noActionRequired
-    }
-    if (compare(fastFarmerVersion, clientVersions.fastFarmer.recommendedMinimum, '>=')) {
-      return VersionUpdateInfo.noActionRequired
-    }
-    if (compare(fastFarmerVersion, clientVersions.fastFarmer.minimum, '>=')) {
-      return VersionUpdateInfo.updateRecommended
-    }
-
-    return VersionUpdateInfo.updateStronglyRecommended
+    return getSemverVersionUpdateInfo(fastFarmerClient, this.fastFarmerVersion)
   }
 
   public get fastFarmerVersion(): string|undefined {
-    if (this.harvester.versionInfo.clientName === 'dg_fast_farmer') {
-      return this.harvester.versionInfo.clientVersion ?? undefined
-    }
+    return getVersionFromClientVersion(fastFarmerClient, this.harvester.versionInfo)
   }
 
   public get hasFastFarmerVersion(): boolean {
     return this.fastFarmerVersion !== undefined
+  }
+
+  public get liteFarmerVersionUpdateInfo(): VersionUpdateInfo {
+    return getSemverVersionUpdateInfo(liteFarmerClient, this.liteFarmerVersion)
+  }
+
+  public get liteFarmerVersion(): string|undefined {
+    return getVersionFromClientVersion(liteFarmerClient, this.harvester.versionInfo)
+  }
+
+  public get hasLiteFarmerVersion(): boolean {
+    return this.liteFarmerVersion !== undefined
   }
 
   public get rowColumnClasses(): string[] {
@@ -745,13 +610,13 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     if (this.hasFastFarmerVersion) {
       count += 1
     }
+    if (this.hasLiteFarmerVersion) {
+      count += 1
+    }
     if (this.hasOgVersion) {
       count += 1
     }
     if (this.hasGigahorseVersion) {
-      count += 1
-    }
-    if (this.hasChiaCompressionVersion) {
       count += 1
     }
     if (this.hasFoxyFarmerVersion) {
