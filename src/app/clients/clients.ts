@@ -51,6 +51,17 @@ export const foxyFarmerClient: Client<string> = {
     recommendedMinimum: '1.9.1',
   },
 }
+export const foxyGhFarmerClient: Client<string> = {
+  displayName: 'Foxy-GH-Farmer',
+  versionInfoMatching: {
+    name: 'Chia Blockchain',
+    localName: 'foxy-gh-farmer',
+  },
+  versions: {
+    minimum: '1.6.1',
+    recommendedMinimum: '1.7.0',
+  },
+}
 export const gigahorseClient: Client<number> = {
   displayName: 'Gigahorse',
   versionInfoMatching: {
@@ -128,6 +139,8 @@ export function getClientForClientVersion(clientVersion: VersionInfo): Client<un
     return liteFarmerClient
   } else if (clientVersion.localName1 === foxyFarmerClient.versionInfoMatching.localName || clientVersion.localName2 === foxyFarmerClient.versionInfoMatching.localName || clientVersion.localName3 === foxyFarmerClient.versionInfoMatching.localName) {
     return foxyFarmerClient
+  } else if (clientVersion.localName1 === foxyGhFarmerClient.versionInfoMatching.localName || clientVersion.localName2 === foxyGhFarmerClient.versionInfoMatching.localName || clientVersion.localName3 === foxyGhFarmerClient.versionInfoMatching.localName) {
+    return foxyGhFarmerClient
   } else if (clientVersion.localName1 === gigahorseClient.versionInfoMatching.localName || clientVersion.localName2 === gigahorseClient.versionInfoMatching.localName || clientVersion.localName3 === gigahorseClient.versionInfoMatching.localName) {
     return gigahorseClient
   }else if (clientVersion.localName1 === chiaOgClient.versionInfoMatching.localName || clientVersion.localName2 === chiaOgClient.versionInfoMatching.localName || clientVersion.localName3 === chiaOgClient.versionInfoMatching.localName) {

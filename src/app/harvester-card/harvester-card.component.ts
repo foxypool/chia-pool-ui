@@ -28,9 +28,14 @@ import {
   chiaClient,
   chiaOgClient,
   fastFarmerClient,
-  foxyFarmerClient, getIntegerVersionUpdateInfo, getSemverVersionUpdateInfo, getVersionFromClientVersion,
+  foxyFarmerClient,
+  foxyGhFarmerClient,
+  getIntegerVersionUpdateInfo,
+  getSemverVersionUpdateInfo,
+  getVersionFromClientVersion,
   gigahorseClient,
-  liteFarmerClient, VersionUpdateInfo
+  liteFarmerClient,
+  VersionUpdateInfo
 } from '../clients/clients'
 
 const sharesPerDayPerK32 = 10
@@ -557,6 +562,18 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     return this.foxyFarmerVersion !== undefined
   }
 
+  public get foxyGhFarmerVersionUpdateInfo(): VersionUpdateInfo {
+    return getSemverVersionUpdateInfo(foxyGhFarmerClient, this.foxyGhFarmerVersion)
+  }
+
+  public get foxyGhFarmerVersion(): string|undefined {
+    return getVersionFromClientVersion(foxyGhFarmerClient, this.harvester.versionInfo)
+  }
+
+  public get hasFoxyGhFarmerVersion(): boolean {
+    return this.foxyGhFarmerVersion !== undefined
+  }
+
   public get gigahorseVersionUpdateInfo(): VersionUpdateInfo {
     return getIntegerVersionUpdateInfo(gigahorseClient, this.gigahorseVersion)
   }
@@ -620,6 +637,9 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       count += 1
     }
     if (this.hasFoxyFarmerVersion) {
+      count += 1
+    }
+    if (this.hasFoxyGhFarmerVersion) {
       count += 1
     }
     if (this.hasChiaDashboardShareKey) {
