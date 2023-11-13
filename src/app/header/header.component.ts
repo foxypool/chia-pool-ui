@@ -6,7 +6,7 @@ import {AccountService} from '../account.service'
 import {RatesService} from '../rates.service'
 import {ActivatedRoute, Router} from '@angular/router'
 import {faCircleNotch, faMoon, faSearch} from '@fortawesome/free-solid-svg-icons'
-import {makeAccountIdentifierName} from '../util'
+import {makeAccountIdentifierName, unifyAccountIdentifier} from '../util'
 import {MyFarmerComponent} from '../my-farmer/my-farmer.component'
 import {BehaviorSubject, Observable} from 'rxjs'
 import {Theme, ThemeProvider} from '../theme-provider'
@@ -106,11 +106,12 @@ export class HeaderComponent {
     if (!this.accountSearchInput) {
       return
     }
+    const accountIdentifier = unifyAccountIdentifier(this.accountSearchInput, this.poolsProvider.pool.type)
     this.isSearchingAccount.next(true)
     try {
-      const accountExists = await this.accountService.doesAccountExist({ accountIdentifier: this.accountSearchInput })
+      const accountExists = await this.accountService.doesAccountExist({ accountIdentifier })
       if (accountExists) {
-        await this.router.navigate([`/farmer/${this.accountSearchInput}`])
+        await this.router.navigate([`/farmer/${accountIdentifier}`])
         this.accountSearchInput = ''
       }
     } finally {

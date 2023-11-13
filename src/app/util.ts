@@ -69,3 +69,13 @@ export function makeAccountIdentifierName(poolType: PoolType): string {
 export async function sleep(ms: number): Promise<void> {
   await new Promise(resolve => setTimeout(resolve, ms))
 }
+
+export function unifyAccountIdentifier(accountIdentifier: string, poolType: PoolType): string {
+  if (poolType === PoolType.og) {
+    return accountIdentifier.ensureHexPrefix()
+  } else if(poolType === PoolType.nft) {
+    return accountIdentifier.stripHexPrefix()
+  }
+
+  return accountIdentifier
+}

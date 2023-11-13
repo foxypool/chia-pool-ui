@@ -16,7 +16,7 @@ import {AccountService} from '../account.service'
 import {AuthenticationModalComponent} from '../authentication-modal/authentication-modal.component'
 import {RatesService} from '../rates.service'
 import {ConfigService, DateFormatting, TimeInterval} from '../config.service'
-import {getEffortColor, makeAccountIdentifierName, sleep} from '../util'
+import {getEffortColor, makeAccountIdentifierName, sleep, unifyAccountIdentifier} from '../util'
 import {PoolsProvider, PoolType} from '../pools.provider'
 import {SettingsModalComponent} from '../settings-modal/settings-modal.component'
 import {BalanceProvider} from '../balance-provider'
@@ -129,7 +129,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   private readonly subscriptions: Subscription[] = [
     this.activatedRoute.params.subscribe(async params => {
       if (params.accountIdentifier) {
-        this.accountService.accountIdentifier = params.accountIdentifier
+        this.accountService.accountIdentifier = unifyAccountIdentifier(params.accountIdentifier, this.poolsProvider.pool.type)
         this.accountService.isMyFarmerAccount = false
       } else {
         this.accountService.isMyFarmerAccount = true
@@ -1248,12 +1248,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
       return
     }
-    let accountIdentifier = this.accountIdentifierInput.trim()
-    if (this.poolsProvider.pool.type === PoolType.og) {
-      accountIdentifier = accountIdentifier.ensureHexPrefix()
-    } else if(this.poolsProvider.pool.type === PoolType.nft) {
-      accountIdentifier = accountIdentifier.stripHexPrefix()
-    }
+    const accountIdentifier = unifyAccountIdentifier(this.accountIdentifierInput.trim(), this.poolsProvider.pool.type)
     const success: boolean = await this.accountService.login({ accountIdentifier })
     if (!success) {
       return
