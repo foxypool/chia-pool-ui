@@ -12,7 +12,7 @@ import Capacity from '../capacity'
 import {EChartsOption} from 'echarts'
 import {faEllipsisV, faPencil, faReceipt} from '@fortawesome/free-solid-svg-icons'
 import {HarvesterSettingsModalComponent} from '../harvester-settings-modal/harvester-settings-modal.component'
-import {HarvesterStats, RejectedSubmissionType} from '../api/types/harvester/harvester-stats'
+import {HarvesterStats} from '../api/types/harvester/harvester-stats'
 import {ProofTime} from '../api/types/harvester/proof-time'
 import {Harvester} from '../api/types/harvester/harvester'
 import {PoolsProvider, PoolType} from '../pools.provider'
@@ -21,7 +21,7 @@ import {HarvesterStatus} from '../status/harvester-status'
 import {LastUpdatedState} from '../status/last-updated-state'
 import {colors, Theme, ThemeProvider} from '../theme-provider'
 import {
-  durationInDays, getResolutionInMinutes,
+  durationInDays, getResolutionInMinutes, HistoricalStatsDuration,
 } from '../api/types/historical-stats-duration'
 import {HistoricalStatsDurationProvider} from '../historical-stats-duration-provider'
 import {
@@ -88,6 +88,10 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     return this.accountService.account?.integrations?.chiaDashboardShareKey !== undefined
   }
 
+  public get selectedHistoricalStatsDuration(): HistoricalStatsDuration {
+    return this.historicalStatsDurationProvider.selectedDuration
+  }
+
   private get historicalIntervalInMinutes(): number {
     return getResolutionInMinutes(this.historicalStatsDurationProvider.selectedDuration)
   }
@@ -130,7 +134,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     this.isLoading = this.statsSubject.asObservable().pipe(map(stats => stats === undefined), distinctUntilChanged(), shareReplay())
     this.averageEc = this.stats.pipe(
       map(stats => {
-        const totalShares = stats.submissionStats.reduce((acc, submissionStat) => acc.plus(submissionStat.shares), new BigNumber(0))
+        const totalShares = stats.reduce((acc, submissionStat) => acc.plus(submissionStat.shares), new BigNumber(0))
         const ecInGib = totalShares
           .dividedBy(sharesPerDayPerK32 * durationInDays(this.historicalStatsDurationProvider.selectedDuration))
           .multipliedBy(k32SizeInGib)
@@ -140,19 +144,14 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     )
     const averageProofTimeInSeconds = this.stats.pipe(
       map(stats => {
-        const averageProofTimes = stats.submissionStats
-          .map(stat => ({ partials: stat.partials, proofTimeSumInSeconds: stat.proofTimeSumInSeconds }))
-          .concat(stats.rejectedSubmissionStats.map(stat => ({ partials: stat.partials, proofTimeSumInSeconds: stat.proofTimeSumInSeconds })))
-          .filter(stat => stat.proofTimeSumInSeconds !== null && stat.partials > 0)
-
-        const totalPartials = averageProofTimes.reduce((acc, curr) => acc.plus(curr.partials), new BigNumber(0))
-        if (totalPartials.isZero()) {
-          return undefined
+        const averageProofTimes = stats.filter(stat => stat.proofTimeInSeconds !== null)
+        if (averageProofTimes.length === 0) {
+          return
         }
 
         return averageProofTimes
-          .reduce((acc, curr) => acc.plus(curr.proofTimeSumInSeconds), new BigNumber(0))
-          .dividedBy(totalPartials)
+          .reduce((acc, curr) => acc.plus(curr.proofTimeInSeconds), new BigNumber(0))
+          .dividedBy(averageProofTimes.length)
       }),
       shareReplay(),
     )
@@ -346,13 +345,9 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     const sharesStream = this.stats
       .pipe(
         map(harvesterStats => {
-          const totalValidShares = harvesterStats.submissionStats.reduce((acc, curr) => acc.plus(curr.shares), new BigNumber(0))
-          const totalInvalidShares = harvesterStats.rejectedSubmissionStats
-            .filter(stat => stat.type === RejectedSubmissionType.invalid)
-            .reduce((acc, curr) => acc.plus(curr.shares), new BigNumber(0))
-          const totalStaleShares = harvesterStats.rejectedSubmissionStats
-            .filter(stat => stat.type === RejectedSubmissionType.stale)
-            .reduce((acc, curr) => acc.plus(curr.shares), new BigNumber(0))
+          const totalValidShares = harvesterStats.reduce((acc, curr) => acc.plus(curr.shares), new BigNumber(0))
+          const totalInvalidShares = harvesterStats.reduce((acc, curr) => acc.plus(curr.invalidShares), new BigNumber(0))
+          const totalStaleShares = harvesterStats.reduce((acc, curr) => acc.plus(curr.staleShares), new BigNumber(0))
           const totalShares = totalValidShares.plus(totalInvalidShares).plus(totalStaleShares)
 
           return {
@@ -701,34 +696,12 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   private makeSharesChartUpdateOptions(stats: HarvesterStats): EChartsOption {
-    const validSharesSeries = stats.submissionStats.map(stats => [stats.date, stats.shares])
-    const staleSharesSeries = stats.rejectedSubmissionStats
-      .filter(stat => stat.type === RejectedSubmissionType.stale)
-      .map(stats => [stats.date, stats.shares])
-    const invalidSharesSeries = stats.rejectedSubmissionStats
-      .filter(stat => stat.type === RejectedSubmissionType.invalid)
-      .map(stats => [stats.date, stats.shares])
-
-    const proofTimeSumsByDate = new Map<string, ProofTimeSum[]>()
-    stats.submissionStats.forEach(stat => {
-      if (stat.proofTimeSumInSeconds !== null && stat.partials > 0) {
-        const proofTimeSumsForDate = proofTimeSumsByDate.get(stat.date) ?? []
-        proofTimeSumsForDate.push({ partials: stat.partials, proofTimeSumInSeconds: stat.proofTimeSumInSeconds })
-        proofTimeSumsByDate.set(stat.date, proofTimeSumsForDate)
-      }
-    })
-    stats.rejectedSubmissionStats.forEach(stat => {
-      if (stat.proofTimeSumInSeconds !== null && stat.partials > 0) {
-        const proofTimeSumsForDate = proofTimeSumsByDate.get(stat.date) ?? []
-        proofTimeSumsForDate.push({ partials: stat.partials, proofTimeSumInSeconds: stat.proofTimeSumInSeconds })
-        proofTimeSumsByDate.set(stat.date, proofTimeSumsForDate)
-      }
-    })
-    const averageProofTimes = Array
-      .from(proofTimeSumsByDate)
-      .map(([date, proofTimeSums]) => ({ date, averageProofTime: proofTimeSums.reduce((acc, curr) => acc + curr.proofTimeSumInSeconds, 0) / proofTimeSums.reduce((acc, curr) => acc + curr.partials, 0) }))
-    averageProofTimes.sort((lhs, rhs) => (new Date(lhs.date)).getTime() - (new Date(rhs.date)).getTime())
-    const averageProofTimesSeries = averageProofTimes.map(stat => [stat.date, stat.averageProofTime])
+    const validSharesSeries = stats.map(stats => [stats.receivedAt, stats.shares])
+    const staleSharesSeries = stats.map(stats => [stats.receivedAt, stats.staleShares])
+    const invalidSharesSeries = stats.map(stats => [stats.receivedAt, stats.invalidShares])
+    const averageProofTimesSeries = stats
+      .filter(stat => stat.proofTimeInSeconds !== null)
+      .map(stat => [stat.receivedAt, stat.proofTimeInSeconds])
 
     const roundToNextLower15Min = (date: Moment): Moment => {
       const minutesRoundedDown = Math.floor(date.minutes() / 15) * 15
@@ -879,11 +852,6 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
 
     return ''
   }
-}
-
-interface ProofTimeSum {
-  proofTimeSumInSeconds: number
-  partials: number
 }
 
 enum ChartMode {

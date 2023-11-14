@@ -1,20 +1,10 @@
-interface SubmissionStat {
+export interface HistoricalSubmissionStat {
   shares: number
+  staleShares: number
+  invalidShares: number
   partials: number
-  proofTimeSumInSeconds: number|null
-  date: string
+  proofTimeInSeconds: number|null
+  receivedAt: string
 }
 
-export enum RejectedSubmissionType {
-  stale = 'STALE',
-  invalid = 'INVALID',
-}
-
-interface RejectedSubmissionStat extends SubmissionStat {
-  type: RejectedSubmissionType
-}
-
-export interface HarvesterStats {
-  submissionStats: SubmissionStat[]
-  rejectedSubmissionStats: RejectedSubmissionStat[]
-}
+export type HarvesterStats = HistoricalSubmissionStat[]

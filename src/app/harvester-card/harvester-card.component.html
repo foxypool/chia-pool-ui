@@ -148,7 +148,7 @@
         <div echarts [options]="proofTimesChartOptions" [merge]="proofTimesChartUpdateOptions" theme="default" class="proof-times-chart"></div>
       </div>
       <div class="col-12 text-center mt-3" *ngIf="(hasProofTimes | async) === false && (isLoadingProofTimes | async) === false">
-        <app-empty-state text="No proof times recorded in the last 24h" [icon]="faReceipt"></app-empty-state>
+        <app-empty-state text="No proof times recorded in the last {{selectedHistoricalStatsDuration}}" [icon]="faReceipt"></app-empty-state>
       </div>
       <div class="col-12 text-center mt-3" *ngIf="isLoadingProofTimes | async">
         <app-loading-state [height]="3" [width]="3"></app-loading-state>

@@ -29,7 +29,7 @@ export abstract class AbstractApi<
   protected readonly client: AxiosInstance
 
   public constructor(poolIdentifier: string) {
-    this.client = axios.create({ baseURL: `https://api2.foxypool.io/api/v2/${poolIdentifier}` })
+    this.client = axios.create({ baseURL: `https://api2.foxypool.io/api/v3/${poolIdentifier}` })
   }
 
   public async getPoolConfig(): Promise<PoolConfig> {
