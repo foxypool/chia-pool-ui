@@ -29,6 +29,10 @@ export class InfoComponent implements OnInit, OnDestroy {
     return this.poolsProvider.pool.type === PoolType.nft
   }
 
+  public get chartTheme(): string {
+    return this.themeProvider.isDarkTheme ? 'dark' : 'default'
+  }
+
   protected readonly faCheck = faCheck
 
   private clientVersionsUpdateInterval?: ReturnType<typeof setInterval>
@@ -62,6 +66,7 @@ export class InfoComponent implements OnInit, OnDestroy {
     private readonly themeProvider: ThemeProvider,
   ) {
     this.clientVersionsChartOptions = {
+      backgroundColor: 'rgba(0,0,0,0)',
       title: {
         text: 'Client Versions',
         left: 'center',
@@ -116,16 +121,16 @@ export class InfoComponent implements OnInit, OnDestroy {
               color: textColor,
             },
           },
-          series: [{
-            label: {
+        }
+        if (this.clientVersionsChartUpdateOptions.series !== undefined) {
+          this.clientVersionsChartUpdateOptions.series[0].label = {
+            color: textColor,
+          }
+          this.clientVersionsChartUpdateOptions.series[0].labelLine = {
+            lineStyle: {
               color: textColor,
             },
-            labelLine: {
-              lineStyle: {
-                color: textColor,
-              },
-            },
-          }],
+          }
         }
       })
     )
