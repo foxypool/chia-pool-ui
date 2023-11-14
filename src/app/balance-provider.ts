@@ -9,7 +9,7 @@ import {TtlCache} from './ttl-cache'
 export class BalanceProvider {
   private readonly cache: TtlCache = new TtlCache(29 * 60)
   private readonly client: AxiosInstance = axios.create({
-    baseURL: 'https://www.chia.tt/api/chia',
+    baseURL: 'https://chia.tt/api/chia',
   })
 
   public constructor() {}
