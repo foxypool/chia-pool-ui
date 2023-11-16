@@ -4,7 +4,7 @@ import {ToastService} from '../toast.service'
 import {AccountService} from '../account.service'
 import * as moment from 'moment'
 import {Moment} from 'moment'
-import {BehaviorSubject, Observable, Subscription, take} from 'rxjs'
+import {BehaviorSubject, Observable, share, Subscription, take} from 'rxjs'
 import {StatsService} from '../stats.service'
 import {distinctUntilChanged, filter, map, shareReplay, skip} from 'rxjs/operators'
 import {BigNumber} from 'bignumber.js'
@@ -37,6 +37,7 @@ import {
   liteFarmerClient,
   VersionUpdateInfo
 } from '../clients/clients'
+import {LocalStorageService} from '../local-storage.service'
 
 const sharesPerDayPerK32 = 10
 const k32SizeInGb = 108.837
@@ -96,6 +97,19 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     return getResolutionInMinutes(this.historicalStatsDurationProvider.selectedDuration)
   }
 
+  private get persistedChartMode(): ChartMode {
+    const chartMode = this.localStorageService.getItem(`chart-mode:${this.peerIdSlug}`)
+    if (chartMode === null) {
+      return ChartMode.shares
+    }
+
+    return ChartMode[chartMode] ?? ChartMode.shares
+  }
+
+  private set persistedChartMode(chartMode: ChartMode) {
+    this.localStorageService.setItem(`chart-mode:${this.peerIdSlug}`, chartMode)
+  }
+
   private readonly stats: Observable<HarvesterStats>
   private readonly statsSubject: BehaviorSubject<HarvesterStats|undefined> = new BehaviorSubject<HarvesterStats>(undefined)
   private statsUpdateInterval?: ReturnType<typeof setInterval>
@@ -121,11 +135,12 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     private readonly poolsProvider: PoolsProvider,
     private readonly themeProvider: ThemeProvider,
     private readonly historicalStatsDurationProvider: HistoricalStatsDurationProvider,
+    private readonly localStorageService: LocalStorageService,
   ) {
     this.isLoadingProofTimes = this.isLoadingProofTimesSubject.pipe(shareReplay())
-    this.showSharesChart = this.chartModeSubject.pipe(map(mode => mode === ChartMode.shares), shareReplay())
-    this.showProofTimesChart = this.chartModeSubject.pipe(map(mode => mode === ChartMode.proofTimes), shareReplay())
-    this.chartMode = this.chartModeSubject.pipe(shareReplay())
+    this.showSharesChart = this.chartModeSubject.pipe(map(mode => mode === ChartMode.shares), distinctUntilChanged(), share())
+    this.showProofTimesChart = this.chartModeSubject.pipe(map(mode => mode === ChartMode.proofTimes), distinctUntilChanged(), share())
+    this.chartMode = this.chartModeSubject.pipe(distinctUntilChanged(), share())
     this.hasProofTimes = this.proofTimes.pipe(
       map(proofTimes => proofTimes.reduce((acc, curr) => acc + (curr.proofTimeInSeconds !== undefined ? 1 : 0), 0) > 0),
       shareReplay(),
@@ -452,6 +467,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   public async ngOnInit(): Promise<void> {
+    this.chartModeSubject.next(this.persistedChartMode)
     this.nameControl = new UntypedFormControl(this.harvester.name)
     this.statsUpdateInterval = setInterval(this.updateStats.bind(this), 10 * 60 * 1000)
     await this.updateStats()
@@ -657,6 +673,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
 
   public setChartMode(chartMode: ChartMode) {
     this.chartModeSubject.next(chartMode)
+    this.persistedChartMode = chartMode
   }
 
   public async updateName(): Promise<void> {
