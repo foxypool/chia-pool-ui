@@ -16,16 +16,20 @@
 <h6 class="pt-2 settings-modal-text">Account Image URL</h6>
 <div class="row">
   <div class="col-12">
-    <input type="text"
-           class="form-control"
-           aria-describedby="imageUrlFeedback"
-           placeholder="https://your-image-here.jpg"
-           [class.is-invalid]="!isNewImageUrlValid"
-           [(ngModel)]="newImageUrl"
-    >
-    <div id="imageUrlFeedback" class="invalid-feedback">
-      Not a valid url
-    </div>
+    <form [formGroup]="imageUrlForm">
+      <div class="d-flex gap-2" [class.is-invalid]="imageUrlForm.invalid">
+        <input type="text"
+               class="form-control"
+               formControlName="imageUrl"
+               aria-describedby="imageUrlFeedback"
+               placeholder="https://your-image-here.jpg"
+        >
+        <app-loading-state *ngIf="isValidatingImageUrl" width="2" height="2"></app-loading-state>
+      </div>
+      <div id="imageUrlFeedback" class="invalid-feedback">
+        Not a valid url
+      </div>
+    </form>
   </div>
 </div>
 <div class="row mt-2">
