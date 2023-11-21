@@ -5,7 +5,10 @@
     </h4>
     <div>
       <ul>
-        <li [innerHTML]="snippetService.getSnippet('info-component.using-this-pool.docs', docsGettingStartedUrl)"></li>
+        <li>
+          <span>Please follow <a [href]="docsGettingStartedUrl" target="_blank">this guide</a> to get started</span>
+          <span *ngIf="supportsCompressedPlots"> and <a href="https://docs.foxypool.io/proof-of-spacetime/guides/switching-from-flex-farmer-to-foxy/" target="_blank">this guide</a> if you are switching from FlexFarmer</span>
+        </li>
       </ul>
     </div>
     <h4>
@@ -13,8 +16,12 @@
     </h4>
     <div>
       <ul>
-        <li *ngIf="supportsCompressedPlots">
-          Compressed plots are supported <fa-icon [icon]="faCheck" class="color-green"></fa-icon>
+        <li *ngIf="supportsCompressedPlots" style="list-style: none">
+          <fa-icon [icon]="faCheck" class="color-green"></fa-icon> Compressed Bladebit and Gigahorse plots are supported
+        </li>
+        <li style="list-style: none">
+          <fa-icon [icon]="faCheck" class="color-green"></fa-icon> Light farmers available:
+          <ul [innerHTML]="availableLightFarmersHtml" style=""></ul>
         </li>
         <li>
           {{snippetService.getSnippet('info-component.pool-info.block-split-info')}}

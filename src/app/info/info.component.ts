@@ -29,6 +29,27 @@ export class InfoComponent implements OnInit, OnDestroy {
     return this.poolsProvider.pool.type === PoolType.nft
   }
 
+  public get availableLightFarmersHtml(): string {
+    const lightFarmers = [{
+      name: 'Foxy-Farmer',
+      supports: 'OG & NFT uncompressed and Bladebit compressed plots',
+      link: 'https://docs.foxypool.io/proof-of-spacetime/foxy-farmer/',
+    }]
+    if (this.poolsProvider.pool.type === PoolType.nft) {
+      lightFarmers.push({
+        name: 'Foxy-GH-Farmer',
+        supports: 'NFT uncompressed, Bladebit compressed and Gigahorse compressed plots',
+        link: 'https://docs.foxypool.io/proof-of-spacetime/foxy-gh-farmer/',
+      }, {
+        name: 'Fast Farmer',
+        supports: 'NFT uncompressed and Bladebit compressed plots',
+        link: 'https://docs.foxypool.io/proof-of-spacetime/fast-farmer/',
+      })
+    }
+
+    return lightFarmers.map(lightFarmer => `<li><a href="${lightFarmer.link}" target="_blank">${lightFarmer.name}</a>: ${lightFarmer.supports}</li>`).join('')
+  }
+
   public get chartTheme(): string {
     return this.themeProvider.isDarkTheme ? 'dark' : 'default'
   }
