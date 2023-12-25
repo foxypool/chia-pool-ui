@@ -40,11 +40,11 @@ export class UpdateHarvesterNotificationSettingsComponent implements OnInit {
   }
 
   public get isInheritedOfflineDurationInMinutes(): boolean {
-    return this.currentOfflineDurationInMinutes === undefined && this.newOfflineDurationInMinutes === this.currentAccountHarvesterOfflineDurationInMinutes
+    return this.newOfflineDurationInMinutes === this.currentAccountHarvesterOfflineDurationInMinutes
   }
 
   public get isInheritedAreOfflineNotificationsEnabled(): boolean {
-    return this.currentAreOfflineNotificationsEnabled === undefined && this.areOfflineNotificationsEnabled === this.currentAccountAreHarvesterOfflineNotificationsEnabled
+    return this.areOfflineNotificationsEnabled === this.currentAccountAreHarvesterOfflineNotificationsEnabled
   }
 
   public get canUpdateNotificationSettings(): boolean {
@@ -56,8 +56,8 @@ export class UpdateHarvesterNotificationSettingsComponent implements OnInit {
       return
     }
     this.isUpdating = true
-    const areOfflineNotificationsEnabled = this.areOfflineNotificationsEnabled === this.currentAccountAreHarvesterOfflineNotificationsEnabled ? undefined : this.areOfflineNotificationsEnabled
-    const offlineDurationInMinutes = this.newOfflineDurationInMinutes === this.currentAccountHarvesterOfflineDurationInMinutes ? undefined : this.newOfflineDurationInMinutes
+    const areOfflineNotificationsEnabled = this.isInheritedAreOfflineNotificationsEnabled ? undefined : this.areOfflineNotificationsEnabled
+    const offlineDurationInMinutes = this.isInheritedOfflineDurationInMinutes ? undefined : this.newOfflineDurationInMinutes
     try {
       await this.accountService.updateHarvesterNotificationSettings({
         harvesterPeerId: this.harvester.peerId,
