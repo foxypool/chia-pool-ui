@@ -53,7 +53,7 @@ export class UpdateAccountComponent {
     if (this.accountService.isUpdatingAccount) {
       return false
     }
-    if (!this.isNewNameValid || !this.imageUrlForm.valid) {
+    if (!this.isNewNameValid || (this.imageUrlForm.dirty && !this.imageUrlForm.valid)) {
       return false
     }
     if (this.accountService.account.name !== this.newNameOrUndefined) {
