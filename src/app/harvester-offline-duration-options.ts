@@ -1,6 +1,6 @@
 import {Options} from 'ngx-slider-v2'
 
-const ticksArray = [10, 20, 30, 60, 2 * 60, 4 * 60, 8 * 60, 16 * 60, 24 * 60]
+const ticksArray = [5, 10, 20, 30, 60, 2 * 60, 4 * 60, 8 * 60, 16 * 60, 24 * 60]
 
 export const options: Options = {
   showTicks: true,
