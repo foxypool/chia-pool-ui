@@ -32,8 +32,12 @@ export class UpdateAccountComponent {
 
   public get newImageUrl(): string|undefined {
     const value = this.imageUrlForm.controls['imageUrl'].getRawValue()
+    if (value === null || value === undefined) {
+      return undefined
+    }
+    const trimmedValue = value.trim()
 
-    return value?.trim() === '' ? undefined : value.trim()
+    return trimmedValue === '' ? undefined : trimmedValue
   }
 
   constructor(
@@ -115,9 +119,12 @@ export class UpdateAccountComponent {
     )
   }
 
-  private async isValidImageUrl(imageUrl: string|undefined): Promise<boolean> {
-    imageUrl = imageUrl?.trim() === '' ? undefined : imageUrl.trim()
-    if (imageUrl === undefined) {
+  private async isValidImageUrl(imageUrl: string|null|undefined): Promise<boolean> {
+    if (imageUrl === null || imageUrl === undefined) {
+      return true
+    }
+    imageUrl = imageUrl.trim()
+    if (imageUrl === '') {
       return true
     }
 
