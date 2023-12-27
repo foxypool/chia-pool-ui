@@ -13,6 +13,11 @@ export interface Remark {
 export interface AccountWonBlock {
   height: number
   hash: string
+  blockRewardAmounts?: {
+    pool: number
+    farmer: number
+    fee: number
+  }
   effort: number|null
   createdAt: string
   remarks: Remark[]

@@ -1,7 +1,7 @@
 <div style="display: flex;flex-direction: row;justify-content: space-between;">
   <h5>
     {{snippetService.getSnippet('blocks-won-component.title')}}
-    <span *ngIf="limit">| {{snippetService.getSnippet('blocks-won-component.blocks-won-in-the-last-24h', getBlocksWonLast24H())}}</span>
+    <span *ngIf="limit">| {{snippetService.getSnippet('blocks-won-component.blocks-won-in-the-last-24h', numberOfBlocksWonInLast24h$ | async)}}</span>
   </h5>
 </div>
 <div class="table-responsive-lg">
@@ -33,7 +33,7 @@
           <app-empty-state [text]="snippetService.getSnippet('blocks-won-component.no-blocks-won-yet')" [icon]="faCubes"></app-empty-state>
         </td>
       </tr>
-      <tr *ngFor="let block of recentlyWonBlocks | slice: (page - 1) * pageSize : page * pageSize; trackBy: trackBy">
+      <tr *ngFor="let block of recentlyWonBlocksLimited$ | async | slice: (page - 1) * pageSize : page * pageSize; trackBy: trackBy">
         <td class="no-wrap">{{getBlockDate(block)}}</td>
         <td *ngIf="(statsService.poolConfig$ | async)?.blockExplorerBlockUrlTemplate"><a href="{{getBlockExplorerBlockLink(block)}}" target="_blank" style="color: #b45bff">{{block.height}}</a></td>
         <td *ngIf="!(statsService.poolConfig$ | async)?.blockExplorerBlockUrlTemplate">{{block.height}}</td>
@@ -56,11 +56,11 @@
   </table>
 </div>
 <ngb-pagination
-  *ngIf="!limit && recentlyWonBlocks.length > pageSize"
+  *ngIf="!limit && (recentlyWonBlocksLimitedLength$ | async) > pageSize"
   class="d-flex justify-content-center"
   [(page)]="page"
   [pageSize]="pageSize"
-  [collectionSize]="recentlyWonBlocks.length"
+  [collectionSize]="recentlyWonBlocksLimitedLength$ | async"
   [maxSize]="5"
   [rotate]="true"
   [boundaryLinks]="true">

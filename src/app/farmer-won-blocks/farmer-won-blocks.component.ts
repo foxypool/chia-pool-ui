@@ -175,6 +175,14 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
     }
   }
 
+  public getFarmerReward(block: AccountWonBlock): undefined|string {
+    if (block.blockRewardAmounts === undefined) {
+      return
+    }
+
+    return `${block.blockRewardAmounts.farmer + block.blockRewardAmounts.fee} ${this.statsService.poolConfig?.ticker}`
+  }
+
   public getEffortColor(block: AccountWonBlock): string {
     const effort = block.effort
     if (effort === null || effort === undefined) {

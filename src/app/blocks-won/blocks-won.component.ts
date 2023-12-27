@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core'
+import {Component, Input, OnInit} from '@angular/core'
 import {StatsService} from '../stats.service'
 import * as moment from 'moment'
 import Capacity from '../capacity'
@@ -9,13 +9,15 @@ import BigNumber from 'bignumber.js'
 import {ConfigService, DateFormatting} from '../config.service'
 import {RecentlyWonBlock} from '../api/types/pool/reward-stats'
 import {TransactionState} from '../api/types/transaction-state'
+import {Observable} from 'rxjs'
+import {map, shareReplay} from 'rxjs/operators'
 
 @Component({
   selector: 'app-blocks-won',
   templateUrl: './blocks-won.component.html',
   styleUrls: ['./blocks-won.component.scss']
 })
-export class BlocksWonComponent {
+export class BlocksWonComponent implements OnInit {
   @Input() limit: number|null = null
 
   public readonly faCubes = faCubes
@@ -23,28 +25,46 @@ export class BlocksWonComponent {
   public page = 1
   public pageSize = 25
 
+  public recentlyWonBlocksLimited$: Observable<RecentlyWonBlock[]>
+  public recentlyWonBlocksLimitedLength$: Observable<number>
+  public readonly recentlyWonBlocks$: Observable<RecentlyWonBlock[]>
+  public readonly numberOfBlocksWonInLast24h$: Observable<number>
+
   public constructor(
     public readonly statsService: StatsService,
     private readonly _snippetService: SnippetService,
     private readonly configService: ConfigService,
-  ) {}
+  ) {
+    this.recentlyWonBlocks$ = this.statsService.rewardStats$.pipe(
+      map(rewardStats => rewardStats.recentlyWonBlocks),
+      shareReplay(1),
+    )
+    this.numberOfBlocksWonInLast24h$ = this.recentlyWonBlocks$.pipe(
+      map(recentlyWonBlocks => {
+        return recentlyWonBlocks
+          .filter(wonBlock => moment(wonBlock.createdAt).isAfter(moment().subtract(1, 'day')))
+          .length
+      }),
+      shareReplay(1),
+    )
+  }
+
+  public ngOnInit() {
+    this.recentlyWonBlocksLimited$ = this.recentlyWonBlocks$.pipe(
+      map(recentlyWonBlocks => {
+        if (!this.limit) {
+          return recentlyWonBlocks
+        }
+
+        return recentlyWonBlocks.slice(0, this.limit)
+      }),
+      shareReplay(1),
+    )
+    this.recentlyWonBlocksLimitedLength$ = this.recentlyWonBlocksLimited$.pipe(map(recentlyWonBlocks => recentlyWonBlocks.length))
+  }
 
   get snippetService(): SnippetService {
     return this._snippetService
-  }
-
-  get recentlyWonBlocks() {
-    const recentlyWonBlocks = this.recentlyWonBlocksUnfiltered
-
-    if (!this.limit) {
-      return recentlyWonBlocks
-    }
-
-    return recentlyWonBlocks.slice(0, this.limit)
-  }
-
-  private get recentlyWonBlocksUnfiltered(): RecentlyWonBlock[] {
-    return this.statsService.rewardStats?.recentlyWonBlocks ?? []
   }
 
   getBlockDate(block): string {
@@ -57,12 +77,6 @@ export class BlocksWonComponent {
 
   getFormattedCapacityFromTiB(capacityInTiB) {
     return Capacity.fromTiB(capacityInTiB).toString()
-  }
-
-  getBlocksWonLast24H() {
-    return this.recentlyWonBlocksUnfiltered
-      .filter(wonBlock => moment(wonBlock.createdAt).isAfter(moment().subtract(1, 'day')))
-      .length
   }
 
   getBlockExplorerBlockLink(block) {

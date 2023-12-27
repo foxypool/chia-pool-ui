@@ -10,6 +10,11 @@ export interface BaseRecentlyWonBlock {
   height: number
   hash: string
   reward: number
+  blockRewardAmounts?: {
+    pool: number
+    farmer: number
+    fee: number
+  }
   networkSpaceInTib: string
   distributed: boolean
   distributionRatio: string

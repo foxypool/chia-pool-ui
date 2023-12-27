@@ -32,17 +32,18 @@
             </th>
             <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.height')}}</th>
             <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.effort')}}</th>
+            <th>Farmer Reward</th>
             <th scope="col">Remarks</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngIf="isLoading && (hasWonBlocksObservable | async) === false">
-            <td colspan="4" style="text-align: center">
+            <td colspan="5" style="text-align: center">
               <app-loading-state></app-loading-state>
             </td>
           </tr>
           <tr *ngIf="!isLoading && (hasWonBlocksObservable | async) === false">
-            <td colspan="4" style="text-align: center; padding-top: 1rem">
+            <td colspan="5" style="text-align: center; padding-top: 1rem">
               <app-empty-state [text]="snippetService.getSnippet('blocks-won-component.no-blocks-won-yet')" [icon]="faCubes"></app-empty-state>
             </td>
           </tr>
@@ -51,6 +52,7 @@
             <td *ngIf="(statsService.poolConfig$ | async)?.blockExplorerBlockUrlTemplate"><a href="{{getBlockExplorerBlockLink(block)}}" target="_blank" style="color: #b45bff">{{block.height}}</a></td>
             <td *ngIf="!(statsService.poolConfig$ | async)?.blockExplorerBlockUrlTemplate">{{block.height}}</td>
             <td><span [class]="getEffortColor(block)">{{getBlockEffort(block)}}</span></td>
+            <td>{{getFarmerReward(block) ?? 'N/A'}}</td>
             <td *ngIf="block.remarks === undefined || block.remarks.length === 0">
               <span class="badge remark-pill background-color-light-green">OK</span>
             </td>
