@@ -104,10 +104,10 @@ export class AccountService {
     private readonly snippetService: SnippetService,
     private readonly historicalStatsDurationProvider: HistoricalStatsDurationProvider,
   ) {
-    this.accountIdentifier$ = this.accountIdentifierSubject.pipe(distinctUntilChanged(), shareReplay())
-    this.haveAccountIdentifier$ = this.accountIdentifier$.pipe(map(identifier => identifier !== null), distinctUntilChanged(), shareReplay())
-    this.haveAccount$ = this.accountSubject.pipe(map(account => account !== null), distinctUntilChanged(), shareReplay())
-    this.isLoading$ = this.isLoadingSubject.pipe(distinctUntilChanged(), shareReplay())
+    this.accountIdentifier$ = this.accountIdentifierSubject.pipe(distinctUntilChanged(), shareReplay(1))
+    this.haveAccountIdentifier$ = this.accountIdentifier$.pipe(map(identifier => identifier !== null), distinctUntilChanged(), shareReplay(1))
+    this.haveAccount$ = this.accountSubject.pipe(map(account => account !== null), distinctUntilChanged(), shareReplay(1))
+    this.isLoading$ = this.isLoadingSubject.pipe(distinctUntilChanged(), shareReplay(1))
     this.migrateLegacyConfig()
     this.accountIdentifier = this.accountIdentifierFromLocalStorage
     this.currentAccountIdentifier = this.accountSubject
@@ -116,7 +116,7 @@ export class AccountService {
         filter(account => account !== null),
         map(account => getAccountIdentifier(account)),
         distinctUntilChanged(),
-        shareReplay(),
+        shareReplay(1),
       )
   }
 

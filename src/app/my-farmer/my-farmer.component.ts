@@ -70,7 +70,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     .pipe(
       map(account => !account),
       distinctUntilChanged(),
-      shareReplay(),
+      shareReplay(1),
     )
   public payoutDateFormattingObservable: Observable<DateFormatting>
   public selectedCurrencyObservable: Observable<string>
@@ -360,7 +360,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       .pipe(
         map(([lastAcceptedPartialAt]) => lastAcceptedPartialAt !== undefined ? moment(lastAcceptedPartialAt).fromNow() : 'Never'),
         distinctUntilChanged(),
-        shareReplay(),
+        shareReplay(1),
       )
     const sharesStream = this.accountService.accountHistoricalStats
       .pipe(
@@ -378,16 +378,16 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
             totalShares,
           }
         }),
-        shareReplay(),
+        shareReplay(1),
       )
-    this.totalValidShares = sharesStream.pipe(map(stream => stream.totalValidShares.toNumber().toLocaleString('en')), shareReplay())
-    this.totalValidSharesPercentage = sharesStream.pipe(map(stream => stream.totalValidShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100).toFixed(2)), shareReplay())
-    this.totalInvalidShares = sharesStream.pipe(map(stream => stream.totalInvalidShares.toNumber().toLocaleString('en')), shareReplay())
-    this.totalInvalidSharesPercentage = sharesStream.pipe(map(stream => stream.totalInvalidShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100).toFixed(2)), shareReplay())
-    this.invalidSharesColorClasses = sharesStream.pipe(map(stream => stream.totalInvalidShares.isZero() ? [] : ['color-red']), shareReplay())
-    this.totalStaleShares = sharesStream.pipe(map(stream => stream.totalStaleShares.toNumber().toLocaleString('en')), shareReplay())
-    const staleSharesPercentage = sharesStream.pipe(map(stream => stream.totalStaleShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100)), shareReplay())
-    this.totalStaleSharesPercentage = staleSharesPercentage.pipe(map(percentage => percentage.toFixed(2)), shareReplay())
+    this.totalValidShares = sharesStream.pipe(map(stream => stream.totalValidShares.toNumber().toLocaleString('en')), shareReplay(1))
+    this.totalValidSharesPercentage = sharesStream.pipe(map(stream => stream.totalValidShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100).toFixed(2)), shareReplay(1))
+    this.totalInvalidShares = sharesStream.pipe(map(stream => stream.totalInvalidShares.toNumber().toLocaleString('en')), shareReplay(1))
+    this.totalInvalidSharesPercentage = sharesStream.pipe(map(stream => stream.totalInvalidShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100).toFixed(2)), shareReplay(1))
+    this.invalidSharesColorClasses = sharesStream.pipe(map(stream => stream.totalInvalidShares.isZero() ? [] : ['color-red']), shareReplay(1))
+    this.totalStaleShares = sharesStream.pipe(map(stream => stream.totalStaleShares.toNumber().toLocaleString('en')), shareReplay(1))
+    const staleSharesPercentage = sharesStream.pipe(map(stream => stream.totalStaleShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100)), shareReplay(1))
+    this.totalStaleSharesPercentage = staleSharesPercentage.pipe(map(percentage => percentage.toFixed(2)), shareReplay(1))
     this.staleSharesColorClasses = staleSharesPercentage.pipe(
       map(percentage => {
         if (percentage.isGreaterThanOrEqualTo(2)) {
@@ -399,7 +399,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
         return []
       }),
-      shareReplay(),
+      shareReplay(1),
     )
     const averageEffort: Observable<BigNumber|undefined> = this.accountService
       .accountWonBlocks
@@ -414,7 +414,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
             .reduce((acc, curr) => acc.plus(curr.effort), new BigNumber(0))
             .dividedBy(blocksWithEffort.length)
         }),
-        shareReplay(),
+        shareReplay(1),
       )
     this.averageEffortFormatted = averageEffort.pipe(
       map(averageEffort => {
@@ -424,16 +424,16 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
         return `${averageEffort.multipliedBy(100).toFixed(2)} %`
       }),
-      shareReplay(),
+      shareReplay(1),
     )
     this.averageEffortColorClass = averageEffort.pipe(
       map(averageEffort => getEffortColor(averageEffort)),
-      shareReplay(),
+      shareReplay(1),
     )
     this.isLoadingPayoutAddressBalance = this.isUpdatingPayoutAddressBalance.pipe(
       distinctUntilChanged(),
       takeWhile(isLoading => isLoading, true),
-      shareReplay(),
+      shareReplay(1),
     )
     this.payoutAddressBalance = combineLatest([
       this.accountService.accountSubject
@@ -452,8 +452,8 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         map(balance => balance.toNumber()),
         shareReplay({ refCount: true }),
       )
-    this.selectedNavTab = this.activatedRoute.fragment.pipe(map(fragment => fragment === null ? 'stats' : fragment), shareReplay())
-    this.showDurationSelection = this.selectedNavTab.pipe(map(tabId => tabId === 'stats' || tabId === 'harvesters'), shareReplay(), distinctUntilChanged())
+    this.selectedNavTab = this.activatedRoute.fragment.pipe(map(fragment => fragment === null ? 'stats' : fragment), shareReplay(1))
+    this.showDurationSelection = this.selectedNavTab.pipe(map(tabId => tabId === 'stats' || tabId === 'harvesters'), shareReplay(1), distinctUntilChanged())
     const harvesters = this.chiaDashboardService.satellites$.pipe(
       filter(satellites => satellites !== undefined),
       map(satellites => satellites
@@ -461,7 +461,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         .map(satellite => satellite.services?.harvester)
         .filter(harvester => harvester !== undefined && harvester.stats !== undefined && harvester.stats.plotCount !== undefined && harvester.lastUpdate !== undefined && moment(harvester.lastUpdate).isAfter(moment().subtract(5, 'minutes')))
       ),
-      shareReplay(),
+      shareReplay(1),
     )
     this.reportedRawCapacity$ = harvesters.pipe(
       map(harvesters => {
@@ -488,7 +488,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     this.hasChiaDashboardShareKey$ = this.accountService.accountSubject.pipe(
       map(account => account?.integrations?.chiaDashboardShareKey !== undefined),
       distinctUntilChanged(),
-      shareReplay(),
+      shareReplay(1),
     )
     this.subscriptions.push(
       this.themeProvider.theme$.subscribe(theme => {

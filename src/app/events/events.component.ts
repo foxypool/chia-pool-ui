@@ -21,7 +21,7 @@ export class EventsComponent {
     public readonly statsService: StatsService,
     private readonly _snippetService: SnippetService,
   ) {
-    this.events$ = this.statsService.poolStats$.pipe(map(stats => stats.events), shareReplay())
+    this.events$ = this.statsService.poolStats$.pipe(map(stats => stats.events), shareReplay(1))
   }
 
   get snippetService() {

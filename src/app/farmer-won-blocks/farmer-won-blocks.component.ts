@@ -117,7 +117,7 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
           gigahorseDevFeeBlocks,
         }
       }),
-      shareReplay(),
+      shareReplay(1),
     )
     this.hasGigahorseDevFeeBlocksAndEnoughWonBlocks$ = gigahorseDevFeeBlocksAndWonBlocks.pipe(
       map(({ gigahorseDevFeeBlocks, wonBlocks }) => gigahorseDevFeeBlocks.length > 0 && wonBlocks.length >= 8),

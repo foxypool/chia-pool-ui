@@ -23,7 +23,7 @@ export class GenerateLoginLinkComponent {
     private readonly toastService: ToastService,
     private readonly poolsProvider: PoolsProvider,
   ) {
-    this.loginLink = this.loginLinkSubject.pipe(shareReplay())
+    this.loginLink = this.loginLinkSubject.pipe(shareReplay(1))
   }
 
   public async generateLoginToken(): Promise<void> {

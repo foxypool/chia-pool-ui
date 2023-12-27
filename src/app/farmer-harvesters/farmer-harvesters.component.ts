@@ -52,7 +52,7 @@ export class FarmerHarvestersComponent implements OnInit, OnDestroy {
     this.showItemsPerPageSelection = this.harvesters.pipe(
       map(harvesters => harvesters.length > 0),
       distinctUntilChanged(),
-      shareReplay(),
+      shareReplay(1),
     )
   }
 

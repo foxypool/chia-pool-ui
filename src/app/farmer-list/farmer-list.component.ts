@@ -56,11 +56,11 @@ export class FarmerListComponent implements OnDestroy {
             }
           })
         }),
-        shareReplay(),
+        shareReplay(1),
       )
-    this.isLoading = this.isLoadingSubject.pipe(shareReplay())
-    this.hasNoAccounts = this.accountsSubject.pipe(map(accounts => accounts.length === 0), shareReplay())
-    this.isLoadingInitial = this.isLoadingSubject.pipe(takeWhile(isLoading => isLoading, true), shareReplay())
+    this.isLoading = this.isLoadingSubject.pipe(shareReplay(1))
+    this.hasNoAccounts = this.accountsSubject.pipe(map(accounts => accounts.length === 0), shareReplay(1))
+    this.isLoadingInitial = this.isLoadingSubject.pipe(takeWhile(isLoading => isLoading, true), shareReplay(1))
   }
 
   public ngOnDestroy() {

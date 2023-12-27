@@ -23,6 +23,6 @@ export class HistoricalStatsDurationProvider {
   private readonly selectedDurationRelay: BehaviorSubject<HistoricalStatsDuration> = new BehaviorSubject<HistoricalStatsDuration>('1d')
 
   public constructor() {
-    this.selectedDuration$ = this.selectedDurationRelay.pipe(distinctUntilChanged(), shareReplay())
+    this.selectedDuration$ = this.selectedDurationRelay.pipe(distinctUntilChanged(), shareReplay(1))
   }
 }

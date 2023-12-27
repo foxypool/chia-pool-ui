@@ -73,13 +73,13 @@ export class StatsService {
     private readonly snippetService: SnippetService,
     poolsProvider: PoolsProvider,
   ) {
-    this.poolConfig$ = this.poolConfigSubject.pipe(filter((poolConfig): poolConfig is PoolConfig => poolConfig !== undefined), shareReplay())
-    this.ticker$ = this.poolConfig$.pipe(map(poolConfig => poolConfig.ticker), shareReplay())
-    this.poolStats$ = this.poolStatsSubject.pipe(filter((poolStats): poolStats is PoolStats => poolStats !== undefined), shareReplay())
-    this.accountStats$ = this.accountStatsSubject.pipe(filter((accountStats): accountStats is AccountStats => accountStats !== undefined), shareReplay())
-    this.rewardStats$ = this.rewardStatsSubject.pipe(filter((rewardStats): rewardStats is RewardStats => rewardStats !== undefined), shareReplay())
-    this.recentPayouts$ = this.recentPayoutsSubject.pipe(filter((recentPayouts): recentPayouts is Payout[] => recentPayouts !== undefined), shareReplay())
-    this.exchangeStats$ = this.exchangeStatsSubject.pipe(filter((exchangeStats): exchangeStats is RateStats => exchangeStats !== undefined), shareReplay())
+    this.poolConfig$ = this.poolConfigSubject.pipe(filter((poolConfig): poolConfig is PoolConfig => poolConfig !== undefined), shareReplay(1))
+    this.ticker$ = this.poolConfig$.pipe(map(poolConfig => poolConfig.ticker), shareReplay(1))
+    this.poolStats$ = this.poolStatsSubject.pipe(filter((poolStats): poolStats is PoolStats => poolStats !== undefined), shareReplay(1))
+    this.accountStats$ = this.accountStatsSubject.pipe(filter((accountStats): accountStats is AccountStats => accountStats !== undefined), shareReplay(1))
+    this.rewardStats$ = this.rewardStatsSubject.pipe(filter((rewardStats): rewardStats is RewardStats => rewardStats !== undefined), shareReplay(1))
+    this.recentPayouts$ = this.recentPayoutsSubject.pipe(filter((recentPayouts): recentPayouts is Payout[] => recentPayouts !== undefined), shareReplay(1))
+    this.exchangeStats$ = this.exchangeStatsSubject.pipe(filter((exchangeStats): exchangeStats is RateStats => exchangeStats !== undefined), shareReplay(1))
     if (poolsProvider.pool.type === PoolType.og) {
       this.api = new OgApi(poolsProvider.poolIdentifier)
     } else if (poolsProvider.pool.type === PoolType.nft) {

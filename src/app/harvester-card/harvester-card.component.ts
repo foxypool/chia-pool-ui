@@ -137,16 +137,16 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     private readonly historicalStatsDurationProvider: HistoricalStatsDurationProvider,
     private readonly localStorageService: LocalStorageService,
   ) {
-    this.isLoadingProofTimes = this.isLoadingProofTimesSubject.pipe(shareReplay())
+    this.isLoadingProofTimes = this.isLoadingProofTimesSubject.pipe(shareReplay(1))
     this.showSharesChart = this.chartModeSubject.pipe(map(mode => mode === ChartMode.shares), distinctUntilChanged(), share())
     this.showProofTimesChart = this.chartModeSubject.pipe(map(mode => mode === ChartMode.proofTimes), distinctUntilChanged(), share())
     this.chartMode = this.chartModeSubject.pipe(distinctUntilChanged(), share())
     this.hasProofTimes = this.proofTimes.pipe(
       map(proofTimes => proofTimes.reduce((acc, curr) => acc + (curr.proofTimeInSeconds !== undefined ? 1 : 0), 0) > 0),
-      shareReplay(),
+      shareReplay(1),
     )
-    this.stats = this.statsSubject.asObservable().pipe(filter(stats => stats !== undefined), shareReplay())
-    this.isLoading = this.statsSubject.asObservable().pipe(map(stats => stats === undefined), distinctUntilChanged(), shareReplay())
+    this.stats = this.statsSubject.asObservable().pipe(filter(stats => stats !== undefined), shareReplay(1))
+    this.isLoading = this.statsSubject.asObservable().pipe(map(stats => stats === undefined), distinctUntilChanged(), shareReplay(1))
     this.averageEc = this.stats.pipe(
       map(stats => {
         const totalShares = stats.reduce((acc, submissionStat) => acc.plus(submissionStat.shares), new BigNumber(0))
@@ -168,7 +168,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
           .reduce((acc, curr) => acc.plus(curr.proofTimeInSeconds), new BigNumber(0))
           .dividedBy(averageProofTimes.length)
       }),
-      shareReplay(),
+      shareReplay(1),
     )
     this.averageProofTimeInSeconds = averageProofTimeInSeconds.pipe(
       map(averageProofTime => {
@@ -178,12 +178,12 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
 
         return `${averageProofTime.toFixed(3)} s`
       }),
-      shareReplay(),
+      shareReplay(1),
     )
     this.averageProofTimeInSecondsColorClass = averageProofTimeInSeconds.pipe(
       filter(averageProofTimeInSeconds => averageProofTimeInSeconds !== undefined),
       map(averageProofTimeInSeconds => this.getProofTimeColorClass(averageProofTimeInSeconds)),
-      shareReplay(),
+      shareReplay(1),
     )
     this.sharesChartOptions = {
       title: {
@@ -372,13 +372,13 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
             totalShares,
           }
         }),
-        shareReplay(),
+        shareReplay(1),
       )
-    this.totalValidShares = sharesStream.pipe(map(stream => stream.totalValidShares.toNumber().toLocaleString('en')), shareReplay())
-    this.totalValidSharesPercentage = sharesStream.pipe(map(stream => stream.totalValidShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100).toFixed(2)), shareReplay())
-    this.totalStaleShares = sharesStream.pipe(map(stream => stream.totalStaleShares.toNumber().toLocaleString('en')), shareReplay())
-    const staleSharesPercentage = sharesStream.pipe(map(stream => stream.totalStaleShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100)), shareReplay())
-    this.totalStaleSharesPercentage = staleSharesPercentage.pipe(map(percentage => percentage.toFixed(2)), shareReplay())
+    this.totalValidShares = sharesStream.pipe(map(stream => stream.totalValidShares.toNumber().toLocaleString('en')), shareReplay(1))
+    this.totalValidSharesPercentage = sharesStream.pipe(map(stream => stream.totalValidShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100).toFixed(2)), shareReplay(1))
+    this.totalStaleShares = sharesStream.pipe(map(stream => stream.totalStaleShares.toNumber().toLocaleString('en')), shareReplay(1))
+    const staleSharesPercentage = sharesStream.pipe(map(stream => stream.totalStaleShares.dividedBy(BigNumber.max(stream.totalShares, 1)).multipliedBy(100)), shareReplay(1))
+    this.totalStaleSharesPercentage = staleSharesPercentage.pipe(map(percentage => percentage.toFixed(2)), shareReplay(1))
     this.staleSharesColorClasses = staleSharesPercentage.pipe(
       map(percentage => {
         if (percentage.isGreaterThanOrEqualTo(2)) {
@@ -390,7 +390,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
 
         return []
       }),
-      shareReplay(),
+      shareReplay(1),
     )
     this.subscriptions.push(
       this.chartModeSubject
@@ -419,12 +419,12 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         status: HarvesterStatus.fromHarvesterStats(harvester),
         harvester,
       })),
-      shareReplay(),
+      shareReplay(1),
     )
     const harvesterWithStatusOk$ = harvesterWithStatus$.pipe(
       filter(({ status }) => status.lastUpdatedState === LastUpdatedState.ok),
       map(({ harvester }) => harvester),
-      shareReplay(),
+      shareReplay(1),
     )
     this.reportedRawCapacity$ = harvesterWithStatusOk$.pipe(
       map(harvester => {

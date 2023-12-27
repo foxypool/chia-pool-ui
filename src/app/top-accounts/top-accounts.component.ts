@@ -48,7 +48,7 @@ export class TopAccountsComponent {
             .toNumber()
           : undefined,
       }))),
-      shareReplay()
+      shareReplay(1)
     )
   }
 
