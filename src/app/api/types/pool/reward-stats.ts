@@ -11,9 +11,9 @@ export interface BaseRecentlyWonBlock {
   hash: string
   reward: number
   blockRewardAmounts?: {
-    pool: number
-    farmer: number
-    fee: number
+    pool: string
+    farmer: string
+    fee: string
   }
   networkSpaceInTib: string
   distributed: boolean

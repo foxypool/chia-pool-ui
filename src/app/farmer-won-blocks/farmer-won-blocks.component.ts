@@ -180,7 +180,7 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
       return
     }
 
-    return `${block.blockRewardAmounts.farmer + block.blockRewardAmounts.fee} ${this.statsService.poolConfig?.ticker}`
+    return `${(new BigNumber(block.blockRewardAmounts.farmer)).plus(block.blockRewardAmounts.fee).toString()} ${this.statsService.poolConfig?.ticker}`
   }
 
   public getEffortColor(block: AccountWonBlock): string {

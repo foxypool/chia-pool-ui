@@ -14,9 +14,9 @@ export interface AccountWonBlock {
   height: number
   hash: string
   blockRewardAmounts?: {
-    pool: number
-    farmer: number
-    fee: number
+    pool: string
+    farmer: string
+    fee: string
   }
   effort: number|null
   createdAt: string
