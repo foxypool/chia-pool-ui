@@ -10,6 +10,7 @@ export interface BaseRecentlyWonBlock {
   height: number
   hash: string
   reward: number
+  farmerReward?: string
   blockRewardAmounts?: {
     pool: string
     farmer: string
