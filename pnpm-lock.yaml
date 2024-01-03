@@ -57,7 +57,7 @@ dependencies:
     specifier: ^1.6.1
     version: 1.6.1(@angular/common@15.2.10)(@angular/core@15.2.10)
   '@popperjs/core':
-    specifier: ^2.11.7
+    specifier: ^2.11.8
     version: 2.11.8
   '@sentry/angular-ivy':
     specifier: ^7.51.2
@@ -66,23 +66,23 @@ dependencies:
     specifier: ^15.0.1
     version: 15.0.1(@angular/core@15.2.10)
   axios:
-    specifier: ^1.4.0
-    version: 1.5.1
+    specifier: ^1.6.3
+    version: 1.6.3
   bignumber.js:
-    specifier: ^9.1.1
+    specifier: ^9.1.2
     version: 9.1.2
   bootstrap:
     specifier: ^5.3.2
     version: 5.3.2(@popperjs/core@2.11.8)
   compare-versions:
-    specifier: ^6.0.0-rc.1
+    specifier: ^6.1.0
     version: 6.1.0
   echarts:
-    specifier: ^5.4.2
+    specifier: ^5.4.3
     version: 5.4.3
   moment:
-    specifier: ^2.29.4
-    version: 2.29.4
+    specifier: ^2.30.1
+    version: 2.30.1
   ngx-clipboard:
     specifier: ^16.0.0
     version: 16.0.0(@angular/common@15.2.10)(@angular/core@15.2.10)
@@ -3296,8 +3296,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /axios@1.5.1:
-    resolution: {integrity: sha512-Q28iYCWzNHjAm+yEAot5QaAMxhMghWLFVf7rRdwhUI+c2jix2DUXjAHXVi+s1ibs3mjPO/cCgbA++3BjD0vP/A==}
+  /axios@1.6.3:
+    resolution: {integrity: sha512-fWyNdeawGam70jXSVlKl+SUNVcL6j6W79CuSIPfi6HnDUmSCH6gyUys/HrqHeA/wU0Az41rRgean494d0Jb+ww==}
     dependencies:
       follow-redirects: 1.15.3
       form-data: 4.0.0
@@ -6066,8 +6066,8 @@ packages:
     hasBin: true
     dev: true
 
-  /moment@2.29.4:
-    resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
+  /moment@2.30.1:
+    resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
     dev: false
 
   /ms@2.0.0:
