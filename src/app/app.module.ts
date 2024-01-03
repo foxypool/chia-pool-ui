@@ -40,7 +40,13 @@ import {
 } from './update-notification-settings/update-notification-settings.component'
 import { FarmerHarvestersComponent } from './farmer-harvesters/farmer-harvesters.component'
 import { HarvesterCardComponent } from './harvester-card/harvester-card.component'
-import { EditableModule } from '@ngneat/edit-in-place'
+import {
+  EditableComponent,
+  EditableOnEnterDirective,
+  EditableOnEscapeDirective,
+  EditModeDirective,
+  ViewModeDirective
+} from '@ngneat/edit-in-place'
 import { SettingsModalComponent } from './settings-modal/settings-modal.component'
 import {NgOptimizedImage} from '@angular/common'
 import { FarmerListComponent } from './farmer-list/farmer-list.component'
@@ -113,7 +119,11 @@ import { ConfirmationModalComponent } from './confirmation-modal/confirmation-mo
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
-    EditableModule,
+    EditableComponent,
+    EditModeDirective,
+    ViewModeDirective,
+    EditableOnEnterDirective,
+    EditableOnEscapeDirective,
     NgOptimizedImage,
     NgxSliderModule,
     QRCodeModule,
