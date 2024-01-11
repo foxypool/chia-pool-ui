@@ -22,11 +22,11 @@ export const chiaClient: Client<string> = {
     name: 'Chia Blockchain',
   },
   versions: {
-    minimum: '1.8.0',
-    recommendedMinimum: '2.1.0',
-    current: '2.1.0',
-    recent: '2.0.0',
-    outdated: '1.8.0',
+    minimum: '2.1.0',
+    recommendedMinimum: '2.1.4',
+    current: '2.1.4',
+    recent: '2.1.0',
+    outdated: '1.8.2',
   },
 }
 export const chiaOgClient: Client<string> = {
@@ -37,7 +37,7 @@ export const chiaOgClient: Client<string> = {
   },
   versions: {
     minimum: '1.2.0',
-    recommendedMinimum: '1.4.0',
+    recommendedMinimum: '1.5.0',
   },
 }
 export const foxyFarmerClient: Client<string> = {
@@ -47,8 +47,8 @@ export const foxyFarmerClient: Client<string> = {
     localName: 'ff',
   },
   versions: {
-    minimum: '1.4.0',
-    recommendedMinimum: '1.9.1',
+    minimum: '1.8.0',
+    recommendedMinimum: '1.14.0',
   },
 }
 export const foxyGhFarmerClient: Client<string> = {
@@ -58,8 +58,8 @@ export const foxyGhFarmerClient: Client<string> = {
     localName: 'foxy-gh-farmer',
   },
   versions: {
-    minimum: '1.6.1',
-    recommendedMinimum: '1.7.0',
+    minimum: '1.7.2',
+    recommendedMinimum: '1.9.0',
   },
 }
 export const gigahorseClient: Client<number> = {
@@ -69,8 +69,8 @@ export const gigahorseClient: Client<number> = {
     localName: 'giga',
   },
   versions: {
-    minimum: 10,
-    recommendedMinimum: 22,
+    minimum: 22,
+    recommendedMinimum: 26,
   },
 }
 export const fastFarmerClient: Client<string> = {
