@@ -20,9 +20,7 @@ import {ChiaDashboardService} from '../chia-dashboard.service'
 import {HarvesterStatus} from '../status/harvester-status'
 import {LastUpdatedState} from '../status/last-updated-state'
 import {colors, Theme, ThemeProvider} from '../theme-provider'
-import {
-  durationInDays, getResolutionInMinutes, HistoricalStatsDuration,
-} from '../api/types/historical-stats-duration'
+import {durationInDays, getResolutionInMinutes, HistoricalStatsDuration,} from '../api/types/historical-stats-duration'
 import {HistoricalStatsDurationProvider} from '../historical-stats-duration-provider'
 import {
   chiaClient,
@@ -508,6 +506,10 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   public get chiaVersionUpdateInfo(): VersionUpdateInfo {
+    if (this.hasFoxyFarmerVersion || this.hasFoxyGhFarmerVersion) {
+      return VersionUpdateInfo.noActionRequired
+    }
+
     return getSemverVersionUpdateInfo(chiaClient, this.chiaVersion)
   }
 
