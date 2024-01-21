@@ -6,7 +6,7 @@ import './extensions/extensions'
 import { AppModule } from './app/app.module'
 import { environment } from './environments/environment'
 import { gitCommitHash } from './environments/config'
-import {Event, EventHint} from '@sentry/angular-ivy'
+import {BrowserTracing, Event, EventHint, Replay} from '@sentry/angular-ivy'
 
 const ignoreErrors = [
   'Request failed with status code',
@@ -32,12 +32,14 @@ const ignoreErrors = [
 Sentry.init({
   dsn: 'https://37abd9100b744f01a9b38464c91c28e3@o236153.ingest.sentry.io/4505596429860864',
   release: gitCommitHash || null,
+  tracePropagationTargets: ['localhost', 'https://api.foxypool.io/api'],
   integrations: [
-    new Sentry.BrowserTracing({
-      tracePropagationTargets: ['localhost', 'https://api2.foxypool.io/api'],
+    new BrowserTracing({
       routingInstrumentation: Sentry.routingInstrumentation,
     }),
-    new Sentry.Replay(),
+    new Replay({
+      networkDetailAllowUrls: ['https://api.foxypool.io', 'https://oracle.foxypool.io'],
+    }),
   ],
   // Performance Monitoring
   tracesSampleRate: 0.05,
