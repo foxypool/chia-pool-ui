@@ -24,10 +24,10 @@ import {durationInDays, getResolutionInMinutes, HistoricalStatsDuration,} from '
 import {HistoricalStatsDurationProvider} from '../historical-stats-duration-provider'
 import {
   chiaClient,
-  chiaOgClient,
+  chiaOgClient, Client,
   fastFarmerClient,
-  foxyFarmerClient,
-  foxyGhFarmerClient,
+  foxyFarmerClientWithBB, foxyFarmerClientWithGH,
+  foxyGhFarmerClient, getClientForClientVersion,
   getIntegerVersionUpdateInfo,
   getSemverVersionUpdateInfo,
   getVersionFromClientVersion,
@@ -568,11 +568,33 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   public get foxyFarmerVersionUpdateInfo(): VersionUpdateInfo {
-    return getSemverVersionUpdateInfo(foxyFarmerClient, this.foxyFarmerVersion)
+    const version = this.foxyFarmerVersion
+    if (version === undefined) {
+      return VersionUpdateInfo.noActionRequired
+    }
+    const client = this.client
+    if (client === undefined) {
+      return
+    }
+    if (client === foxyFarmerClientWithGH) {
+      return getSemverVersionUpdateInfo(foxyFarmerClientWithGH, version)
+    }
+
+    return getSemverVersionUpdateInfo(foxyFarmerClientWithBB, version)
   }
 
   public get foxyFarmerVersion(): string|undefined {
-    return getVersionFromClientVersion(foxyFarmerClient, this.harvester.versionInfo)
+    const client = this.client
+    if (client === undefined) {
+      return
+    }
+    if (client === foxyFarmerClientWithBB || client === foxyFarmerClientWithGH) {
+      return getVersionFromClientVersion(client, this.harvester.versionInfo)
+    }
+  }
+
+  private get client(): Client<unknown>|undefined {
+    return getClientForClientVersion(this.harvester.versionInfo)
   }
 
   public get hasFoxyFarmerVersion(): boolean {

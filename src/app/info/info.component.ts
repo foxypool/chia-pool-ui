@@ -12,7 +12,7 @@ import {
   chiaClient,
   Client, getClientForClientVersion,
   getGroupedClientForClientVersion,
-  getVersionFromClientVersion
+  getVersionFromClientVersion,
 } from '../clients/clients'
 
 @Component({
