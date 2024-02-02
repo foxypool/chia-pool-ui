@@ -38,7 +38,7 @@ export const chiaOgClient: Client<string> = {
   },
   versions: {
     minimum: '1.2.0',
-    recommendedMinimum: '1.5.0',
+    recommendedMinimum: '1.6.0',
   },
 }
 export const foxyFarmerClientWithBB: Client<string> = {
@@ -49,7 +49,7 @@ export const foxyFarmerClientWithBB: Client<string> = {
   },
   versions: {
     minimum: '1.8.0',
-    recommendedMinimum: '1.14.0',
+    recommendedMinimum: '1.15.0',
   },
 }
 export const foxyFarmerClientWithGH: Client<string> = {
@@ -59,8 +59,8 @@ export const foxyFarmerClientWithGH: Client<string> = {
     localNames: ['ff', 'giga'],
   },
   versions: {
-    minimum: '1.15.0',
-    recommendedMinimum: '1.15.0',
+    minimum: '1.16.0',
+    recommendedMinimum: '1.16.0',
   },
 }
 export const foxyGhFarmerClient: Client<string> = {
@@ -71,7 +71,7 @@ export const foxyGhFarmerClient: Client<string> = {
   },
   versions: {
     minimum: '1.7.2',
-    recommendedMinimum: '1.9.0',
+    recommendedMinimum: '1.10.1',
   },
 }
 export const gigahorseClient: Client<number> = {
