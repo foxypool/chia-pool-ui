@@ -564,7 +564,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   public get hasOgVersion(): boolean {
-    return this.ogVersion !== undefined
+    return this.poolsProvider.pool.type === PoolType.og && this.ogVersion !== undefined
   }
 
   public get foxyFarmerVersionUpdateInfo(): VersionUpdateInfo {
