@@ -552,6 +552,10 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   public get ogVersionUpdateInfo(): VersionUpdateInfo {
+    if (this.hasFoxyFarmerVersion) {
+      return VersionUpdateInfo.noActionRequired
+    }
+
     return getSemverVersionUpdateInfo(chiaOgClient, this.ogVersion)
   }
 
