@@ -41,6 +41,17 @@ export const chiaOgClient: Client<string> = {
     recommendedMinimum: '1.6.0',
   },
 }
+export const drPlotterClient: Client<string> = {
+  displayName: 'DrPlotter',
+  versionInfoMatching: {
+    name: 'Chia Blockchain',
+    localNames: ['dr'],
+  },
+  versions: {
+    minimum: '0.9.0',
+    recommendedMinimum: '0.9.0',
+  },
+}
 export const foxyFarmerClientWithBB: Client<string> = {
   displayName: 'Foxy-Farmer (BB)',
   versionInfoMatching: {
@@ -57,6 +68,17 @@ export const foxyFarmerClientWithGH: Client<string> = {
   versionInfoMatching: {
     name: 'Chia Blockchain',
     localNames: ['ff', 'giga'],
+  },
+  versions: {
+    minimum: '1.16.0',
+    recommendedMinimum: '1.16.0',
+  },
+}
+export const foxyFarmerClientWithDR: Client<string> = {
+  displayName: 'Foxy-Farmer (DR)',
+  versionInfoMatching: {
+    name: 'Chia Blockchain',
+    localNames: ['ff', 'og', 'dr'],
   },
   versions: {
     minimum: '1.16.0',
@@ -152,6 +174,8 @@ export function getClientForClientVersion(clientVersion: VersionInfo): Client<un
     return fastFarmerClient
   } else if (clientVersion.clientName === liteFarmerClient.versionInfoMatching.name) {
     return liteFarmerClient
+  } else if (foxyFarmerClientWithDR.versionInfoMatching.localNames.every(localName => localNames.some(curr => curr === localName))) {
+    return foxyFarmerClientWithDR
   } else if (foxyFarmerClientWithBB.versionInfoMatching.localNames.every(localName => localNames.some(curr => curr === localName))) {
     return foxyFarmerClientWithBB
   } else if (foxyFarmerClientWithGH.versionInfoMatching.localNames.every(localName => localNames.some(curr => curr === localName))) {
@@ -160,7 +184,9 @@ export function getClientForClientVersion(clientVersion: VersionInfo): Client<un
     return foxyGhFarmerClient
   } else if (gigahorseClient.versionInfoMatching.localNames.every(localName => localNames.some(curr => curr === localName))) {
     return gigahorseClient
-  }else if (chiaOgClient.versionInfoMatching.localNames.every(localName => localNames.some(curr => curr === localName))) {
+  } else if (drPlotterClient.versionInfoMatching.localNames.every(localName => localNames.some(curr => curr === localName))) {
+    return drPlotterClient
+  } else if (chiaOgClient.versionInfoMatching.localNames.every(localName => localNames.some(curr => curr === localName))) {
     return chiaOgClient
   } else if (clientVersion.clientName === chiaClient.versionInfoMatching.name) {
     return chiaClient

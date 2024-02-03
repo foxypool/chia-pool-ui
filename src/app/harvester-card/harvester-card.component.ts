@@ -24,9 +24,9 @@ import {durationInDays, getResolutionInMinutes, HistoricalStatsDuration,} from '
 import {HistoricalStatsDurationProvider} from '../historical-stats-duration-provider'
 import {
   chiaClient,
-  chiaOgClient, Client,
+  chiaOgClient, Client, drPlotterClient,
   fastFarmerClient,
-  foxyFarmerClientWithBB, foxyFarmerClientWithGH,
+  foxyFarmerClientWithBB, foxyFarmerClientWithDR, foxyFarmerClientWithGH,
   foxyGhFarmerClient, getClientForClientVersion,
   getIntegerVersionUpdateInfo,
   getSemverVersionUpdateInfo,
@@ -576,11 +576,8 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     if (client === undefined) {
       return
     }
-    if (client === foxyFarmerClientWithGH) {
-      return getSemverVersionUpdateInfo(foxyFarmerClientWithGH, version)
-    }
 
-    return getSemverVersionUpdateInfo(foxyFarmerClientWithBB, version)
+    return getSemverVersionUpdateInfo(client as Client<string>, version)
   }
 
   public get foxyFarmerVersion(): string|undefined {
@@ -588,7 +585,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     if (client === undefined) {
       return
     }
-    if (client === foxyFarmerClientWithBB || client === foxyFarmerClientWithGH) {
+    if (client === foxyFarmerClientWithBB || client === foxyFarmerClientWithGH || client === foxyFarmerClientWithDR) {
       return getVersionFromClientVersion(client, this.harvester.versionInfo)
     }
   }
@@ -649,6 +646,22 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     return this.liteFarmerVersion !== undefined
   }
 
+  public get drPlotterVersionUpdateInfo(): VersionUpdateInfo {
+    if (this.hasDrPlotterVersion) {
+      return VersionUpdateInfo.noActionRequired
+    }
+
+    return getSemverVersionUpdateInfo(drPlotterClient, this.drPlotterVersion)
+  }
+
+  public get drPlotterVersion(): string|undefined {
+    return getVersionFromClientVersion(drPlotterClient, this.harvester.versionInfo)
+  }
+
+  public get hasDrPlotterVersion(): boolean {
+    return this.drPlotterVersion !== undefined
+  }
+
   public get rowColumnClasses(): string[] {
     const cardCount = this.cardCount
 
@@ -673,6 +686,9 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       count += 1
     }
     if (this.hasGigahorseVersion) {
+      count += 1
+    }
+    if (this.hasDrPlotterVersion) {
       count += 1
     }
     if (this.hasFoxyFarmerVersion) {
