@@ -102,6 +102,13 @@
           [versionUpdateInfo]="fastFarmerVersionUpdateInfo"
         ></app-version-info>
       </div>
+      <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl col-xxl col-xxxl col-xxxxl col-xxxxxl p-1" *ngIf="hasGigahorseFastFarmerVersion">
+        <app-version-info
+          versionName="GH Fast Farmer Version"
+          [versionString]="gigahorseFastFarmerVersion"
+          [versionUpdateInfo]="gigahorseFastFarmerVersionUpdateInfo"
+        ></app-version-info>
+      </div>
       <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl col-xxl col-xxxl col-xxxxl col-xxxxxl p-1" *ngIf="hasLiteFarmerVersion">
         <app-version-info
           versionName="Lite Farmer Version"

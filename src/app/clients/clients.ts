@@ -121,6 +121,20 @@ export const fastFarmerClient: Client<string> = {
     outdated: '0.0.0',
   },
 }
+export const gigahorseFastFarmerClient: Client<string> = {
+  displayName: 'GH Fast Farmer',
+  versionInfoMatching: {
+    name: 'gh_fast_farmer',
+    localNames: [],
+  },
+  versions: {
+    minimum: '1.0.1',
+    recommendedMinimum: '1.0.1',
+    current: '1.0.1',
+    recent: '1.0.0',
+    outdated: '0.0.0',
+  },
+}
 export const liteFarmerClient: Client<string> = {
   displayName: 'Lite Farmer',
   versionInfoMatching: {
@@ -172,7 +186,9 @@ export function getClientForClientVersion(clientVersion: VersionInfo): Client<un
   const localNames = [clientVersion.localName1, clientVersion.localName2, clientVersion.localName3]
   if (clientVersion.clientName === fastFarmerClient.versionInfoMatching.name) {
     return fastFarmerClient
-  } else if (clientVersion.clientName === liteFarmerClient.versionInfoMatching.name) {
+  } else if (clientVersion.clientName === gigahorseFastFarmerClient.versionInfoMatching.name) {
+    return gigahorseFastFarmerClient
+  } if (clientVersion.clientName === liteFarmerClient.versionInfoMatching.name) {
     return liteFarmerClient
   } else if (foxyFarmerClientWithDR.versionInfoMatching.localNames.every(localName => localNames.some(curr => curr === localName))) {
     return foxyFarmerClientWithDR
@@ -196,7 +212,9 @@ export function getClientForClientVersion(clientVersion: VersionInfo): Client<un
 export function getGroupedClientForClientVersion(clientVersion: VersionInfo): Client<unknown>|undefined {
   if (clientVersion.clientName === fastFarmerClient.versionInfoMatching.name) {
     return fastFarmerClient
-  }  else if (clientVersion.clientName === liteFarmerClient.versionInfoMatching.name) {
+  } else if (clientVersion.clientName === gigahorseFastFarmerClient.versionInfoMatching.name) {
+    return gigahorseFastFarmerClient
+  } if (clientVersion.clientName === liteFarmerClient.versionInfoMatching.name) {
     return liteFarmerClient
   } else if (clientVersion.clientName === chiaClient.versionInfoMatching.name) {
     return chiaClient

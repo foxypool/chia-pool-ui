@@ -31,7 +31,7 @@ import {
   getIntegerVersionUpdateInfo,
   getSemverVersionUpdateInfo,
   getVersionFromClientVersion,
-  gigahorseClient,
+  gigahorseClient, gigahorseFastFarmerClient,
   liteFarmerClient,
   VersionUpdateInfo
 } from '../clients/clients'
@@ -634,6 +634,18 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     return this.fastFarmerVersion !== undefined
   }
 
+  public get gigahorseFastFarmerVersionUpdateInfo(): VersionUpdateInfo {
+    return getSemverVersionUpdateInfo(gigahorseFastFarmerClient, this.gigahorseFastFarmerVersion)
+  }
+
+  public get gigahorseFastFarmerVersion(): string|undefined {
+    return getVersionFromClientVersion(gigahorseFastFarmerClient, this.harvester.versionInfo)
+  }
+
+  public get hasGigahorseFastFarmerVersion(): boolean {
+    return this.gigahorseFastFarmerVersion !== undefined
+  }
+
   public get liteFarmerVersionUpdateInfo(): VersionUpdateInfo {
     return getSemverVersionUpdateInfo(liteFarmerClient, this.liteFarmerVersion)
   }
@@ -677,6 +689,9 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
       count += 1
     }
     if (this.hasFastFarmerVersion) {
+      count += 1
+    }
+    if (this.hasGigahorseFastFarmerVersion) {
       count += 1
     }
     if (this.hasLiteFarmerVersion) {
