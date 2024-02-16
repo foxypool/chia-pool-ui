@@ -32,7 +32,7 @@ export class InfoComponent implements OnInit, OnDestroy {
   public get availableLightFarmersHtml(): string {
     const lightFarmers = [{
       name: 'Foxy-Farmer',
-      supports: 'OG & NFT uncompressed, Bladebit compressed and Gigahorse compressed plots',
+      supports: 'OG & NFT uncompressed, Bladebit, Gigahorse and DrPlotter compressed plots',
       link: 'https://docs.foxypool.io/proof-of-spacetime/foxy-farmer/',
     }]
     if (this.poolsProvider.pool.type === PoolType.nft) {
