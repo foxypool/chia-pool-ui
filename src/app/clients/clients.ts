@@ -122,7 +122,7 @@ export const fastFarmerClient: Client<string> = {
   },
 }
 export const gigahorseFastFarmerClient: Client<string> = {
-  displayName: 'GH Fast Farmer',
+  displayName: 'Fast Farmer (GH)',
   versionInfoMatching: {
     name: 'gh_fast_farmer',
     localNames: [],
