@@ -13,6 +13,7 @@ export class ConfigService implements OnDestroy {
   private static readonly payoutDateFormattingStorageKey = 'config:dateFormatting:payout'
   private static readonly rewardTimeIntervalStorageKey = 'config:rewardTimeInterval'
   private static readonly hideNewAccountInfoAlertStorageKey = 'config:hideNewAccountInfoAlert'
+  private static readonly partialDateFormattingStorageKey = 'config:dateFormatting:partial'
 
   public selectedCurrencySubject = new BehaviorSubject<string>(
     this.localStorageService.getItem(ConfigService.selectedCurrencyStorageKey) || 'usd'
@@ -28,6 +29,9 @@ export class ConfigService implements OnDestroy {
   )
   private readonly hideNewAccountInfoAlertSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     JSON.parse(this.localStorageService.getItem(ConfigService.hideNewAccountInfoAlertStorageKey) ?? 'false')
+  )
+  public readonly partialDateFormattingSubject = new BehaviorSubject<DateFormatting>(
+    DateFormatting[this.localStorageService.getItem(ConfigService.partialDateFormattingStorageKey) || DateFormatting.fixed]
   )
 
   private readonly subscriptions: Subscription[] = [
@@ -55,6 +59,11 @@ export class ConfigService implements OnDestroy {
       .pipe(skip(1), distinctUntilChanged())
       .subscribe(hideNewAccountInfoAlert =>
         this.localStorageService.setItem(ConfigService.hideNewAccountInfoAlertStorageKey, JSON.stringify(hideNewAccountInfoAlert))
+      ),
+    this.partialDateFormattingSubject
+      .pipe(skip(1), distinctUntilChanged())
+      .subscribe(partialDateFormatting =>
+        this.localStorageService.setItem(ConfigService.partialDateFormattingStorageKey, partialDateFormatting)
       ),
   ]
 
@@ -98,6 +107,14 @@ export class ConfigService implements OnDestroy {
 
   public set hideNewAccountInfoAlert(hideNewAccountInfoAlert: boolean) {
     this.hideNewAccountInfoAlertSubject.next(hideNewAccountInfoAlert)
+  }
+
+  public get partialDateFormatting(): DateFormatting {
+    return this.partialDateFormattingSubject.getValue()
+  }
+
+  public set partialDateFormatting(dateFormatting: DateFormatting) {
+    this.partialDateFormattingSubject.next(dateFormatting)
   }
 
   public ngOnDestroy(): void {

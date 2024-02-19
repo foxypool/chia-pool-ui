@@ -306,6 +306,14 @@
                 </div>
               </ng-template>
             </li>
+            <li ngbNavItem="partials" [destroyOnHide]="true">
+              <a class="text-decoration-none" ngbNavLink routerLink="." fragment="partials"><h5>Partials</h5></a>
+              <ng-template ngbNavContent>
+                <div class="p-1 col-md-12">
+                  <app-farmer-partials></app-farmer-partials>
+                </div>
+              </ng-template>
+            </li>
           </ul>
           <div class="col-12 col-sm-auto d-flex justify-content-end duration-selection" *ngIf="showDurationSelection | async">
             <div *ngFor="let duration of possibleDurations" class="z-2">

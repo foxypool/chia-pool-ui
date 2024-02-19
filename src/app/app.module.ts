@@ -61,6 +61,7 @@ import { IntegrationSettingsComponent } from './integration-settings/integration
 import {NgxSliderModule} from 'ngx-slider-v2'
 import { UpdateBlockSettingsComponent } from './update-block-settings/update-block-settings.component'
 import { ConfirmationModalComponent } from './confirmation-modal/confirmation-modal.component'
+import {FarmerPartialsComponent} from './farmer-partials/farmer-partials.component'
 
 @NgModule({
   declarations: [
@@ -96,6 +97,7 @@ import { ConfirmationModalComponent } from './confirmation-modal/confirmation-mo
     IntegrationSettingsComponent,
     UpdateBlockSettingsComponent,
     ConfirmationModalComponent,
+    FarmerPartialsComponent,
   ],
   imports: [
     BrowserModule,

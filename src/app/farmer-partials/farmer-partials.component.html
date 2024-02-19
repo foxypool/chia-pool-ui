@@ -1,0 +1,72 @@
+<div class="table-responsive-lg">
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">
+        <div class="date-header-container">
+          <span>Date</span>
+          <fa-icon [icon]="faExchangeAlt" class="toggle-date-formatting-icon" (click)="toggleDateFormatting()"></fa-icon>
+        </div>
+      </th>
+      <th scope="col">State</th>
+      <th scope="col">Shares</th>
+      <th scope="col">Harvester</th>
+      <th scope="col">Proof time</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngIf="isLoadingInitial | async">
+      <td colspan="5" style="text-align: center">
+        <app-loading-state></app-loading-state>
+      </td>
+    </tr>
+    <tr *ngIf="(isLoadingInitial | async) === false && (partials | async)?.length === 0">
+      <td colspan="5" style="text-align: center; padding-top: 1rem">
+        <app-empty-state text="No partials received yet" [icon]="faBarsStaggered"></app-empty-state>
+      </td>
+    </tr>
+    <tr *ngFor="let partial of partials | async; trackBy: trackBy">
+      <td>{{getPartialDate(partial)}}</td>
+      <td>
+        <span *ngIf="partial.type === 'VALID'" class="badge state-pill background-color-light-green">Valid</span>
+        <span *ngIf="partial.type === 'INVALID'" class="badge state-pill background-color-red">Invalid</span>
+        <span *ngIf="partial.type === 'STALE'" class="badge state-pill background-color-orange">Stale</span>
+      </td>
+      <td>{{partial.shares}}</td>
+      <td>{{getPartialHarvesterName(partial)}}</td>
+      <td><span [ngStyle]="{color: getProofTimeColor(partial.proofTimeInSeconds)}">{{partial.proofTimeInSeconds}} sec</span></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="d-grid footer-grid">
+  <div class="pagination-grid-item">
+    <ngb-pagination
+      *ngIf="total > pageSize"
+      class="d-flex justify-content-center"
+      [(page)]="page"
+      [pageSize]="pageSize"
+      [collectionSize]="total"
+      [maxSize]="5"
+      [rotate]="true"
+      [boundaryLinks]="true"
+      (pageChange)="onPageChange()">
+      <ng-template ngbPaginationNumber let-p>
+        <div class="d-flex flex-nowrap gap-1">
+          {{ p }}
+          <app-loading-state *ngIf="p === page && (isLoading | async)" width="1" height="1" colorClass="text-light"></app-loading-state>
+        </div>
+      </ng-template>
+    </ngb-pagination>
+  </div>
+  <div style="margin-left: auto" *ngIf="showItemsPerPageSelection | async">
+    <div class="input-group" style="flex-wrap: nowrap">
+      <label class="input-group-text page-size-select-label">
+        Items per page
+      </label>
+      <select  class="form-select page-size-select" [(ngModel)]="pageSize">
+        <option *ngFor="let currPageSize of pageSizes" [ngValue]="currPageSize" class="page-size-select-option">{{currPageSize}}</option>
+      </select>
+    </div>
+  </div>
+</div>

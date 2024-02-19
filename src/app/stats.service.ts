@@ -186,8 +186,12 @@ export class StatsService {
     return this.api.getAccount({ accountIdentifier, bustCache })
   }
 
-  getAccountHarvesters({ accountIdentifier, bustCache }) {
+  public async getAccountHarvesters({ accountIdentifier, bustCache }) {
     return this.api.getAccountHarvesters({ accountIdentifier, bustCache })
+  }
+
+  public async getAccountPartials({ accountIdentifier, page, limit }) {
+    return this.api.getAccountPartials({ accountIdentifier, page, limit })
   }
 
   getAccountHistoricalStats({ accountIdentifier, duration }: { accountIdentifier: string, duration: HistoricalStatsDuration }) {

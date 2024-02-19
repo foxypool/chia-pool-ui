@@ -16,6 +16,8 @@ import {AccountWonBlock} from './api/types/account/account-won-block'
 import {makeAccountIdentifierName} from './util'
 import {HistoricalStatsDuration} from './api/types/historical-stats-duration'
 import {HistoricalStatsDurationProvider} from './historical-stats-duration-provider'
+import {AccountPartialList} from './api/types/account/account-partial'
+import {Harvester} from './api/types/harvester/harvester'
 
 @Injectable({
   providedIn: 'root'
@@ -269,7 +271,7 @@ export class AccountService {
 
   async getAccountHarvesters({ bustCache = false }) {
     this.isLoading = true
-    let accountHarvesters = []
+    let accountHarvesters: Harvester[] = []
     try {
       accountHarvesters = await this.statsService.getAccountHarvesters({ accountIdentifier: this.accountIdentifier, bustCache })
     } finally {
@@ -277,6 +279,18 @@ export class AccountService {
     }
 
     return accountHarvesters
+  }
+
+  public async getAccountPartials({ page, limit }) {
+    this.isLoading = true
+    let accountPartials: AccountPartialList
+    try {
+      accountPartials = await this.statsService.getAccountPartials({ accountIdentifier: this.accountIdentifier, page, limit })
+    } finally {
+      this.isLoading = false
+    }
+
+    return accountPartials
   }
 
   async getAccountHistoricalStats({ accountIdentifier, duration }: { accountIdentifier: string, duration: HistoricalStatsDuration }): Promise<AccountHistoricalStat[]> {

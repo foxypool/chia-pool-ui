@@ -20,6 +20,7 @@ import {LoginTokenResult} from './types/auth/login-token-result'
 import {BaseTopAccount} from './types/account/top-account'
 import {ApiResponse} from './types/api-response'
 import {HistoricalStatsDuration} from './types/historical-stats-duration'
+import {AccountPartialList} from './types/account/account-partial'
 
 export abstract class AbstractApi<
   AccountType extends Account,
@@ -97,6 +98,12 @@ export abstract class AbstractApi<
     }
 
     const { data } = await this.client.get<Harvester[]>(`account/${accountIdentifier}/harvesters`, { params })
+
+    return data
+  }
+
+  public async getAccountPartials({ accountIdentifier, page, limit }: { accountIdentifier: string, page: number, limit: number }): Promise<AccountPartialList> {
+    const { data } = await this.client.get<AccountPartialList>(`account/${accountIdentifier}/partials`, { params: { page, limit } })
 
     return data
   }

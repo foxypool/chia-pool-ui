@@ -902,10 +902,10 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   private getProofTimeColorForChart(proofTimeInSeconds: number): string {
-    if (proofTimeInSeconds < 5) {
+    if (proofTimeInSeconds < 9) {
       return '#46cf76'
     }
-    if (proofTimeInSeconds < 10) {
+    if (proofTimeInSeconds < 17) {
       return '#b9a44c'
     }
     if (proofTimeInSeconds < 25) {
