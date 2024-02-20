@@ -11,6 +11,7 @@ import {RecentlyWonBlock} from '../api/types/pool/reward-stats'
 import {TransactionState} from '../api/types/transaction-state'
 import {Observable} from 'rxjs'
 import {map, shareReplay} from 'rxjs/operators'
+import {RatesService} from '../rates.service'
 
 @Component({
   selector: 'app-blocks-won',
@@ -32,6 +33,7 @@ export class BlocksWonComponent implements OnInit {
 
   public constructor(
     public readonly statsService: StatsService,
+    public readonly ratesService: RatesService,
     private readonly _snippetService: SnippetService,
     private readonly configService: ConfigService,
   ) {

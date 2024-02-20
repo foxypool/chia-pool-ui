@@ -14,6 +14,8 @@ import {RatesService} from '../rates.service'
 import {Moment} from 'moment'
 import {StatsService} from '../stats.service'
 import {ThemeProvider} from '../theme-provider'
+import {AccountPayout} from '../api/types/account/account-payout'
+import {TransactionState} from '../api/types/transaction-state'
 
 @Component({
   selector: 'app-farmer-payout-history',
@@ -96,13 +98,22 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
       'Date',
       'Coin',
       'Amount',
+      'Fiat Amount (Hold)',
+      'Fiat Amount (Sold)',
       'State',
-    ], this.payouts.getValue().map(payout => ([
-      moment(payout.createdAt).format('YYYY-MM-DD HH:mm'),
-      payout.coinId,
-      payout.amount,
-      payout.state,
-    ])))
+    ], this.payouts.getValue().map(payout => {
+      const amountFiatHold = this.ratesService.getFiatAmount(payout.amount)
+      const amountFiatSold = this.ratesService.getHistoricalFiatAmount(payout.amount, payout.historicalRate)
+
+      return [
+        moment(payout.createdAt).format('YYYY-MM-DD HH:mm'),
+        payout.coinId,
+        payout.amount,
+        amountFiatHold?.toString(),
+        amountFiatSold?.toString(),
+        payout.state,
+      ]
+    }))
   }
 
   public ngOnInit(): void {
@@ -114,12 +125,15 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
     ])
       .pipe(map(([accountPayouts, payoutDateFormatting]) => {
         return accountPayouts.map(accountPayout => {
+          const amount = parseFloat(accountPayout.amount) || 0
+
           return {
             coinId: accountPayout.coinId,
             amountFormatted: (new BigNumber(accountPayout.amount))
               .decimalPlaces(this.coinConfig.decimalPlaces, BigNumber.ROUND_FLOOR)
               .toString(),
-            fiatAmountFormatted: this.ratesService.getValuesInFiatFormatted(parseFloat(accountPayout.amount) || 0),
+            fiatHoldAmountFormatted: this.ratesService.getValuesInFiatFormatted(amount),
+            fiatSoldAmountFormatted: this.ratesService.getValueInHistoricalFiatFormatted(amount, accountPayout.historicalRate),
             state: this.getFormattedPaymentState(accountPayout.state),
             formattedPayoutDate: this.formatDate(moment(accountPayout.createdAt), payoutDateFormatting),
             blockExplorerUrl: this.getBlockExplorerCoinLink(accountPayout.coinId),
@@ -156,11 +170,11 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
     return this.statsService.poolConfig.blockExplorerCoinUrlTemplate.replace('#COIN#', coinId.ensureHexPrefix())
   }
 
-  private getFormattedPaymentState(payoutState: AccountPayoutState): string {
+  private getFormattedPaymentState(payoutState: TransactionState): string {
     switch (payoutState) {
-      case AccountPayoutState.inMempool:
+      case TransactionState.inMempool:
         return this.snippetService.getSnippet('payouts-component.in-mempool')
-      case AccountPayoutState.confirmed:
+      case TransactionState.confirmed:
         return this.snippetService.getSnippet('payouts-component.confirmed')
     }
   }
@@ -187,22 +201,11 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
   }
 }
 
-enum AccountPayoutState {
-  inMempool = 'IN_MEMPOOL',
-  confirmed = 'CONFIRMED',
-}
-
-export interface AccountPayout {
-  coinId: string,
-  amount: string,
-  state: AccountPayoutState,
-  createdAt: Date,
-}
-
 interface FormattedAccountPayout {
   coinId: string,
   amountFormatted: string,
-  fiatAmountFormatted: string,
+  fiatHoldAmountFormatted: string,
+  fiatSoldAmountFormatted: string,
   state: string,
   formattedPayoutDate: string,
   blockExplorerUrl?: string,

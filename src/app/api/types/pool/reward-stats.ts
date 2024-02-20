@@ -1,4 +1,5 @@
 import {TransactionState} from '../transaction-state'
+import {HistoricalRate} from '../historical/historical-rate'
 
 export interface BaseRecentlyWonBlock {
   winner: {
@@ -19,6 +20,7 @@ export interface BaseRecentlyWonBlock {
   networkSpaceInTib: string
   distributed: boolean
   distributionRatio: string
+  historicalRate?: HistoricalRate
   effort: number|null
   createdAt: string
 }

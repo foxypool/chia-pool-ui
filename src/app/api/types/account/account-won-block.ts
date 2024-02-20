@@ -1,3 +1,5 @@
+import {HistoricalRate} from '../historical/historical-rate'
+
 export enum RemarkType {
   gigahorseDevFee = 'GIGAHORSE_DEV_FEE',
   corePoolFarmerReward = 'CORE_POOL_FARMER_REWARD',
@@ -21,6 +23,7 @@ export interface AccountWonBlock {
   effort: number|null
   createdAt: string
   remarks: Remark[]
+  historicalRate?: HistoricalRate
 }
 
 

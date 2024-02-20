@@ -7,6 +7,7 @@ import {BigNumber} from 'bignumber.js'
 import {PoolsProvider} from '../pools.provider'
 import {ConfigService, DateFormatting} from '../config.service'
 import {Payout, PayoutState} from '../api/types/pool/payout'
+import {RatesService} from '../rates.service'
 
 @Component({
   selector: 'app-payouts',
@@ -23,6 +24,7 @@ export class PayoutsComponent {
 
   constructor(
     public readonly statsService: StatsService,
+    public readonly ratesService: RatesService,
     private readonly _snippetService: SnippetService,
     private readonly poolsProvider: PoolsProvider,
     private readonly configService: ConfigService,

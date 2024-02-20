@@ -1,6 +1,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core'
 import * as moment from 'moment'
-import BigNumber from 'bignumber.js'
+import {BigNumber} from 'bignumber.js'
 import {faCubes, faExchangeAlt, faInfoCircle} from '@fortawesome/free-solid-svg-icons'
 import {BehaviorSubject, Observable, Subscription} from 'rxjs'
 
@@ -13,6 +13,7 @@ import {EChartsOption} from 'echarts'
 import {StatsService} from '../stats.service'
 import {AccountWonBlock, Remark, RemarkType} from '../api/types/account/account-won-block'
 import {colors, Theme, ThemeProvider} from '../theme-provider'
+import {RatesService} from '../rates.service'
 
 @Component({
   selector: 'app-farmer-won-blocks',
@@ -100,6 +101,7 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
   constructor(
     public readonly snippetService: SnippetService,
     public readonly statsService: StatsService,
+    public readonly ratesService: RatesService,
     private readonly configService: ConfigService,
     private readonly csvExporter: CsvExporter,
     private readonly themeProvider: ThemeProvider,
@@ -175,12 +177,21 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
     }
   }
 
-  public getFarmerReward(block: AccountWonBlock): undefined|string {
+  public getFarmerRewardAmount(block: AccountWonBlock): undefined|BigNumber {
     if (block.blockRewardAmounts === undefined) {
       return
     }
 
-    return `${(new BigNumber(block.blockRewardAmounts.farmer)).plus(block.blockRewardAmounts.fee).toString()} ${this.statsService.poolConfig?.ticker}`
+    return (new BigNumber(block.blockRewardAmounts.farmer)).plus(block.blockRewardAmounts.fee)
+  }
+
+  public getFarmerRewardFormatted(block: AccountWonBlock): string {
+    const farmerRewardAmount = this.getFarmerRewardAmount(block)
+    if (farmerRewardAmount === undefined) {
+      return 'N/A'
+    }
+
+    return `${farmerRewardAmount.toString()} ${this.statsService.poolConfig?.ticker}`
   }
 
   public getEffortColor(block: AccountWonBlock): string {
@@ -251,14 +262,26 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
       'Height',
       'Hash',
       'Effort',
+      'Farmer Reward',
+      'Farmer Reward Fiat (Hold)',
+      'Farmer Reward Fiat (Sold)',
       'Remarks',
-    ], this.wonBlocksSubject.getValue().map(wonBlock => ([
-      moment(wonBlock.createdAt).format('YYYY-MM-DD HH:mm'),
-      wonBlock.height,
-      wonBlock.hash,
-      wonBlock.effort,
-      wonBlock.remarks.map(remark => remark.type).join(', '),
-    ])))
+    ], this.wonBlocksSubject.getValue().map(wonBlock => {
+      const farmerRewardAmount = this.getFarmerRewardAmount(wonBlock)
+      const farmerRewardAmountFiatHold = this.ratesService.getFiatAmount(farmerRewardAmount)
+      const farmerRewardAmountFiatSold = this.ratesService.getHistoricalFiatAmount(farmerRewardAmount, wonBlock.historicalRate)
+
+      return [
+        moment(wonBlock.createdAt).format('YYYY-MM-DD HH:mm'),
+        wonBlock.height,
+        wonBlock.hash,
+        wonBlock.effort,
+        farmerRewardAmount?.toString(),
+        farmerRewardAmountFiatHold?.toString(),
+        farmerRewardAmountFiatSold?.toString(),
+        wonBlock.remarks.map(remark => remark.type).join(', '),
+      ]
+    }))
   }
 
   private makeChartUpdateOptions(wonBlocks: AccountWonBlock[]): EChartsOption {

@@ -22,18 +22,19 @@
             </th>
             <th scope="col">{{snippetService.getSnippet('payouts-component.headers.transaction')}}</th>
             <th scope="col">{{snippetService.getSnippet('payouts-component.headers.amount')}}</th>
-            <th scope="col">{{snippetService.getSnippet('payouts-component.headers.fiat-amount')}}</th>
+            <th scope="col">Fiat Amount (Hold)</th>
+            <th scope="col">Fiat Amount (Sold)</th>
             <th scope="col">{{snippetService.getSnippet('payouts-component.headers.state')}}</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngIf="isLoading && (payouts | async).length === 0">
-            <td colspan="5" style="text-align: center">
+            <td colspan="6" style="text-align: center">
               <app-loading-state></app-loading-state>
             </td>
           </tr>
           <tr *ngIf="!isLoading && (payouts | async).length === 0">
-            <td colspan="5" style="text-align: center; padding-top: 1rem">
+            <td colspan="6" style="text-align: center; padding-top: 1rem">
               <app-empty-state [text]="snippetService.getSnippet('payouts-component.no-payouts-sent-yet')" [icon]="faMoneyCheck"></app-empty-state>
             </td>
           </tr>
@@ -44,7 +45,8 @@
               <span *ngIf="payout.blockExplorerUrl === undefined">{{payout.coinId}}</span>
             </td>
             <td style="white-space: nowrap">{{payout.amountFormatted}} {{statsService.ticker$ | async}}</td>
-            <td style="white-space: nowrap">{{payout.fiatAmountFormatted}}</td>
+            <td style="white-space: nowrap">{{payout.fiatHoldAmountFormatted}}</td>
+            <td style="white-space: nowrap">{{payout.fiatSoldAmountFormatted}}</td>
             <td>{{payout.state}}</td>
           </tr>
         </tbody>

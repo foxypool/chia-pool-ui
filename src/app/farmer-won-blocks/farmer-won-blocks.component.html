@@ -52,7 +52,11 @@
             <td *ngIf="(statsService.poolConfig$ | async)?.blockExplorerBlockUrlTemplate"><a href="{{getBlockExplorerBlockLink(block)}}" target="_blank" style="color: #b45bff">{{block.height}}</a></td>
             <td *ngIf="!(statsService.poolConfig$ | async)?.blockExplorerBlockUrlTemplate">{{block.height}}</td>
             <td><span [class]="getEffortColor(block)">{{getBlockEffort(block)}}</span></td>
-            <td>{{getFarmerReward(block) ?? 'N/A'}}</td>
+            <td>
+              <span ngbTooltip="Hold: {{ratesService.getValuesInFiatFormatted(getFarmerRewardAmount(block))}} | Sold: {{ratesService.getValueInHistoricalFiatFormatted(getFarmerRewardAmount(block), block.historicalRate)}}">
+                {{getFarmerRewardFormatted(block)}}
+              </span>
+            </td>
             <td *ngIf="block.remarks === undefined || block.remarks.length === 0">
               <span class="badge remark-pill background-color-light-green">OK</span>
             </td>

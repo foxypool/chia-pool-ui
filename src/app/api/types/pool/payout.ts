@@ -1,4 +1,5 @@
 import {TransactionState} from '../transaction-state'
+import {HistoricalRate} from '../historical/historical-rate'
 
 export enum PayoutState {
   inMempool = 'IN_MEMPOOL',
@@ -17,5 +18,6 @@ export interface Payout {
   _id: string
   state: PayoutState
   transactions: PayoutTransaction[]
+  historicalRate?: HistoricalRate
   createdAt: string
 }

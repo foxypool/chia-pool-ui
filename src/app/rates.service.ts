@@ -4,6 +4,7 @@ import {ConfigService} from './config.service'
 import {combineLatest, Observable, Subscription} from 'rxjs'
 import {distinctUntilChanged, map} from 'rxjs/operators'
 import {BigNumber} from 'bignumber.js'
+import {HistoricalRate} from './api/types/historical/historical-rate'
 
 @Injectable({
   providedIn: 'root',
@@ -30,27 +31,63 @@ export class RatesService implements OnDestroy {
     this.subscriptions.map(subscription => subscription.unsubscribe())
   }
 
-  _getCoinValueAsFiat(value: string|number|null|undefined): number {
-    if (!this.rates) {
-      return 0
-    }
-    if (!value) {
-      return 0
-    }
-    if (this.isTestnet) {
-      return 0
+  public getFiatAmount(value: string|number|null|undefined|BigNumber): BigNumber|undefined {
+    if (this.isTestnet || value === undefined || value === null) {
+      return
     }
     const rate = this.rates[this.configService.selectedCurrency]
-    if (!rate) {
-      return 0
+    if (rate === undefined) {
+      return
     }
 
-    return (new BigNumber(value)).multipliedBy(rate).toNumber()
+    return (new BigNumber(value)).multipliedBy(rate)
   }
 
-  public getValuesInFiatFormatted(value: string|number|null|undefined): string {
-    const fiatAmount = this._getCoinValueAsFiat(value)
-    const decimalPlaces = this._getDecimalPlaces(fiatAmount)
+  public getHistoricalFiatAmount(value: string|number|null|undefined|BigNumber, historicalRate?: HistoricalRate): BigNumber|undefined {
+    if (this.isTestnet || value === undefined || value === null || historicalRate === undefined) {
+      return
+    }
+    const rate = historicalRate.rates[this.configService.selectedCurrency]
+    if (rate === undefined) {
+      return
+    }
+
+    return (new BigNumber(value)).multipliedBy(rate)
+  }
+
+  public getHistoricalOrCurrentFiatAmount(value: string|number|null|undefined|BigNumber, historicalRate?: HistoricalRate): BigNumber|undefined {
+    if (this.isTestnet || value === undefined || value === null) {
+      return
+    }
+    const ratesToUse = historicalRate !== undefined ? historicalRate.rates : this.rates
+    let rate = ratesToUse[this.configService.selectedCurrency]
+    if (rate === undefined && historicalRate !== undefined) {
+      rate = this.rates[this.configService.selectedCurrency]
+    }
+
+    if (rate === undefined) {
+      return
+    }
+
+    return (new BigNumber(value)).multipliedBy(rate)
+  }
+
+  public getValuesInFiatFormatted(value: string|number|null|undefined|BigNumber, historicalRate?: HistoricalRate): string {
+    const fiatAmount = this.getHistoricalOrCurrentFiatAmount(value, historicalRate)
+    if (fiatAmount === undefined) {
+      return 'N/A'
+    }
+    const decimalPlaces = this.getDecimalPlaces(fiatAmount.toNumber())
+
+    return `${fiatAmount.toFixed(decimalPlaces)} ${this.configService.selectedCurrency.toUpperCase()}`
+  }
+
+  public getValueInHistoricalFiatFormatted(value: string|number|null|undefined|BigNumber, historicalRate?: HistoricalRate): string {
+    const fiatAmount = this.getHistoricalFiatAmount(value, historicalRate)
+    if (fiatAmount === undefined) {
+      return 'N/A'
+    }
+    const decimalPlaces = this.getDecimalPlaces(fiatAmount.toNumber())
 
     return `${fiatAmount.toFixed(decimalPlaces)} ${this.configService.selectedCurrency.toUpperCase()}`
   }
@@ -62,13 +99,7 @@ export class RatesService implements OnDestroy {
     ]).pipe(
       map(([exchangeStats]) => exchangeStats.rates),
       map(rates => {
-        if (!rates) {
-          return 0
-        }
-        if (!value) {
-          return 0
-        }
-        if (this.isTestnet) {
+        if (!rates || this.isTestnet) {
           return 0
         }
         const rate = rates[this.configService.selectedCurrency]
@@ -80,14 +111,14 @@ export class RatesService implements OnDestroy {
       }),
       distinctUntilChanged(),
       map(fiatAmount => {
-        const decimalPlaces = this._getDecimalPlaces(fiatAmount)
+        const decimalPlaces = this.getDecimalPlaces(fiatAmount)
 
         return `${fiatAmount.toFixed(decimalPlaces)} ${this.configService.selectedCurrency.toUpperCase()}`
       }),
     )
   }
 
-  _getDecimalPlaces(value) {
+  private getDecimalPlaces(value: number): number {
     if (value === 0) {
       return 0
     }
