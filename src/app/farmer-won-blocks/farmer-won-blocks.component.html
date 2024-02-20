@@ -53,7 +53,7 @@
             <td *ngIf="!(statsService.poolConfig$ | async)?.blockExplorerBlockUrlTemplate">{{block.height}}</td>
             <td><span [class]="getEffortColor(block)">{{getBlockEffort(block)}}</span></td>
             <td>
-              <span ngbTooltip="Hold: {{ratesService.getValuesInFiatFormatted(getFarmerRewardAmount(block))}} | Sold: {{ratesService.getValueInHistoricalFiatFormatted(getFarmerRewardAmount(block), block.historicalRate)}}">
+              <span ngbTooltip="Now: {{ratesService.getValuesInFiatFormatted(getFarmerRewardAmount(block))}} | At receipt: {{ratesService.getValueInHistoricalFiatFormatted(getFarmerRewardAmount(block), block.historicalRate)}}">
                 {{getFarmerRewardFormatted(block)}}
               </span>
             </td>

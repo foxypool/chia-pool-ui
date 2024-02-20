@@ -22,8 +22,8 @@
             </th>
             <th scope="col">{{snippetService.getSnippet('payouts-component.headers.transaction')}}</th>
             <th scope="col">{{snippetService.getSnippet('payouts-component.headers.amount')}}</th>
-            <th scope="col">Fiat Amount (Hold)</th>
-            <th scope="col">Fiat Amount (Sold)</th>
+            <th scope="col">Fiat Amount (Now)</th>
+            <th scope="col">Fiat Amount (At receipt)</th>
             <th scope="col">{{snippetService.getSnippet('payouts-component.headers.state')}}</th>
           </tr>
         </thead>
@@ -45,8 +45,8 @@
               <span *ngIf="payout.blockExplorerUrl === undefined">{{payout.coinId}}</span>
             </td>
             <td style="white-space: nowrap">{{payout.amountFormatted}} {{statsService.ticker$ | async}}</td>
-            <td style="white-space: nowrap">{{payout.fiatHoldAmountFormatted}}</td>
-            <td style="white-space: nowrap">{{payout.fiatSoldAmountFormatted}}</td>
+            <td style="white-space: nowrap">{{payout.fiatAmountNowFormatted}}</td>
+            <td style="white-space: nowrap">{{payout.fiatAmountAtReceiptFormatted}}</td>
             <td>{{payout.state}}</td>
           </tr>
         </tbody>

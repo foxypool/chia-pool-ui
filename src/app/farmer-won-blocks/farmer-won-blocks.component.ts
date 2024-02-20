@@ -263,13 +263,13 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
       'Hash',
       'Effort',
       'Farmer Reward',
-      'Farmer Reward Fiat (Hold)',
-      'Farmer Reward Fiat (Sold)',
+      'Farmer Reward Fiat (Now)',
+      'Farmer Reward Fiat (At receipt)',
       'Remarks',
     ], this.wonBlocksSubject.getValue().map(wonBlock => {
       const farmerRewardAmount = this.getFarmerRewardAmount(wonBlock)
-      const farmerRewardAmountFiatHold = this.ratesService.getFiatAmount(farmerRewardAmount)
-      const farmerRewardAmountFiatSold = this.ratesService.getHistoricalFiatAmount(farmerRewardAmount, wonBlock.historicalRate)
+      const farmerRewardAmountFiatNow = this.ratesService.getFiatAmount(farmerRewardAmount)
+      const farmerRewardAmountFiatAtReceipt = this.ratesService.getHistoricalFiatAmount(farmerRewardAmount, wonBlock.historicalRate)
 
       return [
         moment(wonBlock.createdAt).format('YYYY-MM-DD HH:mm'),
@@ -277,8 +277,8 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
         wonBlock.hash,
         wonBlock.effort,
         farmerRewardAmount?.toString(),
-        farmerRewardAmountFiatHold?.toString(),
-        farmerRewardAmountFiatSold?.toString(),
+        farmerRewardAmountFiatNow?.toString(),
+        farmerRewardAmountFiatAtReceipt?.toString(),
         wonBlock.remarks.map(remark => remark.type).join(', '),
       ]
     }))

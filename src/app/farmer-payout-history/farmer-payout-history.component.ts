@@ -98,19 +98,19 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
       'Date',
       'Coin',
       'Amount',
-      'Fiat Amount (Hold)',
-      'Fiat Amount (Sold)',
+      'Fiat Amount (Now)',
+      'Fiat Amount (At receipt)',
       'State',
     ], this.payouts.getValue().map(payout => {
-      const amountFiatHold = this.ratesService.getFiatAmount(payout.amount)
-      const amountFiatSold = this.ratesService.getHistoricalFiatAmount(payout.amount, payout.historicalRate)
+      const amountFiatNow = this.ratesService.getFiatAmount(payout.amount)
+      const amountFiatAtReceipt = this.ratesService.getHistoricalFiatAmount(payout.amount, payout.historicalRate)
 
       return [
         moment(payout.createdAt).format('YYYY-MM-DD HH:mm'),
         payout.coinId,
         payout.amount,
-        amountFiatHold?.toString(),
-        amountFiatSold?.toString(),
+        amountFiatNow?.toString(),
+        amountFiatAtReceipt?.toString(),
         payout.state,
       ]
     }))
@@ -132,8 +132,8 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
             amountFormatted: (new BigNumber(accountPayout.amount))
               .decimalPlaces(this.coinConfig.decimalPlaces, BigNumber.ROUND_FLOOR)
               .toString(),
-            fiatHoldAmountFormatted: this.ratesService.getValuesInFiatFormatted(amount),
-            fiatSoldAmountFormatted: this.ratesService.getValueInHistoricalFiatFormatted(amount, accountPayout.historicalRate),
+            fiatAmountNowFormatted: this.ratesService.getValuesInFiatFormatted(amount),
+            fiatAmountAtReceiptFormatted: this.ratesService.getValueInHistoricalFiatFormatted(amount, accountPayout.historicalRate),
             state: this.getFormattedPaymentState(accountPayout.state),
             formattedPayoutDate: this.formatDate(moment(accountPayout.createdAt), payoutDateFormatting),
             blockExplorerUrl: this.getBlockExplorerCoinLink(accountPayout.coinId),
@@ -204,8 +204,8 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
 interface FormattedAccountPayout {
   coinId: string,
   amountFormatted: string,
-  fiatHoldAmountFormatted: string,
-  fiatSoldAmountFormatted: string,
+  fiatAmountNowFormatted: string,
+  fiatAmountAtReceiptFormatted: string,
   state: string,
   formattedPayoutDate: string,
   blockExplorerUrl?: string,
