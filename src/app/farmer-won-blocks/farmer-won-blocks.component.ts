@@ -263,8 +263,8 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
       'Hash',
       'Effort',
       'Farmer Reward',
-      'Farmer Reward Fiat (Now)',
-      'Farmer Reward Fiat (At receipt)',
+      'Farmer Reward Value (Now)',
+      'Farmer Reward Value (At receipt)',
       'Remarks',
     ], this.wonBlocksSubject.getValue().map(wonBlock => {
       const farmerRewardAmount = this.getFarmerRewardAmount(wonBlock)

@@ -98,8 +98,8 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
       'Date',
       'Coin',
       'Amount',
-      'Fiat Amount (Now)',
-      'Fiat Amount (At receipt)',
+      'Value (Now)',
+      'Value (At receipt)',
       'State',
     ], this.payouts.getValue().map(payout => {
       const amountFiatNow = this.ratesService.getFiatAmount(payout.amount)
