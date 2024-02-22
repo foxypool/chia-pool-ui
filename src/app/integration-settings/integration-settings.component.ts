@@ -2,7 +2,7 @@ import { Component } from '@angular/core'
 import {AccountService} from '../account.service'
 import {faCircleNotch} from '@fortawesome/free-solid-svg-icons'
 import {ToastService} from '../toast.service'
-import {ChiaDashboardApi, getBestChiaDashboardApiBaseUrl} from '../integrations/chia-dashboard-api/api'
+import {ChiaDashboardApi} from '../integrations/chia-dashboard-api/api'
 import {AsyncValidatorFn, FormBuilder} from '@angular/forms'
 import {debounceTime, switchMap} from 'rxjs'
 import {distinctUntilChanged, first, map} from 'rxjs/operators'
@@ -51,6 +51,8 @@ export class IntegrationSettingsComponent {
     return this.accountService.account?.integrations?.chiaDashboardShareKey !== this.newChiaDashboardShareKey
   }
 
+  private readonly api: ChiaDashboardApi = new ChiaDashboardApi()
+
   public constructor(
     public readonly accountService: AccountService,
     private readonly toastService: ToastService,
@@ -86,23 +88,12 @@ export class IntegrationSettingsComponent {
       return true
     }
 
+    this.api.shareKey = shareKey
     this.isValidatingShareKey = true
     try {
-      const baseUrl = await getBestChiaDashboardApiBaseUrlMemoized()
-      const api = new ChiaDashboardApi(baseUrl, shareKey)
-
-      return await api.isValidShareKey()
+      return await this.api.isValidShareKey()
     } finally {
       this.isValidatingShareKey = false
     }
   }
-}
-
-let bestApiBaseUrl: string|undefined
-async function getBestChiaDashboardApiBaseUrlMemoized() {
-  if (bestApiBaseUrl === undefined) {
-    bestApiBaseUrl = await getBestChiaDashboardApiBaseUrl()
-  }
-
-  return bestApiBaseUrl
 }

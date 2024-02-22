@@ -1,13 +1,13 @@
 import {Injectable, OnDestroy} from '@angular/core'
 import {
   ChiaDashboardApi,
-  getBestChiaDashboardApiBaseUrl
 } from './integrations/chia-dashboard-api/api'
 import {AccountService} from './account.service'
 import {combineLatest, distinctUntilChanged, map, BehaviorSubject, Observable, Subscription} from 'rxjs'
 import {Satellite} from './integrations/chia-dashboard-api/types/satellite'
 import {TtlCache} from './ttl-cache'
 import {sleep} from './util'
+import {tap} from 'rxjs/operators'
 
 @Injectable({
   providedIn: 'root'
@@ -22,9 +22,8 @@ export class ChiaDashboardService implements OnDestroy {
   private readonly satellitesSubject: BehaviorSubject<Satellite[]|undefined> = new BehaviorSubject<Satellite[]|undefined>(undefined)
   private readonly isLoadingSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
 
-  private readonly cache: TtlCache = new TtlCache(2 * 60)
-  private api?: ChiaDashboardApi
-  private bestBaseUrl?: string
+  private readonly cache: TtlCache = new TtlCache(1.5 * 60)
+  private readonly api: ChiaDashboardApi = new ChiaDashboardApi()
   private updateSatellitesInterval?: ReturnType<typeof setInterval>
   private retryCounter: number = 0
 
@@ -33,8 +32,9 @@ export class ChiaDashboardService implements OnDestroy {
       .pipe(
         map(account => account?.integrations?.chiaDashboardShareKey),
         distinctUntilChanged(),
+        tap(shareKey => this.api.shareKey = shareKey),
       )
-      .subscribe(this.updateApi.bind(this)),
+      .subscribe(this.updateSatellites.bind(this)),
   ]
 
   public constructor(private readonly accountService: AccountService) {
@@ -43,7 +43,7 @@ export class ChiaDashboardService implements OnDestroy {
       this.isLoadingSubject.pipe(distinctUntilChanged()),
       this.satellitesSubject.pipe(distinctUntilChanged()),
     ]).pipe(map(([isLoading, satellites]) => isLoading && satellites === undefined))
-    this.updateSatellitesInterval = setInterval(this.updateSatellites.bind(this), 2 * 60 * 1000)
+    this.updateSatellitesInterval = setInterval(this.updateSatellites.bind(this),  1.5 * 60 * 1000)
   }
 
   public ngOnDestroy(): void {
@@ -54,29 +54,8 @@ export class ChiaDashboardService implements OnDestroy {
     }
   }
 
-  private async updateApi(shareKey?: string) {
-    if (shareKey === undefined) {
-      this.api = undefined
-      void this.updateSatellites()
-
-      return
-    }
-    this.isLoadingSubject.next(true)
-    const baseUrl = this.bestBaseUrl ?? await getBestChiaDashboardApiBaseUrl()
-    this.isLoadingSubject.next(false)
-    if (baseUrl === undefined) {
-      this.api = undefined
-      void this.updateSatellites()
-
-      return
-    }
-    this.bestBaseUrl = baseUrl
-    this.api = new ChiaDashboardApi(baseUrl, shareKey)
-    await this.updateSatellites()
-  }
-
   private async updateSatellites() {
-    if (this.api === undefined) {
+    if (this.api.shareKey === undefined) {
       this.satellitesSubject.next(undefined)
 
       return

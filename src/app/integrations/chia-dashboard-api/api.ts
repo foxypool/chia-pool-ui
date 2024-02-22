@@ -1,41 +1,29 @@
 import axios, {AxiosInstance, CreateAxiosDefaults} from 'axios'
 import {Satellite} from './types/satellite'
 
-const apiBaseUrls: string[] = [
-  'https://chia-dashboard-api.foxypool.io/api',
-  'https://chia-dashboard-api-2.foxypool.io/api',
-  'https://chia-dashboard-api-3.foxypool.io/api',
-]
-
-export async function getBestChiaDashboardApiBaseUrl(): Promise<string|undefined> {
-  try {
-    const bestResult = await Promise.any(
-      apiBaseUrls.map(async baseUrl => {
-        const api = new ChiaDashboardApi(baseUrl)
-
-        return {
-          baseUrl,
-          pingResult: await api.ping(),
-        }
-      })
-    )
-
-    return bestResult.baseUrl
-  } catch (err) {
-    return
-  }
-}
-
 export class ChiaDashboardApi {
+  public get shareKey(): string|undefined {
+    return this._shareKey
+  }
+
+  public set shareKey(shareKey: string|undefined) {
+    this._shareKey = shareKey
+    if (shareKey !== undefined) {
+      this.client.defaults.headers.Authorization = `Bearer ${shareKey}`
+    } else {
+      delete this.client.defaults.headers.Authorization
+    }
+  }
+
   private readonly client: AxiosInstance
 
-  public constructor(baseURL: string, public readonly shareKey?: string) {
+  public constructor(private _shareKey?: string) {
     const options: CreateAxiosDefaults = {
-      baseURL,
+      baseURL: 'https://chia-dashboard-api.foxypool.io/api',
       timeout: 30 * 1000,
     }
-    if (shareKey !== undefined) {
-      options.headers = { Authorization: `Bearer ${shareKey}` }
+    if (_shareKey !== undefined) {
+      options.headers = { Authorization: `Bearer ${_shareKey}` }
     }
 
     this.client = axios.create(options)
