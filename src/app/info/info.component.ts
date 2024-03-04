@@ -38,7 +38,7 @@ export class InfoComponent implements OnInit, OnDestroy {
     if (this.poolsProvider.pool.type === PoolType.nft) {
       lightFarmers.push({
         name: 'Fast Farmer',
-        supports: 'NFT uncompressed and Bladebit compressed plots',
+        supports: 'NFT uncompressed, Bladebit and Gigahorse compressed plots',
         link: 'https://docs.foxypool.io/proof-of-spacetime/fast-farmer/',
       })
     }
