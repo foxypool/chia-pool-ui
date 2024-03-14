@@ -1,0 +1,63 @@
+<h5 class="settings-modal-text">Reward settings</h5>
+<div class="row">
+  <div class="col-12">
+    <label for="distributionRatio" class="form-label">Distribution Ratio</label>
+    <div
+      class="input-group"
+      id="distributionRatio"
+      [class.is-invalid]="!isValidDistributionRatio"
+    >
+      <div class="form-floating" [class.is-invalid]="isBlockWinnerRatioInvalid">
+        <input
+          type="number"
+          class="form-control"
+          id="blockWinnerRatio"
+          aria-describedby="blockWinnerRatioFeedback"
+          [class.is-invalid]="isBlockWinnerRatioInvalid"
+          [(ngModel)]="blockWinnerRatio"
+          min="0"
+          max="100"
+          placeholder=""
+        >
+        <label for="blockWinnerRatio">Block winner ratio</label>
+      </div>
+      <span class="input-group-text fw-bold">-</span>
+      <div class="form-floating" [class.is-invalid]="isHistoricalRatioInvalid">
+        <input
+          type="number"
+          class="form-control"
+          id="historicalRatio"
+          aria-describedby="historicalRatioFeedback"
+          [class.is-invalid]="isHistoricalRatioInvalid"
+          [(ngModel)]="historicalRatio"
+          min="0"
+          max="100"
+          placeholder=""
+        >
+        <label for="historicalRatio">Historical ratio</label>
+      </div>
+      <div *ngIf="isBlockWinnerRatioInvalid" id="blockWinnerRatioFeedback" class="invalid-feedback">
+        The block winner ratio must be a whole number between 0 and 100.
+      </div>
+      <div *ngIf="isHistoricalRatioInvalid" id="historicalRatioFeedback" class="invalid-feedback">
+        The historical ratio must be a whole number between 0 and 100.
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row mt-3">
+  <div class="col-12" >
+    <div class="alert alert-info" role="alert" style="font-size: 1.1rem">
+      To learn more about what distribution ratio is and how it works, see <a href="https://docs.foxypool.io/proof-of-spacetime/foxy-pool/distribution-ratio/" target="_blank">the docs</a>.
+    </div>
+  </div>
+</div>
+<div class="row mt-1">
+  <div class="col-12">
+    <button type="button" class="btn btn-success w-100" (click)="updateSettings()" [disabled]="!canUpdateSettings">
+      <span *ngIf="accountService.isUpdatingAccount">Saving</span>
+      <span *ngIf="!accountService.isUpdatingAccount">Apply changes</span>
+      <fa-icon [icon]="faCircleNotch" animation="spin" *ngIf="accountService.isUpdatingAccount" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
+    </button>
+  </div>
+</div>

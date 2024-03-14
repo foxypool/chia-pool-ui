@@ -15,7 +15,8 @@
           </div>
         </th>
         <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.height')}}</th>
-        <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.network-capacity')}}</th>
+        <th scope="col">Netspace</th>
+        <th scope="col"><span ngbTooltip="Distribution ratio">DR</span></th>
         <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.effort')}}</th>
         <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.winner')}}</th>
         <th scope="col">{{snippetService.getSnippet('blocks-won-component.header.reward')}}</th>
@@ -24,12 +25,12 @@
     </thead>
     <tbody>
       <tr *ngIf="(statsService.rewardStats$ | async) === null">
-        <td colspan="7" style="text-align: center">
+        <td colspan="8" style="text-align: center">
           <app-loading-state></app-loading-state>
         </td>
       </tr>
       <tr *ngIf="(statsService.rewardStats$ | async)?.recentlyWonBlocks.length === 0">
-        <td colspan="7" style="text-align: center; padding-top: 1rem">
+        <td colspan="8" style="text-align: center; padding-top: 1rem">
           <app-empty-state [text]="snippetService.getSnippet('blocks-won-component.no-blocks-won-yet')" [icon]="faCubes"></app-empty-state>
         </td>
       </tr>
@@ -38,6 +39,7 @@
         <td *ngIf="(statsService.poolConfig$ | async)?.blockExplorerBlockUrlTemplate"><a href="{{getBlockExplorerBlockLink(block)}}" target="_blank" style="color: #b45bff">{{block.height}}</a></td>
         <td *ngIf="!(statsService.poolConfig$ | async)?.blockExplorerBlockUrlTemplate">{{block.height}}</td>
         <td class="no-wrap">{{block.networkSpaceInTib ? getFormattedCapacityFromTiB(block.networkSpaceInTib) : snippetService.getSnippet('general.not-available.short')}}</td>
+        <td class="no-wrap">{{block.distributionRatio}}</td>
         <td class="no-wrap"><span [class]="getEffortColor(block)">{{getBlockEffort(block)}}</span></td>
         <td class="ellipsis" *ngIf="block.winner.accountReference">
           <a class="farmer-page-link" routerLink="/farmer/{{block.winner.accountReference}}">{{block.winner.name || block.winner.payoutAddress || snippetService.getSnippet('general.unknown')}}</a>

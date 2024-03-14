@@ -62,6 +62,7 @@ import {NgxSliderModule} from 'ngx-slider-v2'
 import { UpdateBlockSettingsComponent } from './update-block-settings/update-block-settings.component'
 import { ConfirmationModalComponent } from './confirmation-modal/confirmation-modal.component'
 import {FarmerPartialsComponent} from './farmer-partials/farmer-partials.component'
+import {UpdateRewardSettingsComponent} from './update-reward-settings/update-reward-settings.component'
 
 @NgModule({
   declarations: [
@@ -129,6 +130,7 @@ import {FarmerPartialsComponent} from './farmer-partials/farmer-partials.compone
     NgOptimizedImage,
     NgxSliderModule,
     QRCodeModule,
+    UpdateRewardSettingsComponent,
   ],
   providers: [
     WINDOW_PROVIDERS,

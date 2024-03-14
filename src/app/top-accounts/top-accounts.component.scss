@@ -18,3 +18,11 @@
   white-space: nowrap;
   max-width: 200px;
 }
+@media (min-width:1200px) and (max-width:1510px) {
+  .ellipsis {
+    max-width: 150px;
+  }
+  .hide-on-smaller-screens {
+    display: none;
+  }
+}

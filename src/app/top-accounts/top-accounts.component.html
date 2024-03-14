@@ -32,7 +32,7 @@
       <tr *ngFor="let account of topAccounts$ | async; trackBy: trackBy">
         <td class="ellipsis"><a class="farmer-page-link" routerLink="/farmer/{{account.accountIdentifier}}">{{account.name ? account.name : account.payoutAddress}}</a></td>
         <td class="no-wrap">{{account.pendingRounded}}<span *ngIf="account.pendingRounded === 0 && account.collateralRounded !== undefined"><span style="font-size: 12.8px"> +{{account.collateralRounded}}</span></span> {{statsService.ticker$ | async}}</td>
-        <td class="no-wrap">{{account.capacity}} <span style="font-size: 12.8px">({{account.capacityShare}} %)</span></td>
+        <td class="no-wrap">{{account.capacity}}<span class="hide-on-smaller-screens" style="font-size: 12.8px"> ({{account.capacityShare}} %)</span></td>
       </tr>
     </tbody>
   </table>

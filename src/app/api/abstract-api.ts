@@ -179,6 +179,16 @@ export abstract class AbstractApi<
     return data
   }
 
+  public async updateAccountDistributionRatio({ accountIdentifier, authToken, newDistributionRatio }: UpdateAccountDistributionRatioOptions): Promise<ApiResponse<void>> {
+    const { data } = await this.client.post<ApiResponse<void>>(`account/${accountIdentifier}/distribution-ratio`, {
+      newDistributionRatio,
+    }, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    })
+
+    return data
+  }
+
   public async updateHarvesterName({ accountIdentifier, authToken, harvesterPeerId, newName }: UpdateHarvesterNameOptions): Promise<ApiResponse<void>> {
     const { data } = await this.client.put<ApiResponse<void>>(`account/${accountIdentifier}/harvester/${harvesterPeerId}/name`, {
       newName,
@@ -255,6 +265,10 @@ export abstract class AbstractApi<
 
 export interface UpdateAccountNameOptions extends AuthenticatedAccountRequestOptions {
   newName?: string
+}
+
+export interface UpdateAccountDistributionRatioOptions extends AuthenticatedAccountRequestOptions {
+  newDistributionRatio: string
 }
 
 export interface UpdateAccountPayoutOptions extends AuthenticatedAccountRequestOptions {

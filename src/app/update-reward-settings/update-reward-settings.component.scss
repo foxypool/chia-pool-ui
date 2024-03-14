@@ -1,0 +1,15 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+.info-icon {
+  font-size: 1.1rem;
+  color: var(--info-icon-color);
+}
+.info-icon:hover{
+  color: var(--info-icon-color-hover);
+}

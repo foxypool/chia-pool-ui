@@ -374,6 +374,25 @@ export class AccountService {
     }
   }
 
+  public async updateRewardOptions(options: UpdateAccountRewardOptions) {
+    if (!this.isAuthenticated) {
+      return
+    }
+    this.isUpdatingAccount = true
+    try {
+      if ('newDistributionRatio' in options) {
+        await this.statsService.updateAccountDistributionRatio({
+          accountIdentifier: this.accountIdentifier,
+          authToken: this.authToken,
+          newDistributionRatio: options.newDistributionRatio,
+        })
+      }
+      await this.updateAccount({ bustCache: true })
+    } finally {
+      this.isUpdatingAccount = false
+    }
+  }
+
   public async generateLoginToken(): Promise<LoginTokenResult> {
     if (!this.isAuthenticated) {
       throw new Error('Not authenticated')
@@ -570,4 +589,8 @@ function makeInvalidFarmerErrorMessage(poolType: PoolType, accountIdentifier: st
 export interface UpdateAccountSettingsOptions {
   name?: string
   imageUrl?: string
+}
+
+export interface UpdateAccountRewardOptions {
+  newDistributionRatio?: string
 }

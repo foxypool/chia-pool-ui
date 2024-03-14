@@ -234,6 +234,10 @@ export class StatsService {
     return this.requestWithError(this.api.updateAccountName({ accountIdentifier, authToken, newName }))
   }
 
+  public async updateAccountDistributionRatio({ accountIdentifier, authToken, newDistributionRatio }) {
+    return this.requestWithError(this.api.updateAccountDistributionRatio({ accountIdentifier, authToken, newDistributionRatio }))
+  }
+
   public async updateHarvesterName({ accountIdentifier, authToken, harvesterPeerId, newName }) {
     return this.requestWithError(this.api.updateHarvesterName({ accountIdentifier, authToken, harvesterPeerId, newName }))
   }
