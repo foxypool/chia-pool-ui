@@ -1,0 +1,58 @@
+::ng-deep .page-link {
+  background-color: var(--page-link-background-color);
+  border-color: var(--page-link-border-color);
+  -webkit-transition: color 0.3s;
+  transition: color 0.3s;
+  color: var(--highlight-color);
+}
+::ng-deep .page-link:hover {
+  color: var(--highlight-color-hover);
+  border-color: var(--page-link-border-color);
+  text-decoration: none;
+}
+::ng-deep .page-item:not(.active) .page-link:hover {
+  background-color: var(--page-link-background-color);
+}
+::ng-deep .page-item.disabled .page-link {
+  background-color: var(--page-link-background-color);
+  border-color: var(--page-link-border-color);
+}
+.page-size-select {
+  width: 4.2em;
+  background-color: var(--input-field-background-color);
+  color: var(--text-color);
+  border-color: var(--input-field-border-color);
+}
+.page-size-select-option {
+  background-color: var(--select-item-background-color);
+}
+.page-size-select-label {
+  font-size: small;
+  background-color: var(--input-field-background-color);
+  color: var(--text-color);
+  border-color: var(--input-field-border-color);
+}
+.footer-grid {
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 5px;
+  grid-auto-flow: row;
+  justify-items: center;
+}
+.pagination-grid-item {
+  grid-column-start: 2;
+}
+@media (max-width: 606px) {
+  .footer-grid {
+    grid-template-columns: repeat(1, 1fr);
+    grid-column-gap: 5px;
+    grid-auto-flow: row;
+    justify-items: center;
+  }
+  .pagination-grid-item {
+    grid-column-start: 1;
+  }
+}
+.state-pill {
+  color: #18191c;
+  font-weight: 600;
+}

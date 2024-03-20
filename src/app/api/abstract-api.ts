@@ -21,6 +21,7 @@ import {BaseTopAccount} from './types/account/top-account'
 import {ApiResponse} from './types/api-response'
 import {HistoricalStatsDuration} from './types/historical-stats-duration'
 import {AccountPartialList} from './types/account/account-partial'
+import {AccountBalanceChangeList} from './types/account/account-balance-change'
 
 export abstract class AbstractApi<
   AccountType extends Account,
@@ -104,6 +105,12 @@ export abstract class AbstractApi<
 
   public async getAccountPartials({ accountIdentifier, page, limit }: { accountIdentifier: string, page: number, limit: number }): Promise<AccountPartialList> {
     const { data } = await this.client.get<AccountPartialList>(`account/${accountIdentifier}/partials`, { params: { page, limit } })
+
+    return data
+  }
+
+  public async getAccountBalanceChanges({ accountIdentifier, page, limit }: { accountIdentifier: string, page: number, limit: number }): Promise<AccountBalanceChangeList> {
+    const { data } = await this.client.get<AccountBalanceChangeList>(`account/${accountIdentifier}/balance-changes`, { params: { page, limit } })
 
     return data
   }

@@ -194,6 +194,10 @@ export class StatsService {
     return this.api.getAccountPartials({ accountIdentifier, page, limit })
   }
 
+  public async getAccountBalanceChanges({ accountIdentifier, page, limit }) {
+    return this.api.getAccountBalanceChanges({ accountIdentifier, page, limit })
+  }
+
   getAccountHistoricalStats({ accountIdentifier, duration }: { accountIdentifier: string, duration: HistoricalStatsDuration }) {
     return this.api.getAccountHistoricalStats({ accountIdentifier, duration })
   }

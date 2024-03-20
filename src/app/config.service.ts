@@ -3,6 +3,7 @@ import {BehaviorSubject, Subscription} from 'rxjs'
 import {distinctUntilChanged, skip} from 'rxjs/operators'
 
 import {LocalStorageService} from './local-storage.service'
+import {DateFormatting} from './date-formatting'
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class ConfigService implements OnDestroy {
   private static readonly rewardTimeIntervalStorageKey = 'config:rewardTimeInterval'
   private static readonly hideNewAccountInfoAlertStorageKey = 'config:hideNewAccountInfoAlert'
   private static readonly partialDateFormattingStorageKey = 'config:dateFormatting:partial'
+  private static readonly balanceChangeDateFormattingStorageKey = 'config:dateFormatting:balanceChange'
 
   public selectedCurrencySubject = new BehaviorSubject<string>(
     this.localStorageService.getItem(ConfigService.selectedCurrencyStorageKey) || 'usd'
@@ -32,6 +34,9 @@ export class ConfigService implements OnDestroy {
   )
   public readonly partialDateFormattingSubject = new BehaviorSubject<DateFormatting>(
     DateFormatting[this.localStorageService.getItem(ConfigService.partialDateFormattingStorageKey) || DateFormatting.fixed]
+  )
+  public readonly balanceChangeDateFormattingSubject = new BehaviorSubject<DateFormatting>(
+    DateFormatting[this.localStorageService.getItem(ConfigService.balanceChangeDateFormattingStorageKey) || DateFormatting.fixed]
   )
 
   private readonly subscriptions: Subscription[] = [
@@ -64,6 +69,11 @@ export class ConfigService implements OnDestroy {
       .pipe(skip(1), distinctUntilChanged())
       .subscribe(partialDateFormatting =>
         this.localStorageService.setItem(ConfigService.partialDateFormattingStorageKey, partialDateFormatting)
+      ),
+    this.balanceChangeDateFormattingSubject
+      .pipe(skip(1), distinctUntilChanged())
+      .subscribe(balanceChangeDateFormatting =>
+        this.localStorageService.setItem(ConfigService.balanceChangeDateFormattingStorageKey, balanceChangeDateFormatting)
       ),
   ]
 
@@ -117,14 +127,17 @@ export class ConfigService implements OnDestroy {
     this.partialDateFormattingSubject.next(dateFormatting)
   }
 
+  public get balanceChangeDateFormatting(): DateFormatting {
+    return this.balanceChangeDateFormattingSubject.getValue()
+  }
+
+  public set balanceChangeDateFormatting(dateFormatting: DateFormatting) {
+    this.balanceChangeDateFormattingSubject.next(dateFormatting)
+  }
+
   public ngOnDestroy(): void {
     this.subscriptions.map(subscription => subscription.unsubscribe())
   }
-}
-
-export enum DateFormatting {
-  fixed = 'fixed',
-  relative = 'relative',
 }
 
 export enum TimeInterval {

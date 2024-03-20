@@ -6,12 +6,13 @@ import {SnippetService} from '../snippet.service'
 import {faCubes, faRightLeft} from '@fortawesome/free-solid-svg-icons'
 import {getEffortColor} from '../util'
 import BigNumber from 'bignumber.js'
-import {ConfigService, DateFormatting} from '../config.service'
+import {ConfigService} from '../config.service'
 import {RecentlyWonBlock} from '../api/types/pool/reward-stats'
 import {TransactionState} from '../api/types/transaction-state'
 import {Observable} from 'rxjs'
 import {map, shareReplay} from 'rxjs/operators'
 import {RatesService} from '../rates.service'
+import {DateFormatting} from '../date-formatting'
 
 @Component({
   selector: 'app-blocks-won',

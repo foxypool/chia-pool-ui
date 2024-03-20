@@ -63,6 +63,7 @@ import { UpdateBlockSettingsComponent } from './update-block-settings/update-blo
 import { ConfirmationModalComponent } from './confirmation-modal/confirmation-modal.component'
 import {FarmerPartialsComponent} from './farmer-partials/farmer-partials.component'
 import {UpdateRewardSettingsComponent} from './update-reward-settings/update-reward-settings.component'
+import {FarmerBalanceChangesComponent} from './farmer-balance-changes/farmer-balance-changes.component'
 
 @NgModule({
   declarations: [
@@ -74,8 +75,6 @@ import {UpdateRewardSettingsComponent} from './update-reward-settings/update-rew
     TopAccountsComponent,
     DashboardComponent,
     StatsCardComponent,
-    EmptyStateComponent,
-    LoadingStateComponent,
     MyFarmerComponent,
     AuthenticationModalComponent,
     UpdateAccountComponent,
@@ -131,6 +130,9 @@ import {UpdateRewardSettingsComponent} from './update-reward-settings/update-rew
     NgxSliderModule,
     QRCodeModule,
     UpdateRewardSettingsComponent,
+    FarmerBalanceChangesComponent,
+    EmptyStateComponent,
+    LoadingStateComponent,
   ],
   providers: [
     WINDOW_PROVIDERS,
@@ -144,7 +146,8 @@ import {UpdateRewardSettingsComponent} from './update-reward-settings/update-rew
     },
     {
       provide: APP_INITIALIZER,
-      useFactory: () => () => {},
+      useFactory: () => () => {
+      },
       deps: [Sentry.TraceService],
       multi: true,
     },

@@ -5,9 +5,10 @@ import {SnippetService} from '../snippet.service'
 import {faExchangeAlt, faMoneyCheckAlt} from '@fortawesome/free-solid-svg-icons'
 import {BigNumber} from 'bignumber.js'
 import {PoolsProvider} from '../pools.provider'
-import {ConfigService, DateFormatting} from '../config.service'
+import {ConfigService} from '../config.service'
 import {Payout, PayoutState} from '../api/types/pool/payout'
 import {RatesService} from '../rates.service'
+import {DateFormatting} from '../date-formatting'
 
 @Component({
   selector: 'app-payouts',

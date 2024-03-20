@@ -15,7 +15,7 @@ import Capacity from '../capacity'
 import {AccountService} from '../account.service'
 import {AuthenticationModalComponent} from '../authentication-modal/authentication-modal.component'
 import {RatesService} from '../rates.service'
-import {ConfigService, DateFormatting, TimeInterval} from '../config.service'
+import {ConfigService, TimeInterval} from '../config.service'
 import {getEffortColor, makeAccountIdentifierName, sleep, unifyAccountIdentifier} from '../util'
 import {PoolsProvider, PoolType} from '../pools.provider'
 import {SettingsModalComponent} from '../settings-modal/settings-modal.component'
@@ -31,6 +31,7 @@ import {
   HistoricalStatsDuration,
 } from '../api/types/historical-stats-duration'
 import {HistoricalStatsDurationProvider} from '../historical-stats-duration-provider'
+import {DateFormatting} from '../date-formatting'
 
 @Component({
   selector: 'app-my-farmer',

@@ -5,7 +5,7 @@ import {faCubes, faExchangeAlt, faInfoCircle} from '@fortawesome/free-solid-svg-
 import {BehaviorSubject, Observable, Subscription} from 'rxjs'
 
 import {SnippetService} from '../snippet.service'
-import {ConfigService, DateFormatting} from '../config.service'
+import {ConfigService} from '../config.service'
 import {getEffortColor, getEffortColorForChart} from '../util'
 import {CsvExporter} from '../csv-exporter'
 import {map, shareReplay} from 'rxjs/operators'
@@ -14,6 +14,7 @@ import {StatsService} from '../stats.service'
 import {AccountWonBlock, Remark, RemarkType} from '../api/types/account/account-won-block'
 import {colors, Theme, ThemeProvider} from '../theme-provider'
 import {RatesService} from '../rates.service'
+import {DateFormatting} from '../date-formatting'
 
 @Component({
   selector: 'app-farmer-won-blocks',

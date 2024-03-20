@@ -5,17 +5,17 @@ import {EChartsOption} from 'echarts'
 import BigNumber from 'bignumber.js'
 
 import {SnippetService} from '../snippet.service'
-import {ConfigService, DateFormatting} from '../config.service'
+import {ConfigService} from '../config.service'
 import {CsvExporter} from '../csv-exporter'
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs'
 import {map} from 'rxjs/operators'
 import {CoinConfig} from '../coin-config'
 import {RatesService} from '../rates.service'
-import {Moment} from 'moment'
 import {StatsService} from '../stats.service'
 import {ThemeProvider} from '../theme-provider'
 import {AccountPayout} from '../api/types/account/account-payout'
 import {TransactionState} from '../api/types/transaction-state'
+import {DateFormatting, formatDate} from '../date-formatting'
 
 @Component({
   selector: 'app-farmer-payout-history',
@@ -135,7 +135,7 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
             fiatAmountNowFormatted: this.ratesService.getValuesInFiatFormatted(amount),
             fiatAmountAtReceiptFormatted: this.ratesService.getValueInHistoricalFiatFormatted(amount, accountPayout.historicalRate),
             state: this.getFormattedPaymentState(accountPayout.state),
-            formattedPayoutDate: this.formatDate(moment(accountPayout.createdAt), payoutDateFormatting),
+            formattedPayoutDate: formatDate(moment(accountPayout.createdAt), payoutDateFormatting),
             blockExplorerUrl: this.getBlockExplorerCoinLink(accountPayout.coinId),
           }
         })
@@ -151,15 +151,6 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
 
   public trackPayoutById(index: number, payout: FormattedAccountPayout): string {
     return payout.coinId
-  }
-
-  private formatDate(date: Moment, dateFormatting: DateFormatting): string {
-    switch (dateFormatting) {
-      case DateFormatting.fixed:
-        return date.format('YYYY-MM-DD HH:mm')
-      case DateFormatting.relative:
-        return date.fromNow()
-    }
   }
 
   private getBlockExplorerCoinLink(coinId: string): string|undefined {

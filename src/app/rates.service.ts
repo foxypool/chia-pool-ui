@@ -122,14 +122,15 @@ export class RatesService implements OnDestroy {
     if (value === 0) {
       return 0
     }
+    let absValue = Math.abs(value)
 
     let decimalPlaces = 2
     while (decimalPlaces < 6) {
-      if (value > 0.1) {
+      if (absValue > 0.1) {
         return decimalPlaces
       }
       decimalPlaces += 1
-      value *= 10
+      absValue *= 10
     }
 
     return decimalPlaces

@@ -5,9 +5,9 @@ import {distinctUntilChanged, map, shareReplay, skip} from 'rxjs/operators'
 import {AccountService} from '../account.service'
 import {AccountPartial} from '../api/types/account/account-partial'
 import {faBarsStaggered, faExchangeAlt} from '@fortawesome/free-solid-svg-icons'
-import {faHdd} from '@fortawesome/free-regular-svg-icons'
-import {ConfigService, DateFormatting} from '../config.service'
+import {ConfigService} from '../config.service'
 import * as moment from 'moment/moment'
+import {DateFormatting} from '../date-formatting'
 
 @Component({
   selector: 'app-farmer-partials',
@@ -155,6 +155,5 @@ export class FarmerPartialsComponent implements OnInit, OnDestroy {
     }
   }
 
-  protected readonly faHdd = faHdd
   protected readonly faExchangeAlt = faExchangeAlt
 }

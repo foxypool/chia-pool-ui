@@ -18,6 +18,7 @@ import {HistoricalStatsDurationProvider} from './historical-stats-duration-provi
 import {AccountPartialList} from './api/types/account/account-partial'
 import {Harvester} from './api/types/harvester/harvester'
 import {AccountPayout} from './api/types/account/account-payout'
+import {AccountBalanceChangeList} from './api/types/account/account-balance-change'
 
 @Injectable({
   providedIn: 'root'
@@ -291,6 +292,18 @@ export class AccountService {
     }
 
     return accountPartials
+  }
+
+  public async getAccountBalanceChanges({ page, limit }) {
+    this.isLoading = true
+    let accountBalanceChanges: AccountBalanceChangeList
+    try {
+      accountBalanceChanges = await this.statsService.getAccountBalanceChanges({ accountIdentifier: this.accountIdentifier, page, limit })
+    } finally {
+      this.isLoading = false
+    }
+
+    return accountBalanceChanges
   }
 
   async getAccountHistoricalStats({ accountIdentifier, duration }: { accountIdentifier: string, duration: HistoricalStatsDuration }): Promise<AccountHistoricalStat[]> {

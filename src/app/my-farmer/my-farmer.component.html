@@ -277,6 +277,17 @@
                 </div>
               </ng-template>
             </li>
+            <li ngbNavItem="rewards" [destroyOnHide]="true">
+              <a class="text-decoration-none" ngbNavLink routerLink="." fragment="rewards"><h5>Rewards</h5></a>
+              <ng-template ngbNavContent>
+                <div class="p-1 col-md-12">
+                  <app-farmer-balance-changes
+                    [coinConfig]="statsService.coinConfig"
+                    [selectedCurrencyObservable]="selectedCurrencyObservable"
+                  ></app-farmer-balance-changes>
+                </div>
+              </ng-template>
+            </li>
             <li ngbNavItem="recent-payouts" [destroyOnHide]="true">
               <a class="text-decoration-none" ngbNavLink routerLink="." fragment="recent-payouts"><h5>{{snippetService.getSnippet('my-farmer-component.tabs.recent-payouts.label')}}</h5></a>
               <ng-template ngbNavContent>
