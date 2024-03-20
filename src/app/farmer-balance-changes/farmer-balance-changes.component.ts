@@ -120,7 +120,7 @@ export class FarmerBalanceChangesComponent implements OnInit, OnDestroy {
             }
           })
         }),
-        share(),
+        shareReplay(1),
       )
     this.showItemsPerPageSelection = this.balanceChanges.pipe(
       map(balanceChanges => balanceChanges.length > 0),
