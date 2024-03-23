@@ -315,6 +315,7 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
         type: 'scatter',
         name: 'Proof times',
         color: '#426b69',
+        symbolSize: 8,
       }],
     }
     this.subscriptions.push(this.stats.subscribe(stats => {
