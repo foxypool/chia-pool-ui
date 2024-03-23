@@ -41,7 +41,7 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
       }
     },
     grid: {
-      left: 45,
+      left: 48,
       top: 30,
       right: 10,
       bottom: 20,
