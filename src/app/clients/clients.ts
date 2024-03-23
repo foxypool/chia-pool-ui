@@ -48,8 +48,8 @@ export const drPlotterClient: Client<string> = {
     localNames: ['dr'],
   },
   versions: {
-    minimum: '0.9.0',
-    recommendedMinimum: '0.9.0',
+    minimum: '0.11.0',
+    recommendedMinimum: '0.11.0',
   },
 }
 export const foxyFarmerClientWithBB: Client<string> = {
