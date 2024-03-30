@@ -1,6 +1,30 @@
 <h5 class="settings-modal-text">Update your Farmer difficulty</h5>
 <div class="row">
   <div class="col-12">
+    <div class="form-group">
+      <div class="d-flex justify-content-between">
+        <label for="partialsPerHour" class="form-label bigger-text">
+          Partials per hour (PPH)
+        </label>
+        <button
+          type="button"
+          class="btn btn-link small"
+          (click)="resetPartialsPerHour()"
+        >
+          Reset
+        </button>
+      </div>
+      <div class="duration-slider-wrapper">
+        <ngx-slider id="partialsPerHour" [(value)]="partialsPerHour" [options]="partialsPerHourSliderOptions"></ngx-slider>
+      </div>
+      <div class="alert alert-info" role="alert">
+        A higher PPH will result in smoother capacity estimates but requires more disk lookups and compute when using compressed plots, while a lower PPH results in the opposite.
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
     <div class="form-check form-switch" style="padding-bottom: 0.5rem">
       <input type="checkbox" class="form-check-input" role="switch" id="isFixedDifficultyCheckbox" [(ngModel)]="isFixedDifficulty">
       <label class="form-check-label settings-modal-text bigger-text" for="isFixedDifficultyCheckbox" style="display: inline">Fixed difficulty</label>
@@ -24,18 +48,18 @@
     </div>
   </div>
 </div>
-<div class="row">
+<div class="row mt-3 mb-0" *ngIf="isFixedDifficulty">
   <div class="col-12">
-    <div *ngIf="isFixedDifficulty" class="alert alert-info" role="alert" style="margin-bottom: 0; margin-top: 1rem">
-      <a href="https://xchdata.io/diffcalc" target="_blank">xchdata.io/diffcalc</a> can be used to calculate the optimal fixed difficulty
+    <div class="alert alert-info" role="alert">
+      PPH is disabled when using a fixed difficulty, <a href="https://xchdata.io/diffcalc" target="_blank">xchdata.io/diffcalc</a> can be used to calculate the optimal difficulty based on your desired partial rate.
     </div>
   </div>
 </div>
 <div class="row mt-2">
   <div class="col-12">
-    <button type="button" class="btn btn-success w-100" (click)="updateDifficulty()" [disabled]="!canUpdateDifficulty">
-      <span *ngIf="accountService.isUpdatingAccount">Updating</span>
-      <span *ngIf="!accountService.isUpdatingAccount">Update difficulty</span>
+    <button type="button" class="btn btn-success w-100" (click)="updateSettings()" [disabled]="!canUpdateSettings">
+      <span *ngIf="accountService.isUpdatingAccount">Saving</span>
+      <span *ngIf="!accountService.isUpdatingAccount">Apply changes</span>
       <fa-icon [icon]="faCircleNotch" animation="spin" *ngIf="accountService.isUpdatingAccount" style="margin-top: 5px; margin-left: 0.8em"></fa-icon>
     </button>
   </div>

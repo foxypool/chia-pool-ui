@@ -18,6 +18,7 @@ export default {
   'api.error.invalid_payout_multiples_of': 'The payout multiples of amount is invalid!',
   'api.error.invalid_token': 'The login link is invalid, already used or expired!',
   'api.error.invalid_image_url': 'The image url is invalid!',
+  'api.error.invalid_partials_per_hour': 'The partials per hour value is invalid!',
   'authentication-modal.authenticate': 'Authenticate',
   'authentication-modal.authenticating': 'Authenticating',
   'authentication-modal.authentication-guide': 'For a list of detailed steps please follow <a href="{1}" target="_blank">the guide</a> on how to authenticate yourself.',

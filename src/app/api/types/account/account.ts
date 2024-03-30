@@ -21,9 +21,14 @@ export interface AccountProfileSettings {
   imageUrl?: string
 }
 
+export interface AccountDifficultySettings {
+  partialsPerHour?: number
+}
+
 export interface AccountSettings {
   profile?: AccountProfileSettings
   blocks: AccountBlockSettings
+  difficulty?: AccountDifficultySettings
 }
 
 export interface BaseAccount {

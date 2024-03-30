@@ -10,7 +10,13 @@ import {BehaviorSubject, Observable} from 'rxjs'
 import {distinctUntilChanged, filter, map, shareReplay} from 'rxjs/operators'
 import {AccountHistoricalStat} from './api/types/account/account-historical-stat'
 import {LoginTokenResult} from './api/types/auth/login-token-result'
-import {Account, AccountNotificationSettings, AccountSettings, getAccountIdentifier} from './api/types/account/account'
+import {
+  Account,
+  AccountDifficultySettings,
+  AccountNotificationSettings,
+  AccountSettings,
+  getAccountIdentifier
+} from './api/types/account/account'
 import {AccountWonBlock} from './api/types/account/account-won-block'
 import {makeAccountIdentifierName} from './util'
 import {HistoricalStatsDuration} from './api/types/historical-stats-duration'
@@ -501,18 +507,29 @@ export class AccountService {
     }
   }
 
-  public async updateDifficulty({ difficulty, isFixedDifficulty }): Promise<void> {
+  public async updateDifficulty({ accountDifficulty, accountDifficultySettings }: UpdateDifficultySettingsOptions): Promise<void> {
     if (!this.isAuthenticated) {
       return
     }
     this.isUpdatingAccount = true
     try {
-      await this.statsService.updateAccountDifficulty({
-        accountIdentifier: this.accountIdentifier,
-        authToken: this.authToken,
-        difficulty,
-        isFixedDifficulty,
-      })
+      if (accountDifficulty !== undefined) {
+        await this.statsService.updateAccountDifficulty({
+          accountIdentifier: this.accountIdentifier,
+          authToken: this.authToken,
+          difficulty: accountDifficulty.difficulty,
+          isFixedDifficulty: accountDifficulty.isFixedDifficulty,
+        })
+      }
+      if (accountDifficultySettings !== undefined) {
+        await this.statsService.updateSettings({
+          accountIdentifier: this.accountIdentifier,
+          authToken: this.authToken,
+          partialSettings: {
+            difficulty: accountDifficultySettings,
+          },
+        })
+      }
       await this.updateAccount({ bustCache: true })
     } finally {
       this.isUpdatingAccount = false
@@ -606,4 +623,12 @@ export interface UpdateAccountSettingsOptions {
 
 export interface UpdateAccountRewardOptions {
   newDistributionRatio?: string
+}
+
+export interface UpdateDifficultySettingsOptions {
+  accountDifficulty?: {
+    difficulty: number
+    isFixedDifficulty: boolean
+  }
+  accountDifficultySettings?: AccountDifficultySettings
 }
