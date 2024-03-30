@@ -6,12 +6,6 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
-.input-group-text {
-  border: 1px solid var(--settings-input-field-border-color);
-}
-.form-control {
-  border: 1px solid var(--settings-input-field-border-color);
-}
 .custom-select {
   border: 1px solid var(--settings-input-field-border-color);
   border-top-left-radius: 0;

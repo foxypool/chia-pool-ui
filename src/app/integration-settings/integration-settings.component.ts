@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import {AccountService} from '../account.service'
-import {faCircleNotch} from '@fortawesome/free-solid-svg-icons'
+import {faCircleNotch, faInfoCircle} from '@fortawesome/free-solid-svg-icons'
 import {ToastService} from '../toast.service'
 import {ChiaDashboardApi} from '../integrations/chia-dashboard-api/api'
 import {AsyncValidatorFn, FormBuilder} from '@angular/forms'
@@ -96,4 +96,6 @@ export class IntegrationSettingsComponent {
       this.isValidatingShareKey = false
     }
   }
+
+  protected readonly faInfoCircle = faInfoCircle
 }

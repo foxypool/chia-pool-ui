@@ -1,5 +1,5 @@
 import {Component} from '@angular/core'
-import { faCircleNotch } from '@fortawesome/free-solid-svg-icons'
+import {faCircleNotch, faInfoCircle} from '@fortawesome/free-solid-svg-icons'
 import {BigNumber} from 'bignumber.js'
 import {AccountService} from '../account.service'
 import {SnippetService} from '../snippet.service'
@@ -106,4 +106,6 @@ export class UpdatePayoutOptionsComponent {
 
     return this.isNewMinimumPayout || this.isNewPayoutMultiplesOf
   }
+
+  protected readonly faInfoCircle = faInfoCircle
 }

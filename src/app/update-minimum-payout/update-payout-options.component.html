@@ -2,7 +2,7 @@
   <h6 class="settings-modal-text">Configure a minimum payout amount</h6>
   <div class="row">
     <div class="col-12">
-      <div class="input-group">
+      <div class="input-group has-validation">
         <input
           type="number"
           class="form-control"
@@ -22,10 +22,18 @@
   </div>
 </div>
 <div class="mt-2">
-  <h6 class="settings-modal-text">Payout multiples of</h6>
+  <h6 class="settings-modal-text">
+    <div class="d-flex gap-2">
+      <span>Payout multiples of</span>
+      <fa-icon
+        [icon]="faInfoCircle"
+        ngbTooltip="Only payout multiples of the supplied amount. For example with an input of 0.5 only exactly 0.5, 1, 1.5 etc are paid out, the remainder is kept in the pending balance till the next payout."
+      ></fa-icon>
+    </div>
+  </h6>
   <div class="row">
     <div class="col-12">
-      <div class="input-group">
+      <div class="input-group has-validation">
         <input
           type="number"
           class="form-control"

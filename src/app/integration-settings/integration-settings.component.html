@@ -1,5 +1,13 @@
 <div>
-  <h6 class="settings-modal-text"><a href="https://dashboard.chia.foxypool.io" target="_blank">Chia-Dashboard</a> Share Key</h6>
+  <h6 class="settings-modal-text">
+    <div class="d-flex gap-2">
+      <a href="https://dashboard.chia.foxypool.io" target="_blank">Chia-Dashboard</a> Share Key
+      <fa-icon
+        [icon]="faInfoCircle"
+        ngbTooltip="To obtain the share key, share your dashboard via the profile page and copy the last part of the url, it will look like this: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx."
+      ></fa-icon>
+    </div>
+  </h6>
   <div class="row">
     <div class="col-12">
       <form [formGroup]="form">
