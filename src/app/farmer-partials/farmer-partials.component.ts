@@ -252,13 +252,27 @@ export class FarmerPartialsComponent implements OnInit, OnDestroy {
   }
 
   private makePartialsPerHourChartUpdateOptions(historicalStats: AccountHistoricalStat[]): EChartsOption {
+    let relevantHistoricalStats = historicalStats
+    if (this.selectedHistoricalStatsDuration !== '1d') {
+      // Ignore first and last entry as they contain partial data
+      relevantHistoricalStats = historicalStats.slice(1, -1)
+    }
     const historicalSharesSeries = []
-    const startIndex = this.selectedHistoricalStatsDuration === '30d' ? 1 : 0
     let currentChunkStartedAt: Moment|undefined
     let partialCount = 0
-    for (const historicalStat of historicalStats.slice(startIndex)) {
-      const endDate = moment(historicalStat.createdAt).set({ seconds: 0, milliseconds: 0 })
-      const startDate = endDate.clone().subtract(this.historicalIntervalInMinutes, 'minutes')
+    for (const historicalStat of relevantHistoricalStats) {
+      let startDate: Moment
+      let endDate: Moment
+      if (this.selectedHistoricalStatsDuration === '1d') {
+        // Created at is the creation timestamp of the entry, the entry spans the last n minutes
+        endDate = moment(historicalStat.createdAt).set({ seconds: 0, milliseconds: 0 })
+        startDate = endDate.clone().subtract(this.historicalIntervalInMinutes, 'minutes')
+      } else {
+        // Created at is the start timestamp of the entry, the entry spans the next n hours
+        startDate = moment(historicalStat.createdAt).set({ seconds: 0, milliseconds: 0 })
+        endDate = startDate.clone().add(this.historicalIntervalInMinutes, 'minutes')
+      }
+
       if (currentChunkStartedAt === undefined) {
         currentChunkStartedAt = startDate
       }
