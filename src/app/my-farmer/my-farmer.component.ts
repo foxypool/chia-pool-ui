@@ -454,7 +454,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         shareReplay({ refCount: true }),
       )
     this.selectedNavTab = this.activatedRoute.fragment.pipe(map(fragment => fragment === null ? 'stats' : fragment), shareReplay(1))
-    this.showDurationSelection = this.selectedNavTab.pipe(map(tabId => tabId === 'stats' || tabId === 'harvesters'), shareReplay(1), distinctUntilChanged())
+    this.showDurationSelection = this.selectedNavTab.pipe(map(tabId => tabId === 'stats' || tabId === 'harvesters' || tabId === 'partials'), shareReplay(1), distinctUntilChanged())
     const harvesters = this.chiaDashboardService.satellites$.pipe(
       filter(satellites => satellites !== undefined),
       map(satellites => satellites
