@@ -257,8 +257,8 @@ export class FarmerPartialsComponent implements OnInit, OnDestroy {
     let currentChunkStartedAt: Moment|undefined
     let partialCount = 0
     for (const historicalStat of historicalStats.slice(startIndex)) {
-      const startDate = moment(historicalStat.createdAt).subtract(this.historicalIntervalInMinutes, 'minutes')
-      const endDate = moment(historicalStat.createdAt)
+      const endDate = moment(historicalStat.createdAt).set({ seconds: 0, milliseconds: 0 })
+      const startDate = endDate.clone().subtract(this.historicalIntervalInMinutes, 'minutes')
       if (currentChunkStartedAt === undefined) {
         currentChunkStartedAt = startDate
       }
