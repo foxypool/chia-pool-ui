@@ -713,11 +713,15 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     if (this.hasFoxyGhFarmerVersion) {
       count += 1
     }
-    if (this.hasChiaDashboardShareKey) {
+    if (this.hasChiaDashboardShareKey && !this.hasThirdPartyClient) {
       count += 3
     }
 
     return count
+  }
+
+  private get hasThirdPartyClient(): boolean {
+    return this.hasFastFarmerVersion || this.hasGigahorseFastFarmerVersion || this.hasLiteFarmerVersion
   }
 
   private get shareChartTopMargin(): number {
