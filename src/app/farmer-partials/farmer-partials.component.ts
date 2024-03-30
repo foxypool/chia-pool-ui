@@ -33,6 +33,10 @@ export class FarmerPartialsComponent implements OnInit, OnDestroy {
     void this.updatePartials()
   }
 
+  public get hasPartialsPerHour(): boolean {
+    return this.partialsPerHourChartUpdateOptions?.series[0].data.length > 0
+  }
+
   public partialsPerHourChartUpdateOptions: EChartsOption
   public page = 1
   public total = 0
