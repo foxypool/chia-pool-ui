@@ -29,8 +29,19 @@
   </div>
 </div>
 <div class="row mb-4" *ngIf="(loginLink | async) !== undefined">
-  <div class="col-12 text-center">
-    <a [href]="loginLink | async" target="_blank">Login Link</a>
+  <div class="col-12">
+    <div class="d-flex justify-content-center gap-2">
+      <a [href]="loginLink | async" target="_blank">Login Link</a>
+      <div
+        ngbTooltip="Copy login link"
+        ngxClipboard
+        [cbContent]="loginLink | async"
+        (cbOnSuccess)="onCopied()"
+        style="cursor: pointer"
+      >
+        <fa-icon [icon]="copyIcon" [ngStyle]="copyIconStyle"></fa-icon>
+      </div>
+    </div>
   </div>
 </div>
 <div class="row mt-2">

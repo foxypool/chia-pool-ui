@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import {faCircleNotch} from '@fortawesome/free-solid-svg-icons'
+import {faCheck, faCircleNotch, faCopy} from '@fortawesome/free-solid-svg-icons'
 import {BehaviorSubject, Observable} from 'rxjs'
 import {shareReplay} from 'rxjs/operators'
 import {AccountService} from '../account.service'
@@ -15,6 +15,8 @@ export class GenerateLoginLinkComponent {
   public readonly faCircleNotch = faCircleNotch
   public isGenerating = false
   public loginLink: Observable<string|undefined>
+  protected copyIcon = faCopy
+  protected copyIconStyle = {}
   private readonly loginLinkSubject: BehaviorSubject<string|undefined> = new BehaviorSubject<string | undefined>(undefined)
   private clearLoginLinkTimeout: ReturnType<typeof setTimeout>|undefined
 
@@ -37,6 +39,15 @@ export class GenerateLoginLinkComponent {
     } finally {
       this.isGenerating = false
     }
+  }
+
+  public onCopied(): void {
+    this.copyIcon = faCheck
+    this.copyIconStyle = { color: 'green' }
+    setTimeout(() => {
+      this.copyIcon = faCopy
+      this.copyIconStyle = {}
+    }, 1000)
   }
 
   private makePoolLoginLink(token: string): string {
