@@ -1245,8 +1245,6 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
 
   async login() {
     if (!this.accountIdentifierInput) {
-      this.toastService.showErrorToast(`No ${makeAccountIdentifierName(this.poolsProvider.pool.type)} entered!`)
-
       return
     }
     const accountIdentifier = unifyAccountIdentifier(this.accountIdentifierInput.trim(), this.poolsProvider.pool.type)
