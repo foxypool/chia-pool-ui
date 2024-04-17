@@ -81,7 +81,7 @@ export class UpdateDifficultyComponent {
   }
 
   public get isValidDifficulty(): boolean {
-    return this.newDifficulty !== undefined && Number.isInteger(this.newDifficulty) && this.newDifficulty >= 1
+    return this.newDifficulty !== undefined && Number.isInteger(this.newDifficulty) && this.newDifficulty >= 1 && this.newDifficulty < 750_000
   }
 
   public get canUpdateSettings(): boolean {
