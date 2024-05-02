@@ -184,40 +184,41 @@ export function getIntegerVersionUpdateInfo(client: Client<number>, version?: st
 
 export function getClientForClientVersion(clientVersion: VersionInfo): Client<unknown>|undefined {
   const localNames = [clientVersion.localName1, clientVersion.localName2, clientVersion.localName3]
-  if (clientVersion.clientName === fastFarmerClient.versionInfoMatching.name) {
-    return fastFarmerClient
-  } else if (clientVersion.clientName === gigahorseFastFarmerClient.versionInfoMatching.name) {
-    return gigahorseFastFarmerClient
-  } if (clientVersion.clientName === liteFarmerClient.versionInfoMatching.name) {
-    return liteFarmerClient
-  } else if (foxyFarmerClientWithDR.versionInfoMatching.localNames.every(localName => localNames.some(curr => curr === localName))) {
-    return foxyFarmerClientWithDR
-  } else if (foxyFarmerClientWithBB.versionInfoMatching.localNames.every(localName => localNames.some(curr => curr === localName))) {
-    return foxyFarmerClientWithBB
-  } else if (foxyFarmerClientWithGH.versionInfoMatching.localNames.every(localName => localNames.some(curr => curr === localName))) {
-    return foxyFarmerClientWithGH
-  } else if (foxyGhFarmerClient.versionInfoMatching.localNames.every(localName => localNames.some(curr => curr === localName))) {
-    return foxyGhFarmerClient
-  } else if (gigahorseClient.versionInfoMatching.localNames.every(localName => localNames.some(curr => curr === localName))) {
-    return gigahorseClient
-  } else if (drPlotterClient.versionInfoMatching.localNames.every(localName => localNames.some(curr => curr === localName))) {
-    return drPlotterClient
-  } else if (chiaOgClient.versionInfoMatching.localNames.every(localName => localNames.some(curr => curr === localName))) {
-    return chiaOgClient
-  } else if (clientVersion.clientName === chiaClient.versionInfoMatching.name) {
+  const clients = [
+    fastFarmerClient,
+    gigahorseFastFarmerClient,
+    liteFarmerClient,
+    foxyFarmerClientWithDR,
+    foxyFarmerClientWithBB,
+    foxyFarmerClientWithGH,
+    foxyGhFarmerClient,
+    gigahorseClient,
+    drPlotterClient,
+    chiaOgClient,
+  ]
+  for (const client of clients) {
+    if (client.versionInfoMatching.name === clientVersion.clientName && client.versionInfoMatching.localNames.every(localName => localNames.some(curr => curr === localName))) {
+      return client
+    }
+  }
+
+  // Catch all for chia clients with no or unknown local names
+  if (clientVersion.clientName === chiaClient.versionInfoMatching.name) {
     return chiaClient
   }
 }
 
 export function getGroupedClientForClientVersion(clientVersion: VersionInfo): Client<unknown>|undefined {
-  if (clientVersion.clientName === fastFarmerClient.versionInfoMatching.name) {
-    return fastFarmerClient
-  } else if (clientVersion.clientName === gigahorseFastFarmerClient.versionInfoMatching.name) {
-    return gigahorseFastFarmerClient
-  } if (clientVersion.clientName === liteFarmerClient.versionInfoMatching.name) {
-    return liteFarmerClient
-  } else if (clientVersion.clientName === chiaClient.versionInfoMatching.name) {
-    return chiaClient
+  const clients = [
+    fastFarmerClient,
+    gigahorseFastFarmerClient,
+    liteFarmerClient,
+    chiaClient,
+  ]
+  for (const client of clients) {
+    if (clientVersion.clientName === client.versionInfoMatching.name) {
+      return client
+    }
   }
 }
 
