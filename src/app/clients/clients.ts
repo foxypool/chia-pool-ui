@@ -24,8 +24,8 @@ export const chiaClient: Client<string> = {
   },
   versions: {
     minimum: '2.1.0',
-    recommendedMinimum: '2.1.4',
-    current: '2.2.1',
+    recommendedMinimum: '2.2.1',
+    current: '2.3.0',
     recent: '2.1.0',
     outdated: '1.8.2',
   },
@@ -49,7 +49,7 @@ export const drPlotterClient: Client<string> = {
   },
   versions: {
     minimum: '0.11.0',
-    recommendedMinimum: '0.11.0',
+    recommendedMinimum: '0.12.0',
   },
 }
 export const foxyFarmerClientWithBB: Client<string> = {
@@ -60,7 +60,7 @@ export const foxyFarmerClientWithBB: Client<string> = {
   },
   versions: {
     minimum: '1.8.0',
-    recommendedMinimum: '1.15.0',
+    recommendedMinimum: '1.22.5',
   },
 }
 export const foxyFarmerClientWithGH: Client<string> = {
@@ -70,8 +70,8 @@ export const foxyFarmerClientWithGH: Client<string> = {
     localNames: ['ff', 'giga'],
   },
   versions: {
-    minimum: '1.20.0',
-    recommendedMinimum: '1.22.4',
+    minimum: '1.22.4',
+    recommendedMinimum: '1.22.5',
   },
 }
 export const foxyFarmerClientWithDR: Client<string> = {
@@ -82,7 +82,7 @@ export const foxyFarmerClientWithDR: Client<string> = {
   },
   versions: {
     minimum: '1.22.1',
-    recommendedMinimum: '1.22.1',
+    recommendedMinimum: '1.22.5',
   },
 }
 export const foxyGhFarmerClient: Client<string> = {
@@ -104,7 +104,7 @@ export const gigahorseClient: Client<number> = {
   },
   versions: {
     minimum: 22,
-    recommendedMinimum: 26,
+    recommendedMinimum: 34,
   },
 }
 export const fastFarmerClient: Client<string> = {
@@ -129,10 +129,10 @@ export const gigahorseFastFarmerClient: Client<string> = {
   },
   versions: {
     minimum: '1.0.1',
-    recommendedMinimum: '1.0.1',
-    current: '1.0.1',
-    recent: '1.0.0',
-    outdated: '0.0.0',
+    recommendedMinimum: '1.0.2',
+    current: '1.0.4',
+    recent: '1.0.2',
+    outdated: '1.0.0',
   },
 }
 export const liteFarmerClient: Client<string> = {
