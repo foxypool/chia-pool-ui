@@ -612,6 +612,10 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
   }
 
   public get gigahorseVersionUpdateInfo(): VersionUpdateInfo {
+    if (this.hasFoxyFarmerVersion) {
+      return VersionUpdateInfo.noActionRequired
+    }
+
     return getIntegerVersionUpdateInfo(gigahorseClient, this.gigahorseVersion)
   }
 

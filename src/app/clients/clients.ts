@@ -24,7 +24,7 @@ export const chiaClient: Client<string> = {
   },
   versions: {
     minimum: '2.1.0',
-    recommendedMinimum: '2.2.1',
+    recommendedMinimum: '2.3.0',
     current: '2.3.0',
     recent: '2.1.0',
     outdated: '1.8.2',
@@ -104,7 +104,7 @@ export const gigahorseClient: Client<number> = {
   },
   versions: {
     minimum: 22,
-    recommendedMinimum: 34,
+    recommendedMinimum: 36,
   },
 }
 export const fastFarmerClient: Client<string> = {
