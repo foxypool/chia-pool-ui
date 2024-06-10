@@ -36,6 +36,7 @@ import {
   VersionUpdateInfo
 } from '../clients/clients'
 import {LocalStorageService} from '../local-storage.service'
+import {getPlotFilterShareMultiplier} from '../../consensus/plot-filter-share-multiplier'
 
 const sharesPerDayPerK32 = 10
 const k32SizeInGb = 108.837
@@ -148,8 +149,9 @@ export class HarvesterCardComponent implements OnInit, OnDestroy {
     this.averageEc = this.stats.pipe(
       map(stats => {
         const totalShares = stats.reduce((acc, submissionStat) => acc.plus(submissionStat.shares), new BigNumber(0))
+        const sharesPerDayPerK32Adjusted = sharesPerDayPerK32 * getPlotFilterShareMultiplier(this.statsService.poolStats?.height)
         const ecInGib = totalShares
-          .dividedBy(sharesPerDayPerK32 * durationInDays(this.historicalStatsDurationProvider.selectedDuration))
+          .dividedBy(sharesPerDayPerK32Adjusted * durationInDays(this.historicalStatsDurationProvider.selectedDuration))
           .multipliedBy(k32SizeInGib)
 
         return new Capacity(ecInGib.toNumber()).toString()
