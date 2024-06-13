@@ -1,6 +1,6 @@
 export function getPlotFilterShareMultiplier(height?: number): number {
   if (height === undefined) {
-    return 1 // Adjust after plot filter halving
+    return 2 // TODO: Adjust after next plot filter halving
   }
 
   if (height < 5_496_000) {
