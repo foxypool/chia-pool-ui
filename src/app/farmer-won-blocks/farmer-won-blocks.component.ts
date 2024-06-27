@@ -285,6 +285,24 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
     }))
   }
 
+  public getFarmTimeColor(farmTimeInSeconds: number): string {
+    if (farmTimeInSeconds < 9) {
+      return '#46cf76'
+    }
+    if (farmTimeInSeconds < 17) {
+      return '#b9a44c'
+    }
+    if (farmTimeInSeconds < 25) {
+      return '#ffaa00'
+    }
+
+    return '#ff4d4d'
+  }
+
+  public formatFarmTime(farmTimeInSeconds: number): number {
+    return (new BigNumber(farmTimeInSeconds)).decimalPlaces(3).toNumber()
+  }
+
   private makeChartUpdateOptions(wonBlocks: AccountWonBlock[]): EChartsOption {
     const wonBlocksWithEffort = wonBlocks.filter(wonBlock => wonBlock.effort !== null)
 

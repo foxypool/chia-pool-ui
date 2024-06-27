@@ -24,6 +24,7 @@ export interface AccountWonBlock {
   createdAt: string
   remarks: Remark[]
   historicalRate?: HistoricalRate
+  farmTimeInSeconds?: number
 }
 
 
