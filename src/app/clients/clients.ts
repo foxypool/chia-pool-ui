@@ -25,9 +25,9 @@ export const chiaClient: Client<string> = {
   versions: {
     minimum: '2.1.0',
     recommendedMinimum: '2.3.0',
-    current: '2.3.0',
-    recent: '2.1.0',
-    outdated: '1.8.2',
+    current: '2.4.0',
+    recent: '2.3.0',
+    outdated: '2.1.0',
   },
 }
 export const chiaOgClient: Client<string> = {
