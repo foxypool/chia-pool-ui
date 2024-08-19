@@ -14,7 +14,7 @@ import {ProofTime} from './types/harvester/proof-time'
 import {ClientVersion} from './types/pool/client-version'
 import {AccountHistoricalStat} from './types/account/account-historical-stat'
 import {AccountWonBlock} from './types/account/account-won-block'
-import {AccountPayout} from './types/account/account-payout'
+import {AccountPayouts} from './types/account/account-payout'
 import {AuthenticationResult} from './types/auth/authentication-result'
 import {LoginTokenResult} from './types/auth/login-token-result'
 import {BaseTopAccount} from './types/account/top-account'
@@ -31,7 +31,7 @@ export abstract class AbstractApi<
   protected readonly client: AxiosInstance
 
   public constructor(poolIdentifier: string) {
-    this.client = axios.create({ baseURL: `https://api.foxypool.io/api/v3/${poolIdentifier}` })
+    this.client = axios.create({ baseURL: `https://api.foxypool.io/api/v4/${poolIdentifier}` })
   }
 
   public async getPoolConfig(): Promise<PoolConfig> {
@@ -145,8 +145,8 @@ export abstract class AbstractApi<
     return data
   }
 
-  public async getAccountPayouts(accountIdentifier: string): Promise<AccountPayout[]> {
-    const { data } = await this.client.get<AccountPayout[]>(`account/${accountIdentifier}/payouts`)
+  public async getAccountPayouts({ accountIdentifier, page, limit }: { accountIdentifier: string, page: number, limit: number }): Promise<AccountPayouts> {
+    const { data } = await this.client.get<AccountPayouts>(`account/${accountIdentifier}/payouts`, { params: { page, limit } })
 
     return data
   }

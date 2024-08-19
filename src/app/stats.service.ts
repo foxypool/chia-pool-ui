@@ -206,8 +206,8 @@ export class StatsService {
     return this.api.getAccountWonBlocks(accountIdentifier)
   }
 
-  public getAccountPayouts(accountIdentifier: string) {
-    return this.api.getAccountPayouts(accountIdentifier)
+  public getAccountPayouts({ accountIdentifier, page, limit  }: { accountIdentifier: string, page: number, limit: number }) {
+    return this.api.getAccountPayouts({ accountIdentifier, page, limit })
   }
 
   public async getHarvesterStats({ harvesterId, duration }: { harvesterId: string, duration: HistoricalStatsDuration }) {

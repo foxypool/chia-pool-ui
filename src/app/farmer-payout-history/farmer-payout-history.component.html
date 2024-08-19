@@ -1,11 +1,22 @@
 <div class="row">
-  <div *ngIf="payouts.getValue().length > 0" class="col-md-12">
+  <div *ngIf="(isLoadingChartInitial$ | async) && (isLoadingInitial$ | async) === false" class="col-md-12 d-flex justify-content-center">
+    <app-loading-state></app-loading-state>
+  </div>
+  <div *ngIf="hasChartPayouts$ | async" class="col-md-12">
     <div echarts [options]="chartOptions" [merge]="chartUpdateOptions" theme="default" class="recent-payouts-chart"></div>
   </div>
 </div>
 <div class="row justify-content-end">
   <div class="col-auto">
-    <button *ngIf="payouts.getValue().length > 0" type="button" class="btn btn-sm" [ngClass]="exportCsvButtonClasses" style="margin-top: 0.5rem;float: right" (click)="exportCsv()">{{snippetService.getSnippet('download-csv-button.title')}}</button>
+    <button *ngIf="hasPayouts$ | async"
+            type="button"
+            class="btn btn-sm"
+            [ngClass]="exportCsvButtonClasses"
+            style="margin-top: 0.5rem;float: right"
+            (click)="exportCsv()">
+      {{snippetService.getSnippet('download-csv-button.title')}}
+      <app-loading-state *ngIf="isExportingCsv$ | async" width="1" height="1" colorClass="text-light"></app-loading-state>
+    </button>
   </div>
 </div>
 <div class="row">
@@ -28,17 +39,17 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngIf="isLoading && (payouts | async).length === 0">
+          <tr *ngIf="isLoadingInitial$ | async">
             <td colspan="6" style="text-align: center">
               <app-loading-state></app-loading-state>
             </td>
           </tr>
-          <tr *ngIf="!isLoading && (payouts | async).length === 0">
+          <tr *ngIf="(isLoadingInitial$ | async) === false && (hasPayouts$ | async) === false">
             <td colspan="6" style="text-align: center; padding-top: 1rem">
               <app-empty-state [text]="snippetService.getSnippet('payouts-component.no-payouts-sent-yet')" [icon]="faMoneyCheck"></app-empty-state>
             </td>
           </tr>
-          <tr *ngFor="let payout of payoutsObservable | async | slice: (page - 1) * pageSize : page * pageSize; trackBy: trackPayoutById">
+          <tr *ngFor="let payout of payouts$ | async; trackBy: trackPayoutById">
             <td style="white-space: nowrap">{{payout.formattedPayoutDate}}</td>
             <td>
               <a *ngIf="payout.blockExplorerUrl !== undefined" href="{{payout.blockExplorerUrl}}" target="_blank" style="color: #b45bff">{{payout.coinId}}</a>
@@ -52,15 +63,36 @@
         </tbody>
       </table>
     </div>
+    <div class="d-grid footer-grid">
+      <div class="pagination-grid-item">
+        <ngb-pagination
+          *ngIf="total > pageSize"
+          class="d-flex justify-content-center"
+          [(page)]="page"
+          [pageSize]="pageSize"
+          [collectionSize]="total"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="onPageChange()">
+          <ng-template ngbPaginationNumber let-p>
+            <div class="d-flex flex-nowrap gap-1">
+              {{ p }}
+              <app-loading-state *ngIf="p === page && (isLoading$ | async)" width="1" height="1" colorClass="text-light"></app-loading-state>
+            </div>
+          </ng-template>
+        </ngb-pagination>
+      </div>
+      <div style="margin-left: auto" *ngIf="showItemsPerPageSelection | async">
+        <div class="input-group" style="flex-wrap: nowrap">
+          <label class="input-group-text page-size-select-label">
+            Items per page
+          </label>
+          <select  class="form-select page-size-select" [(ngModel)]="pageSize">
+            <option *ngFor="let currPageSize of pageSizes" [ngValue]="currPageSize" class="page-size-select-option">{{currPageSize}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-<ngb-pagination
-  *ngIf="(payouts | async).length > pageSize"
-  class="d-flex justify-content-center"
-  [(page)]="page"
-  [pageSize]="pageSize"
-  [collectionSize]="(payouts | async).length"
-  [maxSize]="5"
-  [rotate]="true"
-  [boundaryLinks]="true">
-</ngb-pagination>

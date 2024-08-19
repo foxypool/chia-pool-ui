@@ -8,3 +8,8 @@ export interface AccountPayout {
   historicalRate?: HistoricalRate
   createdAt: Date
 }
+
+export interface AccountPayouts {
+  payouts: AccountPayout[]
+  total: number
+}

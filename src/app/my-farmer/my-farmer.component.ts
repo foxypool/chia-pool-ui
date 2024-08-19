@@ -32,6 +32,7 @@ import {
 } from '../api/types/historical-stats-duration'
 import {HistoricalStatsDurationProvider} from '../historical-stats-duration-provider'
 import {DateFormatting} from '../date-formatting'
+import {AccountPayoutChartDuration, AccountPayoutChartDurationProvider} from '../account-payout-chart-duration-provider'
 
 @Component({
   selector: 'app-my-farmer',
@@ -82,7 +83,9 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   public readonly showAuthenticationDocsLinkButton: boolean = this.poolsProvider.pool.type === PoolType.nft
   public readonly accountIdentifierInputPlaceholder: string = makeAccountIdentifierName(this.poolsProvider.pool.type)
   public readonly selectedNavTab: Observable<string>
-  public readonly showDurationSelection: Observable<boolean>
+  public readonly showDurationSelection$: Observable<boolean>
+  public readonly showHistoricalDurationSelection: Observable<boolean>
+  public readonly showAccountPayoutsChartDurationSelection$: Observable<boolean>
   public readonly hasChiaDashboardShareKey$: Observable<boolean>
 
   public get authDocsUrl(): string {
@@ -97,12 +100,24 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     return this.historicalStatsDurationProvider.possibleDurations
   }
 
+  public get possibleAccountPayoutsChartDurations(): AccountPayoutChartDuration[] {
+    return this.accountPayoutChartDurationProvider.possibleDurations
+  }
+
   public get selectedHistoricalStatsDuration(): HistoricalStatsDuration {
     return this.historicalStatsDurationProvider.selectedDuration
   }
 
   public set selectedHistoricalStatsDuration(duration: HistoricalStatsDuration) {
     this.historicalStatsDurationProvider.selectedDuration = duration
+  }
+
+  public get selectedAccountPayoutsChartDuration(): AccountPayoutChartDuration {
+    return this.accountPayoutChartDurationProvider.selectedDuration
+  }
+
+  public set selectedAccountPayoutsChartDuration(duration: AccountPayoutChartDuration) {
+    this.accountPayoutChartDurationProvider.selectedDuration = duration
   }
 
   private get historicalIntervalInMinutes(): number {
@@ -165,7 +180,6 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   private accountUpdateInterval: ReturnType<typeof setInterval> = null
   private accountHistoricalUpdateInterval: ReturnType<typeof setInterval> = null
   private accountWonBlocksUpdateInterval: ReturnType<typeof setInterval> = null
-  private accountPayoutsUpdateInterval: ReturnType<typeof setInterval> = null
 
   constructor(
     public snippetService: SnippetService,
@@ -181,6 +195,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     protected readonly chiaDashboardService: ChiaDashboardService,
     private readonly themeProvider: ThemeProvider,
     private readonly historicalStatsDurationProvider: HistoricalStatsDurationProvider,
+    private readonly accountPayoutChartDurationProvider: AccountPayoutChartDurationProvider,
   ) {
     this.ecChartOptions = {
       title: {
@@ -454,7 +469,20 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         shareReplay({ refCount: true }),
       )
     this.selectedNavTab = this.activatedRoute.fragment.pipe(map(fragment => fragment === null ? 'stats' : fragment), shareReplay(1))
-    this.showDurationSelection = this.selectedNavTab.pipe(map(tabId => tabId === 'stats' || tabId === 'harvesters' || tabId === 'partials'), shareReplay(1), distinctUntilChanged())
+    this.showHistoricalDurationSelection = this.selectedNavTab.pipe(
+      map(tabId => tabId === 'stats' || tabId === 'harvesters' || tabId === 'partials'),
+      shareReplay(1),
+      distinctUntilChanged(),
+    )
+    this.showAccountPayoutsChartDurationSelection$ = this.selectedNavTab.pipe(
+      map(tabId => tabId === 'recent-payouts'),
+      shareReplay(1),
+      distinctUntilChanged(),
+    )
+    this.showDurationSelection$ = combineLatest([
+      this.showHistoricalDurationSelection,
+      this.showAccountPayoutsChartDurationSelection$,
+    ]).pipe(map(([a, b]) => a || b), shareReplay(1))
     const harvesters = this.chiaDashboardService.satellites$.pipe(
       filter(satellites => satellites !== undefined),
       map(satellites => satellites
@@ -548,9 +576,6 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     if (this.accountWonBlocksUpdateInterval) {
       clearInterval(this.accountWonBlocksUpdateInterval)
     }
-    if (this.accountPayoutsUpdateInterval) {
-      clearInterval(this.accountPayoutsUpdateInterval)
-    }
 
     this.accountService.clearStats()
   }
@@ -573,12 +598,6 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
         return
       }
       await this.accountService.updateAccountWonBlocks()
-    }, 11 * 60 * 1000)
-    this.accountPayoutsUpdateInterval = setInterval(async () => {
-      if (!this.accountService.haveAccountIdentifier) {
-        return
-      }
-      await this.accountService.updateAccountPayouts()
     }, 11 * 60 * 1000)
 
     if (this.isLoginRequest()) {
@@ -644,7 +663,6 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     await Promise.all([
       this.accountService.updateAccountHistoricalStats(),
       this.accountService.updateAccountWonBlocks(),
-      this.accountService.updateAccountPayouts(),
     ])
   }
 

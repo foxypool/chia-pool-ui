@@ -249,7 +249,7 @@
     <div class="row">
       <div class="p-2 col-md-12">
         <div class="row m-0">
-          <ul ngbNav #nav="ngbNav" [activeId]="selectedNavTab | async" class="nav-tabs col-12 col-sm" [ngClass]="{'nav-tabs-no-border': showDurationSelection | async}">
+          <ul ngbNav #nav="ngbNav" [activeId]="selectedNavTab | async" class="nav-tabs col-12 col-sm" [ngClass]="{'nav-tabs-no-border': showDurationSelection$ | async}">
             <li ngbNavItem="stats" [destroyOnHide]="true">
               <a class="text-decoration-none" ngbNavLink routerLink="." [fragment]="null"><h5>{{snippetService.getSnippet('my-farmer-component.tabs.stats.label')}}</h5></a>
               <ng-template ngbNavContent>
@@ -300,11 +300,9 @@
               <ng-template ngbNavContent>
                 <div class="p-1 col-md-12">
                   <app-farmer-payout-history
-                    [isLoading]="isAccountLoading | async"
                     [coinConfig]="statsService.coinConfig"
                     [payoutDateFormattingObservable]="payoutDateFormattingObservable"
                     [selectedCurrencyObservable]="selectedCurrencyObservable"
-                    [payouts]="accountService.accountPayouts"
                   ></app-farmer-payout-history>
                 </div>
               </ng-template>
@@ -337,10 +335,16 @@
               </ng-template>
             </li>
           </ul>
-          <div class="col-12 col-sm-auto d-flex justify-content-end duration-selection" *ngIf="showDurationSelection | async">
+          <div class="col-12 col-sm-auto d-flex justify-content-end duration-selection" *ngIf="showHistoricalDurationSelection | async">
             <div *ngFor="let duration of possibleDurations" class="z-2">
               <input type="radio" class="btn-check" name="options-base" id="duration-radio-{{duration}}" autocomplete="off" [(ngModel)]="selectedHistoricalStatsDuration" [value]="duration">
               <label class="btn" for="duration-radio-{{duration}}">{{duration.toUpperCase()}}</label>
+            </div>
+          </div>
+          <div class="col-12 col-sm-auto d-flex justify-content-end duration-selection" *ngIf="showAccountPayoutsChartDurationSelection$ | async">
+            <div *ngFor="let duration of possibleAccountPayoutsChartDurations" class="z-2">
+              <input type="radio" class="btn-check" name="options-base" id="duration-radio-apc-{{duration}}" autocomplete="off" [(ngModel)]="selectedAccountPayoutsChartDuration" [value]="duration">
+              <label class="btn" for="duration-radio-apc-{{duration}}">{{duration.toUpperCase()}}</label>
             </div>
           </div>
         </div>

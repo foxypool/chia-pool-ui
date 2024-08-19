@@ -23,7 +23,7 @@ import {HistoricalStatsDuration} from './api/types/historical-stats-duration'
 import {HistoricalStatsDurationProvider} from './historical-stats-duration-provider'
 import {AccountPartialList} from './api/types/account/account-partial'
 import {Harvester} from './api/types/harvester/harvester'
-import {AccountPayout} from './api/types/account/account-payout'
+import {AccountPayout, AccountPayouts} from './api/types/account/account-payout'
 import {AccountBalanceChangeList} from './api/types/account/account-balance-change'
 
 @Injectable({
@@ -141,7 +141,6 @@ export class AccountService {
     await Promise.all([
       this.updateAccountHistoricalStats(),
       this.updateAccountWonBlocks(),
-      this.updateAccountPayouts(),
     ])
     this.toastService.showSuccessToast(this.snippetService.getSnippet('account-service.login.success'))
 
@@ -161,7 +160,6 @@ export class AccountService {
     await Promise.all([
       this.updateAccountHistoricalStats(),
       this.updateAccountWonBlocks(),
-      this.updateAccountPayouts(),
     ])
 
     try {
@@ -213,7 +211,6 @@ export class AccountService {
     this.account = null
     this.accountHistoricalStats.next([])
     this.accountWonBlocks.next([])
-    this.accountPayouts.next([])
   }
 
   removeAccountIdentifierFromLocalStorage(): void {
@@ -241,7 +238,6 @@ export class AccountService {
       }
       this.accountHistoricalStats.next([])
       this.accountWonBlocks.next([])
-      this.accountPayouts.next([])
       this.toastService.showErrorToast(makeInvalidFarmerErrorMessage(this.poolsProvider.pool.type, this.accountIdentifier))
     }
   }
@@ -252,10 +248,6 @@ export class AccountService {
 
   async updateAccountWonBlocks() {
     this.accountWonBlocks.next(await this.getAccountWonBlocks({ accountIdentifier: this.accountIdentifier }))
-  }
-
-  async updateAccountPayouts() {
-    this.accountPayouts.next(await this.getAccountPayouts({ accountIdentifier: this.accountIdentifier }))
   }
 
   private async getAccount({ accountIdentifier, bustCache = false }): Promise<Account|null> {
@@ -336,11 +328,15 @@ export class AccountService {
     return accountWonBlocks
   }
 
-  private async getAccountPayouts({ accountIdentifier }) {
+  public async getAccountPayouts({ page, limit }: { page: number, limit: number }): Promise<AccountPayouts> {
     this.isLoading = true
-    let accountPayouts = []
+    let accountPayouts: AccountPayouts
     try {
-      accountPayouts = await this.statsService.getAccountPayouts(accountIdentifier)
+      accountPayouts = await this.statsService.getAccountPayouts({
+        accountIdentifier: this.accountIdentifier,
+        page,
+        limit,
+      })
     } finally {
       this.isLoading = false
     }
