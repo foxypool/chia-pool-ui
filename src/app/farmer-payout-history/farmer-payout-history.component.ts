@@ -17,7 +17,7 @@ import {AccountPayout} from '../api/types/account/account-payout'
 import {TransactionState} from '../api/types/transaction-state'
 import {DateFormatting, formatDate} from '../date-formatting'
 import {AccountService} from '../account.service'
-import {AccountPayoutChartDurationProvider, durationInDays} from '../account-payout-chart-duration-provider'
+import {AccountPayoutChartSizeProvider} from '../account-payout-chart-size-provider.service'
 
 @Component({
   selector: 'app-farmer-payout-history',
@@ -108,10 +108,6 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
     return this.themeProvider.isDarkTheme ? 'btn-outline-info' : 'btn-info'
   }
 
-  private get chartPayoutLimit(): number {
-    return durationInDays(this.accountPayoutChartDurationProvider.selectedDuration)
-  }
-
   private readonly isLoadingSubject: BehaviorSubject<boolean> = new BehaviorSubject(true)
   private readonly isLoadingChartSubject: BehaviorSubject<boolean> = new BehaviorSubject(true)
   private readonly isExportingCsv: BehaviorSubject<boolean> = new BehaviorSubject(false)
@@ -123,7 +119,7 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
       this.page = 1
       await this.updateAllPayouts()
     }),
-    this.accountPayoutChartDurationProvider.selectedDuration$.pipe(skip(1)).subscribe(async _ => {
+    this.accountPayoutChartSizeProvider.selectedSize$.pipe(skip(1)).subscribe(async _ => {
       await this.updateChartPayouts()
     }),
   ]
@@ -137,7 +133,7 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
     private readonly ratesService: RatesService,
     private readonly themeProvider: ThemeProvider,
     private readonly accountService: AccountService,
-    private readonly accountPayoutChartDurationProvider: AccountPayoutChartDurationProvider,
+    private readonly accountPayoutChartSizeProvider: AccountPayoutChartSizeProvider,
   ) {
     this.isExportingCsv$ = this.isExportingCsv.asObservable()
     this.isLoading$ = this.isLoadingSubject.asObservable()
@@ -253,7 +249,10 @@ export class FarmerPayoutHistoryComponent implements OnInit, OnDestroy {
   private async updateChartPayouts(): Promise<void> {
     this.isLoadingChartSubject.next(true)
     try {
-      const { payouts } = await this.accountService.getAccountPayouts({ page: 1, limit: this.chartPayoutLimit })
+      const { payouts } = await this.accountService.getAccountPayouts({
+        page: 1,
+        limit: this.accountPayoutChartSizeProvider.selectedSize,
+      })
       this.chartPayoutsSubject.next(payouts)
     } finally {
       this.isLoadingChartSubject.next(false)

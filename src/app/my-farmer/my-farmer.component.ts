@@ -32,7 +32,7 @@ import {
 } from '../api/types/historical-stats-duration'
 import {HistoricalStatsDurationProvider} from '../historical-stats-duration-provider'
 import {DateFormatting} from '../date-formatting'
-import {AccountPayoutChartDuration, AccountPayoutChartDurationProvider} from '../account-payout-chart-duration-provider'
+import {AccountPayoutChartSize, AccountPayoutChartSizeProvider} from '../account-payout-chart-size-provider.service'
 
 @Component({
   selector: 'app-my-farmer',
@@ -85,7 +85,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
   public readonly selectedNavTab: Observable<string>
   public readonly showDurationSelection$: Observable<boolean>
   public readonly showHistoricalDurationSelection: Observable<boolean>
-  public readonly showAccountPayoutsChartDurationSelection$: Observable<boolean>
+  public readonly showAccountPayoutsChartSizeSelection$: Observable<boolean>
   public readonly hasChiaDashboardShareKey$: Observable<boolean>
 
   public get authDocsUrl(): string {
@@ -96,12 +96,16 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     return this.themeProvider.isDarkTheme ? 'btn-outline-light' : 'btn-outline-dark'
   }
 
+  public get radioSelectionButtonClasses(): string {
+    return this.themeProvider.isDarkTheme ? 'btn-outline-light' : 'btn-outline-dark'
+  }
+
   public get possibleDurations(): HistoricalStatsDuration[] {
     return this.historicalStatsDurationProvider.possibleDurations
   }
 
-  public get possibleAccountPayoutsChartDurations(): AccountPayoutChartDuration[] {
-    return this.accountPayoutChartDurationProvider.possibleDurations
+  public get possibleAccountPayoutsChartSizes(): AccountPayoutChartSize[] {
+    return this.accountPayoutChartSizeProvider.possibleSizes
   }
 
   public get selectedHistoricalStatsDuration(): HistoricalStatsDuration {
@@ -112,12 +116,12 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     this.historicalStatsDurationProvider.selectedDuration = duration
   }
 
-  public get selectedAccountPayoutsChartDuration(): AccountPayoutChartDuration {
-    return this.accountPayoutChartDurationProvider.selectedDuration
+  public get selectedAccountPayoutsChartSize(): AccountPayoutChartSize {
+    return this.accountPayoutChartSizeProvider.selectedSize
   }
 
-  public set selectedAccountPayoutsChartDuration(duration: AccountPayoutChartDuration) {
-    this.accountPayoutChartDurationProvider.selectedDuration = duration
+  public set selectedAccountPayoutsChartSize(size: AccountPayoutChartSize) {
+    this.accountPayoutChartSizeProvider.selectedSize = size
   }
 
   private get historicalIntervalInMinutes(): number {
@@ -195,7 +199,7 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
     protected readonly chiaDashboardService: ChiaDashboardService,
     private readonly themeProvider: ThemeProvider,
     private readonly historicalStatsDurationProvider: HistoricalStatsDurationProvider,
-    private readonly accountPayoutChartDurationProvider: AccountPayoutChartDurationProvider,
+    private readonly accountPayoutChartSizeProvider: AccountPayoutChartSizeProvider,
   ) {
     this.ecChartOptions = {
       title: {
@@ -474,14 +478,14 @@ export class MyFarmerComponent implements OnInit, OnDestroy {
       shareReplay(1),
       distinctUntilChanged(),
     )
-    this.showAccountPayoutsChartDurationSelection$ = this.selectedNavTab.pipe(
+    this.showAccountPayoutsChartSizeSelection$ = this.selectedNavTab.pipe(
       map(tabId => tabId === 'recent-payouts'),
       shareReplay(1),
       distinctUntilChanged(),
     )
     this.showDurationSelection$ = combineLatest([
       this.showHistoricalDurationSelection,
-      this.showAccountPayoutsChartDurationSelection$,
+      this.showAccountPayoutsChartSizeSelection$,
     ]).pipe(map(([a, b]) => a || b), shareReplay(1))
     const harvesters = this.chiaDashboardService.satellites$.pipe(
       filter(satellites => satellites !== undefined),
