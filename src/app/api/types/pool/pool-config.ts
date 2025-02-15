@@ -1,6 +1,8 @@
 export interface Notice {
   date: string
-  text: string
+  text: {
+    en: string
+  }
 }
 
 export interface PoolConfig {

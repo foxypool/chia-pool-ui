@@ -37,7 +37,7 @@ export class DashboardComponent  {
     return this.noticesInTheLastWeekOrLess.length > 0
   }
 
-  getTranslatedNoticeText(notice) {
+  public getTranslatedNoticeText(notice: Notice): string {
     return notice.text.en
   }
 
