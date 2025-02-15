@@ -23,11 +23,11 @@ export const chiaClient: Client<string> = {
     localNames: [],
   },
   versions: {
-    minimum: '2.1.0',
-    recommendedMinimum: '2.3.0',
-    current: '2.4.0',
-    recent: '2.3.0',
-    outdated: '2.1.0',
+    minimum: '2.5.1',
+    recommendedMinimum: '2.5.1',
+    current: '2.5.1',
+    recent: '2.5.0',
+    outdated: '2.4.0',
   },
 }
 export const chiaOgClient: Client<string> = {
