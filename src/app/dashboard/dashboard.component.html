@@ -1,21 +1,19 @@
+<div class="row" *ngIf="showNotices">
+  <div class="col-12">
+    <div class="row">
+      <div>
+        <div class="alert alert-warning d-flex align-items-center" role="alert">
+          <div>
+            ⚠ Due to a bug in the chia codebase <strong>block forging is currently impacted</strong>. Chia nodes running 2.5.0 and below might stop producing blocks until restarted, and can stop producing blocks again later. <strong>Please upgrade to <a href="{{downloadUrl}}" target="_blank">2.5.1</a> as soon as possible, as the pool rejects all partials from older versions!</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="row">
   <app-stats-card class="col-md-12 col-lg-6"></app-stats-card>
   <app-pool-history class="col-md-12 col-lg-6"></app-pool-history>
-</div>
-<div class="row" style="margin-bottom: 1em" *ngIf="hasNotices">
-  <div class="col-12">
-    <h4>
-      {{snippetService.getSnippet('dashboard-component.latest-notices.title')}}:
-    </h4>
-    <div class="row">
-      <ul>
-        <li *ngFor="let notice of noticesInTheLastWeekOrLess">
-          <span style="font-size: 0.8em">{{getFormattedDate(notice.date)}}</span>
-          <div [innerHTML]="getTranslatedNoticeText(notice)"></div>
-        </li>
-      </ul>
-    </div>
-  </div>
 </div>
 <div class="row">
   <div class="col-lg-12 col-xl-4 col-xxl-4 col-xxxl-9">
