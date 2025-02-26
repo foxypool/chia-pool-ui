@@ -36,7 +36,7 @@ export class DashboardComponent  {
   }
 
   public get showNotices(): boolean {
-    return true
+    return false
   }
 
   get downloadUrl(): string {
