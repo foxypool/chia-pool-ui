@@ -24,6 +24,7 @@ import {DateFormatting} from '../date-formatting'
 export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
   @Input() wonBlocksObservable: Observable<AccountWonBlock[]>
   @Input() isLoading = false
+  @Input() shouldIgnoreDifferingFarmerRewardAddresses = false
 
   public page = 1
   public pageSize = 10
@@ -301,6 +302,22 @@ export class FarmerWonBlocksComponent implements OnInit, OnDestroy {
 
   public formatFarmTime(farmTimeInSeconds: number): number {
     return (new BigNumber(farmTimeInSeconds)).decimalPlaces(3).toNumber()
+  }
+
+  public hasRemarks(block: AccountWonBlock): boolean {
+    return this.filteredRemarks(block).length > 0
+  }
+
+  public filteredRemarks(block: AccountWonBlock): Remark[] {
+    if (block.remarks === undefined) {
+      return []
+    }
+
+    if (this.shouldIgnoreDifferingFarmerRewardAddresses) {
+      return block.remarks.filter(remark => remark.type !== RemarkType.farmerRewardAddressDiffers)
+    }
+
+    return block.remarks
   }
 
   private makeChartUpdateOptions(wonBlocks: AccountWonBlock[]): EChartsOption {

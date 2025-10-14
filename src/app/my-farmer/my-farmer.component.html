@@ -314,6 +314,7 @@
                   <app-farmer-won-blocks
                     [isLoading]="isAccountLoading | async"
                     [wonBlocksObservable]="accountService.accountWonBlocks.asObservable()"
+                    [shouldIgnoreDifferingFarmerRewardAddresses]="accountService.account.settings?.blocks.ignoreDifferingFarmerRewardAddresses ?? false"
                   ></app-farmer-won-blocks>
                 </div>
               </ng-template>

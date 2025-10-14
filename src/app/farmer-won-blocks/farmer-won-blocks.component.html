@@ -60,11 +60,11 @@
             </td>
             <td *ngIf="block.farmTimeInSeconds === undefined">N/A</td>
             <td *ngIf="block.farmTimeInSeconds !== undefined"><span [ngStyle]="{color: getFarmTimeColor(block.farmTimeInSeconds)}">{{formatFarmTime(block.farmTimeInSeconds)}} sec</span></td>
-            <td *ngIf="block.remarks === undefined || block.remarks.length === 0">
+            <td *ngIf="!hasRemarks(block)">
               <span class="badge remark-pill background-color-light-green">OK</span>
             </td>
-            <td *ngIf="block.remarks !== undefined && block.remarks.length > 0">
-            <span *ngFor="let remark of block.remarks; let last = last;">
+            <td *ngIf="hasRemarks(block)">
+            <span *ngFor="let remark of filteredRemarks(block); let last = last;">
               <span class="badge remark-pill"
                     [ngClass]="getRemarkClasses(remark)"
                     ngbTooltip="{{getRemarkTooltip(remark)}}"
