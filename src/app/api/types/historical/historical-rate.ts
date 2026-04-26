@@ -1,3 +1,3 @@
 export interface HistoricalRate {
-  rates: Record<string, number>
+  rates?: Record<string, number>
 }

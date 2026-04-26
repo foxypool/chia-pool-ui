@@ -44,7 +44,7 @@ export class RatesService implements OnDestroy {
   }
 
   public getHistoricalFiatAmount(value: string|number|null|undefined|BigNumber, historicalRate?: HistoricalRate): BigNumber|undefined {
-    if (this.isTestnet || value === undefined || value === null || historicalRate === undefined) {
+    if (this.isTestnet || value === undefined || value === null || historicalRate === undefined || historicalRate.rates === undefined) {
       return
     }
     const rate = historicalRate.rates[this.configService.selectedCurrency]
@@ -59,7 +59,7 @@ export class RatesService implements OnDestroy {
     if (this.isTestnet || value === undefined || value === null) {
       return
     }
-    const ratesToUse = historicalRate !== undefined ? historicalRate.rates : this.rates
+    const ratesToUse = historicalRate !== undefined ? (historicalRate.rates ?? this.rates) : this.rates
     let rate = ratesToUse[this.configService.selectedCurrency]
     if (rate === undefined && historicalRate !== undefined) {
       rate = this.rates[this.configService.selectedCurrency]
