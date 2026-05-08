@@ -5,7 +5,7 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router'
 import {filter, map, mergeMap} from 'rxjs/operators'
 import {StatsService} from './stats.service'
 import {SnippetService} from './snippet.service'
-import {PoolsProvider} from './pools.provider'
+import {PoolsProvider, PoolType} from './pools.provider'
 import {Subscription} from 'rxjs'
 import {gitCommitHash} from '../environments/config'
 
@@ -68,6 +68,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this.subscriptions.map(subscription => subscription.unsubscribe())
+  }
+
+  public get shouldShowShutdownNotice(): boolean {
+    return this.poolsProvider.pool.type === PoolType.og
   }
 
   setTitlePrefix(titlePrefixSnippet) {

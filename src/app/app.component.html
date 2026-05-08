@@ -1,4 +1,17 @@
 <app-header></app-header>
+<div class="row" *ngIf="shouldShowShutdownNotice">
+  <div class="col-12">
+    <div class="row">
+      <div>
+        <div class="alert alert-danger d-flex align-items-center justify-content-center" role="alert">
+          <div>
+            The OG pool is <strong>shutting down</strong>. All pending balances and collateral will be paid out before the shutdown. For further information please check the announcements.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="container-fluid site-content" style="padding-top: 0.4em">
   <router-outlet></router-outlet>
 </div>
