@@ -41,16 +41,6 @@ export class PoolsProvider {
     downloadUrl: 'https://github.com/Chia-Network/chia-blockchain/releases/latest',
     type: PoolType.nft,
     launchDate: '2021-07-27T00:00:00.000Z',
-  },{
-    coin: Coin.chia,
-    name: 'Foxy-Pool CHIA (OG)',
-    url: 'https://chia-og.foxypool.io',
-    poolIdentifier: 'chia-og',
-    hostnames: ['chia-og.foxypool.io'],
-    algorithm: Algorithm.post,
-    downloadUrl: 'https://github.com/foxypool/chia-blockchain/releases/latest',
-    type: PoolType.og,
-    launchDate: '2021-06-13T00:00:00.000Z',
   }]
 
   public readonly pool: Pool
